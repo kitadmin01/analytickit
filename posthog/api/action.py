@@ -1,5 +1,5 @@
 from posthog.models import Event, Team, Action, ActionStep, Element, User, Person, Filter, Entity, Cohort, CohortPeople
-from posthog.utils import append_data
+from posthog.utils import append_data, get_compare_period_dates
 from posthog.constants import TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS
 from rest_framework import request, serializers, viewsets, authentication
 from rest_framework.response import Response
@@ -17,6 +17,7 @@ import pytz
 import copy
 import numpy as np
 from dateutil.relativedelta import relativedelta
+import dateutil
 from .person import PersonSerializer
 
 FREQ_MAP = {
@@ -362,7 +363,6 @@ class ActionViewSet(viewsets.ModelViewSet):
         response = []
         events = self._process_entity_for_events(entity=entity, team=team, order_by=None if request.GET.get('shown_as') == 'Stickiness' else '-timestamp')
         events = events.filter(self._filter_events(filter, entity))
-
         if request.GET.get('shown_as', 'Volume') == 'Volume':
             items = self._aggregate_by_interval(
                 filtered_events=events,
@@ -403,11 +403,26 @@ class ActionViewSet(viewsets.ModelViewSet):
             return Event.objects.filter_by_event_with_people(event=entity.id, team_id=team.pk, order_by=order_by)
         return QuerySet()
 
+    def _convert_to_comparison(self, trend_entity: List[Dict[str, Any]], filter: Filter, label: str) -> List[Dict[str, Any]]:
+        for entity in trend_entity:
+            days = [i for i in range(len(entity['days']))]
+            labels = ['{} {}'.format(filter.interval if filter.interval is not None else 'day', i) for i in range(len(entity['labels']))]
+            entity.update({'labels': labels, 'days': days, 'label': label, 'dates': entity['days'], 'compare': True})
+        return trend_entity
+    
+    def _determine_compared_filter(self, filter, request):
+        date_from, date_to = get_compare_period_dates(filter.date_from, filter.date_to)
+        compared_filter = Filter(request=request)
+        compared_filter._date_from = date_from.date().isoformat()
+        compared_filter._date_to = date_to.date().isoformat()
+        return compared_filter
+
     @action(methods=['GET'], detail=False)
     def trends(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
         actions = self.get_queryset()
         actions = actions.filter(deleted=False)
         team = request.user.team_set.get()
+        compare = request.GET.get('compare')
         entities_list = []
         filter = Filter(request=request)
 
@@ -424,6 +439,10 @@ class ActionViewSet(viewsets.ModelViewSet):
         if not filter.date_to:
             filter._date_to = now().isoformat()
 
+        compared_filter = None
+        if compare:
+            compared_filter = self._determine_compared_filter(filter, request)
+
         for entity in filter.entities:
             if entity.type == TREND_FILTER_TYPE_ACTIONS:
                 try:
@@ -437,7 +456,22 @@ class ActionViewSet(viewsets.ModelViewSet):
                 request=request,
                 team=team
             )
-            entities_list.extend(trend_entity)
+            if compare and compared_filter:
+                trend_entity = self._convert_to_comparison(trend_entity, filter, '{} - {}'.format(entity.name, 'current'))
+                entities_list.extend(trend_entity)
+
+                compared_trend_entity = self._serialize_entity(
+                    entity=entity,
+                    filter=compared_filter,
+                    request=request,
+                    team=team
+                )
+                
+                compared_trend_entity = self._convert_to_comparison(compared_trend_entity, compared_filter, '{} - {}'.format(entity.name, 'previous'))
+                entities_list.extend(compared_trend_entity) 
+            else:
+                entities_list.extend(trend_entity)
+            
         return Response(entities_list)
 
     @action(methods=['GET'], detail=False)

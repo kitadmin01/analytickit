@@ -1,6 +1,6 @@
 from posthog.models import Event, Team, Action, ActionStep, Element, User, Person, Filter, Entity, Cohort, CohortPeople
 from posthog.utils import append_data, get_compare_period_dates
-from posthog.constants import TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS
+from posthog.constants import TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS, TRENDS_CUMULATIVE, TRENDS_STICKINESS
 from posthog.tasks.calculate_action import calculate_action
 from rest_framework import request, serializers, viewsets, authentication
 from rest_framework.response import Response
@@ -379,8 +379,10 @@ class ActionViewSet(viewsets.ModelViewSet):
                 if value != 'Total':
                     new_dict.update(self._breakdown_label(entity, value))
                 new_dict.update(append_data(dates_filled=list(item.items()), interval=interval))
+                if filter.display == TRENDS_CUMULATIVE:
+                    new_dict['data'] = np.cumsum(new_dict['data'])
                 response.append(new_dict)
-        elif request.GET['shown_as'] == 'Stickiness':
+        elif request.GET['shown_as'] == TRENDS_STICKINESS:
             new_dict = copy.deepcopy(serialized)
             new_dict.update(self._stickiness(filtered_events=events, entity=entity, filter=filter))
             response.append(new_dict)

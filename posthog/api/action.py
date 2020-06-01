@@ -19,6 +19,7 @@ import numpy as np
 from dateutil.relativedelta import relativedelta
 import dateutil
 from .person import PersonSerializer
+from urllib.parse import urlsplit
 
 FREQ_MAP = {
     'minute': '60S',
@@ -56,13 +57,12 @@ class TemporaryTokenAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request: request.Request):
         # if the Origin is different, the only authentication method should be temporary_token
         # This happens when someone is trying to create actions from the editor on their own website
-        if request.headers.get('Origin') and request.headers['Origin'] not in request.build_absolute_uri('/'):
+        if request.headers.get('Origin') and urlsplit(request.headers['Origin']).netloc not in urlsplit(request.build_absolute_uri('/')).netloc:
             if not request.GET.get('temporary_token'):
-                raise AuthenticationFailed(detail="""No temporary_token set.
-                    That means you're either trying to access this API from a different site,
-                    or it means your proxy isn\'t sending the correct headers.
-                    See https://github.com/PostHog/posthog/wiki/Running-behind-a-proxy for more information.
-                    """)
+                raise AuthenticationFailed(detail="No temporary_token set. " +
+                    "That means you're either trying to access this API from a different site, " +
+                    "or it means your proxy isn\'t sending the correct headers. " +
+                    "See https://posthog.com/docs/deployment/running-behind-proxy for more information.")
         if request.GET.get('temporary_token'):
             user = User.objects.filter(temporary_token=request.GET.get('temporary_token'))
             if not user.exists():

@@ -1,11 +1,10 @@
 from posthog.models import Event, Team, Action, ActionStep, DashboardItem, User, Person, Filter, Entity, Cohort, CohortPeople
-from posthog.utils import append_data, get_compare_period_dates
+from posthog.utils import append_data, get_compare_period_dates, TemporaryTokenAuthentication
 from posthog.constants import TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS, TRENDS_CUMULATIVE, TRENDS_STICKINESS
 from posthog.tasks.calculate_action import calculate_action
 from rest_framework import request, serializers, viewsets, authentication
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.exceptions import AuthenticationFailed
 from django.db.models import Q, Count, Prefetch, functions, QuerySet, OuterRef, Exists, Value, BooleanField
 from django.db import connection
 from django.utils.timezone import now
@@ -52,24 +51,6 @@ class ActionSerializer(serializers.HyperlinkedModelSerializer):
     def get_count(self, action: Action) -> Optional[int]:
         if hasattr(action, 'count'):
             return action.count  # type: ignore
-        return None
-
-
-class TemporaryTokenAuthentication(authentication.BaseAuthentication):
-    def authenticate(self, request: request.Request):
-        # if the Origin is different, the only authentication method should be temporary_token
-        # This happens when someone is trying to create actions from the editor on their own website
-        if request.headers.get('Origin') and urlsplit(request.headers['Origin']).netloc not in urlsplit(request.build_absolute_uri('/')).netloc:
-            if not request.GET.get('temporary_token'):
-                raise AuthenticationFailed(detail="No temporary_token set. " +
-                    "That means you're either trying to access this API from a different site, " +
-                    "or it means your proxy isn\'t sending the correct headers. " +
-                    "See https://posthog.com/docs/deployment/running-behind-proxy for more information.")
-        if request.GET.get('temporary_token'):
-            user = User.objects.filter(temporary_token=request.GET.get('temporary_token'))
-            if not user.exists():
-                raise AuthenticationFailed(detail='User doesnt exist')
-            return (user.first(), None)
         return None
 
 def get_actions(queryset: QuerySet, params: dict, team_id: int) -> QuerySet:
@@ -228,7 +209,7 @@ class ActionViewSet(viewsets.ModelViewSet):
                 except Action.DoesNotExist:
                     return Response([])
                 filtered_events = process_entity_for_events(entity, team_id=team.pk, order_by=None).filter(filter_events(team.pk, filter, entity))
-        
+
         people = _calculate_people(events=filtered_events)
         return Response([people])
 
@@ -277,9 +258,9 @@ def calculate_trends(filter: Filter, params: dict, team_id: int, actions: QueryS
                 params=params,
                 team_id=team_id
             )
-            
+
             compared_trend_entity = convert_to_comparison(compared_trend_entity, compared_filter, '{} - {}'.format(entity.name, 'previous'))
-            entities_list.extend(compared_trend_entity) 
+            entities_list.extend(compared_trend_entity)
         else:
             entities_list.extend(trend_entity)
     return entities_list
@@ -433,11 +414,11 @@ def stickiness(filtered_events: QuerySet, entity: Entity, filter: Filter, team_i
 def breakdown_label(entity: Entity, value: Union[str, int]) -> Dict[str, Optional[Union[str, int]]]:
     ret_dict: Dict[str, Optional[Union[str, int]]] = {}
     if not value or not isinstance(value, str) or 'cohort_' not in value:
-        ret_dict['label'] = '{} - {}'.format(entity.name, value if value and value != "None" and value != "nan" else 'Other') 
+        ret_dict['label'] = '{} - {}'.format(entity.name, value if value and value != "None" and value != "nan" else 'Other')
         ret_dict['breakdown_value'] = value if value and not pd.isna(value) else None
     else:
         if value == 'cohort_all':
-            ret_dict['label'] = '{} - all users'.format(entity.name) 
+            ret_dict['label'] = '{} - all users'.format(entity.name)
             ret_dict['breakdown_value'] = 'all'
         else:
             cohort = Cohort.objects.get(pk=value.replace('cohort_', ''))

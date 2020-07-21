@@ -30,6 +30,10 @@ from rest_framework.decorators import action
 from django.db.models import (
     Q,
     Count,
+    Sum,
+    Avg,
+    Min,
+    Max,
     Prefetch,
     functions,
     QuerySet,
@@ -37,7 +41,10 @@ from django.db.models import (
     Exists,
     Value,
     BooleanField,
+    FloatField,
 )
+from django.db.models.expressions import RawSQL
+from django.db.models.functions import Cast
 from django.db import connection
 from django.utils.timezone import now
 from typing import Any, List, Dict, Optional, Tuple, Union
@@ -510,9 +517,24 @@ def aggregate_by_interval(
     return dates_filled
 
 
-def process_math(query: QuerySet, entity: Entity):
+def process_math(query: QuerySet, entity: Entity) -> QuerySet:
+    math_to_aggregate_function = {"sum": Sum, "avg": Avg, "min": Min, "max": Max}
     if entity.math == "dau":
+        # In daily active users mode count only up to 1 event per user per day
         query = query.annotate(count=Count("person_id", distinct=True))
+    elif entity.math in math_to_aggregate_function:
+        # Run relevant aggregate function on specified event property, casting it to a double
+        query = query.annotate(
+            count=math_to_aggregate_function[entity.math](
+                Cast(RawSQL('"posthog_event"."properties"->>%s', (entity.math_property,)), output_field=FloatField())
+            )
+        )
+        # Skip over events where the specified property is not set or not a number
+        # It may not be ideally clear to the user what events were skipped,
+        # but in the absence of typing, this is safe, cheap, and frictionless
+        query = query.extra(
+            where=['jsonb_typeof("posthog_event"."properties"->%s) = \'number\''], params=[entity.math_property]
+        )
     return query
 
 

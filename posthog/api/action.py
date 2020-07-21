@@ -209,9 +209,15 @@ class ActionViewSet(viewsets.ModelViewSet):
     def retention(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
         team = request.user.team_set.get()
         properties = request.GET.get("properties", "{}")
+        start_entity_data = request.GET.get("start_entity", None)
+        start_entity: Optional[Entity] = None
+        if start_entity_data:
+            data = json.loads(start_entity_data)
+            start_entity = Entity({"id": data["id"], "type": data["type"]})
+
         filter = Filter(data={"properties": json.loads(properties)})
         filter._date_from = "-11d"
-        result = calculate_retention(filter, team)
+        result = calculate_retention(filter, team, start_entity=start_entity)
         return Response(result)
 
     @action(methods=["GET"], detail=False)
@@ -352,11 +358,11 @@ def calculate_trends(filter: Filter, params: dict, team_id: int, actions: QueryS
     return entities_list
 
 
-def calculate_retention(filter: Filter, team: Team, total_days=11):
+def calculate_retention(filter: Filter, team: Team, start_entity: Optional[Entity] = None, total_days=11):
     date_from: datetime.datetime = filter.date_from  # type: ignore
     filter._date_to = (date_from + timedelta(days=total_days)).isoformat()
     labels_format = "%a. %-d %B"
-    resultset = Event.objects.query_retention(filter, team)
+    resultset = Event.objects.query_retention(filter, team, start_entity=start_entity)
 
     result = {
         "data": [

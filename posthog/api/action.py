@@ -413,9 +413,17 @@ def group_events_to_date(
 ) -> Dict[str, Dict[datetime.datetime, int]]:
     response = {}
 
+    if interval == "day":
+        if date_from:
+            date_from = date_from.replace(hour=0, minute=0, second=0, microsecond=0)
+        if date_to:
+            date_to = date_to.replace(hour=0, minute=0, second=0, microsecond=0)
+
     time_index = pd.date_range(date_from, date_to, freq=FREQ_MAP[interval])
     if len(aggregates) > 0:
         dataframe = build_dataframe(aggregates, interval, breakdown)
+
+        # extract top 20 if more than 20 breakdowns
         if breakdown and dataframe["breakdown"].nunique() > 20:
             counts = (
                 dataframe.groupby(["breakdown"])["count"]
@@ -439,6 +447,7 @@ def group_events_to_date(
         dataframe = pd.DataFrame([], index=time_index)
         dataframe = dataframe.fillna(0)
         response["total"] = {key: value[0] if len(value) > 0 else 0 for key, value in dataframe.iterrows()}
+
     return response
 
 
@@ -527,14 +536,14 @@ def process_math(query: QuerySet, entity: Entity) -> QuerySet:
         # Run relevant aggregate function on specified event property, casting it to a double
         query = query.annotate(
             count=math_to_aggregate_function[entity.math](
-                Cast(RawSQL('"posthog_event"."properties"->>%s', (entity.math_property,)), output_field=FloatField())
+                Cast(RawSQL('"posthog_event"."properties"->>%s', (entity.math_property,)), output_field=FloatField(),)
             )
         )
         # Skip over events where the specified property is not set or not a number
         # It may not be ideally clear to the user what events were skipped,
         # but in the absence of typing, this is safe, cheap, and frictionless
         query = query.extra(
-            where=['jsonb_typeof("posthog_event"."properties"->%s) = \'number\''], params=[entity.math_property]
+            where=['jsonb_typeof("posthog_event"."properties"->%s) = \'number\''], params=[entity.math_property],
         )
     return query
 

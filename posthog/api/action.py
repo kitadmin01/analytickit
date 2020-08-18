@@ -165,6 +165,8 @@ class ActionViewSet(viewsets.ModelViewSet):
                     )
 
         serializer = ActionSerializer(action, context={"request": request})
+        if 'created_by' in request.data:
+            del request.data['created_by']
         serializer.update(action, request.data)
         action.is_calculating = True
         calculate_action.delay(action_id=action.pk)

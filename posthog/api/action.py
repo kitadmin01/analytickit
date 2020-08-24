@@ -6,7 +6,9 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
+from celery.result import AsyncResult
 from dateutil.relativedelta import relativedelta
+from django.core.cache import cache
 from django.db import connection
 from django.db.models import (
     Avg,
@@ -32,8 +34,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from posthog.api.user import UserSerializer
+from posthog.celery import update_cache_item_task
 from posthog.constants import TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS, TRENDS_CUMULATIVE, TRENDS_STICKINESS
-from posthog.decorators import TRENDS_ENDPOINT, cached_function
+from posthog.decorators import FUNNEL_ENDPOINT, TRENDS_ENDPOINT, cached_function
 from posthog.models import (
     Action,
     ActionStep,
@@ -47,9 +50,9 @@ from posthog.models import (
     Team,
     User,
 )
-from posthog.queries import base, retention, stickiness, trends
+from posthog.queries import base, funnel, retention, stickiness, trends
 from posthog.tasks.calculate_action import calculate_action
-from posthog.utils import TemporaryTokenAuthentication, append_data, get_compare_period_dates
+from posthog.utils import TemporaryTokenAuthentication, append_data, generate_cache_key, get_compare_period_dates
 
 from .person import PersonSerializer
 
@@ -214,6 +217,37 @@ class ActionViewSet(viewsets.ModelViewSet):
         filter._date_from = "-11d"
         result = retention.Retention().run(filter, team)
         return Response({"data": result})
+
+    @action(methods=["GET"], detail=False)
+    def funnel(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+        team = request.user.team_set.get()
+        refresh = request.GET.get("refresh", None)
+        dashboard_id = request.GET.get("from_dashboard", None)
+
+        filter = Filter(request=request)
+        cache_key = generate_cache_key("{}_{}".format(filter.toJSON(), team.pk))
+        result = {"loading": True}
+
+        if refresh:
+            cache.delete(cache_key)
+        else:
+            cached_result = cache.get(cache_key)
+            if cached_result:
+                task_id = cached_result.get("task_id", None)
+                if not task_id:
+                    return Response(cached_result["result"])
+                else:
+                    return Response(result)
+
+        payload = {"filter": filter.toJSON(), "team_id": team.pk}
+        task = update_cache_item_task.delay(cache_key, FUNNEL_ENDPOINT, payload)
+        task_id = task.id
+        cache.set(cache_key, {"task_id": task_id}, 180)  # task will be live for 3 minutes
+
+        if dashboard_id:
+            DashboardItem.objects.filter(pk=dashboard_id).update(last_refresh=datetime.datetime.now())
+
+        return Response(result)
 
     @action(methods=["GET"], detail=False)
     def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:

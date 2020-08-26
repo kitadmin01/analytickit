@@ -28,10 +28,13 @@ from django.db.models import (
 )
 from django.db.models.expressions import RawSQL, Subquery
 from django.db.models.functions import Cast
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 from django.utils.timezone import now
 from rest_framework import authentication, request, serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_hooks.signals import raw_hook_event
 
 from posthog.api.user import UserSerializer
 from posthog.celery import update_cache_item_task
@@ -52,7 +55,13 @@ from posthog.models import (
 )
 from posthog.queries import base, funnel, retention, stickiness, trends
 from posthog.tasks.calculate_action import calculate_action
-from posthog.utils import TemporaryTokenAuthentication, append_data, generate_cache_key, get_compare_period_dates
+from posthog.utils import (
+    PersonalAPIKeyAuthentication,
+    TemporaryTokenAuthentication,
+    append_data,
+    generate_cache_key,
+    get_compare_period_dates,
+)
 
 from .person import PersonSerializer
 
@@ -117,6 +126,7 @@ class ActionViewSet(viewsets.ModelViewSet):
     serializer_class = ActionSerializer
     authentication_classes = [
         TemporaryTokenAuthentication,
+        PersonalAPIKeyAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication,
     ]
@@ -340,3 +350,16 @@ class ActionViewSet(viewsets.ModelViewSet):
 def serialize_people(people: QuerySet, request: request.Request) -> Dict:
     people_dict = [PersonSerializer(person, context={"request": request}).data for person in people]
     return {"people": people_dict, "count": len(people_dict)}
+
+
+@receiver(post_save, dispatch_uid="hook-action-defined")
+def action_defined(sender, instance, created, raw, using, **kwargs):
+    """Trigger action_defined hooks on Action creation."""
+    if isinstance(instance, Action) and created:
+        raw_hook_event.send(
+            sender=None,
+            event_name="action_defined",
+            instance=instance,
+            payload=ActionSerializer(instance).data,
+            user=instance.team,
+        )

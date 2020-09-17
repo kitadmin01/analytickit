@@ -352,10 +352,10 @@ def serialize_people(people: QuerySet, request: request.Request) -> Dict:
     return {"people": people_dict, "count": len(people_dict)}
 
 
-@receiver(post_save, dispatch_uid="hook-action-defined")
+@receiver(post_save, sender=Action, dispatch_uid="hook-action-defined")
 def action_defined(sender, instance, created, raw, using, **kwargs):
     """Trigger action_defined hooks on Action creation."""
-    if isinstance(instance, Action) and created:
+    if created:
         raw_hook_event.send(
             sender=None,
             event_name="action_defined",

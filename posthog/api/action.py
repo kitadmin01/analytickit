@@ -37,6 +37,7 @@ from rest_framework.response import Response
 from rest_hooks.signals import raw_hook_event
 
 from posthog.api.user import UserSerializer
+from posthog.auth import PersonalAPIKeyAuthentication, TemporaryTokenAuthentication
 from posthog.celery import update_cache_item_task
 from posthog.constants import TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS, TRENDS_CUMULATIVE, TRENDS_STICKINESS
 from posthog.decorators import FUNNEL_ENDPOINT, TRENDS_ENDPOINT, cached_function
@@ -55,13 +56,7 @@ from posthog.models import (
 )
 from posthog.queries import base, funnel, retention, stickiness, trends
 from posthog.tasks.calculate_action import calculate_action
-from posthog.utils import (
-    PersonalAPIKeyAuthentication,
-    TemporaryTokenAuthentication,
-    append_data,
-    generate_cache_key,
-    get_compare_period_dates,
-)
+from posthog.utils import generate_cache_key
 
 from .person import PersonSerializer
 

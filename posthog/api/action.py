@@ -130,12 +130,12 @@ class ActionViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         if self.action == "list":  # type: ignore
             queryset = queryset.filter(deleted=False)
-        return get_actions(queryset, self.request.GET.dict(), self.request.user.team_set.get().pk)
+        return get_actions(queryset, self.request.GET.dict(), self.request.user.team.pk)
 
     def create(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
         action, created = Action.objects.get_or_create(
             name=request.data["name"],
-            team=request.user.team_set.get(),
+            team=request.user.team,
             deleted=False,
             defaults={"post_to_slack": request.data.get("post_to_slack", False), "created_by": request.user,},
         )
@@ -151,7 +151,7 @@ class ActionViewSet(viewsets.ModelViewSet):
         return Response(ActionSerializer(action, context={"request": request}).data)
 
     def update(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-        action = Action.objects.get(pk=kwargs["pk"], team=request.user.team_set.get())
+        action = Action.objects.get(pk=kwargs["pk"], team=request.user.team)
 
         # If there's no steps property at all we just ignore it
         # If there is a step property but it's an empty array [], we'll delete all the steps
@@ -194,7 +194,7 @@ class ActionViewSet(viewsets.ModelViewSet):
 
     @cached_function(cache_type=TRENDS_ENDPOINT)
     def _calculate_trends(self, request: request.Request) -> List[Dict[str, Any]]:
-        team = request.user.team_set.get()
+        team = request.user.team
         filter = Filter(request=request)
         if filter.shown_as == "Stickiness":
             result = stickiness.Stickiness().run(filter, team)
@@ -203,13 +203,13 @@ class ActionViewSet(viewsets.ModelViewSet):
 
         dashboard_id = request.GET.get("from_dashboard", None)
         if dashboard_id:
-            DashboardItem.objects.filter(pk=dashboard_id).update(last_refresh=datetime.datetime.now())
+            DashboardItem.objects.filter(pk=dashboard_id).update(last_refresh=now())
 
         return result
 
     @action(methods=["GET"], detail=False)
     def retention(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-        team = request.user.team_set.get()
+        team = request.user.team
         properties = request.GET.get("properties", "{}")
 
         filter = Filter(data={"properties": json.loads(properties)})
@@ -225,7 +225,7 @@ class ActionViewSet(viewsets.ModelViewSet):
 
     @action(methods=["GET"], detail=False)
     def funnel(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-        team = request.user.team_set.get()
+        team = request.user.team
         refresh = request.GET.get("refresh", None)
         dashboard_id = request.GET.get("from_dashboard", None)
 
@@ -250,13 +250,13 @@ class ActionViewSet(viewsets.ModelViewSet):
         cache.set(cache_key, {"task_id": task_id}, 180)  # task will be live for 3 minutes
 
         if dashboard_id:
-            DashboardItem.objects.filter(pk=dashboard_id).update(last_refresh=datetime.datetime.now())
+            DashboardItem.objects.filter(pk=dashboard_id).update(last_refresh=now())
 
         return Response(result)
 
     @action(methods=["GET"], detail=False)
     def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-        team = request.user.team_set.get()
+        team = request.user.team
         filter = Filter(request=request)
         offset = int(request.GET.get("offset", 0))
 

@@ -256,10 +256,6 @@ class ActionViewSet(viewsets.ModelViewSet):
 
     @action(methods=["GET"], detail=False)
     def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-        result = self.get_people(request)
-        return Response(result)
-
-    def get_people(self, request: request.Request) -> Union[Dict[str, Any], List]:
         team = request.user.team
         filter = Filter(request=request)
         offset = int(request.GET.get("offset", 0))
@@ -323,7 +319,7 @@ class ActionViewSet(viewsets.ModelViewSet):
                 try:
                     action = actions.get(pk=entity.id)
                 except Action.DoesNotExist:
-                    return []
+                    return Response([])
                 filtered_events = base.process_entity_for_events(entity, team_id=team.pk, order_by=None).filter(
                     base.filter_events(team.pk, filter, entity)
                 )
@@ -343,7 +339,7 @@ class ActionViewSet(viewsets.ModelViewSet):
         else:
             next_url = None
 
-        return {"results": [people], "next": next_url, "previous": current_url[1:]}
+        return Response({"results": [people], "next": next_url, "previous": current_url[1:]})
 
 
 def serialize_people(people: QuerySet, request: request.Request) -> Dict:

@@ -33,6 +33,7 @@ from django.dispatch import receiver
 from django.utils.timezone import now
 from rest_framework import authentication, request, serializers, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_hooks.signals import raw_hook_event
 
@@ -54,6 +55,7 @@ from posthog.models import (
     Team,
     User,
 )
+from posthog.permissions import ProjectMembershipNecessaryPermissions
 from posthog.queries import base, funnel, retention, stickiness, trends
 from posthog.tasks.calculate_action import calculate_action
 from posthog.utils import generate_cache_key
@@ -125,6 +127,7 @@ class ActionViewSet(viewsets.ModelViewSet):
         authentication.SessionAuthentication,
         authentication.BasicAuthentication,
     ]
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -198,6 +201,7 @@ class ActionViewSet(viewsets.ModelViewSet):
     @cached_function(cache_type=CacheType.TRENDS)
     def _calculate_trends(self, request: request.Request) -> List[Dict[str, Any]]:
         team = request.user.team
+        assert team is not None
         filter = Filter(request=request)
         if filter.shown_as == "Stickiness":
             result = stickiness.Stickiness().run(filter, team)
@@ -213,6 +217,7 @@ class ActionViewSet(viewsets.ModelViewSet):
     @action(methods=["GET"], detail=False)
     def retention(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
         team = request.user.team
+        assert team is not None
         properties = request.GET.get("properties", "{}")
 
         filter = Filter(data={"properties": json.loads(properties)})
@@ -229,6 +234,7 @@ class ActionViewSet(viewsets.ModelViewSet):
     @action(methods=["GET"], detail=False)
     def funnel(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
         team = request.user.team
+        assert team is not None
         refresh = request.GET.get("refresh", None)
         dashboard_id = request.GET.get("from_dashboard", None)
 
@@ -264,6 +270,7 @@ class ActionViewSet(viewsets.ModelViewSet):
 
     def get_people(self, request: request.Request) -> Union[Dict[str, Any], List]:
         team = request.user.team
+        assert team is not None
         filter = Filter(request=request)
         offset = int(request.GET.get("offset", 0))
 

@@ -173,7 +173,7 @@ class ActionViewSet(StructuredViewSetMixin, viewsets.ModelViewSet):
         result = self._calculate_trends(request)
         return Response(result)
 
-    @cached_function(cache_type=CacheType.TRENDS)
+    @cached_function()
     def _calculate_trends(self, request: request.Request) -> List[Dict[str, Any]]:
         team = self.team
         filter = Filter(request=request)

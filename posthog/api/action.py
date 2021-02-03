@@ -34,7 +34,7 @@ from posthog.models.filters.stickiness_filter import StickinessFilter
 from posthog.permissions import ProjectMembershipNecessaryPermissions
 from posthog.queries import base, retention, stickiness, trends
 from posthog.tasks.calculate_action import calculate_action
-from posthog.utils import generate_cache_key
+from posthog.utils import generate_cache_key, get_safe_cache
 
 from .person import PersonSerializer, paginated_result
 
@@ -230,7 +230,7 @@ class ActionViewSet(StructuredViewSetMixin, viewsets.ModelViewSet):
         if refresh:
             cache.delete(cache_key)
         else:
-            cached_result = cache.get(cache_key)
+            cached_result = get_safe_cache(cache_key)
             if cached_result:
                 task_id = cached_result.get("task_id", None)
                 if not task_id:

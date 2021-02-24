@@ -15,12 +15,13 @@ import {
     ACTION_TYPE,
     ShownAsValue,
 } from 'lib/constants'
-import { ViewType, insightLogic } from './insightLogic'
-import { insightHistoryLogic } from './InsightHistoryPanel/insightHistoryLogic'
+import { ViewType, insightLogic } from '../insights/insightLogic'
+import { insightHistoryLogic } from '../insights/InsightHistoryPanel/insightHistoryLogic'
 import { SESSIONS_WITH_RECORDINGS_FILTER } from 'scenes/sessions/filters/constants'
+import { cohortLogic } from 'scenes/persons/cohortLogic'
 import { ActionType, EntityType, FilterType, PersonType, PropertyFilter } from '~/types'
 import { trendsLogicType } from './trendsLogicType'
-import { ToastId } from 'react-toastify'
+import { toast, ToastId } from 'react-toastify'
 import { dashboardItemsModel } from '~/models/dashboardItemsModel'
 
 interface ActionFilter {
@@ -132,7 +133,6 @@ export const trendsLogic = kea<trendsLogicType<FilterType, ActionType, TrendPeop
 
     connect: {
         values: [userLogic, ['eventNames'], actionsModel, ['actions']],
-        actions: [insightHistoryLogic, ['createInsight']],
     },
 
     loaders: ({ values, props }) => ({
@@ -175,7 +175,9 @@ export const trendsLogic = kea<trendsLogicType<FilterType, ActionType, TrendPeop
         setDisplay: (display) => ({ display }),
 
         loadPeople: (action, label, day, breakdown_value) => ({ action, label, day, breakdown_value }),
+        saveCohortWithFilters: (cohortName: string) => ({ cohortName }),
         loadMorePeople: true,
+        refreshCohort: true,
         setLoadingMorePeople: (status) => ({ status }),
         setShowingPeople: (isShowing) => ({ isShowing }),
         setPeople: (people, count, action, label, day, breakdown_value, next) => ({
@@ -236,7 +238,7 @@ export const trendsLogic = kea<trendsLogicType<FilterType, ActionType, TrendPeop
                 }
 
                 const { action, day, breakdown_value } = people
-                const properties = filters.properties || []
+                const properties = [...(filters.properties || []), ...(action.properties || [])]
                 if (filters.breakdown && filters.breakdown_type && breakdown_value) {
                     properties.push({
                         key: filters.breakdown,
@@ -280,6 +282,35 @@ export const trendsLogic = kea<trendsLogicType<FilterType, ActionType, TrendPeop
     listeners: ({ actions, values, props }) => ({
         setDisplay: async ({ display }) => {
             actions.setFilters({ display })
+        },
+        refreshCohort: () => {
+            cohortLogic({
+                cohort: {
+                    id: 'new',
+                    groups: [],
+                },
+            }).actions.setCohort({
+                id: 'new',
+                groups: [],
+            })
+        },
+        saveCohortWithFilters: ({ cohortName }) => {
+            if (values.people) {
+                const { label, action, day, breakdown_value } = values.people
+                const filterParams = parsePeopleParams({ label, action, day, breakdown_value }, values.filters)
+                const cohortParams = {
+                    is_static: true,
+                    name: cohortName,
+                }
+                cohortLogic({
+                    cohort: {
+                        id: 'new',
+                        groups: [],
+                    },
+                }).actions.saveCohort(cohortParams, filterParams)
+            } else {
+                toast.error('Error creating cohort')
+            }
         },
         loadPeople: async ({ label, action, day, breakdown_value }, breakpoint) => {
             let people = []
@@ -334,7 +365,7 @@ export const trendsLogic = kea<trendsLogicType<FilterType, ActionType, TrendPeop
         },
         loadResultsSuccess: () => {
             if (!props.dashboardItemId) {
-                actions.createInsight({
+                insightHistoryLogic.actions.createInsight({
                     ...values.filters,
                     insight: values.filters.session ? ViewType.SESSIONS : ViewType.TRENDS,
                 })

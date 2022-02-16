@@ -345,23 +345,6 @@ class ActionViewSet(TaggedItemViewSetMixin, StructuredViewSetMixin, viewsets.Mod
         return Response(result)
 
 
-def filter_by_type(entity: Entity, team: Team, filter: Filter) -> QuerySet:
-    events: Union[EventManager, QuerySet] = Event.objects.none()
-    if filter.session:
-        events = Event.objects.filter(team=team).filter(base.filter_events(team.pk, filter)).add_person_id(team.pk)
-    else:
-        if entity.type == TREND_FILTER_TYPE_ACTIONS:
-            actions = Action.objects.filter(deleted=False)
-            try:
-                actions.get(pk=entity.id)
-            except Action.DoesNotExist:
-                return events
-        events = base.process_entity_for_events(entity, team_id=team.pk, order_by=None).filter(
-            base.filter_events(team.pk, filter, entity)
-        )
-    return events
-
-
 def _filter_cohort_breakdown(events: QuerySet, filter: Filter) -> QuerySet:
     if filter.breakdown_type == "cohort" and filter.breakdown_value != "all":
         cohort = Cohort.objects.get(pk=int(cast(str, filter.breakdown_value)))

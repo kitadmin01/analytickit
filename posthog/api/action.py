@@ -249,7 +249,7 @@ class ActionViewSet(TaggedItemViewSetMixin, StructuredViewSetMixin, viewsets.Mod
     @action(methods=["GET"], detail=True)
     def count(self, request: request.Request, **kwargs) -> Response:
         action = self.get_object()
-        query, params = format_action_filter(action)
+        query, params = format_action_filter(team_id=action.team_id, action=action)
         if query == "":
             return Response({"count": 0})
 

@@ -1,15 +1,13 @@
-import json
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, List, Optional, cast
 
 from dateutil.relativedelta import relativedelta
 from django.core.cache import cache
-from django.db.models import Count, Exists, OuterRef, Prefetch, QuerySet
+from django.db.models import Count, Prefetch
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import now
 from rest_framework import authentication, request, serializers, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
@@ -23,28 +21,10 @@ from posthog.api.routing import StructuredViewSetMixin
 from posthog.api.shared import UserBasicSerializer
 from posthog.api.utils import get_target_entity
 from posthog.auth import PersonalAPIKeyAuthentication, TemporaryTokenAuthentication
-from posthog.celery import update_cache_item_task
-from posthog.constants import INSIGHT_STICKINESS, TREND_FILTER_TYPE_ACTIONS, TREND_FILTER_TYPE_EVENTS, TRENDS_STICKINESS
-from posthog.decorators import CacheType, cached_function
+from posthog.constants import TREND_FILTER_TYPE_EVENTS
 from posthog.event_usage import report_user_action
-from posthog.models import (
-    Action,
-    ActionStep,
-    CohortPeople,
-    Entity,
-    Event,
-    Filter,
-    Insight,
-    Person,
-    RetentionFilter,
-)
-from posthog.models.cohort import Cohort
-from posthog.models.event import EventManager
-from posthog.models.filters.stickiness_filter import StickinessFilter
-from posthog.models.team import Team
+from posthog.models import Action, ActionStep, Filter, Person
 from posthog.permissions import ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission
-from posthog.queries import base, retention, stickiness, trends
-from posthog.utils import generate_cache_key, get_safe_cache, should_refresh
 
 from .person import get_person_name
 from .tagged_item import TaggedItemSerializerMixin, TaggedItemViewSetMixin

@@ -6,7 +6,7 @@ import { teamLogic } from 'scenes/teamLogic'
 function IOSInstallSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Ruby}>
-            {'pod "PostHog", "~> 1.0" # Cocoapods \n# OR \ngithub "posthog/posthog-ios" # Carthage'}
+            {'pod "analytickit", "~> 1.0" # Cocoapods \n# OR \ngithub "analytickit/analytickit-ios" # Carthage'}
         </CodeSnippet>
     )
 }
@@ -16,7 +16,7 @@ function IOS_OBJ_C_SetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.ObjectiveC}>
-            {`#import <PostHog/PHGPostHog.h>\n#import <PostHog/PHGPostHogConfiguration.h>\n\nPHGPostHogConfiguration *configuration = [PHGPostHogConfiguration configurationWithApiKey:@"${currentTeam?.api_token}" host:@"${window.location.origin}"];\n\nconfiguration.captureApplicationLifecycleEvents = YES; // Record certain application events automatically!\nconfiguration.recordScreenViews = YES; // Record screen views automatically!\n\n[PHGPostHog setupWithConfiguration:configuration];`}
+            {`#import <analytickit/PHGanalytickit.h>\n#import <analytickit/PHGanalytickitConfiguration.h>\n\nPHGanalytickitConfiguration *configuration = [PHGanalytickitConfiguration configurationWithApiKey:@"${currentTeam?.api_token}" host:@"${window.location.origin}"];\n\nconfiguration.captureApplicationLifecycleEvents = YES; // Record certain application events automatically!\nconfiguration.recordScreenViews = YES; // Record screen views automatically!\n\n[PHGanalytickit setupWithConfiguration:configuration];`}
         </CodeSnippet>
     )
 }
@@ -26,7 +26,7 @@ function IOS_SWIFT_SetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.Swift}>
-            {`import PostHog\n\nlet configuration = PHGPostHogConfiguration(apiKey: "${currentTeam?.api_token}", host: "${window.location.origin}")\n\nconfiguration.captureApplicationLifecycleEvents = true; // Record certain application events automatically!\nconfiguration.recordScreenViews = true; // Record screen views automatically!\n\nPHGPostHog.setup(with: configuration)\nlet posthog = PHGPostHog.shared()`}
+            {`import analytickit\n\nlet configuration = PHGanalytickitConfiguration(apiKey: "${currentTeam?.api_token}", host: "${window.location.origin}")\n\nconfiguration.captureApplicationLifecycleEvents = true; // Record certain application events automatically!\nconfiguration.recordScreenViews = true; // Record screen views automatically!\n\nPHGanalytickit.setup(with: configuration)\nlet analytickit = PHGanalytickit.shared()`}
         </CodeSnippet>
     )
 }
@@ -34,13 +34,13 @@ function IOS_SWIFT_SetupSnippet(): JSX.Element {
 function IOS_OBJ_C_CaptureSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.ObjectiveC}>
-            {'[[PHGPostHog sharedPostHog] capture:@"Test Event"];'}
+            {'[[PHGanalytickit sharedanalytickit] capture:@"Test Event"];'}
         </CodeSnippet>
     )
 }
 
 function IOS_SWIFT_CaptureSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.Swift}>{'posthog.capture("Test Event")'}</CodeSnippet>
+    return <CodeSnippet language={Language.Swift}>{'analytickit.capture("Test Event")'}</CodeSnippet>
 }
 
 export function IOSInstructions(): JSX.Element {

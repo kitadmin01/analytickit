@@ -25,7 +25,7 @@ export enum TeamMembershipLevel {
     Admin = 8,
 }
 
-/** See posthog/api/organization.py for details. */
+/** See analytickit/api/organization.py for details. */
 export enum PluginsAccessLevel {
     None = 0,
     Config = 3,
@@ -126,14 +126,14 @@ export const FEATURE_FLAGS = {
     TOOLBAR_LAUNCH_SIDE_ACTION: 'toolbar-launch-side-action', // owner: @pauldambra,
     FEATURE_FLAG_EXPERIENCE_CONTINUITY: 'feature-flag-experience-continuity', // owner: @neilkakkar
     // Re-enable person modal CSV downloads when frontend can support new entity properties
-    PERSON_MODAL_EXPORTS: 'person-modal-exports', // hot potato see https://github.com/PostHog/posthog/pull/10824
+    PERSON_MODAL_EXPORTS: 'person-modal-exports', // hot potato see https://github.com/analytickit/analytickit/pull/10824
     BILLING_LOCK_EVERYTHING: 'billing-lock-everything', // owner @timgl
     IN_APP_PROMPTS_EXPERIMENT: 'IN_APP_PROMPTS_EXPERIMENT', // owner: @kappa90
     SESSION_RECORDINGS_PLAYER_V3: 'session-recording-player-v3', // owner @alexkim205
 }
 
 /** Which self-hosted plan's features are available with Cloud's "Standard" plan (aka card attached). */
-export const POSTHOG_CLOUD_STANDARD_PLAN = LicensePlan.Scale
+export const analytickit_CLOUD_STANDARD_PLAN = LicensePlan.Scale
 export const FEATURE_MINIMUM_PLAN: Record<AvailableFeature, LicensePlan> = {
     [AvailableFeature.ZAPIER]: LicensePlan.Scale,
     [AvailableFeature.ORGANIZATIONS_PROJECTS]: LicensePlan.Scale,
@@ -187,7 +187,7 @@ export const SSO_PROVIDER_NAMES: Record<SSOProviders, string> = {
 // TODO: Support checking minimum plan required for specific feature and highlight the relevant plan in the
 // pricing page (or billing page). Requires updating the pricing page to support this highlighting first.
 export const UPGRADE_LINK = (cloud?: boolean): { url: string; target?: '_blank' } =>
-    cloud ? { url: urls.organizationBilling() } : { url: 'https://posthog.com/pricing', target: '_blank' }
+    cloud ? { url: urls.organizationBilling() } : { url: 'https://analytickit.com/pricing', target: '_blank' }
 
 export const DOMAIN_REGEX = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/
 export const SECURE_URL_REGEX = /^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gi

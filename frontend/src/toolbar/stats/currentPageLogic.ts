@@ -1,9 +1,9 @@
-import { kea } from 'kea'
-import type { currentPageLogicType } from './currentPageLogicType'
+import{kea}from'kea'
+import type {currentPageLogicType}from './currentPageLogicType'
 
 export const currentPageLogic = kea<currentPageLogicType>({
-    path: ['toolbar', 'stats', 'currentPageLogic'],
-    actions: () => ({
+path: ['toolbar', 'stats', 'currentPageLogic'],
+actions:() => ({
         setHref: (href: string) => ({ href }),
         setWildcardHref: (href: string) => ({ href }),
     }),

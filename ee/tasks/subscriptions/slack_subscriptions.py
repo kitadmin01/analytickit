@@ -3,13 +3,13 @@ from typing import Dict, List
 import structlog
 from django.conf import settings
 
-from posthog.models.exported_asset import ExportedAsset
-from posthog.models.integration import Integration, SlackIntegration
-from posthog.models.subscription import Subscription
+from analytickit.models.exported_asset import ExportedAsset
+from analytickit.models.integration import Integration, SlackIntegration
+from analytickit.models.subscription import Subscription
 
 logger = structlog.get_logger(__name__)
 
-UTM_TAGS_BASE = "utm_source=posthog&utm_campaign=subscription_report"
+UTM_TAGS_BASE = "utm_source=analytickit&utm_campaign=subscription_report"
 
 
 def _block_for_asset(asset: ExportedAsset) -> Dict:
@@ -25,7 +25,8 @@ def _block_for_asset(asset: ExportedAsset) -> Dict:
 
 
 def send_slack_subscription_report(
-    subscription: Subscription, assets: List[ExportedAsset], total_asset_count: int, is_new_subscription: bool = False
+        subscription: Subscription, assets: List[ExportedAsset], total_asset_count: int,
+        is_new_subscription: bool = False
 ) -> None:
     utm_tags = f"{UTM_TAGS_BASE}&utm_medium=slack"
 
@@ -47,7 +48,7 @@ def send_slack_subscription_report(
     first_asset, *other_assets = assets
 
     if is_new_subscription:
-        title = f"This channel has been subscribed to the {resource_info.kind} *{resource_info.name}* on PostHog! 🎉"
+        title = f"This channel has been subscribed to the {resource_info.kind} *{resource_info.name}* on analytickit! 🎉"
         title += f"\nThis subscription is {subscription.summary}. The next one will be sent on {subscription.next_delivery_date.strftime('%A %B %d, %Y')}"
     else:
         title = f"Your subscription to the {resource_info.kind} *{resource_info.name}* is ready! 🎉"
@@ -67,7 +68,7 @@ def send_slack_subscription_report(
                 "elements": [
                     {
                         "type": "button",
-                        "text": {"type": "plain_text", "text": "View in PostHog"},
+                        "text": {"type": "plain_text", "text": "View in analytickit"},
                         "url": f"{resource_info.url}?{utm_tags}",
                     },
                     {
@@ -99,7 +100,7 @@ def send_slack_subscription_report(
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"Showing {len(assets)} of {total_asset_count} Insights. <{resource_info.url}?{utm_tags}|View the rest in PostHog>",
+                            "text": f"Showing {len(assets)} of {total_asset_count} Insights. <{resource_info.url}?{utm_tags}|View the rest in analytickit>",
                         },
                     }
                 ],

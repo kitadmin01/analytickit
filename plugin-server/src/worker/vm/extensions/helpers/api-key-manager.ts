@@ -1,17 +1,17 @@
-import { DB } from '../../../../utils/db/db'
-import { timeoutGuard } from '../../../../utils/db/utils'
-import { generateRandomToken, getByAge, UUIDT } from '../../../../utils/utils'
-import { OrganizationMembershipLevel, RawOrganization } from './../../../../types'
+import{DB}from'../../../../utils/db/db'
+import {timeoutGuard}from '../../../../utils/db/utils'
+import {generateRandomToken, getByAge, UUIDT}from '../../../../utils/utils'
+import {OrganizationMembershipLevel, RawOrganization}from './../../../../types'
 
-type PluginsApiKeyCache<T> = Map<RawOrganization['id'], [T, number]>
+type PluginsApiKeyCache <T> = Map<RawOrganization['id'], [T, number]>
 
-const POSTHOG_BOT_USER_EMAIL_DOMAIN = 'posthogbot.user'
+const analytickit_BOT_USER_EMAIL_DOMAIN = 'analytickitbot.user'
 
 export class PluginsApiKeyManager {
-    db: DB
-    pluginsApiKeyCache: PluginsApiKeyCache<string | null>
+db: DB
+pluginsApiKeyCache: PluginsApiKeyCache < string | null>
 
-    constructor(db: DB) {
+constructor(db: DB) {
         this.db = db
         this.pluginsApiKeyCache = new Map()
     }
@@ -38,14 +38,14 @@ export class PluginsApiKeyManager {
         try {
             let key: string | null = null
             const userResult = await this.db.postgresQuery(
-                `SELECT id FROM posthog_user WHERE current_organization_id = $1 AND email LIKE $2`,
-                [organizationId, `%@${POSTHOG_BOT_USER_EMAIL_DOMAIN}`],
+                `SELECT id FROM analytickit_user WHERE current_organization_id = $1 AND email LIKE $2`,
+                [organizationId, `%@${analytickit_BOT_USER_EMAIL_DOMAIN}`],
                 'fetchPluginsUser'
-            )
+)
 
-            if (userResult.rowCount < 1) {
+if (userResult.rowCount < 1) {
                 const botUserEmailId = Math.round(Math.random() * 100000000)
-                const botUserEmail = `${botUserEmailId}@${POSTHOG_BOT_USER_EMAIL_DOMAIN}`
+                const botUserEmail = `${botUserEmailId}@${analytickit_BOT_USER_EMAIL_DOMAIN}`
 
                 // No user yet, provision a user and a key
                 const newUserResult = await this.db.createUser({
@@ -68,13 +68,13 @@ export class PluginsApiKeyManager {
                 // User exists, check if the key does too
                 const userId = userResult.rows[0].id
                 const personalApiKeyResult = await this.db.postgresQuery(
-                    'SELECT value FROM posthog_personalapikey WHERE user_id = $1',
+                    'SELECT value FROM analytickit_personalapikey WHERE user_id = $1',
                     [userId],
                     'fetchOrCreatePersonalApiKey'
-                )
+)
 
-                // user remains but key was somehow deleted
-                if (!personalApiKeyResult.rows.length || !personalApiKeyResult.rows[0].value) {
+// user remains but key was somehow deleted
+if(!personalApiKeyResult.rows.length || !personalApiKeyResult.rows[0].value) {
                     key = await createNewKey(userId)
                 } else {
                     key = personalApiKeyResult.rows[0].value

@@ -2,7 +2,7 @@ from rest_framework import status
 
 from ee.api.test.base import APILicensedTest
 from ee.models.dashboard_privilege import DashboardPrivilege
-from posthog.models import Dashboard, OrganizationMembership, User
+from analytickit.models import Dashboard, OrganizationMembership, User
 
 
 class TestDashboardCollaboratorsAPI(APILicensedTest):
@@ -48,7 +48,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.post(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/",
-            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT,},
+            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT, },
         )
         response_data = response.json()
 
@@ -67,7 +67,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.post(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/",
-            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT,},
+            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT, },
         )
         response_data = response.json()
 
@@ -84,7 +84,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.post(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/",
-            {"user_uuid": str(self.user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT,},
+            {"user_uuid": str(self.user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT, },
         )
         response_data = response.json()
 
@@ -106,7 +106,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.post(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/",
-            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT,},
+            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT, },
         )
         response_data = response.json()
 
@@ -124,7 +124,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.post(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/",
-            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT,},
+            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT, },
         )
         response_data = response.json()
 
@@ -144,7 +144,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.post(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/",
-            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT,},
+            {"user_uuid": str(other_user.uuid), "level": Dashboard.PrivilegeLevel.CAN_EDIT, },
         )
         response_data = response.json()
 
@@ -166,7 +166,7 @@ class TestDashboardCollaboratorsAPI(APILicensedTest):
 
         response = self.client.patch(
             f"/api/projects/{self.test_dashboard.team_id}/dashboards/{self.test_dashboard.id}/collaborators/{other_user.uuid}",
-            {"level": Dashboard.PrivilegeLevel.CAN_VIEW,},
+            {"level": Dashboard.PrivilegeLevel.CAN_VIEW, },
         )
 
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

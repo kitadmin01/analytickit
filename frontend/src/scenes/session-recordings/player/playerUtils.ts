@@ -1,5 +1,5 @@
-import { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react'
-import { PlayerPosition, RecordingSegment, RecordingStartAndEndTime } from '~/types'
+import{MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent}from 'react'
+import {PlayerPosition, RecordingSegment, RecordingStartAndEndTime}from '~/types'
 
 export const THUMB_SIZE = 15
 export const THUMB_OFFSET = THUMB_SIZE / 2

@@ -49,7 +49,7 @@ import { FEATURE_FLAGS } from 'lib/constants'
 export const eventTaxonomicGroupProps: Pick<TaxonomicFilterGroup, 'getPopupHeader' | 'getIcon'> = {
     getPopupHeader: (eventDefinition: EventDefinition): string => {
         if (!!keyMapping.event[eventDefinition.name]) {
-            return 'PostHog event'
+            return 'analytickit event'
         }
         return `${eventDefinition.verified ? 'Verified' : 'Unverified'} event`
     },
@@ -61,7 +61,7 @@ export const propertyTaxonomicGroupProps = (
 ): Pick<TaxonomicFilterGroup, 'getPopupHeader' | 'getIcon'> => ({
     getPopupHeader: (propertyDefinition: PropertyDefinition): string => {
         if (verified || !!keyMapping.event[propertyDefinition.name]) {
-            return 'PostHog property'
+            return 'analytickit property'
         }
         return 'Property'
     },

@@ -1,4 +1,4 @@
-import { formatAggregationAxisValue, AggregationAxisFormat } from 'scenes/insights/aggregationAxisFormat'
+import{formatAggregationAxisValue, AggregationAxisFormat}from 'scenes/insights/aggregationAxisFormat'
 
 describe('formatAggregationAxisValue', () => {
     const formatTestcases = [
@@ -16,7 +16,7 @@ describe('formatAggregationAxisValue', () => {
         it(`correctly formats "${testcase.candidate}" as ${testcase.expected} when it is a ${testcase.format}`, () => {
             expect(formatAggregationAxisValue(testcase.format as AggregationAxisFormat, testcase.candidate)).toEqual(
                 testcase.expected
-            )
-        })
-    })
+)
+})
+})
 })

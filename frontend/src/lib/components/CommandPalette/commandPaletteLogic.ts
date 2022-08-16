@@ -1,82 +1,82 @@
-import { kea } from 'kea'
-import { router } from 'kea-router'
-import type { commandPaletteLogicType } from './commandPaletteLogicType'
+import{kea}from'kea'
+import {router}from 'kea-router'
+import type {commandPaletteLogicType}from './commandPaletteLogicType'
 import Fuse from 'fuse.js'
-import { dashboardsModel } from '~/models/dashboardsModel'
-import { Parser } from 'expr-eval'
+import {dashboardsModel}from '~/models/dashboardsModel'
+import {Parser} from 'expr-eval'
 import {
-    CommentOutlined,
-    FundOutlined,
-    RiseOutlined,
-    ContainerOutlined,
-    AimOutlined,
-    SmileOutlined,
-    ProjectOutlined,
-    CheckOutlined,
-    TagOutlined,
-    UserOutlined,
-    UsergroupAddOutlined,
-    FlagOutlined,
-    MessageOutlined,
-    TeamOutlined,
-    LinkOutlined,
-    CalculatorOutlined,
-    FunnelPlotOutlined,
-    GatewayOutlined,
-    InteractionOutlined,
-    ExclamationCircleOutlined,
-    KeyOutlined,
-    VideoCameraOutlined,
-    SendOutlined,
-    LogoutOutlined,
-    PlusOutlined,
-    LineChartOutlined,
-    ApiOutlined,
-    DatabaseOutlined,
-    HomeOutlined,
-} from '@ant-design/icons'
-import { DashboardType, InsightType } from '~/types'
+CommentOutlined,
+FundOutlined,
+RiseOutlined,
+ContainerOutlined,
+AimOutlined,
+SmileOutlined,
+ProjectOutlined,
+CheckOutlined,
+TagOutlined,
+UserOutlined,
+UsergroupAddOutlined,
+FlagOutlined,
+MessageOutlined,
+TeamOutlined,
+LinkOutlined,
+CalculatorOutlined,
+FunnelPlotOutlined,
+GatewayOutlined,
+InteractionOutlined,
+ExclamationCircleOutlined,
+KeyOutlined,
+VideoCameraOutlined,
+SendOutlined,
+LogoutOutlined,
+PlusOutlined,
+LineChartOutlined,
+ApiOutlined,
+DatabaseOutlined,
+HomeOutlined,
+}from '@ant-design/icons'
+import {DashboardType, InsightType }from '~/types'
 import api from 'lib/api'
-import { copyToClipboard, isMobile, isURL, sample, uniqueBy } from 'lib/utils'
-import { userLogic } from 'scenes/userLogic'
-import { personalAPIKeysLogic } from '../PersonalAPIKeys/personalAPIKeysLogic'
-import { teamLogic } from 'scenes/teamLogic'
-import posthog from 'posthog-js'
-import { debugCHQueries } from './DebugCHQueries'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import { urls } from 'scenes/urls'
-import { newDashboardLogic } from 'scenes/dashboard/newDashboardLogic'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { FEATURE_FLAGS } from 'lib/constants'
+import {copyToClipboard, isMobile, isURL, sample, uniqueBy}from 'lib/utils'
+import {userLogic} from 'scenes/userLogic'
+import {personalAPIKeysLogic }from '../PersonalAPIKeys/personalAPIKeysLogic'
+import {teamLogic}from 'scenes/teamLogic'
+import analytickit from 'analytickit-js'
+import {debugCHQueries}from './DebugCHQueries'
+import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
+import {urls}from 'scenes/urls'
+import {newDashboardLogic}from 'scenes/dashboard/newDashboardLogic'
+import {featureFlagLogic }from 'lib/logic/featureFlagLogic'
+import {FEATURE_FLAGS}from 'lib/constants'
 
 // If CommandExecutor returns CommandFlow, flow will be entered
 export type CommandExecutor = () => CommandFlow | void
 
 export interface CommandResultTemplate {
-    icon: any // any, because Ant Design icons are some weird ForwardRefExoticComponent type
-    display: string
-    synonyms?: string[]
-    prefixApplied?: string
-    executor?: CommandExecutor | true // true means "just clear input"
-    guarantee?: boolean // show result always and first, regardless of fuzzy search
+icon: any // any, because Ant Design icons are some weird ForwardRefExoticComponent type
+display: string
+synonyms?: string[]
+prefixApplied?: string
+executor?: CommandExecutor | true // true means "just clear input"
+guarantee?: boolean // show result always and first, regardless of fuzzy search
 }
 
 export interface CommandResult extends CommandResultTemplate {
-    source: Command | CommandFlow
+source: Command | CommandFlow
 }
 
 export interface CommandResultDisplayable extends CommandResult {
-    index: number
+index: number
 }
 
 export type CommandResolver = (
-    argument?: string,
-    prefixApplied?: string
+argument?: string,
+prefixApplied?: string
 ) => CommandResultTemplate[] | CommandResultTemplate | null
 
 export interface Command {
-    key: string // Unique command identification key
-    prefixes?: string[] // Command prefixes, e.g. "go to". Prefix-less case is dynamic base command (e.g. Dashboard)
+key: string // Unique command identification key
+prefixes?: string[] // Command prefixes, e.g. "go to".Prefix-less case is dynamic base command (e.g. Dashboard)
     resolver: CommandResolver | CommandResultTemplate[] | CommandResultTemplate // Resolver based on arguments (prefix excluded)
     scope: string
 }
@@ -202,11 +202,11 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
 
     listeners: ({ actions, values }) => ({
         showPalette: () => {
-            posthog.capture('palette shown', { isMobile: isMobile() })
+            analytickit.capture('palette shown', { isMobile: isMobile() })
         },
         togglePalette: () => {
             if (values.isPaletteShown) {
-                posthog.capture('palette shown', { isMobile: isMobile() })
+                analytickit.capture('palette shown', { isMobile: isMobile() })
             }
         },
         executeResult: ({ result }: { result: CommandResult }) => {
@@ -225,7 +225,7 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
             const { resolver, ...cleanedCommand } = cleanedResult.source
             cleanedResult.source = cleanedCommand
             cleanedResult.isMobile = isMobile()
-            posthog.capture('palette command executed', cleanedResult)
+            analytickit.capture('palette command executed', cleanedResult)
         },
         deregisterScope: ({ scope }) => {
             for (const command of Object.values(values.commandRegistrations)) {
@@ -618,8 +618,8 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                                 open(url)
                             },
                         })
-                    )
-                    if (argument && isURL(argument)) {
+)
+if(argument && isURL(argument)) {
                         results.push({
                             icon: LinkOutlined,
                             display: `Open ${argument}`,
@@ -631,10 +631,10 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                     }
                     results.push({
                         icon: LinkOutlined,
-                        display: 'Open PostHog Docs',
+                        display: 'Open analytickit Docs',
                         synonyms: ['technical documentation'],
                         executor: () => {
-                            open('https://posthog.com/docs')
+                            open('https://analytickit.com/docs')
                         },
                     })
                     return results
@@ -700,12 +700,12 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                 resolver: {
                     icon: CommentOutlined,
                     display: 'Share Feedback',
-                    synonyms: ['send opinion', 'ask question', 'message posthog', 'github issue'],
+                    synonyms: ['send opinion', 'ask question', 'message analytickit', 'github issue'],
                     executor: () => ({
                         scope: 'Sharing Feedback',
                         resolver: [
                             {
-                                display: 'Send Message Directly to PostHog',
+                                display: 'Send Message Directly to analytickit',
                                 icon: CommentOutlined,
                                 executor: () => ({
                                     instruction: "What's on your mind?",
@@ -716,7 +716,7 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                                         executor: !argument?.length
                                             ? undefined
                                             : () => {
-                                                  posthog.capture('palette feedback', { message: argument })
+                                                  analytickit.capture('palette feedback', { message: argument })
                                                   return {
                                                       resolver: {
                                                           icon: CheckOutlined,
@@ -732,14 +732,14 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                                 icon: VideoCameraOutlined,
                                 display: 'Schedule Quick Call',
                                 executor: () => {
-                                    open('https://calendly.com/posthog-feedback')
+                                    open('https://calendly.com/analytickit-feedback')
                                 },
                             },
                             {
                                 icon: ExclamationCircleOutlined,
                                 display: 'Create GitHub Issue',
                                 executor: () => {
-                                    open('https://github.com/PostHog/posthog/issues/new/choose')
+                                    open('https://github.com/analytickit/analytickit/issues/new/choose')
                                 },
                             },
                         ],

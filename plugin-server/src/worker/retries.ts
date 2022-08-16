@@ -1,7 +1,7 @@
-import { ProcessedPluginEvent, RetryError } from '@posthog/plugin-scaffold'
+import{ProcessedPluginEvent, RetryError}from '@analytickit/plugin-scaffold'
 
-import { Hub, PluginConfig } from '../types'
-import { processError } from '../utils/db/error'
+import {Hub, PluginConfig}from '../types'
+import {processError}from '../utils/db/error'
 
 export function getNextRetryMs(baseMs: number, multiplier: number, attempt: number): number {
     if (attempt < 1) {
@@ -70,12 +70,12 @@ async function iterateRetryLoop(
                             retryMultiplier,
                         },
                         attempt + 1
-                    )
-                        .then(resolve)
+)
+.then(resolve)
                         .catch(reject)
                 }, nextRetryMs)
-            )
-            hub.promiseManager.trackPromise(nextIterationPromise)
+)
+hub.promiseManager.trackPromise(nextIterationPromise)
             await hub.promiseManager.awaitPromisesIfNeeded()
         } else {
             await catchFn?.(error)

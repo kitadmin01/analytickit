@@ -1,11 +1,11 @@
-import { entityFilterLogic, toLocalFilters } from 'scenes/insights/filters/ActionFilter/entityFilterLogic'
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
+import{entityFilterLogic, toLocalFilters}from 'scenes/insights/filters/ActionFilter/entityFilterLogic'
+import {expectLogic}from 'kea-test-utils'
+import {initKeaTests}from '~/test/init'
 import filtersJson from './__mocks__/filters.json'
 import eventDefinitionsJson from './__mocks__/event_definitions.json'
-import { FilterType } from '~/types'
-import { actionsModel } from '~/models/actionsModel'
-import { useMocks } from '~/mocks/jest'
+import {FilterType}from '~/types'
+import {actionsModel}from '~/models/actionsModel'
+import {useMocks }from '~/mocks/jest'
 
 describe('entityFilterLogic', () => {
     let logic: ReturnType<typeof entityFilterLogic.build>
@@ -63,10 +63,10 @@ describe('entityFilterLogic', () => {
                         }),
                     ]),
                 })
-            )
-        })
+)
+})
 
-        it('closes modal after renaming', () => {
+it('closes modal after renaming', () => {
             expectLogic(logic, () => {
                 logic.actions.renameFilter('Custom event name')
             })

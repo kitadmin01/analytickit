@@ -25,7 +25,7 @@ import { ActionEvent, IconWebhook, UnverifiedEvent } from 'lib/components/icons'
 import { NewActionButton } from 'scenes/actions/NewActionButton'
 import { TZLabel } from 'lib/components/TimezoneAware'
 import { PageHeader } from 'lib/components/PageHeader'
-import { LemonInput, LemonSelect, LemonSelectOptions } from '@posthog/lemon-ui'
+import { LemonInput, LemonSelect, LemonSelectOptions } from '@analytickit/lemon-ui'
 
 const eventTypeOptions: LemonSelectOptions = {
     [CombinedEventType.All]: {
@@ -201,7 +201,7 @@ export function EventDefinitionsTable(): JSX.Element {
         <div data-attr="manage-events-table">
             <PageHeader
                 title="Data Management"
-                caption="Use data management to organize events that come into PostHog. Reduce noise, clarify usage, and help collaborators get the most value from your data."
+                caption="Use data management to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
                 tabbedPage
                 buttons={shouldSimplifyActions && <NewActionButton />}
             />

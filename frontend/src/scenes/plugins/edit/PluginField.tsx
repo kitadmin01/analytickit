@@ -1,7 +1,7 @@
 import { UploadField } from 'scenes/plugins/edit/UploadField'
 import { Button, Input, Select } from 'antd'
 import React, { useState } from 'react'
-import { PluginConfigSchema } from '@posthog/plugin-scaffold/src/types'
+import { PluginConfigSchema } from '@analytickit/plugin-scaffold/src/types'
 import { EditOutlined } from '@ant-design/icons'
 import { SECRET_FIELD_VALUE } from 'scenes/plugins/utils'
 
@@ -50,7 +50,7 @@ export function PluginField({
         <strong style={{ color: 'var(--danger)' }}>
             Unknown field type "<code>{fieldConfig.type}</code>".
             <br />
-            You may need to upgrade PostHog!
+            You may need to upgrade analytickit!
         </strong>
     )
 }

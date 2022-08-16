@@ -7,9 +7,9 @@ from rest_framework import status
 
 from ee.models.event_definition import EnterpriseEventDefinition
 from ee.models.license import License, LicenseManager
-from posthog.models import Action, Tag
-from posthog.models.event_definition import EventDefinition
-from posthog.test.base import APIBaseTest
+from analytickit.models import Action, Tag
+from analytickit.models.event_definition import EventDefinition
+from analytickit.test.base import APIBaseTest
 
 
 class TestEventDefinitionEnterpriseAPI(APIBaseTest):
@@ -90,7 +90,7 @@ class TestEventDefinitionEnterpriseAPI(APIBaseTest):
         event = EnterpriseEventDefinition.objects.create(team=self.team, name="enterprise event", owner=self.user)
         response = self.client.patch(
             f"/api/projects/@current/event_definitions/{str(event.id)}/",
-            {"description": "This is a description.", "tags": ["official", "internal"],},
+            {"description": "This is a description.", "tags": ["official", "internal"], },
         )
         response_data = response.json()
         self.assertEqual(response_data["description"], "This is a description.")
@@ -107,7 +107,7 @@ class TestEventDefinitionEnterpriseAPI(APIBaseTest):
             f"/api/projects/@current/event_definitions/{str(event.id)}", data={"description": "test"},
         )
         self.assertEqual(response.status_code, status.HTTP_402_PAYMENT_REQUIRED)
-        self.assertIn("This feature is part of the premium PostHog offering.", response.json()["detail"])
+        self.assertIn("This feature is part of the premium analytickit offering.", response.json()["detail"])
 
     def test_with_expired_license(self):
         super(LicenseManager, cast(LicenseManager, License.objects)).create(
@@ -118,7 +118,7 @@ class TestEventDefinitionEnterpriseAPI(APIBaseTest):
             f"/api/projects/@current/event_definitions/{str(event.id)}", data={"description": "test"},
         )
         self.assertEqual(response.status_code, status.HTTP_402_PAYMENT_REQUIRED)
-        self.assertIn("This feature is part of the premium PostHog offering.", response.json()["detail"])
+        self.assertIn("This feature is part of the premium analytickit offering.", response.json()["detail"])
 
     @freeze_time("2021-08-25T22:09:14.252Z")
     def test_can_get_event_verification_data(self):

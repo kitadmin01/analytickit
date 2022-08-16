@@ -1,19 +1,19 @@
-import { PluginEvent, PluginMeta, RetryError } from '@posthog/plugin-scaffold'
+import{PluginEvent, PluginMeta, RetryError}from '@analytickit/plugin-scaffold'
 
 import {
-    Hub,
-    PluginConfig,
-    PluginConfigVMInternalResponse,
-    PluginLogEntrySource,
-    PluginLogEntryType,
-    PluginTaskType,
-} from '../../../../types'
+Hub,
+PluginConfig,
+PluginConfigVMInternalResponse,
+PluginLogEntrySource,
+PluginLogEntryType,
+PluginTaskType,
+}from '../../../../types'
 import {
-    ExportEventsJobPayload,
-    ExportHistoricalEventsUpgrade,
-    fetchEventsForInterval,
-    fetchTimestampBoundariesForTeam,
-} from '../utils/utils'
+ExportEventsJobPayload,
+ExportHistoricalEventsUpgrade,
+fetchEventsForInterval,
+fetchTimestampBoundariesForTeam,
+}from '../utils/utils'
 
 const TEN_MINUTES = 1000 * 60 * 10
 const EVENTS_TIME_INTERVAL = TEN_MINUTES
@@ -190,14 +190,14 @@ export function addHistoricalEventsExportCapability(
                 intraIntervalOffset,
                 EVENTS_TIME_INTERVAL,
                 EVENTS_PER_RUN
-            )
-        } catch (error) {
-            fetchEventsError = error
-        }
+)
+}catch (error) {
+fetchEventsError = error
+}
 
-        let exportEventsError: Error | unknown | null = null
+let exportEventsError: Error | unknown | null = null
 
-        if (fetchEventsError) {
+if (fetchEventsError) {
             await meta.storage.del(EXPORT_RUNNING_KEY)
             createLog(`Failed fetching events. Stopping export - please try again later.`)
             return
@@ -219,10 +219,10 @@ export function addHistoricalEventsExportCapability(
                 } from ${new Date(timestampCursor).toISOString()} to ${new Date(
                     timestampCursor + EVENTS_TIME_INTERVAL
                 ).toISOString()}. Retrying in ${nextRetrySeconds}s`
-            )
+)
 
-            await meta.jobs
-                .exportHistoricalEvents({
+await meta.jobs
+.exportHistoricalEvents({
                     intraIntervalOffset,
                     timestampCursor,
                     retriesPerformedSoFar: payload.retriesPerformedSoFar + 1,
@@ -248,18 +248,18 @@ export function addHistoricalEventsExportCapability(
             } from ${new Date(timestampCursor).toISOString()} to ${new Date(
                 timestampCursor + EVENTS_TIME_INTERVAL
             ).toISOString()}.`
-        )
-    }
+)
+}
 
-    // initTimestampsAndCursor decides what timestamp boundaries to use before
-    // the export starts. if a payload is passed with boundaries, we use that,
-    // but if no payload is specified, we use the boundaries determined at setupPlugin
-    meta.global.initTimestampsAndCursor = async (payload) => {
-        // initTimestampsAndCursor will only run on **one** thread, because of our guard against
-        // multiple exports. as a result, we need to set the boundaries on postgres, and
-        // only set them in global when the job runs, so all threads have global state in sync
+// initTimestampsAndCursor decides what timestamp boundaries to use before
+// the export starts. if a payload is passed with boundaries, we use that,
+// but if no payload is specified, we use the boundaries determined at setupPlugin
+meta.global.initTimestampsAndCursor = async (payload) => {
+// initTimestampsAndCursor will only run on **one** thread, because of our guard against
+// multiple exports. as a result, we need to set the boundaries on postgres, and
+// only set them in global when the job runs, so all threads have global state in sync
 
-        if (payload && payload.dateFrom) {
+if (payload && payload.dateFrom) {
             try {
                 const dateFrom = new Date(payload.dateFrom).getTime()
                 await meta.utils.cursor.init(TIMESTAMP_CURSOR_KEY, dateFrom - EVENTS_TIME_INTERVAL)
@@ -273,11 +273,11 @@ export function addHistoricalEventsExportCapability(
             if (!meta.global.timestampBoundariesForTeam.min) {
                 throw new Error(
                     `Unable to determine the lower timestamp bound for the export automatically. Please specify a 'dateFrom' value.`
-                )
-            }
+)
+}
 
-            const dateFrom = meta.global.timestampBoundariesForTeam.min.getTime()
-            await meta.utils.cursor.init(TIMESTAMP_CURSOR_KEY, dateFrom - EVENTS_TIME_INTERVAL)
+const dateFrom = meta.global.timestampBoundariesForTeam.min.getTime()
+await meta.utils.cursor.init(TIMESTAMP_CURSOR_KEY, dateFrom - EVENTS_TIME_INTERVAL)
             await meta.storage.set(MIN_UNIX_TIMESTAMP_KEY, dateFrom)
         }
 
@@ -293,9 +293,9 @@ export function addHistoricalEventsExportCapability(
             if (!meta.global.timestampBoundariesForTeam.max) {
                 throw new Error(
                     `Unable to determine the upper timestamp bound for the export automatically. Please specify a 'dateTo' value.`
-                )
-            }
-            await meta.storage.set(MAX_UNIX_TIMESTAMP_KEY, meta.global.timestampBoundariesForTeam.max.getTime())
+)
+}
+await meta.storage.set(MAX_UNIX_TIMESTAMP_KEY, meta.global.timestampBoundariesForTeam.max.getTime())
         }
     }
 

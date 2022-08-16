@@ -1,14 +1,14 @@
-import { kea } from 'kea'
-import { inBounds } from '~/toolbar/utils'
-import { heatmapLogic } from '~/toolbar/elements/heatmapLogic'
-import { elementsLogic } from '~/toolbar/elements/elementsLogic'
-import { actionsTabLogic } from '~/toolbar/actions/actionsTabLogic'
-import type { toolbarButtonLogicType } from './toolbarButtonLogicType'
-import { posthog } from '~/toolbar/posthog'
+import{kea}from'kea'
+import {inBounds}from '~/toolbar/utils'
+import {heatmapLogic} from '~/toolbar/elements/heatmapLogic'
+import {elementsLogic}from '~/toolbar/elements/elementsLogic'
+import {actionsTabLogic} from '~/toolbar/actions/actionsTabLogic'
+import type {toolbarButtonLogicType}from './toolbarButtonLogicType'
+import {analytickit}from '~/toolbar/analytickit'
 
 export const toolbarButtonLogic = kea<toolbarButtonLogicType>({
-    path: ['toolbar', 'button', 'toolbarButtonLogic'],
-    actions: () => ({
+path: ['toolbar', 'button', 'toolbarButtonLogic'],
+actions: () => ({
         showHeatmapInfo: true,
         hideHeatmapInfo: true,
         showActionsInfo: true,
@@ -175,17 +175,17 @@ export const toolbarButtonLogic = kea<toolbarButtonLogicType>({
             actionsTabLogic.actions.selectAction(null)
         },
         showFlags: () => {
-            posthog.capture('toolbar mode triggered', { mode: 'flags', enabled: true })
+            analytickit.capture('toolbar mode triggered', { mode: 'flags', enabled: true })
         },
         hideFlags: () => {
-            posthog.capture('toolbar mode triggered', { mode: 'flags', enabled: false })
+            analytickit.capture('toolbar mode triggered', { mode: 'flags', enabled: false })
         },
         saveDragPosition: ({ x, y }) => {
             const { windowWidth, windowHeight } = values
             actions.setDragPosition(
                 x > windowWidth / 2 ? -(windowWidth - x) : x,
                 y > windowHeight / 2 ? -(windowHeight - y) : y
-            )
-        },
-    }),
+)
+},
+}),
 })

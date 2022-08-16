@@ -1,73 +1,77 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { inAppPromptLogic, PromptSequence } from './inAppPromptLogic'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { router } from 'kea-router'
-import { urls } from 'scenes/urls'
-import { useMocks } from '~/mocks/jest'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {inAppPromptLogic, PromptSequence}from './inAppPromptLogic'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import {router}from 'kea-router'
+import {urls}from 'scenes/urls'
+import {useMocks}from '~/mocks/jest'
 import api from 'lib/api'
-import { inAppPromptEventCaptureLogic } from './inAppPromptEventCaptureLogic'
+import {inAppPromptEventCaptureLogic}from './inAppPromptEventCaptureLogic'
 
 const config = {
-    sequences: [
-        {
-            key: 'experiment-events-product-tour',
-            prompts: [
-                {
-                    step: 0,
-                    type: 'tooltip',
-                    text: "Welcome! We'd like to give you a quick tour!",
-                    placement: 'top-start',
-                    buttons: [{ action: 'skip', label: 'Skip tutorial' }],
-                    reference: 'tooltip-test',
-                    icon: 'live-events',
-                },
-                {
-                    step: 1,
-                    type: 'tooltip',
-                    text: "Here you can see all events from the past 12 months. Things look a bit quiet, so let's turn on automatic refresh to see events in real-time.",
-                    placement: 'top-start',
-                    reference: 'tooltip-test',
-                    icon: 'live-events',
-                },
-                {
-                    step: 2,
-                    type: 'tooltip',
-                    text: "If you aren't seeing the data you expect then you can always ask for help. For now, lets analyze some data. Click 'Dashboards' in the sidebar.",
-                    placement: 'top-start',
-                    buttons: [{ url: 'https://posthog.com/questions', label: 'Ask for help' }],
-                    icon: 'live-events',
-                    reference: 'tooltip-test',
-                },
-            ],
-            rule: { path: '/events' },
-            type: 'product-tour',
-        },
-        {
-            key: 'experiment-dashboards-product-tour',
-            prompts: [
-                {
-                    step: 0,
-                    type: 'tooltip',
-                    text: "In PostHog, you analyse data with Insights which can be added to Dashboards to aid collaboration. Let's create a new Dashboard by selecting 'New Dashboard'. ",
-                    placement: 'top-start',
-                    icon: 'dashboard',
-                    reference: 'tooltip-test',
-                },
-            ],
-            rule: { path: '/dashboard' },
-            type: 'product-tour',
-        },
-    ],
-    state: {
-        'experiment-events-product-tour': {
-            key: 'experiment-events-product-tour',
-            step: 0,
-            completed: false,
-            dismissed: false,
-            last_updated_at: '2022-07-26T16:32:55.153Z',
-        },
-    },
+sequences: [
+{
+key: 'experiment-events-product-tour',
+prompts: [
+{
+step: 0,
+type: 'tooltip',
+text: "Welcome! We'd like to give you a quick tour!",
+placement: 'top-start',
+buttons: [{action: 'skip', label: 'Skip tutorial'
+}],
+reference: 'tooltip-test',
+icon: 'live-events',
+},
+{
+step: 1,
+type: 'tooltip',
+text: "Here you can see all events from the past 12 months.Things look a bit quiet, so let's turn on automatic refresh to see events in real-time.",
+placement: 'top-start',
+reference: 'tooltip-test',
+icon: 'live-events',
+},
+{
+step: 2,
+type: 'tooltip',
+text: "If you aren't seeing the data you expect then you can always ask for help.For now, lets analyze some data.Click 'Dashboards' in the sidebar.",
+placement: 'top-start',
+buttons: [{url: 'https://analytickit.com/questions', label: 'Ask for help'
+}],
+icon: 'live-events',
+reference: 'tooltip-test',
+},
+],
+rule: {path: '/events'
+},
+type: 'product-tour',
+},
+{
+key: 'experiment-dashboards-product-tour',
+prompts: [
+{
+step: 0,
+type: 'tooltip',
+text: "In analytickit, you analyse data with Insights which can be added to Dashboards to aid collaboration.Let's create a new Dashboard by selecting 'New Dashboard'.",
+placement: 'top-start',
+icon: 'dashboard',
+reference: 'tooltip-test',
+},
+],
+rule: {path: '/dashboard'
+},
+type: 'product-tour',
+},
+],
+state: {
+'experiment-events-product-tour': {
+key: 'experiment-events-product-tour',
+step: 0,
+completed: false,
+dismissed: false,
+last_updated_at: '2022-07-26T16:32:55.153Z',
+},
+},
 }
 
 describe('inAppPromptLogic', () => {

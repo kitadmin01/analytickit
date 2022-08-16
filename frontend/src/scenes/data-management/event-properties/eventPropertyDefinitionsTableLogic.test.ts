@@ -1,15 +1,15 @@
-import { initKeaTests } from '~/test/init'
-import { api, MOCK_TEAM_ID } from 'lib/api.mock'
-import { expectLogic, partial } from 'kea-test-utils'
-import { mockEventPropertyDefinitions } from '~/test/mocks'
-import { useMocks } from '~/mocks/jest'
-import { organizationLogic } from 'scenes/organizationLogic'
-import { combineUrl, router } from 'kea-router'
+import{initKeaTests}from'~/test/init'
+import {api, MOCK_TEAM_ID}from 'lib/api.mock'
+import {expectLogic, partial}from 'kea-test-utils'
+import {mockEventPropertyDefinitions}from '~/test/mocks'
+import {useMocks} from '~/mocks/jest'
+import {organizationLogic}from 'scenes/organizationLogic'
+import {combineUrl, router}from 'kea-router'
 import {
-    EVENT_PROPERTY_DEFINITIONS_PER_PAGE,
-    eventPropertyDefinitionsTableLogic,
-} from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
-import { urls } from 'scenes/urls'
+EVENT_PROPERTY_DEFINITIONS_PER_PAGE,
+eventPropertyDefinitionsTableLogic,
+}from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
+import {urls}from 'scenes/urls'
 
 describe('eventPropertyDefinitionsTableLogic', () => {
     let logic: ReturnType<typeof eventPropertyDefinitionsTableLogic.build>
@@ -129,9 +129,9 @@ describe('eventPropertyDefinitionsTableLogic', () => {
             await expectLogic(logic, () => {
                 logic.actions.loadEventPropertyDefinitions(
                     `api/projects/${MOCK_TEAM_ID}/property_definitions?limit=50&offset=50`
-                )
-            })
-                .toDispatchActions(['loadEventPropertyDefinitions', 'loadEventPropertyDefinitionsSuccess'])
+)
+})
+.toDispatchActions(['loadEventPropertyDefinitions', 'loadEventPropertyDefinitionsSuccess'])
                 .toFinishAllListeners()
                 .toMatchValues({
                     eventPropertyDefinitions: partial({

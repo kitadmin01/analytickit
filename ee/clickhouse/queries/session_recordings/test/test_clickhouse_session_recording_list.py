@@ -1,14 +1,14 @@
 from dateutil.relativedelta import relativedelta
 from freezegun.api import freeze_time
 
-from posthog.models import Cohort, Person
-from posthog.models.action import Action
-from posthog.models.action_step import ActionStep
-from posthog.models.filters.session_recordings_filter import SessionRecordingsFilter
-from posthog.queries.session_recordings.session_recording_list import SessionRecordingList
-from posthog.queries.session_recordings.test.test_session_recording_list import factory_session_recordings_list_test
-from posthog.session_recordings.test.test_factory import create_snapshot
-from posthog.test.base import (
+from analytickit.models import Cohort, Person
+from analytickit.models.action import Action
+from analytickit.models.action_step import ActionStep
+from analytickit.models.filters.session_recordings_filter import SessionRecordingsFilter
+from analytickit.queries.session_recordings.session_recording_list import SessionRecordingList
+from analytickit.queries.session_recordings.test.test_session_recording_list import factory_session_recordings_list_test
+from analytickit.session_recordings.test.test_factory import create_snapshot
+from analytickit.test.base import (
     ClickhouseTestMixin,
     _create_event,
     snapshot_clickhouse_queries,
@@ -16,7 +16,10 @@ from posthog.test.base import (
 )
 
 
-class TestClickhouseSessionRecordingsList(ClickhouseTestMixin, factory_session_recordings_list_test(SessionRecordingList, _create_event, Action.objects.create, ActionStep.objects.create)):  # type: ignore
+class TestClickhouseSessionRecordingsList(ClickhouseTestMixin,
+                                          factory_session_recordings_list_test(SessionRecordingList, _create_event,
+                                                                               Action.objects.create,
+                                                                               ActionStep.objects.create)):  # type: ignore
     @freeze_time("2021-01-21T20:00:00.000Z")
     @snapshot_clickhouse_queries
     @test_with_materialized_columns(["$current_url"])
@@ -41,7 +44,7 @@ class TestClickhouseSessionRecordingsList(ClickhouseTestMixin, factory_session_r
         )
         filter = SessionRecordingsFilter(
             team=self.team,
-            data={"properties": [{"key": "email", "value": ["bla"], "operator": "exact", "type": "person"}],},
+            data={"properties": [{"key": "email", "value": ["bla"], "operator": "exact", "type": "person"}], },
         )
         session_recording_list_instance = SessionRecordingList(filter=filter, team=self.team)
         (session_recordings, _) = session_recording_list_instance.run()
@@ -82,7 +85,7 @@ class TestClickhouseSessionRecordingsList(ClickhouseTestMixin, factory_session_r
                 )
                 filter = SessionRecordingsFilter(
                     team=self.team,
-                    data={"properties": [{"key": "id", "value": cohort.pk, "operator": None, "type": "cohort"}],},
+                    data={"properties": [{"key": "id", "value": cohort.pk, "operator": None, "type": "cohort"}], },
                 )
                 session_recording_list_instance = SessionRecordingList(filter=filter, team=self.team)
                 (session_recordings, _) = session_recording_list_instance.run()

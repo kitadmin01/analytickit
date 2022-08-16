@@ -1,25 +1,29 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <meta name="robots" content="noindex">
     <script>
-      window.POSTHOG_EXPORTED_DATA = {{exported_data|safe}}
-      if (window.POSTHOG_EXPORTED_DATA.type) {
+      window.analytickit_EXPORTED_DATA = {{exported_data|safe}}
+      if (window.analytickit_EXPORTED_DATA.type) {
         var root = document.documentElement
-        root.className += ' export-type-' + window.POSTHOG_EXPORTED_DATA.type
+        root.className += ' export-type-' + window.analytickit_EXPORTED_DATA.type
       }
+
+
     </script>
     {% include "head.html" %}
-  </head>
-  <body>
-    <script>
+</head>
+<body>
+<script>
         if (typeof Object.entries === 'undefined') {
             var div = document.createElement("div");
             div.style.color='#fef6f6'; div.style.background='#920c0c'; div.style.padding='5px 10px';
-            div.innerHTML = "You are using a really old browser. Please upgrade to fully enjoy PostHog!"
+            div.innerHTML = "You are using a really old browser. Please upgrade to fully enjoy analytickit!"
             document.body.prepend(div);
         }
-    </script>
-    <div id="root"></div>
-  </body>
+
+
+</script>
+<div id="root"></div>
+</body>
 </html>

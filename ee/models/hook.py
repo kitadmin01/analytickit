@@ -8,22 +8,22 @@ from rest_hooks.models import AbstractHook
 from statshog.defaults.django import statsd
 
 from ee.tasks.hooks import DeliverHook
-from posthog.constants import AvailableFeature
-from posthog.models.signals import mutable_receiver
-from posthog.models.team import Team
-from posthog.models.utils import generate_random_token
-from posthog.redis import get_client
+from analytickit.constants import AvailableFeature
+from analytickit.models.signals import mutable_receiver
+from analytickit.models.team import Team
+from analytickit.models.utils import generate_random_token
+from analytickit.redis import get_client
 
 
 class Hook(AbstractHook):
     id = models.CharField(primary_key=True, max_length=50, default=generate_random_token)
-    user = models.ForeignKey("posthog.User", related_name="rest_hooks", on_delete=models.CASCADE)
-    team = models.ForeignKey("posthog.Team", related_name="rest_hooks", on_delete=models.CASCADE)
+    user = models.ForeignKey("analytickit.User", related_name="rest_hooks", on_delete=models.CASCADE)
+    team = models.ForeignKey("analytickit.Team", related_name="rest_hooks", on_delete=models.CASCADE)
     resource_id = models.IntegerField(null=True, blank=True)
 
 
 def find_and_fire_hook(
-    event_name: str, instance: models.Model, user_override: Team, payload_override: Optional[dict] = None,
+        event_name: str, instance: models.Model, user_override: Team, payload_override: Optional[dict] = None,
 ):
     if not user_override.organization.is_feature_available(AvailableFeature.ZAPIER):
         return
@@ -32,7 +32,7 @@ def find_and_fire_hook(
         # action_performed is a resource_id-filterable hook
         hooks = hooks.filter(models.Q(resource_id=instance.pk))
     for hook in hooks:
-        statsd.incr("posthog_cloud_hooks_rest_fired")
+        statsd.incr("analytickit_cloud_hooks_rest_fired")
         hook.deliver_hook(instance, payload_override)
 
 

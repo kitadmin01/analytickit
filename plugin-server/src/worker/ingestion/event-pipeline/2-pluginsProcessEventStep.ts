@@ -1,9 +1,9 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
 
-import { runInstrumentedFunction } from '../../../main/utils'
-import { runProcessEvent } from '../../plugins/run'
-import { LazyPersonContainer } from '../lazy-person-container'
-import { EventPipelineRunner, StepResult } from './runner'
+import {runInstrumentedFunction }from '../../../main/utils'
+import {runProcessEvent }from '../../plugins/run'
+import {LazyPersonContainer}from '../lazy-person-container'
+import {EventPipelineRunner, StepResult}from './runner'
 
 export async function pluginsProcessEventStep(
     runner: EventPipelineRunner,

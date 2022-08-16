@@ -8,9 +8,9 @@ from rest_framework.status import (
 
 from ee.api.test.base import APILicensedTest
 from ee.models.explicit_team_membership import ExplicitTeamMembership
-from posthog.models.organization import Organization, OrganizationMembership
-from posthog.models.team import Team
-from posthog.models.user import User
+from analytickit.models.organization import Organization, OrganizationMembership
+from analytickit.models.team import Team
+from analytickit.models.user import User
 
 
 class TestProjectEnterpriseAPI(APILicensedTest):
@@ -47,7 +47,7 @@ class TestProjectEnterpriseAPI(APILicensedTest):
         )
 
     def test_user_that_does_not_belong_to_an_org_cannot_create_a_project(self):
-        user = User.objects.create(email="no_org@posthog.com")
+        user = User.objects.create(email="no_org@analytickit.com")
         self.client.force_login(user)
 
         response = self.client.post("/api/projects/", {"name": "Test"})

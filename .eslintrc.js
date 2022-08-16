@@ -76,7 +76,7 @@ module.exports = {
                     {
                         propName: 'style',
                         message:
-                            'style should be avoided in favor of utility CSS classes - see https://storybook.posthog.net/?path=/docs/lemon-ui-utilities--overview',
+                            'style should be avoided in favor of utility CSS classes - see https://storybook.analytickit.net/?path=/docs/lemon-ui-utilities--overview',
                     },
                 ],
             },

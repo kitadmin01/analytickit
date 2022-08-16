@@ -1,17 +1,17 @@
 from freezegun import freeze_time
 
 from ee.clickhouse.materialized_columns.columns import materialize
-from posthog.client import sync_execute
-from posthog.models import Action, ActionStep
-from posthog.models.cohort import Cohort
-from posthog.models.element import Element
-from posthog.models.entity import Entity
-from posthog.models.filters import Filter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.person import Person
-from posthog.queries.trends.trend_event_query import TrendsEventQuery
-from posthog.test.base import (
+from analytickit.client import sync_execute
+from analytickit.models import Action, ActionStep
+from analytickit.models.cohort import Cohort
+from analytickit.models.element import Element
+from analytickit.models.entity import Entity
+from analytickit.models.filters import Filter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.person import Person
+from analytickit.queries.trends.trend_event_query import TrendsEventQuery
+from analytickit.test.base import (
     APIBaseTest,
     ClickhouseTestMixin,
     _create_event,
@@ -61,7 +61,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
                 data={
                     "date_from": "2021-05-01 00:00:00",
                     "date_to": "2021-05-07 00:00:00",
-                    "events": [{"id": "viewed", "order": 0},],
+                    "events": [{"id": "viewed", "order": 0}, ],
                 }
             )
         )
@@ -71,9 +71,9 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
             data={
                 "date_from": "2021-05-01 00:00:00",
                 "date_to": "2021-05-07 00:00:00",
-                "events": [{"id": "viewed", "order": 0},],
+                "events": [{"id": "viewed", "order": 0}, ],
                 "properties": [
-                    {"key": "email", "value": "@posthog.com", "operator": "not_icontains", "type": "person"},
+                    {"key": "email", "value": "@analytickit.com", "operator": "not_icontains", "type": "person"},
                     {"key": "key", "value": "val"},
                 ],
             }
@@ -88,14 +88,14 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
                 "id": "viewed",
                 "type": "events",
                 "properties": [
-                    {"key": "email", "value": "@posthog.com", "operator": "not_icontains", "type": "person"},
+                    {"key": "email", "value": "@analytickit.com", "operator": "not_icontains", "type": "person"},
                     {"key": "key", "value": "val"},
                 ],
             }
         )
 
         filter = Filter(
-            data={"date_from": "2021-05-01 00:00:00", "date_to": "2021-05-07 00:00:00", "events": [entity.to_dict()],}
+            data={"date_from": "2021-05-01 00:00:00", "date_to": "2021-05-07 00:00:00", "events": [entity.to_dict()], }
         )
 
         self._run_query(filter, entity)
@@ -106,7 +106,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
             data={
                 "date_from": "2021-05-01 00:00:00",
                 "date_to": "2021-05-07 00:00:00",
-                "events": [{"id": "viewed", "order": 0},],
+                "events": [{"id": "viewed", "order": 0}, ],
                 "properties": [{"key": "some_key", "value": "test_val", "operator": "exact", "type": "event"}],
             }
         )
@@ -119,7 +119,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
             data={
                 "date_from": "2021-05-01 00:00:00",
                 "date_to": "2021-05-07 00:00:00",
-                "events": [{"id": "viewed", "order": 0},],
+                "events": [{"id": "viewed", "order": 0}, ],
             }
         )
 
@@ -146,7 +146,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
             data={
                 "date_from": "2021-05-01 00:00:00",
                 "date_to": "2021-05-07 00:00:00",
-                "events": [{"id": "viewed", "order": 0},],
+                "events": [{"id": "viewed", "order": 0}, ],
                 "properties": [{"key": "id", "value": cohort.pk, "type": "cohort"}],
             }
         )
@@ -193,7 +193,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
             data={
                 "date_from": "2021-05-01 00:00:00",
                 "date_to": "2021-05-07 00:00:00",
-                "events": [{"id": "viewed", "order": 0},],
+                "events": [{"id": "viewed", "order": 0}, ],
                 "properties": [{"key": "id", "value": cohort.pk, "type": "cohort"}],
             },
             team=self.team,
@@ -222,7 +222,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
         self.team.save()
 
         filter = Filter(
-            data={"events": [{"id": "event_name", "order": 0},], "filter_test_accounts": True}, team=self.team
+            data={"events": [{"id": "event_name", "order": 0}, ], "filter_test_accounts": True}, team=self.team
         )
 
         self._run_query(filter)
@@ -240,7 +240,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
             event="event_name", action=action, properties=[{"key": "name", "type": "person", "value": "John"}],
         )
 
-        filter = Filter(data={"actions": [{"id": action.id, "type": "actions", "order": 0},]})
+        filter = Filter(data={"actions": [{"id": action.id, "type": "actions", "order": 0}, ]})
 
         self._run_query(filter)
 
@@ -304,7 +304,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
                 ),
                 Element(tag_name="button", attr_class=["btn", "btn-primary"], nth_child=0, nth_of_type=0),
                 Element(tag_name="div", nth_child=0, nth_of_type=0),
-                Element(tag_name="label", nth_child=0, nth_of_type=0, attr_id="nested",),
+                Element(tag_name="label", nth_child=0, nth_of_type=0, attr_id="nested", ),
             ],
         )
         _create_event(
@@ -324,13 +324,13 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
                 ),
                 Element(tag_name="button", attr_class=["btn", "btn-secondary"], nth_child=0, nth_of_type=0),
                 Element(tag_name="div", nth_child=0, nth_of_type=0),
-                Element(tag_name="img", nth_child=0, nth_of_type=0, attr_id="nested",),
+                Element(tag_name="img", nth_child=0, nth_of_type=0, attr_id="nested", ),
             ],
         )
 
         filter = Filter(
             data={
-                "events": [{"id": "event_name", "order": 0},],
+                "events": [{"id": "event_name", "order": 0}, ],
                 "properties": [{"key": "tag_name", "value": ["label"], "operator": "exact", "type": "element"}],
             }
         )
@@ -339,7 +339,7 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
 
         self._run_query(
             filter.with_data(
-                {"properties": [{"key": "tag_name", "value": [], "operator": "exact", "type": "element"}],}
+                {"properties": [{"key": "tag_name", "value": [], "operator": "exact", "type": "element"}], }
             )
         )
 
@@ -426,7 +426,6 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_entity_filtered_by_session_duration(self):
-
         filter = Filter(
             data={
                 "date_from": "2021-05-02 00:00:00",
@@ -487,7 +486,6 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_entity_filtered_by_multiple_session_duration_filters(self):
-
         filter = Filter(
             data={
                 "date_from": "2021-05-02 00:00:00",
@@ -561,7 +559,6 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_unique_session_math_filtered_by_session_duration(self):
-
         filter = Filter(
             data={
                 "date_from": "2021-05-02 00:00:00",
@@ -571,7 +568,8 @@ class TestEventQuery(ClickhouseTestMixin, APIBaseTest):
                         "id": "$pageview",
                         "math": "unique_session",
                         "order": 0,
-                        "properties": [{"key": "$session_duration", "type": "session", "operator": "gt", "value": 30},],
+                        "properties": [
+                            {"key": "$session_duration", "type": "session", "operator": "gt", "value": 30}, ],
                     },
                 ],
             }

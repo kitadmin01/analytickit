@@ -1,11 +1,11 @@
-import { PluginEvent, ProcessedPluginEvent } from '@posthog/plugin-scaffold'
-import { ProducerRecord } from 'kafkajs'
-import { DateTime } from 'luxon'
+import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {ProducerRecord}from 'kafkajs'
+import {DateTime}from 'luxon'
 
-import { TimestampFormat } from '../../types'
-import { safeClickhouseString } from '../../utils/db/utils'
-import { castTimestampToClickhouseFormat, UUIDT } from '../../utils/utils'
-import { KAFKA_EVENTS_DEAD_LETTER_QUEUE } from './../../config/kafka-topics'
+import {TimestampFormat}from '../../types'
+import {safeClickhouseString}from '../../utils/db/utils'
+import {castTimestampToClickhouseFormat, UUIDT}from '../../utils/utils'
+import {KAFKA_EVENTS_DEAD_LETTER_QUEUE}from './../../config/kafka-topics'
 
 function getClickhouseTimestampOrNull(isoTimestamp?: string): string | null {
     return isoTimestamp

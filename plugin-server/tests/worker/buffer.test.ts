@@ -1,7 +1,7 @@
-import { delay } from '../../src/utils/utils'
-import { PromiseManager } from '../../src/worker/vm/promise-manager'
-import { Hub } from './../../src/types'
-import { ExportEventsBuffer } from './../../src/worker/vm/upgrades/utils/export-events-buffer'
+import{delay}from'../../src/utils/utils'
+import {PromiseManager}from '../../src/worker/vm/promise-manager'
+import {Hub}from './../../src/types'
+import {ExportEventsBuffer}from './../../src/worker/vm/upgrades/utils/export-events-buffer'
 
 jest.setTimeout(100000)
 
@@ -77,10 +77,10 @@ describe('ExportEventsBuffer', () => {
             [{ event: 'event1' }, { event: 'event2' }],
             2,
             expect.any(Date)
-        )
-    })
+)
+})
 
-    test('flush works correctly with promise manager', async () => {
+test('flush works correctly with promise manager', async () => {
         jest.spyOn(promiseManager, 'trackPromise')
         jest.spyOn(exportEventsBuffer, 'flush')
 

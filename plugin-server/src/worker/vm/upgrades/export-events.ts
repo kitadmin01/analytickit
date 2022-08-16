@@ -1,10 +1,10 @@
-import { Plugin, PluginEvent, PluginMeta, ProcessedPluginEvent, RetryError } from '@posthog/plugin-scaffold'
+import{Plugin, PluginEvent, PluginMeta, ProcessedPluginEvent, RetryError}from '@analytickit/plugin-scaffold'
 
-import { Hub, PluginConfig, PluginConfigVMInternalResponse, PluginTaskType } from '../../../types'
-import { isTestEnv } from '../../../utils/env-utils'
-import { status } from '../../../utils/status'
-import { stringClamp } from '../../../utils/utils'
-import { ExportEventsBuffer } from './utils/export-events-buffer'
+import {Hub, PluginConfig, PluginConfigVMInternalResponse, PluginTaskType}from '../../../types'
+import {isTestEnv}from '../../../utils/env-utils'
+import {status}from '../../../utils/status'
+import {stringClamp}from '../../../utils/utils'
+import {ExportEventsBuffer}from './utils/export-events-buffer'
 
 export const MAXIMUM_RETRIES = 3
 const EXPORT_BUFFER_BYTES_MINIMUM = 1
@@ -15,10 +15,10 @@ const EXPORT_BUFFER_SECONDS_MAXIMUM = 600
 const EXPORT_BUFFER_SECONDS_DEFAULT = isTestEnv() ? EXPORT_BUFFER_SECONDS_MAXIMUM : 60
 
 type ExportEventsUpgrade = Plugin<{
-    global: {
-        exportEventsBuffer: ExportEventsBuffer
-        exportEventsToIgnore: Set<string>
-        exportEventsWithRetry: (payload: ExportEventsJobPayload, meta: PluginMeta<ExportEventsUpgrade>) => Promise<void>
+global: {
+exportEventsBuffer: ExportEventsBuffer
+exportEventsToIgnore: Set < string>
+exportEventsWithRetry: (payload: ExportEventsJobPayload, meta: PluginMeta<ExportEventsUpgrade>) => Promise<void>
     }
     config: {
         exportEventsBufferBytes: string
@@ -53,24 +53,24 @@ export function upgradeExportEvents(
         EXPORT_BUFFER_BYTES_DEFAULT,
         EXPORT_BUFFER_BYTES_MINIMUM,
         EXPORT_BUFFER_BYTES_MAXIMUM
-    )
-    const uploadSeconds = stringClamp(
-        meta.config.exportEventsBufferSeconds,
-        EXPORT_BUFFER_SECONDS_DEFAULT,
-        EXPORT_BUFFER_SECONDS_MINIMUM,
-        EXPORT_BUFFER_SECONDS_MAXIMUM
-    )
+)
+const uploadSeconds = stringClamp(
+meta.config.exportEventsBufferSeconds,
+EXPORT_BUFFER_SECONDS_DEFAULT,
+EXPORT_BUFFER_SECONDS_MINIMUM,
+EXPORT_BUFFER_SECONDS_MAXIMUM
+)
 
-    meta.global.exportEventsToIgnore = new Set(
-        meta.config.exportEventsToIgnore
-            ? meta.config.exportEventsToIgnore.split(',').map((event: string) => event.trim())
+meta.global.exportEventsToIgnore = new Set(
+meta.config.exportEventsToIgnore
+? meta.config.exportEventsToIgnore.split(',').map((event: string) => event.trim())
             : null
-    )
+)
 
-    meta.global.exportEventsBuffer = new ExportEventsBuffer(hub, {
-        limit: uploadBytes,
-        timeoutSeconds: uploadSeconds,
-        onFlush: async (batch) => {
+meta.global.exportEventsBuffer = new ExportEventsBuffer(hub, {
+limit: uploadBytes,
+timeoutSeconds: uploadSeconds,
+onFlush: async (batch) => {
             const jobPayload = {
                 batch,
                 batchId: Math.floor(Math.random() * 1000000),
@@ -105,8 +105,8 @@ export function upgradeExportEvents(
                         `Enqueued PluginConfig ${pluginConfig.id} batch ${payload.batchId} for retry #${
                             payload.retriesPerformedSoFar + 1
                         } in ${Math.round(nextRetrySeconds)}s`
-                    )
-                    hub.statsd?.increment('plugin.export_events.retry_enqueued', {
+)
+hub.statsd?.increment('plugin.export_events.retry_enqueued', {
                         retry: `${payload.retriesPerformedSoFar + 1}`,
                         plugin: pluginConfig.plugin?.name ?? '?',
                         teamId: pluginConfig.team_id.toString(),
@@ -115,8 +115,8 @@ export function upgradeExportEvents(
                     status.info(
                         '☠️',
                         `Dropped PluginConfig ${pluginConfig.id} batch ${payload.batchId} after retrying ${payload.retriesPerformedSoFar} times`
-                    )
-                    hub.statsd?.increment('plugin.export_events.retry_dropped', {
+)
+hub.statsd?.increment('plugin.export_events.retry_dropped', {
                         retry: `${payload.retriesPerformedSoFar}`,
                         plugin: pluginConfig.plugin?.name ?? '?',
                         teamId: pluginConfig.team_id.toString(),

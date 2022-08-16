@@ -9,19 +9,20 @@ from freezegun import freeze_time
 
 from ee.clickhouse.queries.paths import ClickhousePaths as Paths
 from ee.clickhouse.queries.paths import ClickhousePathsActors as PathsActors
-from posthog.constants import (
+from analytickit.constants import (
     FUNNEL_PATH_AFTER_STEP,
     FUNNEL_PATH_BEFORE_STEP,
     FUNNEL_PATH_BETWEEN_STEPS,
     INSIGHT_FUNNELS,
 )
-from posthog.models.filters import Filter, PathFilter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.session_recording_event.util import create_session_recording_event
-from posthog.queries.paths.paths_event_query import PathEventQuery
-from posthog.queries.test.test_paths import paths_test_factory
-from posthog.test.base import _create_event, _create_person, snapshot_clickhouse_queries, test_with_materialized_columns
+from analytickit.models.filters import Filter, PathFilter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.session_recording_event.util import create_session_recording_event
+from analytickit.queries.paths.paths_event_query import PathEventQuery
+from analytickit.queries.test.test_paths import paths_test_factory
+from analytickit.test.base import _create_event, _create_person, snapshot_clickhouse_queries, \
+    test_with_materialized_columns
 
 ONE_MINUTE = 60_000  # 1 minute in milliseconds
 
@@ -43,7 +44,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
         create_group(team_id=self.team.pk, group_type_index=1, group_key="company:2", properties={})
 
     def _create_session_recording_event(
-        self, distinct_id, session_id, timestamp, window_id="", team_id=None, has_full_snapshot=True
+            self, distinct_id, session_id, timestamp, window_id="", team_id=None, has_full_snapshot=True
     ):
         if team_id is None:
             team_id = self.team.pk
@@ -54,7 +55,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
             timestamp=timestamp,
             session_id=session_id,
             window_id=window_id,
-            snapshot_data={"timestamp": timestamp.timestamp(), "has_full_snapshot": has_full_snapshot,},
+            snapshot_data={"timestamp": timestamp.timestamp(), "has_full_snapshot": has_full_snapshot, },
         )
 
     def _get_people_at_path(self, filter, path_start=None, path_end=None, funnel_filter=None, path_dropoff=None):
@@ -423,8 +424,9 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                     "target": "2_between_step_1_*",
                     "value": 15,
                     "average_conversion_time": (5 * 3 + 10 * 2)
-                    * ONE_MINUTE
-                    / 15,  # first 5 go till between_step_1_c, next 10 go till between_step_1_b
+                                               * ONE_MINUTE
+                                               / 15,
+                    # first 5 go till between_step_1_c, next 10 go till between_step_1_b
                 },
                 {
                     "source": "2_between_step_1_*",
@@ -444,7 +446,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                     "value": 10,
                     "average_conversion_time": 160000,
                 },
-                {"source": "3_step two", "target": "4_step three", "value": 5, "average_conversion_time": ONE_MINUTE,},
+                {"source": "3_step two", "target": "4_step three", "value": 5, "average_conversion_time": ONE_MINUTE, },
             ],
         )
 
@@ -1425,7 +1427,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                 "date_to": "2021-05-07 00:00:00",
             }
         )
-        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter,)
+        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter, )
         self.assertEqual(
             response,
             [
@@ -1448,7 +1450,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                 "date_to": "2021-05-07 00:00:00",
             }
         )
-        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter,)
+        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter, )
         self.assertEqual(
             response,
             [
@@ -1519,9 +1521,9 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
         # P3 for custom event
         _create_person(team_id=self.team.pk, distinct_ids=["p3"])
         p3 = [
-            _create_event(distinct_id="p3", event="/custom1", team=self.team, timestamp="2012-01-01 03:21:34",),
-            _create_event(distinct_id="p3", event="/custom2", team=self.team, timestamp="2012-01-01 03:22:34",),
-            _create_event(distinct_id="p3", event="/custom3", team=self.team, timestamp="2012-01-01 03:24:34",),
+            _create_event(distinct_id="p3", event="/custom1", team=self.team, timestamp="2012-01-01 03:21:34", ),
+            _create_event(distinct_id="p3", event="/custom2", team=self.team, timestamp="2012-01-01 03:22:34", ),
+            _create_event(distinct_id="p3", event="/custom3", team=self.team, timestamp="2012-01-01 03:24:34", ),
         ]
 
         _ = [*p1, *p2, *p3]
@@ -1564,7 +1566,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
 
         self.assertEqual(
             response,
-            [{"source": "1_/custom1", "target": "2_/custom2", "value": 1, "average_conversion_time": ONE_MINUTE},],
+            [{"source": "1_/custom1", "target": "2_/custom2", "value": 1, "average_conversion_time": ONE_MINUTE}, ],
         )
 
         filter = filter.with_data({"include_event_types": [], "include_custom_events": ["/custom3", "blah"]})
@@ -1702,7 +1704,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
         response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter)
 
         self.assertEqual(
-            response, [{"source": "1_/1", "target": "2_/3", "value": 3, "average_conversion_time": 3 * ONE_MINUTE},],
+            response, [{"source": "1_/1", "target": "2_/3", "value": 3, "average_conversion_time": 3 * ONE_MINUTE}, ],
         )
 
         filter = filter.with_data({"path_groupings": ["/xxx/invalid/*"]})
@@ -1757,9 +1759,9 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
             team=self.team,
             timestamp="2012-01-01 03:28:34",
         ),
-        _create_event(distinct_id="p1", event="/custom1", team=self.team, timestamp="2012-01-01 03:29:34",),
-        _create_event(distinct_id="p1", event="/custom2", team=self.team, timestamp="2012-01-01 03:30:34",),
-        _create_event(distinct_id="p1", event="/custom3", team=self.team, timestamp="2012-01-01 03:32:34",),
+        _create_event(distinct_id="p1", event="/custom1", team=self.team, timestamp="2012-01-01 03:29:34", ),
+        _create_event(distinct_id="p1", event="/custom2", team=self.team, timestamp="2012-01-01 03:30:34", ),
+        _create_event(distinct_id="p1", event="/custom3", team=self.team, timestamp="2012-01-01 03:32:34", ),
 
         filter = PathFilter(data={"step_limit": 10, "date_from": "2012-01-01"})  # include everything, exclude nothing
         response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter)
@@ -2070,7 +2072,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
             },
             team=self.team,
         )
-        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter,)
+        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter, )
         self.assertEqual(
             response, [{"source": "1_/5", "target": "2_/about", "value": 2, "average_conversion_time": 60000.0}]
         )
@@ -2078,7 +2080,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
 
         # test aggregation for long paths
         filter = filter.with_data({"start_point": "/2", "step_limit": 4})
-        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter,)
+        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter, )
         self.assertEqual(
             response,
             [
@@ -2122,7 +2124,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
         self.assertEqual(should_query_list(filter), (True, True))
 
         filter = filter.with_data(
-            {"include_event_types": [], "include_custom_events": [], "exclude_events": ["$pageview"],}
+            {"include_event_types": [], "include_custom_events": [], "exclude_events": ["$pageview"], }
         )
         self.assertEqual(should_query_list(filter), (False, True))
 
@@ -2544,7 +2546,7 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                 "edge_limit": "6",
             }
         )
-        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter,)
+        response = Paths(team=self.team, filter=filter).run(team=self.team, filter=filter, )
         self.assertEqual(
             response,
             [
@@ -2585,8 +2587,9 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                     "target": "2_between_step_1_*",
                     "value": 15,
                     "average_conversion_time": (5 * 3 + 10 * 2)
-                    * ONE_MINUTE
-                    / 15,  # first 5 go till between_step_1_c, next 10 go till between_step_1_b
+                                               * ONE_MINUTE
+                                               / 15,
+                    # first 5 go till between_step_1_c, next 10 go till between_step_1_b
                 },
                 {
                     "source": "2_between_step_1_*",
@@ -2615,8 +2618,9 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
                     "target": "2_between_step_1_*",
                     "value": 15,
                     "average_conversion_time": (5 * 3 + 10 * 2)
-                    * ONE_MINUTE
-                    / 15,  # first 5 go till between_step_1_c, next 10 go till between_step_1_b
+                                               * ONE_MINUTE
+                                               / 15,
+                    # first 5 go till between_step_1_c, next 10 go till between_step_1_b
                 },
             ],
         )
@@ -3053,7 +3057,6 @@ class TestClickhousePaths(paths_test_factory(Paths)):  # type: ignore
 
 
 class TestClickhousePathsEdgeValidation(TestCase):
-
     BASIC_PATH = [("1_a", "2_b"), ("2_b", "3_c"), ("3_c", "4_d")]  # a->b->c->d
     BASIC_PATH_2 = [("1_x", "2_y"), ("2_y", "3_z")]  # x->y->z
 

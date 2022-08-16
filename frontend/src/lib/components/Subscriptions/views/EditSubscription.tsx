@@ -22,7 +22,7 @@ import {
     timeOptions,
     weekdayOptions,
 } from '../utils'
-import { LemonDivider, LemonInput, LemonTextArea, Link } from '@posthog/lemon-ui'
+import { LemonDivider, LemonInput, LemonTextArea, Link } from '@analytickit/lemon-ui'
 import {
     LemonSelectMultiple,
     LemonSelectMultipleOptionItem,
@@ -152,12 +152,12 @@ export function EditSubscription({
                                         <code>{window.location.origin}</code>
                                     </b>
                                     . <br />
-                                    If this value is not configured correctly PostHog may be unable to correctly send
+                                    If this value is not configured correctly analytickit may be unable to correctly send
                                     Subscriptions.{' '}
                                     <a
                                         target="_blank"
                                         rel="noopener"
-                                        href="https://posthog.com/docs/configuring-posthog/environment-variables?utm_medium=in-product&utm_campaign=subcriptions-system-status-site-url-misconfig"
+                                        href="https://analytickit.com/docs/configuring-analytickit/environment-variables?utm_medium=in-product&utm_campaign=subcriptions-system-status-site-url-misconfig"
                                     >
                                         Learn more <IconOpenInNew />
                                     </a>
@@ -178,10 +178,10 @@ export function EditSubscription({
                                 {emailDisabled && (
                                     <AlertMessage type="error">
                                         <>
-                                            Email subscriptions are not currently possible as this PostHog instance
+                                            Email subscriptions are not currently possible as this analytickit instance
                                             isn't{' '}
                                             <a
-                                                href="https://posthog.com/docs/self-host/configure/email"
+                                                href="https://analytickit.com/docs/self-host/configure/email"
                                                 target="_blank"
                                                 rel="noopener"
                                             >
@@ -226,7 +226,7 @@ export function EditSubscription({
                                             <AlertMessage type="info">
                                                 <div className="flex justify-between gap-2">
                                                     <span>
-                                                        Slack is not yet configured for this project. Add PostHog to
+                                                        Slack is not yet configured for this project. Add analytickit to
                                                         your Slack workspace to continue.
                                                     </span>
                                                     <a
@@ -269,11 +269,11 @@ export function EditSubscription({
                                                 <>
                                                     Private channels are only shown if you have{' '}
                                                     <a
-                                                        href="https://posthog.com/docs/integrate/third-party/slack"
+                                                        href="https://analytickit.com/docs/integrate/third-party/slack"
                                                         target="_blank"
                                                         rel="noopener"
                                                     >
-                                                        added the PostHog Slack App
+                                                        added the analytickit Slack App
                                                     </a>{' '}
                                                     to them
                                                 </>
@@ -297,11 +297,11 @@ export function EditSubscription({
                                                 <AlertMessage type="info">
                                                     <div className="flex gap-2 items-center">
                                                         <span>
-                                                            The PostHog Slack App is not in this channel. Please add it
+                                                            The analytickit Slack App is not in this channel. Please add it
                                                             to the channel otherwise Subscriptions will fail to be
                                                             delivered.{' '}
                                                             <a
-                                                                href="https://posthog.com/docs/integrate/third-party/slack"
+                                                                href="https://analytickit.com/docs/integrate/third-party/slack"
                                                                 target="_blank"
                                                                 rel="noopener"
                                                             >

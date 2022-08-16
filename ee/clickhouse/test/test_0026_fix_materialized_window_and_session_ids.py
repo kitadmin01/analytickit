@@ -1,14 +1,14 @@
 import importlib
 
 from ee.clickhouse.materialized_columns.columns import materialize
-from posthog.client import sync_execute
-from posthog.conftest import create_clickhouse_tables
-from posthog.settings import CLICKHOUSE_DATABASE
-from posthog.test.base import BaseTest, ClickhouseDestroyTablesMixin, ClickhouseTestMixin
+from analytickit.client import sync_execute
+from analytickit.conftest import create_clickhouse_tables
+from analytickit.settings import CLICKHOUSE_DATABASE
+from analytickit.test.base import BaseTest, ClickhouseDestroyTablesMixin, ClickhouseTestMixin
 
 # Import the migration in this way because it starts with a number
 _0026_fix_materialized_window_and_session_ids = importlib.import_module(
-    "posthog.clickhouse.migrations.0026_fix_materialized_window_and_session_ids"
+    "analytickit.clickhouse.migrations.0026_fix_materialized_window_and_session_ids"
 )
 does_column_exist = _0026_fix_materialized_window_and_session_ids.does_column_exist
 materialize_session_and_window_id = _0026_fix_materialized_window_and_session_ids.materialize_session_and_window_id

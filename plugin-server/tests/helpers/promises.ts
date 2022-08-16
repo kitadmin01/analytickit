@@ -1,6 +1,6 @@
-interface MockPromise<T> {
-    promise: Promise<T>
-    resolve: (value?: any) => void
+interfaceMockPromise < T> {
+promise: Promise < T>
+resolve:(value?: any) => void
     reject: (error: any) => void
 }
 

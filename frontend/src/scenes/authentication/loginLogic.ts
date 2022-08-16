@@ -1,20 +1,20 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import type { loginLogicType } from './loginLogicType'
-import { router } from 'kea-router'
-import { SSOProviders } from '~/types'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import type {loginLogicType}from './loginLogicType'
+import {router}from 'kea-router'
+import {SSOProviders}from '~/types'
+import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
 
 export interface AuthenticateResponseType {
-    success: boolean
-    errorCode?: string
-    errorDetail?: string
+success: boolean
+errorCode?: string
+errorDetail?: string
 }
 
 export interface PrecheckResponseType {
-    sso_enforcement?: SSOProviders | null
-    saml_available: boolean
-    status: 'pending' | 'completed'
+sso_enforcement?: SSOProviders | null
+saml_available: boolean
+status: 'pending' | 'completed'
 }
 
 export function handleLoginRedirect(): void {
@@ -79,7 +79,7 @@ export const loginLogic = kea<loginLogicType>({
         authenticateSuccess: ({ authenticateResponse }) => {
             if (authenticateResponse?.success) {
                 handleLoginRedirect()
-                // Reload the page after login to ensure POSTHOG_APP_CONTEXT is set correctly.
+                // Reload the page after login to ensure analytickit_APP_CONTEXT is set correctly.
                 window.location.reload()
             }
         },

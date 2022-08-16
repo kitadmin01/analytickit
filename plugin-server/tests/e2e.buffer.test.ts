@@ -1,19 +1,19 @@
-import IORedis from 'ioredis'
+importIORedisfrom'ioredis'
 
-import { ONE_HOUR } from '../src/config/constants'
-import { startPluginsServer } from '../src/main/pluginsServer'
-import { LogLevel, PluginsServerConfig } from '../src/types'
-import { Hub } from '../src/types'
-import { UUIDT } from '../src/utils/utils'
-import { makePiscina } from '../src/worker/piscina'
-import { createPosthog, DummyPostHog } from '../src/worker/vm/extensions/posthog'
-import { writeToFile } from '../src/worker/vm/extensions/test-utils'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from './helpers/clickhouse'
-import { resetKafka } from './helpers/kafka'
-import { pluginConfig39 } from './helpers/plugins'
-import { resetTestDatabase } from './helpers/sql'
+import {ONE_HOUR}from '../src/config/constants'
+import {startPluginsServer}from '../src/main/pluginsServer'
+import {LogLevel, PluginsServerConfig}from '../src/types'
+import {Hub}from '../src/types'
+import {UUIDT} from '../src/utils/utils'
+import {makePiscina}from '../src/worker/piscina'
+import { createanalytickit, Dummyanalytickit}from '../src/worker/vm/extensions/analytickit'
+import {writeToFile}from '../src/worker/vm/extensions/test-utils'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from './helpers/clickhouse'
+import {resetKafka}from './helpers/kafka'
+import { pluginConfig39}from './helpers/plugins'
+import {resetTestDatabase}from './helpers/sql'
 
-const { console: testConsole } = writeToFile
+const {console: testConsole} = writeToFile
 
 jest.mock('../src/utils/status')
 jest.setTimeout(60000) // 60 sec timeout
@@ -52,7 +52,7 @@ export function onEvent (event, { global }) {
 describe('E2E with buffer enabled', () => {
     let hub: Hub
     let stopServer: () => Promise<void>
-    let posthog: DummyPostHog
+    let analytickit: Dummyanalytickit
     let redis: IORedis.Redis
 
     beforeEach(async () => {
@@ -64,7 +64,7 @@ describe('E2E with buffer enabled', () => {
         hub = startResponse.hub
         stopServer = startResponse.stop
         redis = await hub.redisPool.acquire()
-        posthog = createPosthog(hub, pluginConfig39)
+        analytickit = createanalytickit(hub, pluginConfig39)
     })
 
     afterEach(async () => {
@@ -78,7 +78,7 @@ describe('E2E with buffer enabled', () => {
 
             const uuid = new UUIDT().toString()
 
-            await posthog.capture('custom event via buffer', { name: 'hehe', uuid })
+            await analytickit.capture('custom event via buffer', { name: 'hehe', uuid })
             await hub.kafkaProducer.flush()
 
             await delayUntilEventIngested(() => hub.db.fetchEvents(), undefined, undefined, 500)

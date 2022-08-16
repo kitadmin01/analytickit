@@ -5,10 +5,10 @@ import { ComponentMeta } from '@storybook/react'
 import { alphabet, range } from 'lib/utils'
 
 const DUMMIES: ProfileBubblesProps['people'] = [
-    { email: 'michael@posthog.com', name: 'Michael' },
-    { email: 'lottie@posthog.com', name: 'Lottie' },
-    { email: 'paul@posthog.com', name: 'Paul' },
-    { email: 'joe@posthog.com', name: 'Joe' },
+    { email: 'michael@analytickit.com', name: 'Michael' },
+    { email: 'lottie@analytickit.com', name: 'Lottie' },
+    { email: 'paul@analytickit.com', name: 'Paul' },
+    { email: 'joe@analytickit.com', name: 'Joe' },
 ]
 
 export default {
@@ -35,7 +35,7 @@ export function MultipleBubblesWithNoImages(props: any): JSX.Element {
             {...props}
             people={range(20).map((x) => ({
                 name: alphabet[x],
-                email: 'not-real-at-all@posthog.com',
+                email: 'not-real-at-all@analytickit.com',
             }))}
         />
     )

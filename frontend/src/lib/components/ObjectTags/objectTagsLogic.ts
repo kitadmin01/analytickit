@@ -1,16 +1,16 @@
-import { actions, kea, key, listeners, path, props, propsChanged, reducers, selectors } from 'kea'
-import type { objectTagsLogicType } from './objectTagsLogicType'
-import { lemonToast } from '../lemonToast'
+import{actions, kea, key, listeners, path, props, propsChanged, reducers, selectors}from 'kea'
+import type {objectTagsLogicType}from './objectTagsLogicType'
+import {lemonToast}from '../lemonToast'
 import equal from 'fast-deep-equal'
 
 export interface ObjectTagsLogicProps {
-    id: number
-    onChange?: (tag: string, tags: string[]) => void
+id: number
+onChange?:(tag: string, tags: string[]) => void
     tags: string[]
 }
 
 function cleanTag(tag?: string): string {
-    // Same clean done in posthog/api/tagged_item.py on frontend to mitigate confusion on tag create.
+    // Same clean done in analytickit/api/tagged_item.py on frontend to mitigate confusion on tag create.
     return (tag ?? '').trim().toLowerCase()
 }
 

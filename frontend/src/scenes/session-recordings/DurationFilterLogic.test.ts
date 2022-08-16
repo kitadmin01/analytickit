@@ -1,7 +1,7 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { PropertyOperator } from '~/types'
-import { durationFilterLogic } from './durationFilterLogic'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {PropertyOperator} from '~/types'
+import {durationFilterLogic }from './durationFilterLogic'
 
 describe('durationFilterLogic', () => {
     let logic: ReturnType<typeof durationFilterLogic.build>

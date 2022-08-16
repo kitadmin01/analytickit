@@ -15,7 +15,7 @@ describe('Auth', () => {
     it('Logout and login', () => {
         cy.get('[data-attr=top-menu-item-logout]').click()
 
-        cy.get('[data-attr=login-email]').type('fake@posthog.com').should('have.value', 'fake@posthog.com').blur()
+        cy.get('[data-attr=login-email]').type('fake@analytickit.com').should('have.value', 'fake@analytickit.com').blur()
         cy.get('[data-attr=password]', { timeout: 5000 }).should('be.visible') // Wait for login precheck (note blur above)
 
         cy.get('[data-attr=password]').type('12345678').should('have.value', '12345678')
@@ -26,7 +26,7 @@ describe('Auth', () => {
     it('Try logging in improperly', () => {
         cy.get('[data-attr=top-menu-item-logout]').click()
 
-        cy.get('[data-attr=login-email]').type('fake@posthog.com').should('have.value', 'fake@posthog.com').blur()
+        cy.get('[data-attr=login-email]').type('fake@analytickit.com').should('have.value', 'fake@analytickit.com').blur()
         cy.get('[data-attr=password]', { timeout: 5000 }).should('be.visible') // Wait for login precheck (note blur above)
         cy.get('[data-attr=password]').type('wrong password').should('have.value', 'wrong password')
         cy.get('[type=submit]').click()
@@ -41,7 +41,7 @@ describe('Auth', () => {
         cy.visit('/events')
         cy.location('pathname').should('include', '/login') // Should be redirected to login because we're now logged out
 
-        cy.get('[data-attr=login-email]').type('test@posthog.com').blur()
+        cy.get('[data-attr=login-email]').type('test@analytickit.com').blur()
         cy.get('[data-attr=password]', { timeout: 5000 }).should('be.visible') // Wait for login precheck (note blur above)
         cy.get('[data-attr=password]').type('12345678')
         cy.get('[type=submit]').click()
@@ -56,7 +56,7 @@ describe('Auth', () => {
         cy.visit('/insights?search=testString')
         cy.location('pathname').should('include', '/login') // Should be redirected to login because we're now logged out
 
-        cy.get('[data-attr=login-email]').type('test@posthog.com').blur()
+        cy.get('[data-attr=login-email]').type('test@analytickit.com').blur()
         cy.get('[data-attr=password]', { timeout: 5000 }).should('be.visible') // Wait for login precheck (note blur above)
         cy.get('[data-attr=password]').type('12345678')
         cy.get('[type=submit]').click()
@@ -81,10 +81,10 @@ describe('Password Reset', () => {
     it('Can request password reset', () => {
         cy.get('[data-attr="forgot-password"]').click()
         cy.location('pathname').should('eq', '/reset')
-        cy.get('[data-attr="reset-email"]').type('test@posthog.com')
+        cy.get('[data-attr="reset-email"]').type('test@analytickit.com')
         cy.get('button[type=submit]').click()
         cy.get('div').should('contain', 'Request received successfully!')
-        cy.get('b').should('contain', 'test@posthog.com')
+        cy.get('b').should('contain', 'test@analytickit.com')
     })
 
     it('Cannot reset with invalid token', () => {

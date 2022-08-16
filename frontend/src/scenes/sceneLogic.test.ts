@@ -1,12 +1,12 @@
-import { sceneLogic } from './sceneLogic'
-import { initKeaTests } from '~/test/init'
-import { expectLogic, partial, truth } from 'kea-test-utils'
-import { LoadedScene, Scene } from 'scenes/sceneTypes'
-import { teamLogic } from 'scenes/teamLogic'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { router } from 'kea-router'
-import { urls } from 'scenes/urls'
-import { appScenes } from 'scenes/appScenes'
+import{sceneLogic}from'./sceneLogic'
+import {initKeaTests}from '~/test/init'
+import { expectLogic, partial, truth}from 'kea-test-utils'
+import {LoadedScene, Scene}from 'scenes/sceneTypes'
+import {teamLogic}from 'scenes/teamLogic'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import { router}from 'kea-router'
+import {urls }from 'scenes/urls'
+import { appScenes}from 'scenes/appScenes'
 
 describe('sceneLogic', () => {
     let logic: ReturnType<typeof sceneLogic.build>

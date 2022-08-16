@@ -620,7 +620,7 @@
     <remote_servers>
 
         <!-- Test only shard config for testing distributed storage -->
-        <posthog>
+        <analytickit>
             <!-- Inter-server per-cluster secret for Distributed queries
                  default: no secret (no authentication will be performed)
 
@@ -655,7 +655,7 @@
                     <!-- <priority>1</priority> -->
                 </replica>
             </shard>
-        </posthog>
+        </analytickit>
     </remote_servers>
 
     <!-- The list of hosts allowed to use in URL-related storage engines and table functions.
@@ -707,7 +707,6 @@
         <shard>01</shard>
         <replica>ch1</replica>
     </macros>
-
 
 
     <!-- Reloading interval for embedded dictionaries, in seconds. Default: 3600. -->
@@ -914,7 +913,7 @@
         <database>system</database>
         <table>crash_log</table>
 
-        <partition_by />
+        <partition_by/>
         <flush_interval_milliseconds>1000</flush_interval_milliseconds>
     </crash_log>
 
@@ -984,23 +983,23 @@
          a Base64-encoded key to the stdout. -->
     <encryption_codecs>
         <!-- aes_128_gcm_siv -->
-            <!-- Example of getting hex key from env -->
-            <!-- the code should use this key and throw an exception if its length is not 16 bytes -->
-            <!--key_hex from_env="..."></key_hex -->
+        <!-- Example of getting hex key from env -->
+        <!-- the code should use this key and throw an exception if its length is not 16 bytes -->
+        <!--key_hex from_env="..."></key_hex -->
 
-            <!-- Example of multiple hex keys. They can be imported from env or be written down in config-->
-            <!-- the code should use these keys and throw an exception if their length is not 16 bytes -->
-            <!-- key_hex id="0">...</key_hex -->
-            <!-- key_hex id="1" from_env=".."></key_hex -->
-            <!-- key_hex id="2">...</key_hex -->
-            <!-- current_key_id>2</current_key_id -->
+        <!-- Example of multiple hex keys. They can be imported from env or be written down in config-->
+        <!-- the code should use these keys and throw an exception if their length is not 16 bytes -->
+        <!-- key_hex id="0">...</key_hex -->
+        <!-- key_hex id="1" from_env=".."></key_hex -->
+        <!-- key_hex id="2">...</key_hex -->
+        <!-- current_key_id>2</current_key_id -->
 
-            <!-- Example of getting hex key from config -->
-            <!-- the code should use this key and throw an exception if its length is not 16 bytes -->
-            <!-- key>...</key -->
+        <!-- Example of getting hex key from config -->
+        <!-- the code should use this key and throw an exception if its length is not 16 bytes -->
+        <!-- key>...</key -->
 
-            <!-- example of adding nonce -->
-            <!-- nonce>...</nonce -->
+        <!-- example of adding nonce -->
+        <!-- nonce>...</nonce -->
 
         <!-- /aes_128_gcm_siv -->
     </encryption_codecs>

@@ -1,20 +1,20 @@
-import { actions, afterMount, connect, kea, listeners, path, reducers, selectors } from 'kea'
+import{actions, afterMount, connect, kea, listeners, path, reducers, selectors}from 'kea'
 import api from 'lib/api'
-import type { userLogicType } from './userLogicType'
-import { AvailableFeature, OrganizationBasicType, UserType } from '~/types'
-import posthog from 'posthog-js'
-import { getAppContext } from 'lib/utils/getAppContext'
-import { preflightLogic } from './PreflightCheck/preflightLogic'
-import { lemonToast } from 'lib/components/lemonToast'
-import { loaders } from 'kea-loaders'
-import { forms } from 'kea-forms'
+import type {userLogicType}from './userLogicType'
+import {AvailableFeature, OrganizationBasicType, UserType}from '~/types'
+import analytickit from 'analytickit-js'
+import {getAppContext}from 'lib/utils/getAppContext'
+import {preflightLogic}from './PreflightCheck/preflightLogic'
+import { lemonToast}from 'lib/components/lemonToast'
+import {loaders}from 'kea-loaders'
+import {forms}from 'kea-forms'
 
 export interface UserDetailsFormType {
-    first_name: string
+first_name: string
 }
 
 export const userLogic = kea<userLogicType>([
-    path(['scenes', 'userLogic']),
+path(['scenes', 'userLogic']),
     connect({
         values: [preflightLogic, ['preflight']],
     }),
@@ -84,7 +84,7 @@ export const userLogic = kea<userLogicType>([
     }),
     listeners(({ values }) => ({
         logout: () => {
-            posthog.reset()
+            analytickit.reset()
             window.location.href = '/logout'
         },
         loadUserSuccess: ({ user }) => {
@@ -95,28 +95,28 @@ export const userLogic = kea<userLogicType>([
                     id: user.uuid,
                 })
 
-                if (posthog) {
+                if (analytickit) {
                     // If user is not anonymous and the distinct id is different from the current one, reset
                     if (
-                        posthog.get_property('$device_id') !== posthog.get_distinct_id() &&
-                        posthog.get_distinct_id() !== user.distinct_id
+                        analytickit.get_property('$device_id') !== analytickit.get_distinct_id() &&
+                        analytickit.get_distinct_id() !== user.distinct_id
                     ) {
-                        posthog.reset()
+                        analytickit.reset()
                     }
 
-                    posthog.identify(user.distinct_id)
-                    posthog.people.set({
+                    analytickit.identify(user.distinct_id)
+                    analytickit.people.set({
                         email: user.anonymize_data ? null : user.email,
                         realm: user.realm,
-                        posthog_version: user.posthog_version,
+                        analytickit_version: user.analytickit_version,
                     })
 
-                    posthog.register({
+                    analytickit.register({
                         is_demo_project: user.team?.is_demo,
                     })
 
                     if (user.team) {
-                        posthog.group('project', user.team.uuid, {
+                        analytickit.group('project', user.team.uuid, {
                             id: user.team.id,
                             uuid: user.team.uuid,
                             name: user.team.name,
@@ -127,7 +127,7 @@ export const userLogic = kea<userLogicType>([
                     }
 
                     if (user.organization) {
-                        posthog.group('organization', user.organization.id, {
+                        analytickit.group('organization', user.organization.id, {
                             id: user.organization.id,
                             name: user.organization.name,
                             slug: user.organization.slug,
@@ -174,7 +174,7 @@ export const userLogic = kea<userLogicType>([
             (preflight): string =>
                 preflight?.cloud
                     ? '/organization/billing'
-                    : 'https://license.posthog.com?utm_medium=in-product&utm_campaign=in-product-upgrade',
+                    : 'https://license.analytickit.com?utm_medium=in-product&utm_campaign=in-product-upgrade',
         ],
         otherOrganizations: [
             (s) => [s.user],

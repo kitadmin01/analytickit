@@ -1,6 +1,6 @@
 {
-    "name": "PostHog",
-    "short_name": "PostHog",
+    "name": "analytickit",
+    "short_name": "analytickit",
     "icons": [
         {
             "src": "/static/icons/android-chrome-192x192.png?v=2021-04-28",

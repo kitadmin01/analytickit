@@ -106,7 +106,7 @@ export function StaffUsersTab(): JSX.Element {
             <div className="mb-4">
                 Users who have permissions to manage instance-wide settings. Staff user permissions are set at the{' '}
                 <b>instance-level and are independent of any organization or project permissions.</b>{' '}
-                <a href="https://posthog.com/docs/self-host/configure/instance-settings#staff-users" target="_blank">
+                <a href="https://analytickit.com/docs/self-host/configure/instance-settings#staff-users" target="_blank">
                     Learn more <IconOpenInNew style={{ verticalAlign: 'middle' }} />
                 </a>
                 .

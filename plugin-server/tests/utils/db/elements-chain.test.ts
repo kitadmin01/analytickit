@@ -1,4 +1,4 @@
-import { chainToElements, elementsToString } from '../../../src/utils/db/elements-chain'
+import{chainToElements, elementsToString}from '../../../src/utils/db/elements-chain'
 
 describe('elementsToString and chainToElements', () => {
     it('is reversible', () => {
@@ -29,10 +29,10 @@ describe('elementsToString and chainToElements', () => {
                 'div:nth-child="0"nth-of-type="0"',
                 'div:attr_id="nested"nth-child="0"nth-of-type="0"',
             ].join(';')
-        )
+)
 
-        const elements = chainToElements(elementsString, { throwOnError: true })
-        expect(elements.length).toBe(4)
+const elements = chainToElements(elementsString, { throwOnError: true })
+expect(elements.length).toBe(4)
         expect(elements[0].tag_name).toEqual('a')
         expect(elements[0].href).toEqual('/a-url')
         expect(elements[0].attr_class).toEqual(['small'])
@@ -63,10 +63,10 @@ describe('elementsToString and chainToElements', () => {
                 tag_name: 'a',
                 attr_class: ['small'],
             })
-        )
-    })
+)
+})
 
-    it('handles element containing quotes and colons', () => {
+it('handles element containing quotes and colons', () => {
         const element = {
             tag_name: 'a',
             href: '/a-url',
@@ -80,10 +80,10 @@ describe('elementsToString and chainToElements', () => {
 
         expect(elementsString).toEqual(
             'a.small.xy:z:attr_class="xyz small\\""href="/a-url"nth-child="0"nth-of-type="0"'
-        )
+)
 
-        const elements = chainToElements(elementsString, { throwOnError: true })
-        expect(elements.length).toEqual(1)
+const elements = chainToElements(elementsString, { throwOnError: true })
+expect(elements.length).toEqual(1)
         expect(elements[0]).toEqual(
             expect.objectContaining({
                 tag_name: 'a',
@@ -94,6 +94,6 @@ describe('elementsToString and chainToElements', () => {
                     attr_class: 'xyz small\\"',
                 },
             })
-        )
-    })
+)
+})
 })

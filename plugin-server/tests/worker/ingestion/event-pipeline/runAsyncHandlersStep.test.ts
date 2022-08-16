@@ -1,7 +1,7 @@
-import { IngestionEvent } from '../../../../src/types'
-import { convertToProcessedPluginEvent } from '../../../../src/utils/event'
-import { runAsyncHandlersStep } from '../../../../src/worker/ingestion/event-pipeline/6-runAsyncHandlersStep'
-import { runOnEvent, runOnSnapshot } from '../../../../src/worker/plugins/run'
+import{IngestionEvent}from'../../../../src/types'
+import {convertToProcessedPluginEvent }from '../../../../src/utils/event'
+import {runAsyncHandlersStep}from '../../../../src/worker/ingestion/event-pipeline/6-runAsyncHandlersStep'
+import {runOnEvent, runOnSnapshot}from '../../../../src/worker/plugins/run'
 
 jest.mock('../../../../src/worker/plugins/run')
 

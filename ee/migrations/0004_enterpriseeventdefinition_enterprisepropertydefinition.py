@@ -7,9 +7,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("posthog", "0156_insight_short_id"),
+        ("analytickit", "0156_insight_short_id"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("ee", "0003_license_max_users"),
     ]
@@ -26,7 +25,7 @@ class Migration(migrations.Migration):
                         parent_link=True,
                         primary_key=True,
                         serialize=False,
-                        to="posthog.propertydefinition",
+                        to="analytickit.propertydefinition",
                     ),
                 ),
                 ("description", models.CharField(blank=True, max_length=400)),
@@ -44,8 +43,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False,},
-            bases=("posthog.propertydefinition",),
+            options={"abstract": False, },
+            bases=("analytickit.propertydefinition",),
         ),
         migrations.CreateModel(
             name="EnterpriseEventDefinition",
@@ -58,7 +57,7 @@ class Migration(migrations.Migration):
                         parent_link=True,
                         primary_key=True,
                         serialize=False,
-                        to="posthog.eventdefinition",
+                        to="analytickit.eventdefinition",
                     ),
                 ),
                 ("description", models.CharField(blank=True, max_length=400)),
@@ -85,7 +84,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False,},
-            bases=("posthog.eventdefinition",),
+            options={"abstract": False, },
+            bases=("analytickit.eventdefinition",),
         ),
     ]

@@ -1,34 +1,34 @@
-import { RGBColor } from 'd3'
-import { FilterType, FunnelPathType } from '~/types'
+import{RGBColor}from'd3'
+import {FilterType, FunnelPathType}from '~/types'
 
 export interface PathTargetLink {
-    average_conversion_time: number
-    index: number
-    source: PathNodeData
-    target: PathNodeData
-    value: number
-    width: number
-    y0: number
-    color: RGBColor
+average_conversion_time: number
+index: number
+source: PathNodeData
+target: PathNodeData
+value: number
+width: number
+y0: number
+color: RGBColor
 }
 
 export interface PathNodeData {
-    name: string
-    targetLinks: PathTargetLink[]
-    sourceLinks: PathTargetLink[]
-    depth: number
-    width: number
-    height: number
-    index: number
-    value: number
-    x0: number
-    x1: number
-    y0: number
-    y1: number
-    layer: number
-    source: PathNodeData
-    target: PathNodeData
-    visible?: boolean
+name: string
+targetLinks: PathTargetLink[]
+sourceLinks: PathTargetLink[]
+depth: number
+width: number
+height: number
+index: number
+value: number
+x0: number
+x1: number
+y0: number
+y1: number
+layer: number
+source: PathNodeData
+target: PathNodeData
+visible?: boolean
 }
 
 export function roundedRect(
@@ -119,11 +119,11 @@ export const isSelectedPathStartOrEnd = (filter: Partial<FilterType>, pathItemCa
         (filter.funnel_paths === FunnelPathType.between &&
             ((cardName === filter.funnel_filter?.events[filter.funnel_filter.funnel_step - 1].name && isPathEnd) ||
                 (cardName === filter.funnel_filter?.events[filter.funnel_filter.funnel_step - 2].name && isPathStart)))
-    )
+)
 }
 
 export const getDropOffValue = (pathItemCard: PathNodeData): number => {
-    return pathItemCard.value - pathItemCard.sourceLinks.reduce((prev, curr) => prev + curr.value, 0)
+return pathItemCard.value - pathItemCard.sourceLinks.reduce((prev, curr) => prev + curr.value, 0)
 }
 
 export const getContinuingValue = (sourceLinks: PathTargetLink[]): number => {

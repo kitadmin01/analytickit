@@ -13,7 +13,7 @@ from ee.clickhouse.queries.experiments.funnel_experiment_result import (
 from ee.clickhouse.queries.experiments.trend_experiment_result import ClickhouseTrendExperimentResult
 from ee.clickhouse.queries.experiments.trend_experiment_result import Variant as CountVariant
 from ee.clickhouse.queries.experiments.trend_experiment_result import calculate_p_value
-from posthog.constants import ExperimentSignificanceCode
+from analytickit.constants import ExperimentSignificanceCode
 
 Probability = float
 
@@ -72,9 +72,8 @@ def probability_B_beats_A(A_success: int, A_failure: int, B_success: int, B_fail
 
 
 def probability_C_beats_A_and_B(
-    A_success: int, A_failure: int, B_success: int, B_failure: int, C_success: int, C_failure: int
+        A_success: int, A_failure: int, B_success: int, B_failure: int, C_success: int, C_failure: int
 ):
-
     total: Probability = 0
     for i in range(A_success):
         for j in range(B_success):
@@ -88,22 +87,22 @@ def probability_C_beats_A_and_B(
             )
 
     return (
-        1
-        - probability_B_beats_A(C_success, C_failure, A_success, A_failure)
-        - probability_B_beats_A(C_success, C_failure, B_success, B_failure)
-        + total
+            1
+            - probability_B_beats_A(C_success, C_failure, A_success, A_failure)
+            - probability_B_beats_A(C_success, C_failure, B_success, B_failure)
+            + total
     )
 
 
 def probability_D_beats_A_B_and_C(
-    A_success: int,
-    A_failure: int,
-    B_success: int,
-    B_failure: int,
-    C_success: int,
-    C_failure: int,
-    D_success: int,
-    D_failure: int,
+        A_success: int,
+        A_failure: int,
+        B_success: int,
+        B_failure: int,
+        C_success: int,
+        C_failure: int,
+        D_success: int,
+        D_failure: int,
 ):
     total: Probability = 0
     for i in range(A_success):
@@ -121,21 +120,20 @@ def probability_D_beats_A_B_and_C(
                 )
 
     return (
-        1
-        - probability_B_beats_A(A_success, A_failure, D_success, D_failure)
-        - probability_B_beats_A(B_success, B_failure, D_success, D_failure)
-        - probability_B_beats_A(C_success, C_failure, D_success, D_failure)
-        + probability_C_beats_A_and_B(A_success, A_failure, B_success, B_failure, D_success, D_failure)
-        + probability_C_beats_A_and_B(A_success, A_failure, C_success, C_failure, D_success, D_failure)
-        + probability_C_beats_A_and_B(B_success, B_failure, C_success, C_failure, D_success, D_failure)
-        - total
+            1
+            - probability_B_beats_A(A_success, A_failure, D_success, D_failure)
+            - probability_B_beats_A(B_success, B_failure, D_success, D_failure)
+            - probability_B_beats_A(C_success, C_failure, D_success, D_failure)
+            + probability_C_beats_A_and_B(A_success, A_failure, B_success, B_failure, D_success, D_failure)
+            + probability_C_beats_A_and_B(A_success, A_failure, C_success, C_failure, D_success, D_failure)
+            + probability_C_beats_A_and_B(B_success, B_failure, C_success, C_failure, D_success, D_failure)
+            - total
     )
 
 
 @flaky(max_runs=10, min_passes=1)
 class TestFunnelExperimentCalculator(unittest.TestCase):
     def test_calculate_results(self):
-
         variant_test = Variant("A", 100, 10)
         variant_control = Variant("B", 100, 18)
 
@@ -319,7 +317,7 @@ class TestFunnelExperimentCalculator(unittest.TestCase):
 
 # calculation: https://www.evanmiller.org/bayesian-ab-testing.html#count_ab
 def calculate_probability_of_winning_for_target_count_data(
-    target_variant: CountVariant, other_variants: List[CountVariant]
+        target_variant: CountVariant, other_variants: List[CountVariant]
 ) -> Probability:
     """
     Calculates the probability of winning for target variant.
@@ -354,7 +352,7 @@ def probability_B_beats_A_count_data(A_count: int, A_exposure: float, B_count: i
 
 
 def probability_C_beats_A_and_B_count_data(
-    A_count: int, A_exposure: float, B_count: int, B_exposure: float, C_count: int, C_exposure: float
+        A_count: int, A_exposure: float, B_count: int, B_exposure: float, C_count: int, C_exposure: float
 ) -> Probability:
     total: Probability = 0
 
@@ -371,10 +369,10 @@ def probability_C_beats_A_and_B_count_data(
                 - lgamma(C_count)
             )
     return (
-        1
-        - probability_B_beats_A_count_data(C_count, C_exposure, A_count, A_exposure)
-        - probability_B_beats_A_count_data(C_count, C_exposure, B_count, B_exposure)
-        + total
+            1
+            - probability_B_beats_A_count_data(C_count, C_exposure, A_count, A_exposure)
+            - probability_B_beats_A_count_data(C_count, C_exposure, B_count, B_exposure)
+            + total
     )
 
 

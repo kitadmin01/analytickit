@@ -1,7 +1,7 @@
 #
 # This Dockerfile is used for self-hosted production builds.
 #
-# Note: for 'posthog/posthog-cloud' remember to update 'prod.web.Dockerfile' as appropriate
+# Note: for 'analytickit/analytickit-cloud' remember to update 'prod.web.Dockerfile' as appropriate
 #
 
 #
@@ -52,7 +52,7 @@ RUN yarn config set network-timeout 300000 && \
 COPY ./plugin-server/src/ ./src/
 RUN yarn build
 
-# Build the posthog image, incorporating the Django app along with the frontend,
+# Build the analytickit image, incorporating the Django app along with the frontend,
 # as well as the plugin-server
 FROM python:3.8.12-alpine3.14
 
@@ -60,7 +60,7 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /code
 
-# Install OS dependencies needed to run PostHog
+# Install OS dependencies needed to run analytickit
 #
 # Note: please add in this section runtime dependences only.
 # If you temporary need a package to build a Python or npm
@@ -87,7 +87,7 @@ RUN apk --update --no-cache --virtual .geolite-deps add \
     && \
     mkdir share \
     && \
-    ( curl -L "https://mmdbcdn.posthog.net/" | brotli --decompress --output=./share/GeoLite2-City.mmdb ) \
+    ( curl -L "https://mmdbcdn.analytickit.net/" | brotli --decompress --output=./share/GeoLite2-City.mmdb ) \
     && \
     chmod -R 755 ./share/GeoLite2-City.mmdb \
     && \
@@ -122,16 +122,16 @@ RUN apk --update --no-cache --virtual .build-deps add \
     && \
     apk del .build-deps
 
-RUN addgroup -S posthog && \
-    adduser -S posthog -G posthog
+RUN addgroup -S analytickit && \
+    adduser -S analytickit -G analytickit
 
-RUN chown posthog.posthog /code
+RUN chown analytickit.analytickit /code
 
-USER posthog
+USER analytickit
 
 # Add in Django deps and generate Django's static files
 COPY manage.py manage.py
-COPY posthog posthog/
+COPY analytickit analytickit/
 COPY ee ee/
 COPY --from=frontend /code/frontend/dist /code/frontend/dist
 
@@ -153,7 +153,7 @@ RUN apk --update --no-cache add "make~=4.3" "g++~=10.3" "npm~=7" --virtual .buil
     && yarn cache clean \
     && apk del .build-deps
 
-USER posthog
+USER analytickit
 
 # Add in the compiled plugin-server
 COPY --from=plugin-server /code/plugin-server/dist/ ./dist/
@@ -165,7 +165,7 @@ COPY ./plugin-server/package.json ./plugin-server/
 # We need bash to run the bin scripts
 RUN apk --update --no-cache add "bash~=5.1"
 COPY ./bin ./bin/
-USER posthog
+USER analytickit
 
 ENV CHROME_BIN=/usr/bin/chromium-browser \
     CHROME_PATH=/usr/lib/chromium/ \

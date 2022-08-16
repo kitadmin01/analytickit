@@ -4,12 +4,13 @@ from typing import List, Optional, Union
 
 from django.utils.timezone import now
 
-from posthog.client import sync_execute
-from posthog.models.filters.utils import validate_group_type_index
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.property import GroupTypeIndex
-from posthog.queries.actor_base_query import SerializedActor, SerializedGroup, SerializedPerson, get_groups, get_people
-from posthog.queries.person_distinct_id_query import get_team_distinct_ids_query
+from analytickit.client import sync_execute
+from analytickit.models.filters.utils import validate_group_type_index
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.property import GroupTypeIndex
+from analytickit.queries.actor_base_query import SerializedActor, SerializedGroup, SerializedPerson, get_groups, \
+    get_people
+from analytickit.queries.person_distinct_id_query import get_team_distinct_ids_query
 
 
 class RelatedActorsQuery:

@@ -34,7 +34,7 @@ import {
 import { dayjs } from 'lib/dayjs'
 import { inviteLogic } from 'scenes/organization/Settings/inviteLogic'
 import { Tooltip } from 'lib/components/Tooltip'
-import { LemonButtonPropsBase } from '@posthog/lemon-ui'
+import { LemonButtonPropsBase } from '@analytickit/lemon-ui'
 import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
 
 function SitePopoverSection({ title, children }: { title?: string | JSX.Element; children: any }): JSX.Element {
@@ -196,13 +196,13 @@ function Version(): JSX.Element {
             <>
                 <div className="SitePopover__main-info">
                     <div>
-                        Version <strong>{preflight?.posthog_version}</strong>
+                        Version <strong>{preflight?.analytickit_version}</strong>
                     </div>
                     {updateAvailable && <div className="supplement">{latestVersion} is available</div>}
                 </div>
                 {latestVersion && (
                     <Link
-                        href={`https://posthog.com/blog/the-posthog-array-${latestVersion.replace(/\./g, '-')}`}
+                        href={`https://analytickit.com/blog/the-analytickit-array-${latestVersion.replace(/\./g, '-')}`}
                         target="_blank"
                         rel="noopener"
                         onClick={() => {
@@ -322,7 +322,7 @@ export function SitePopover(): JSX.Element {
                         </SitePopoverSection>
                     )}
                     {(!(preflight?.cloud || preflight?.demo) || user?.is_staff) && (
-                        <SitePopoverSection title="PostHog instance">
+                        <SitePopoverSection title="analytickit instance">
                             {!preflight?.cloud && <License license={relevantLicense} expired={expired} />}
                             <SystemStatus />
                             {!preflight?.cloud && <Version />}

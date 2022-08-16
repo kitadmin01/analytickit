@@ -38,7 +38,7 @@ import { usePageVisibility } from 'lib/hooks/usePageVisibility'
 import { LemonTableConfig } from 'lib/components/ResizableTable/TableConfig'
 import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
 import { EventBufferNotice } from './EventBufferNotice'
-import { LemonDivider } from '@posthog/lemon-ui'
+import { LemonDivider } from '@analytickit/lemon-ui'
 
 export interface FixedFilters {
     action_id?: ActionType['id']
@@ -454,7 +454,7 @@ export function EventsTable({
                                         Exporting by csv is limited to 3,500 events.
                                         <br />
                                         To return more, please use{' '}
-                                        <a href="https://posthog.com/docs/api/events">the API</a>. Do you want to export
+                                        <a href="https://analytickit.com/docs/api/events">the API</a>. Do you want to export
                                         by CSV?
                                     </>
                                 }
@@ -482,9 +482,9 @@ export function EventsTable({
                         `No events matching filters found in the last ${months} months!`
                     ) : (
                         <>
-                            This project doesn't have any events. If you haven't integrated PostHog yet,{' '}
+                            This project doesn't have any events. If you haven't integrated analytickit yet,{' '}
                             <Link to="/project/settings">
-                                click here to instrument analytics with PostHog in your product
+                                click here to instrument analytics with analytickit in your product
                             </Link>
                             .
                         </>

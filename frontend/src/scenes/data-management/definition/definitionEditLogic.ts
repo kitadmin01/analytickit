@@ -1,27 +1,27 @@
-import { beforeUnmount, connect, kea, key, path, props } from 'kea'
-import { Definition, EventDefinition, PropertyDefinition } from '~/types'
-import { forms } from 'kea-forms'
-import { loaders } from 'kea-loaders'
+import{beforeUnmount, connect, kea, key, path, props} from 'kea'
+import {Definition, EventDefinition, PropertyDefinition}from '~/types'
+import {forms}from 'kea-forms'
+import {loaders}from 'kea-loaders'
 import api from 'lib/api'
-import { lemonToast } from 'lib/components/lemonToast'
-import { propertyDefinitionsModel } from '~/models/propertyDefinitionsModel'
-import { eventDefinitionsModel } from '~/models/eventDefinitionsModel'
+import {lemonToast }from 'lib/components/lemonToast'
+import {propertyDefinitionsModel}from '~/models/propertyDefinitionsModel'
+import {eventDefinitionsModel}from '~/models/eventDefinitionsModel'
 import {
-    definitionLogic,
-    DefinitionLogicProps,
-    DefinitionPageMode,
-} from 'scenes/data-management/definition/definitionLogic'
-import type { definitionEditLogicType } from './definitionEditLogicType'
-import { capitalizeFirstLetter } from 'lib/utils'
-import { eventDefinitionsTableLogic } from 'scenes/data-management/events/eventDefinitionsTableLogic'
-import { eventPropertyDefinitionsTableLogic } from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
+definitionLogic,
+DefinitionLogicProps,
+DefinitionPageMode,
+}from 'scenes/data-management/definition/definitionLogic'
+import type {definitionEditLogicType }from './definitionEditLogicType'
+import { capitalizeFirstLetter}from 'lib/utils'
+import {eventDefinitionsTableLogic}from 'scenes/data-management/events/eventDefinitionsTableLogic'
+import {eventPropertyDefinitionsTableLogic}from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
 
 export interface DefinitionEditLogicProps extends DefinitionLogicProps {
-    definition: Definition
+definition: Definition
 }
 
 export const definitionEditLogic = kea<definitionEditLogicType>([
-    path(['scenes', 'data-management', 'definition', 'definitionDetailLogic']),
+path(['scenes', 'data-management', 'definition', 'definitionDetailLogic']),
     props({} as DefinitionEditLogicProps),
     key((props) => props.id || 'new'),
     connect(({ id }: DefinitionEditLogicProps) => ({

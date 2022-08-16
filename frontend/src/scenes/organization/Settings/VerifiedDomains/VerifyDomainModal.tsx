@@ -10,7 +10,7 @@ import { verifiedDomainsLogic } from './verifiedDomainsLogic'
 export function VerifyDomainModal(): JSX.Element {
     const { domainBeingVerified, updatingDomainLoading } = useValues(verifiedDomainsLogic)
     const { setVerifyModal, verifyDomain } = useActions(verifiedDomainsLogic)
-    const challengeName = `_posthog-challenge.${domainBeingVerified?.domain}.`
+    const challengeName = `_analytickit-challenge.${domainBeingVerified?.domain}.`
 
     return (
         <LemonModal

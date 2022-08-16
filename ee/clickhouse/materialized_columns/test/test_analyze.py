@@ -1,7 +1,7 @@
 from ee.clickhouse.materialized_columns.analyze import Query, TeamManager
-from posthog.clickhouse.kafka_engine import trim_quotes_expr
-from posthog.models import Person, PropertyDefinition
-from posthog.test.base import BaseTest, ClickhouseTestMixin
+from analytickit.clickhouse.kafka_engine import trim_quotes_expr
+from analytickit.models import Person, PropertyDefinition
+from analytickit.test.base import BaseTest, ClickhouseTestMixin
 
 
 class TestMaterializedColumnsAnalyze(ClickhouseTestMixin, BaseTest):

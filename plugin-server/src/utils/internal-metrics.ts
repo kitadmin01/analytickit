@@ -1,16 +1,16 @@
-import Piscina from '@posthog/piscina'
-import { PluginEvent } from '@posthog/plugin-scaffold'
+importPiscinafrom'@analytickit/piscina'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 
-import { Hub, TeamId } from '../types'
-import { UUIDT } from './utils'
+import {Hub, TeamId}from '../types'
+import {UUIDT}from './utils'
 
 export class InternalMetrics {
-    metrics: Record<string, number>
-    teamId: TeamId | null | undefined
+metrics: Record < string, number>
+teamId: TeamId | null | undefined
 
-    hub: Hub
+hub: Hub
 
-    constructor(hub: Hub) {
+constructor(hub: Hub) {
         this.metrics = {}
         this.teamId = undefined
 

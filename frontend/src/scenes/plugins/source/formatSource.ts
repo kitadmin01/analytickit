@@ -1,4 +1,4 @@
-import * as prettier from 'prettier/standalone'
+import* as prettier from 'prettier/standalone'
 import * as parserTypeScript from 'prettier/parser-typescript'
 export function formatSource(filename: string, source: string): string {
     if (filename.endsWith('.json')) {

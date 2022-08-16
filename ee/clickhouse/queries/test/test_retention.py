@@ -1,10 +1,10 @@
 from ee.clickhouse.queries.retention import ClickhouseRetention
-from posthog.models.filters.retention_filter import RetentionFilter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.person import Person
-from posthog.queries.test.test_retention import _create_events, _date, pluck, retention_test_factory
-from posthog.test.base import snapshot_clickhouse_queries
+from analytickit.models.filters.retention_filter import RetentionFilter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.person import Person
+from analytickit.queries.test.test_retention import _create_events, _date, pluck, retention_test_factory
+from analytickit.test.base import snapshot_clickhouse_queries
 
 
 class TestClickhouseRetention(retention_test_factory(ClickhouseRetention)):  # type: ignore
@@ -60,7 +60,7 @@ class TestClickhouseRetention(retention_test_factory(ClickhouseRetention)):  # t
 
         self.assertEqual(
             pluck(result, "values", "count"),
-            [[1, 1, 0, 1, 1, 0, 1], [1, 0, 1, 1, 0, 1], [0, 0, 0, 0, 0], [1, 1, 0, 1], [1, 0, 1], [0, 0], [1],],
+            [[1, 1, 0, 1, 1, 0, 1], [1, 0, 1, 1, 0, 1], [0, 0, 0, 0, 0], [1, 1, 0, 1], [1, 0, 1], [0, 0], [1], ],
         )
 
         result = ClickhouseRetention().run(
@@ -80,7 +80,7 @@ class TestClickhouseRetention(retention_test_factory(ClickhouseRetention)):  # t
 
         self.assertEqual(
             pluck(result, "values", "count"),
-            [[2, 2, 1, 2, 2, 0, 1], [2, 1, 2, 2, 0, 1], [1, 1, 1, 0, 0], [2, 2, 0, 1], [2, 0, 1], [0, 0], [1],],
+            [[2, 2, 1, 2, 2, 0, 1], [2, 1, 2, 2, 0, 1], [1, 1, 1, 0, 0], [2, 2, 0, 1], [2, 0, 1], [0, 0], [1], ],
         )
 
     @snapshot_clickhouse_queries
@@ -100,7 +100,7 @@ class TestClickhouseRetention(retention_test_factory(ClickhouseRetention)):  # t
         result = ClickhouseRetention().run(filter, self.team)
         self.assertEqual(
             pluck(result, "values", "count"),
-            [[2, 2, 1, 2, 2, 0, 1], [2, 1, 2, 2, 0, 1], [1, 1, 1, 0, 0], [2, 2, 0, 1], [2, 0, 1], [0, 0], [1],],
+            [[2, 2, 1, 2, 2, 0, 1], [2, 1, 2, 2, 0, 1], [1, 1, 1, 0, 0], [2, 2, 0, 1], [2, 0, 1], [0, 0], [1], ],
         )
 
         actor_result = ClickhouseRetention().actors(filter.with_data({"selected_interval": 0}), self.team)
@@ -120,7 +120,7 @@ class TestClickhouseRetention(retention_test_factory(ClickhouseRetention)):  # t
         result = ClickhouseRetention().run(filter, self.team)
         self.assertEqual(
             pluck(result, "values", "count"),
-            [[1, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 0, 1], [0, 0, 0], [0, 0], [1],],
+            [[1, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 0, 1], [0, 0, 0], [0, 0], [1], ],
         )
 
     @snapshot_clickhouse_queries

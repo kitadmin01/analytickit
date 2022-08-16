@@ -18,7 +18,7 @@ export function Exporter(props: ExportedData): JSX.Element {
     useEffect(() => {
         // NOTE: For embedded views we emit an event to indicate the content width / height to allow the parent to correctly resize
         // NOTE: We post the window name to allow the parent to identify the iframe
-        window.parent?.postMessage({ event: 'posthog:dimensions', name: window.name, height, width }, '*')
+        window.parent?.postMessage({ event: 'analytickit:dimensions', name: window.name, height, width }, '*')
     }, [height, width])
 
     return (
@@ -32,7 +32,7 @@ export function Exporter(props: ExportedData): JSX.Element {
             {!whitelabel && dashboard ? (
                 type === ExportType.Scene ? (
                     <div className="SharedDashboard-header">
-                        <a href="https://posthog.com" target="_blank" rel="noopener noreferrer">
+                        <a href="https://analytickit.com" target="_blank" rel="noopener noreferrer">
                             <FriendlyLogo className="text-lg" />
                         </a>
                         <div className="SharedDashboard-header-title">
@@ -44,7 +44,7 @@ export function Exporter(props: ExportedData): JSX.Element {
                         <span className="SharedDashboard-header-team">{team?.name}</span>
                     </div>
                 ) : type === ExportType.Embed ? (
-                    <a href="https://posthog.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://analytickit.com" target="_blank" rel="noopener noreferrer">
                         <FriendlyLogo className="text-lg" />
                     </a>
                 ) : type === ExportType.Image ? (
@@ -73,11 +73,11 @@ export function Exporter(props: ExportedData): JSX.Element {
                     <div>
                         Made with{' '}
                         <a
-                            href="https://posthog.com?utm_medium=in-product&utm_campaign=shared-dashboard"
+                            href="https://analytickit.com?utm_medium=in-product&utm_campaign=shared-dashboard"
                             target="_blank"
                             rel="noopener"
                         >
-                            PostHog – open-source product analytics
+                            analytickit – open-source product analytics
                         </a>
                     </div>
                 </div>

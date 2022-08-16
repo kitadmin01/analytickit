@@ -4,14 +4,14 @@ from unittest.mock import MagicMock, patch
 from freezegun import freeze_time
 
 from ee.tasks.slack import handle_slack_event
-from posthog import settings
-from posthog.models.dashboard import Dashboard
-from posthog.models.exported_asset import ExportedAsset
-from posthog.models.insight import Insight
-from posthog.models.integration import Integration
-from posthog.models.sharing_configuration import SharingConfiguration
-from posthog.models.subscription import Subscription
-from posthog.test.base import APIBaseTest
+from analytickit import settings
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.exported_asset import ExportedAsset
+from analytickit.models.insight import Insight
+from analytickit.models.integration import Integration
+from analytickit.models.sharing_configuration import SharingConfiguration
+from analytickit.models.subscription import Subscription
+from analytickit.test.base import APIBaseTest
 
 
 def create_mock_unfurl_event(team_id: str, links: List[str]):
@@ -28,7 +28,7 @@ def create_mock_unfurl_event(team_id: str, links: List[str]):
             "unfurl_id": "C123456.123456789.987501.1b90fa1278528ce6e2f6c5c2bfa1abc9a41d57d02b29d173f40399c9ffdecf4b",
             "event_ts": "123456621.1855",
             "source": "conversations_history",
-            "links": [{"domain": "app.posthog.com", "url": link} for link in links],
+            "links": [{"domain": "app.analytickit.com", "url": link} for link in links],
         },
         "type": "event_callback",
         "authed_users": ["UXXXXXXX1", "UXXXXXXX2"],

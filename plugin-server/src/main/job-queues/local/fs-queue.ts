@@ -1,28 +1,28 @@
-import { JobHelpers, TaskList } from 'graphile-worker'
+import{JobHelpers, TaskList}from 'graphile-worker'
 
-import { EnqueuedJob } from '../../../types'
+import { EnqueuedJob}from '../../../types'
 import Timeout = NodeJS.Timeout
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { JobQueueBase } from '../job-queue-base'
+import {JobQueueBase}from '../job-queue-base'
 
 interface FsJob {
-    jobName: string
-    timestamp: number
-    type?: string
-    payload?: Record<string, any>
-    eventPayload?: Record<string, any>
-    pluginConfigId?: number
-    pluginConfigTeam?: number
+jobName: string
+timestamp: number
+type?: string
+payload?: Record < string, any>
+eventPayload?: Record < string, any>
+pluginConfigId?: number
+pluginConfigTeam?: number
 }
 export class FsQueue extends JobQueueBase {
-    paused: boolean
-    started: boolean
-    interval: Timeout | null
-    filename: string
+paused: boolean
+started: boolean
+interval: Timeout | null
+filename: string
 
-    constructor(filename?: string) {
+constructor(filename?: string) {
         super()
 
         if (process.env.NODE_ENV !== 'test') {

@@ -1,74 +1,75 @@
-import * as d3 from 'd3'
-import { FunnelLayout } from 'lib/constants'
-import { HistogramDatum } from 'scenes/insights/views/Histogram/Histogram'
+import* as d3 from 'd3'
+import {FunnelLayout }from 'lib/constants'
+import { HistogramDatum}from 'scenes/insights/views/Histogram/Histogram'
 
 export interface HistogramConfig {
-    layout: FunnelLayout
-    height: number
-    width: number
-    inner: { height: number; width: number }
-    margin: { top: number; right: number; bottom: number; left: number }
-    borderRadius: number
-    ranges: { x: number[]; y: number[] }
-    gridlineTickSize: number
-    transforms: { x: string; y: string; yGrid: string }
-    axisFn: { x: any; y: any }
-    transitionDuration: number
-    spacing: {
-        btwnBins: number
-        yLabel: number
-        xLabel: number
-        labelLineHeight: number
-        barLabelPadding: number
-        minBarWidth: number
-    }
+layout: FunnelLayout
+height: number
+width: number
+inner: {height: number; width: number}
+margin: {top: number; right: number; bottom: number; left: number}
+borderRadius: number
+ranges: {x: number[]; y: number[]
+}
+gridlineTickSize: number
+transforms: {x: string; y: string; yGrid: string}
+axisFn: {x: any; y: any}
+transitionDuration: number
+spacing: {
+btwnBins: number
+yLabel: number
+xLabel: number
+labelLineHeight: number
+barLabelPadding: number
+minBarWidth: number
+}
 }
 
 export const INITIAL_CONFIG = {
-    layout: FunnelLayout.vertical,
-    height: 352,
-    width: 500,
-    margin: { top: 20, right: 20, bottom: 20, left: 40 },
-    borderRadius: 4, // same as funnel bar graph,
-    transitionDuration: 200, // in ms; same as in funnel bar graph
-    spacing: {
-        btwnBins: 6, // spacing between bins
-        yLabel: 5, // y-axis label xOffset in vertical position
-        xLabel: 8, // x-axis label xOffset in horizontal position
-        labelLineHeight: 1.2, // line height of wrapped label text in em's,
-        barLabelPadding: 8, // padding between bar and bar label,
-        minBarWidth: 90, // minimum bar width
-    },
+layout: FunnelLayout.vertical,
+height: 352,
+width: 500,
+margin: {top: 20, right: 20, bottom: 20, left: 40},
+borderRadius: 4, // same as funnel bar graph,
+transitionDuration: 200, // in ms; same as in funnel bar graph
+spacing: {
+btwnBins: 6, // spacing between bins
+yLabel: 5, // y-axis label xOffset in vertical position
+xLabel: 8, // x-axis label xOffset in horizontal position
+labelLineHeight: 1.2, // line height of wrapped label text in em's,
+barLabelPadding: 8, // padding between bar and bar label,
+minBarWidth: 90, // minimum bar width
+},
 }
 
 export const getConfig = (layout: FunnelLayout, width?: number, height?: number): HistogramConfig => {
-    const _width = width || INITIAL_CONFIG.width,
-        _height = height || INITIAL_CONFIG.height
-    const isVertical = layout === FunnelLayout.vertical
+const _width = width || INITIAL_CONFIG.width,
+_height = height || INITIAL_CONFIG.height
+const isVertical = layout === FunnelLayout.vertical
 
-    return {
-        ...INITIAL_CONFIG,
-        layout,
-        height: _height,
-        width: _width,
-        inner: {
-            height: _height - INITIAL_CONFIG.margin.bottom - INITIAL_CONFIG.margin.top,
-            width: _width - INITIAL_CONFIG.margin.left - INITIAL_CONFIG.margin.right,
-        },
-        ranges: {
-            x: isVertical
-                ? [INITIAL_CONFIG.margin.left, _width - INITIAL_CONFIG.margin.right]
-                : [INITIAL_CONFIG.margin.top, _height - INITIAL_CONFIG.margin.bottom],
-            y: isVertical
-                ? [_height - INITIAL_CONFIG.margin.bottom, INITIAL_CONFIG.margin.top]
-                : [INITIAL_CONFIG.margin.left, _width - INITIAL_CONFIG.margin.right],
-        },
-        gridlineTickSize: isVertical
-            ? _width - INITIAL_CONFIG.margin.left + INITIAL_CONFIG.spacing.yLabel - INITIAL_CONFIG.margin.right
-            : _height - INITIAL_CONFIG.margin.bottom - INITIAL_CONFIG.margin.top,
-        transforms: {
-            x: isVertical
-                ? `translate(0,${_height - INITIAL_CONFIG.margin.bottom})`
+return {
+...INITIAL_CONFIG,
+layout,
+height: _height,
+width: _width,
+inner: {
+height: _height - INITIAL_CONFIG.margin.bottom - INITIAL_CONFIG.margin.top,
+width: _width - INITIAL_CONFIG.margin.left - INITIAL_CONFIG.margin.right,
+},
+ranges: {
+x: isVertical
+? [INITIAL_CONFIG.margin.left, _width - INITIAL_CONFIG.margin.right]
+: [INITIAL_CONFIG.margin.top, _height - INITIAL_CONFIG.margin.bottom],
+y: isVertical
+? [_height - INITIAL_CONFIG.margin.bottom, INITIAL_CONFIG.margin.top]
+: [INITIAL_CONFIG.margin.left, _width - INITIAL_CONFIG.margin.right],
+},
+gridlineTickSize: isVertical
+? _width - INITIAL_CONFIG.margin.left + INITIAL_CONFIG.spacing.yLabel - INITIAL_CONFIG.margin.right
+: _height - INITIAL_CONFIG.margin.bottom - INITIAL_CONFIG.margin.top,
+transforms: {
+x: isVertical
+? `translate(0,${_height - INITIAL_CONFIG.margin.bottom})`
                 : `translate(${INITIAL_CONFIG.margin.left},0)`,
             y: isVertical ? `translate(${INITIAL_CONFIG.margin.left},0)` : `translate(0,${INITIAL_CONFIG.margin.top})`,
             yGrid: isVertical
@@ -155,11 +156,11 @@ export const createRoundedRectPath = (
         -radii.tl +
         // Close the shape
         'z'
-    )
+)
 }
 
 export interface D3HistogramDatum extends HistogramDatum {
-    labelWidth?: number
-    labelHeight?: number
-    shouldShowInBar?: boolean
+labelWidth?: number
+labelHeight?: number
+shouldShowInBar?: boolean
 }

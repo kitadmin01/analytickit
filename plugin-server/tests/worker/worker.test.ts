@@ -1,19 +1,19 @@
-import { PluginEvent } from '@posthog/plugin-scaffold/src/types'
+import{PluginEvent}from'@analytickit/plugin-scaffold/src/types'
 
-import { loadPluginSchedule } from '../../src/main/services/schedule'
-import { Hub, PreIngestionEvent } from '../../src/types'
-import { createHub } from '../../src/utils/db/hub'
-import { KafkaProducerWrapper } from '../../src/utils/db/kafka-producer-wrapper'
-import { delay, UUIDT } from '../../src/utils/utils'
-import { ActionManager } from '../../src/worker/ingestion/action-manager'
-import { ActionMatcher } from '../../src/worker/ingestion/action-matcher'
-import { EventPipelineRunner } from '../../src/worker/ingestion/event-pipeline/runner'
-import { runPluginTask } from '../../src/worker/plugins/run'
-import { loadSchedule, setupPlugins } from '../../src/worker/plugins/setup'
-import { teardownPlugins } from '../../src/worker/plugins/teardown'
-import { createTaskRunner } from '../../src/worker/worker'
-import { resetTestDatabase } from '../helpers/sql'
-import { setupPiscina } from '../helpers/worker'
+import {loadPluginSchedule}from '../../src/main/services/schedule'
+import {Hub, PreIngestionEvent}from '../../src/types'
+import {createHub}from '../../src/utils/db/hub'
+import {KafkaProducerWrapper}from '../../src/utils/db/kafka-producer-wrapper'
+import {delay, UUIDT}from '../../src/utils/utils'
+import {ActionManager}from '../../src/worker/ingestion/action-manager'
+import {ActionMatcher}from '../../src/worker/ingestion/action-matcher'
+import {EventPipelineRunner} from '../../src/worker/ingestion/event-pipeline/runner'
+import {runPluginTask}from '../../src/worker/plugins/run'
+import {loadSchedule, setupPlugins}from '../../src/worker/plugins/setup'
+import {teardownPlugins}from '../../src/worker/plugins/teardown'
+import {createTaskRunner}from '../../src/worker/worker'
+import {resetTestDatabase}from '../helpers/sql'
+import {setupPiscina }from '../helpers/worker'
 
 jest.mock('../../src/worker/ingestion/action-manager')
 jest.mock('../../src/worker/ingestion/action-matcher')
@@ -173,23 +173,23 @@ describe('worker', () => {
 
             expect(await taskRunner({ task: 'runBufferEventPipeline', args: { event } })).toEqual(
                 'runBufferEventPipeline result'
-            )
+)
 
-            expect(spy).toHaveBeenCalledWith(event)
+expect(spy).toHaveBeenCalledWith(event)
         })
 
         it('handles `runEvery` tasks', async () => {
             jest.mocked(runPluginTask).mockImplementation((server, task, taskType, pluginId) =>
                 Promise.resolve(`${task} for ${pluginId}`)
-            )
+)
 
-            expect(await taskRunner({ task: 'runEveryMinute', args: { pluginConfigId: 1 } })).toEqual(
+expect(await taskRunner({ task: 'runEveryMinute', args: { pluginConfigId: 1 } })).toEqual(
                 'runEveryMinute for 1'
-            )
-            expect(await taskRunner({ task: 'runEveryHour', args: { pluginConfigId: 1 } })).toEqual(
+)
+expect(await taskRunner({ task: 'runEveryHour', args: { pluginConfigId: 1 } })).toEqual(
                 'runEveryHour for 1'
-            )
-            expect(await taskRunner({ task: 'runEveryDay', args: { pluginConfigId: 1 } })).toEqual('runEveryDay for 1')
+)
+expect(await taskRunner({ task: 'runEveryDay', args: { pluginConfigId: 1 } })).toEqual('runEveryDay for 1')
         })
 
         it('handles `reloadPlugins` task', async () => {

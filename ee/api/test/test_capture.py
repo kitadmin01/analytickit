@@ -7,9 +7,9 @@ from django.test.client import Client
 from kafka.errors import NoBrokersAvailable
 from rest_framework import status
 
-from posthog.api.utils import get_event_ingestion_context
-from posthog.settings.data_stores import KAFKA_EVENTS_PLUGIN_INGESTION
-from posthog.test.base import APIBaseTest
+from analytickit.api.utils import get_event_ingestion_context
+from analytickit.settings.data_stores import KAFKA_EVENTS_PLUGIN_INGESTION
+from analytickit.test.base import APIBaseTest
 
 
 def mocked_get_ingest_context_from_token(_: Any) -> None:
@@ -21,15 +21,15 @@ class TestCaptureAPI(APIBaseTest):
         super().setUp()
         self.client = Client()
 
-    @patch("posthog.kafka_client.client._KafkaProducer.produce")
+    @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_produce_to_kafka(self, kafka_produce):
         response = self.client.post(
             "/track/",
             {
                 "data": json.dumps(
                     [
-                        {"event": "event1", "properties": {"distinct_id": "id1", "token": self.team.api_token,},},
-                        {"event": "event2", "properties": {"distinct_id": "id2", "token": self.team.api_token,},},
+                        {"event": "event1", "properties": {"distinct_id": "id1", "token": self.team.api_token, }, },
+                        {"event": "event2", "properties": {"distinct_id": "id2", "token": self.team.api_token, }, },
                     ]
                 ),
                 "api_key": self.team.api_token,
@@ -78,8 +78,9 @@ class TestCaptureAPI(APIBaseTest):
         self.assertEquals(type(kafka_produce_call1["data"]["uuid"]), str)
         self.assertEquals(type(kafka_produce_call2["data"]["uuid"]), str)
 
-    @patch("posthog.api.utils.get_event_ingestion_context_for_token", side_effect=mocked_get_ingest_context_from_token)
-    @patch("posthog.api.capture.log_event_to_dead_letter_queue")
+    @patch("analytickit.api.utils.get_event_ingestion_context_for_token",
+           side_effect=mocked_get_ingest_context_from_token)
+    @patch("analytickit.api.capture.log_event_to_dead_letter_queue")
     def test_unable_to_fetch_team(self, log_event_to_dead_letter_queue, _):
         # In this situation we won't ingest the events, we'll add them to the dead letter queue
 
@@ -88,8 +89,8 @@ class TestCaptureAPI(APIBaseTest):
             {
                 "data": json.dumps(
                     [
-                        {"event": "event1", "properties": {"distinct_id": "eeee", "token": self.team.api_token,},},
-                        {"event": "event2", "properties": {"distinct_id": "aaaa", "token": self.team.api_token,},},
+                        {"event": "event1", "properties": {"distinct_id": "eeee", "token": self.team.api_token, }, },
+                        {"event": "event2", "properties": {"distinct_id": "aaaa", "token": self.team.api_token, }, },
                     ]
                 ),
                 "api_key": self.team.api_token,
@@ -124,14 +125,15 @@ class TestCaptureAPI(APIBaseTest):
         self.assertEqual(log_event_to_dead_letter_queue_call2[4], "django_server_capture_endpoint")  # error_location
 
     # unit test the underlying util that handles the DB being down
-    @patch("posthog.api.utils.get_event_ingestion_context_for_token", side_effect=mocked_get_ingest_context_from_token)
+    @patch("analytickit.api.utils.get_event_ingestion_context_for_token",
+           side_effect=mocked_get_ingest_context_from_token)
     def test_determine_team_from_request_data_ch(self, _):
         team, db_error, _ = get_event_ingestion_context(HttpRequest(), {}, "")
 
         self.assertEqual(team, None)
         self.assertEqual(db_error, "Exception('test exception')")
 
-    @patch("posthog.kafka_client.client._KafkaProducer.produce")
+    @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_capture_event_with_uuid_in_payload(self, kafka_produce):
         response = self.client.post(
             "/track/",
@@ -141,7 +143,7 @@ class TestCaptureAPI(APIBaseTest):
                         {
                             "event": "event1",
                             "uuid": "017d37c1-f285-0000-0e8b-e02d131925dc",
-                            "properties": {"distinct_id": "id1", "token": self.team.api_token,},
+                            "properties": {"distinct_id": "id1", "token": self.team.api_token, },
                         },
                     ]
                 ),
@@ -157,14 +159,14 @@ class TestCaptureAPI(APIBaseTest):
         self.assertEqual(event_data["event"], "event1")
         self.assertEqual(kafka_produce_call["data"]["uuid"], "017d37c1-f285-0000-0e8b-e02d131925dc")
 
-    @patch("posthog.kafka_client.client._KafkaProducer.produce")
+    @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_kafka_connection_error(self, kafka_produce):
         kafka_produce.side_effect = NoBrokersAvailable()
         response = self.client.post(
             "/capture/",
             {
                 "data": json.dumps(
-                    [{"event": "event1", "properties": {"distinct_id": "id1", "token": self.team.api_token,},},]
+                    [{"event": "event1", "properties": {"distinct_id": "id1", "token": self.team.api_token, }, }, ]
                 ),
                 "api_key": self.team.api_token,
             },

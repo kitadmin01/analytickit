@@ -1,18 +1,20 @@
-import { Command, commandPaletteLogic } from 'lib/components/CommandPalette/commandPaletteLogic'
-import { kea } from 'kea'
-import type { insightCommandLogicType } from './insightCommandLogicType'
-import { compareFilterLogic } from 'lib/components/CompareFilter/compareFilterLogic'
-import { RiseOutlined } from '@ant-design/icons'
-import { dateMapping } from 'lib/utils'
-import { InsightLogicProps } from '~/types'
-import { keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
-import { insightDateFilterLogic } from 'scenes/insights/filters/InsightDateFilter/insightDateFilterLogic'
+import{Command, commandPaletteLogic}from 'lib/components/CommandPalette/commandPaletteLogic'
+import {kea}from 'kea'
+import type {insightCommandLogicType}from './insightCommandLogicType'
+import {compareFilterLogic}from 'lib/components/CompareFilter/compareFilterLogic'
+import {RiseOutlined}from '@ant-design/icons'
+import {dateMapping}from 'lib/utils'
+import {InsightLogicProps}from '~/types'
+import {keyForInsightLogicProps}from 'scenes/insights/sharedUtils'
+import {insightDateFilterLogic} from 'scenes/insights/filters/InsightDateFilter/insightDateFilterLogic'
 
 const INSIGHT_COMMAND_SCOPE = 'insights'
 
 export const insightCommandLogic = kea<insightCommandLogicType>({
-    props: {} as InsightLogicProps,
-    key: keyForInsightLogicProps('new'),
+props: {
+
+}as InsightLogicProps,
+key: keyForInsightLogicProps('new'),
     path: (key) => ['scenes', 'insights', 'insightCommandLogic', key],
 
     connect: (props: InsightLogicProps) => [

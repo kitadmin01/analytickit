@@ -4,12 +4,12 @@ from freezegun import freeze_time
 
 from ee.tasks.subscriptions.slack_subscriptions import send_slack_subscription_report
 from ee.tasks.test.subscriptions.subscriptions_test_factory import create_subscription
-from posthog.models.dashboard import Dashboard
-from posthog.models.exported_asset import ExportedAsset
-from posthog.models.insight import Insight
-from posthog.models.integration import Integration
-from posthog.models.subscription import Subscription
-from posthog.test.base import APIBaseTest
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.exported_asset import ExportedAsset
+from analytickit.models.insight import Insight
+from analytickit.models.integration import Integration
+from analytickit.models.subscription import Subscription
+from analytickit.test.base import APIBaseTest
 
 
 @patch("ee.tasks.subscriptions.slack_subscriptions.SlackIntegration")
@@ -67,13 +67,13 @@ class TestSlackSubscriptionsTasks(APIBaseTest):
                 "elements": [
                     {
                         "type": "button",
-                        "text": {"type": "plain_text", "text": "View in PostHog"},
-                        "url": "http://localhost:8000/insights/123456?utm_source=posthog&utm_campaign=subscription_report&utm_medium=slack",
+                        "text": {"type": "plain_text", "text": "View in analytickit"},
+                        "url": "http://localhost:8000/insights/123456?utm_source=analytickit&utm_campaign=subscription_report&utm_medium=slack",
                     },
                     {
                         "type": "button",
                         "text": {"type": "plain_text", "text": "Manage Subscription"},
-                        "url": f"http://localhost:8000/insights/123456/subscriptions/{self.subscription.id}?utm_source=posthog&utm_campaign=subscription_report&utm_medium=slack",
+                        "url": f"http://localhost:8000/insights/123456/subscriptions/{self.subscription.id}?utm_source=analytickit&utm_campaign=subscription_report&utm_medium=slack",
                     },
                 ],
             },
@@ -91,8 +91,8 @@ class TestSlackSubscriptionsTasks(APIBaseTest):
         first_call = post_message_calls[0].kwargs
 
         assert (
-            first_call["text"]
-            == "This channel has been subscribed to the Insight *My Test subscription* on PostHog! 🎉\nThis subscription is sent every day. The next one will be sent on Wednesday February 02, 2022"
+                first_call["text"]
+                == "This channel has been subscribed to the Insight *My Test subscription* on analytickit! 🎉\nThis subscription is sent every day. The next one will be sent on Wednesday February 02, 2022"
         )
 
     def test_subscription_dashboard_delivery(self, MockSlackIntegration: MagicMock) -> None:
@@ -137,13 +137,13 @@ class TestSlackSubscriptionsTasks(APIBaseTest):
                 "elements": [
                     {
                         "type": "button",
-                        "text": {"type": "plain_text", "text": "View in PostHog"},
-                        "url": f"http://localhost:8000/dashboard/{self.dashboard.id}?utm_source=posthog&utm_campaign=subscription_report&utm_medium=slack",
+                        "text": {"type": "plain_text", "text": "View in analytickit"},
+                        "url": f"http://localhost:8000/dashboard/{self.dashboard.id}?utm_source=analytickit&utm_campaign=subscription_report&utm_medium=slack",
                     },
                     {
                         "type": "button",
                         "text": {"type": "plain_text", "text": "Manage Subscription"},
-                        "url": f"http://localhost:8000/dashboard/{self.dashboard.id}/subscriptions/{self.subscription.id}?utm_source=posthog&utm_campaign=subscription_report&utm_medium=slack",
+                        "url": f"http://localhost:8000/dashboard/{self.dashboard.id}/subscriptions/{self.subscription.id}?utm_source=analytickit&utm_campaign=subscription_report&utm_medium=slack",
                     },
                 ],
             },
@@ -154,13 +154,13 @@ class TestSlackSubscriptionsTasks(APIBaseTest):
         assert second_call["channel"] == "C12345"
         assert second_call["thread_ts"] == "1.234"
         assert second_call["blocks"] == [
-            {"type": "image", "image_url": second_call["blocks"][0]["image_url"], "alt_text": "My Test subscription",}
+            {"type": "image", "image_url": second_call["blocks"][0]["image_url"], "alt_text": "My Test subscription", }
         ]
 
         # Third call - other asset
         third_call = post_message_calls[2].kwargs
         assert third_call["blocks"] == [
-            {"type": "image", "image_url": third_call["blocks"][0]["image_url"], "alt_text": "My Test subscription",}
+            {"type": "image", "image_url": third_call["blocks"][0]["image_url"], "alt_text": "My Test subscription", }
         ]
 
         # Fourth call - notice that more exists
@@ -170,7 +170,7 @@ class TestSlackSubscriptionsTasks(APIBaseTest):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"Showing 3 of 10 Insights. <http://localhost:8000/dashboard/{self.dashboard.id}?utm_source=posthog&utm_campaign=subscription_report&utm_medium=slack|View the rest in PostHog>",
+                    "text": f"Showing 3 of 10 Insights. <http://localhost:8000/dashboard/{self.dashboard.id}?utm_source=analytickit&utm_campaign=subscription_report&utm_medium=slack|View the rest in analytickit>",
                 },
             }
         ]

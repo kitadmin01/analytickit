@@ -19,7 +19,7 @@ import { Field } from 'lib/forms/Field'
 import { LemonButton } from 'lib/components/LemonButton'
 import { LemonCheckbox } from 'lib/components/LemonCheckbox'
 import { LemonInput } from 'lib/components/LemonInput/LemonInput'
-import { lemonToast } from '@posthog/lemon-ui'
+import { lemonToast } from '@analytickit/lemon-ui'
 import { Form } from 'kea-forms'
 import { LemonLabel } from 'lib/components/LemonLabel/LemonLabel'
 
@@ -162,7 +162,7 @@ export function ActionEdit({ action: loadedAction, id, onSave, temporaryToken }:
                     <div>
                         Your {shouldSimplifyActions ? 'calculated event' : 'action'} will be triggered whenever{' '}
                         <b>any of your match groups</b> are received.{' '}
-                        <a href="https://posthog.com/docs/features/actions" target="_blank">
+                        <a href="https://analytickit.com/docs/features/actions" target="_blank">
                             <InfoCircleOutlined />
                         </a>
                     </div>
@@ -269,7 +269,7 @@ export function ActionEdit({ action: loadedAction, id, onSave, temporaryToken }:
                                         />
                                         <small>
                                             <a
-                                                href="https://posthog.com/docs/integrations/message-formatting/"
+                                                href="https://analytickit.com/docs/integrations/message-formatting/"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >

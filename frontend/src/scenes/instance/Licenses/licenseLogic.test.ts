@@ -1,8 +1,8 @@
-import { initKeaTests } from '~/test/init'
-import { expectLogic } from 'kea-test-utils'
-import { licenseLogic } from './licenseLogic'
-import { useMocks } from '~/mocks/jest'
-import { LicensePlan, LicenseType } from '~/types'
+import{initKeaTests}from'~/test/init'
+import {expectLogic }from 'kea-test-utils'
+import {licenseLogic} from './licenseLogic'
+import {useMocks }from '~/mocks/jest'
+import {LicensePlan, LicenseType}from '~/types'
 
 describe('licenseLogic', () => {
     let logic: ReturnType<typeof licenseLogic.build>

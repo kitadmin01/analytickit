@@ -1,8 +1,8 @@
-import { createServer, IncomingMessage, Server, ServerResponse } from 'http'
+import{createServer, IncomingMessage, Server, ServerResponse}from 'http'
 
-import { status } from '../../utils/status'
-import { ServerInstance } from '../pluginsServer'
-import { Hub } from './../../types'
+import {status}from '../../utils/status'
+import {ServerInstance}from '../pluginsServer'
+import {Hub}from './../../types'
 
 export const HTTP_SERVER_PORT = 6738
 

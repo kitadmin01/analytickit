@@ -1,15 +1,15 @@
 from datetime import datetime
 
-from posthog.models.entity import Entity
-from posthog.models.filters import Filter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.person import Person
-from posthog.queries.test.test_trends import trend_test_factory
-from posthog.queries.trends.person import TrendsActors
-from posthog.queries.trends.trends import Trends
-from posthog.test.base import _create_event, snapshot_clickhouse_queries
-from posthog.test.test_journeys import journeys_for
+from analytickit.models.entity import Entity
+from analytickit.models.filters import Filter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.person import Person
+from analytickit.queries.test.test_trends import trend_test_factory
+from analytickit.queries.trends.person import TrendsActors
+from analytickit.queries.trends.trends import Trends
+from analytickit.test.base import _create_event, snapshot_clickhouse_queries
+from analytickit.test.test_journeys import journeys_for
 
 
 # override tests from test factory if intervals are different
@@ -62,7 +62,7 @@ class TestClickhouseTrends(trend_test_factory(Trends)):  # type: ignore
                     "date_from": "2020-01-01T00:00:00Z",
                     "date_to": "2020-01-12T00:00:00Z",
                     "breakdown": "key",
-                    "events": [{"id": "sign up", "name": "sign up", "type": "events", "order": 0,}],
+                    "events": [{"id": "sign up", "name": "sign up", "type": "events", "order": 0, }],
                     "properties": [{"key": "industry", "value": "finance", "type": "group", "group_type_index": 0}],
                 }
             ),
@@ -112,10 +112,10 @@ class TestClickhouseTrends(trend_test_factory(Trends)):  # type: ignore
                 "breakdown": "industry",
                 "breakdown_type": "group",
                 "breakdown_group_type_index": 0,
-                "events": [{"id": "sign up", "name": "sign up", "type": "events", "order": 0,}],
+                "events": [{"id": "sign up", "name": "sign up", "type": "events", "order": 0, }],
             }
         )
-        response = Trends().run(filter, self.team,)
+        response = Trends().run(filter, self.team, )
 
         self.assertEqual(len(response), 2)
         self.assertEqual(response[0]["breakdown_value"], "finance")
@@ -126,7 +126,7 @@ class TestClickhouseTrends(trend_test_factory(Trends)):  # type: ignore
         filter = filter.with_data(
             {"breakdown_value": "technology", "date_from": "2020-01-02T00:00:00Z", "date_to": "2020-01-03"}
         )
-        entity = Entity({"id": "sign up", "name": "sign up", "type": "events", "order": 0,})
+        entity = Entity({"id": "sign up", "name": "sign up", "type": "events", "order": 0, })
         res = self._get_trend_people(filter, entity)
 
         self.assertEqual(res[0]["distinct_ids"], ["person1"])
@@ -163,12 +163,12 @@ class TestClickhouseTrends(trend_test_factory(Trends)):  # type: ignore
                 "breakdown": "industry",
                 "breakdown_type": "group",
                 "breakdown_group_type_index": 0,
-                "events": [{"id": "sign up", "name": "sign up", "type": "events", "order": 0,}],
+                "events": [{"id": "sign up", "name": "sign up", "type": "events", "order": 0, }],
                 "properties": [{"key": "key", "value": "value", "type": "person"}],
             }
         )
 
-        response = Trends().run(filter, self.team,)
+        response = Trends().run(filter, self.team, )
 
         self.assertEqual(len(response), 1)
         self.assertEqual(response[0]["breakdown_value"], "finance")

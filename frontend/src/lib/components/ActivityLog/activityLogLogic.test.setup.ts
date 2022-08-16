@@ -1,34 +1,34 @@
 import {
     ActivityChange,
-    ActivityLogItem,
-    ActivityScope,
-    Describer,
-    PersonMerge,
-} from 'lib/components/ActivityLog/humanizeActivity'
-import { useMocks } from '~/mocks/jest'
-import { initKeaTests } from '~/test/init'
-import { activityLogLogic } from 'lib/components/ActivityLog/activityLogLogic'
-import { expectLogic } from 'kea-test-utils'
+ActivityLogItem,
+ActivityScope,
+Describer,
+PersonMerge,
+}from 'lib/components/ActivityLog/humanizeActivity'
+import {useMocks }from '~/mocks/jest'
+import {initKeaTests}from '~/test/init'
+import {activityLogLogic}from 'lib/components/ActivityLog/activityLogLogic'
+import { expectLogic}from 'kea-test-utils'
 
 interface APIMockSetup {
-    name: string
-    activity: string
-    changes?: ActivityChange[] | null
-    scope: ActivityScope
-    merge?: PersonMerge | null
+name: string
+activity: string
+changes?: ActivityChange[] | null
+scope: ActivityScope
+merge?: PersonMerge | null
 }
 
 const makeAPIItem = ({ name, activity, changes = null, scope, merge = null }: APIMockSetup): ActivityLogItem => ({
-    user: { first_name: 'peter', email: 'peter@posthog.com' },
-    activity,
-    scope,
-    item_id: '7',
-    detail: {
-        changes,
-        merge,
-        name,
-    },
-    created_at: '2022-02-05T16:28:39.594Z',
+user: {first_name: 'peter', email: 'peter@analytickit.com' },
+activity,
+scope,
+item_id: '7',
+detail: {
+changes,
+merge,
+name,
+},
+created_at: '2022-02-05T16:28:39.594Z',
 })
 
 async function testSetup(

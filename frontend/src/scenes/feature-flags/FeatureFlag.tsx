@@ -159,7 +159,7 @@ export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
                                         <span className="text-warning">
                                             <b>Warning! </b>Changing this key will
                                             <a
-                                                href={`https://posthog.com/docs/features/feature-flags${UTM_TAGS}#feature-flag-persistence`}
+                                                href={`https://analytickit.com/docs/features/feature-flags${UTM_TAGS}#feature-flag-persistence`}
                                                 target="_blank"
                                                 rel="noopener"
                                             >
@@ -217,7 +217,7 @@ export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
                                             If your feature flag is applied prior to an identify or authentication
                                             event, use this to ensure that feature flags are not reset after a person is
                                             identified. This ensures the experience for the anonymous person is carried
-                                            forward to the authenticated person. Currently supported for posthog-js
+                                            forward to the authenticated person. Currently supported for analytickit-js
                                             only.
                                         </div>
                                     </div>

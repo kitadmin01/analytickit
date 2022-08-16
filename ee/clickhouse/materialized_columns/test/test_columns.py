@@ -9,12 +9,12 @@ from ee.clickhouse.materialized_columns.columns import (
     get_materialized_columns,
     materialize,
 )
-from posthog.client import sync_execute
-from posthog.conftest import create_clickhouse_tables
-from posthog.constants import GROUP_TYPES_LIMIT
-from posthog.models.event.sql import EVENTS_DATA_TABLE
-from posthog.settings import CLICKHOUSE_DATABASE
-from posthog.test.base import BaseTest, ClickhouseTestMixin, _create_event
+from analytickit.client import sync_execute
+from analytickit.conftest import create_clickhouse_tables
+from analytickit.constants import GROUP_TYPES_LIMIT
+from analytickit.models.event.sql import EVENTS_DATA_TABLE
+from analytickit.settings import CLICKHOUSE_DATABASE
+from analytickit.test.base import BaseTest, ClickhouseTestMixin, _create_event
 
 EVENTS_TABLE_DEFAULT_MATERIALIZED_COLUMNS = [f"$group_{i}" for i in range(GROUP_TYPES_LIMIT)] + [
     "$session_id",

@@ -1,8 +1,8 @@
-import { eachBatch } from '../../../src/main/ingestion-queues/batch-processing/each-batch'
-import { eachBatchAsyncHandlers } from '../../../src/main/ingestion-queues/batch-processing/each-batch-async-handlers'
-import { eachBatchIngestion } from '../../../src/main/ingestion-queues/batch-processing/each-batch-ingestion'
-import { ClickhouseEventKafka } from '../../../src/types'
-import { groupIntoBatches } from '../../../src/utils/utils'
+import{eachBatch}from'../../../src/main/ingestion-queues/batch-processing/each-batch'
+import {eachBatchAsyncHandlers}from '../../../src/main/ingestion-queues/batch-processing/each-batch-async-handlers'
+import {eachBatchIngestion} from '../../../src/main/ingestion-queues/batch-processing/each-batch-ingestion'
+import {ClickhouseEventKafka}from '../../../src/types'
+import {groupIntoBatches}from '../../../src/utils/utils'
 
 jest.mock('../../../src/utils/status')
 
@@ -107,11 +107,11 @@ describe('eachBatchX', () => {
             expect(queue.pluginsServer.statsd.timing).toHaveBeenCalledWith(
                 'kafka_queue.each_batch_my_key',
                 expect.any(Date)
-            )
-        })
-    })
+)
+})
+})
 
-    describe('eachBatchAsyncHandlers', () => {
+describe('eachBatchAsyncHandlers', () => {
         it('calls runAsyncHandlersEventPipeline', async () => {
             await eachBatchAsyncHandlers(createBatch(clickhouseEvent), queue)
 
@@ -124,11 +124,11 @@ describe('eachBatchX', () => {
             expect(queue.pluginsServer.statsd.timing).toHaveBeenCalledWith(
                 'kafka_queue.each_batch_async_handlers',
                 expect.any(Date)
-            )
-        })
-    })
+)
+})
+})
 
-    describe('eachBatchIngestion', () => {
+describe('eachBatchIngestion', () => {
         it('calls runEventPipeline', async () => {
             const batch = createBatch(captureEndpointEvent)
             await eachBatchIngestion(batch, queue)
@@ -147,10 +147,10 @@ describe('eachBatchX', () => {
             expect(queue.pluginsServer.statsd.timing).toHaveBeenCalledWith(
                 'kafka_queue.each_batch_ingestion',
                 expect.any(Date)
-            )
-        })
+)
+})
 
-        it('breaks up by teamId:distinctId for enabled teams', async () => {
+it('breaks up by teamId:distinctId for enabled teams', async () => {
             const batch = createBatchWithMultipleEvents([
                 { ...captureEndpointEvent, offset: 1, team_id: 3 },
                 { ...captureEndpointEvent, offset: 2, team_id: 3 }, // repeat
@@ -184,8 +184,8 @@ describe('eachBatchX', () => {
                 {
                     key: 'ingestion',
                 }
-            )
-            expect(queue.pluginsServer.statsd.histogram).toHaveBeenCalledWith('ingest_event_batching.batch_count', 6, {
+)
+expect(queue.pluginsServer.statsd.histogram).toHaveBeenCalledWith('ingest_event_batching.batch_count', 6, {
                 key: 'ingestion',
             })
         })

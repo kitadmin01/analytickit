@@ -4,7 +4,7 @@ import { useValues } from 'kea'
 import { teamLogic } from 'scenes/teamLogic'
 
 function GoInstallSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.Bash}>{'go get "github.com/posthog/posthog-go"'}</CodeSnippet>
+    return <CodeSnippet language={Language.Bash}>{'go get "github.com/analytickit/analytickit-go"'}</CodeSnippet>
 }
 
 function GoSetupSnippet(): JSX.Element {
@@ -14,10 +14,10 @@ function GoSetupSnippet(): JSX.Element {
         <CodeSnippet language={Language.Go}>
             {`package main
 import (
-    "github.com/posthog/posthog-go"
+    "github.com/analytickit/analytickit-go"
 )
 func main() {
-    client, _ := posthog.NewWithConfig("${currentTeam?.api_token}", posthog.Config{Endpoint: "${window.location.origin}"})
+    client, _ := analytickit.NewWithConfig("${currentTeam?.api_token}", analytickit.Config{Endpoint: "${window.location.origin}"})
     defer client.Close()
 }`}
         </CodeSnippet>
@@ -27,7 +27,7 @@ func main() {
 function GoCaptureSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Go}>
-            {'client.Enqueue(posthog.Capture{\n    DistinctId: "test-user",\n    Event: "test-snippet"\n})'}
+            {'client.Enqueue(analytickit.Capture{\n    DistinctId: "test-user",\n    Event: "test-snippet"\n})'}
         </CodeSnippet>
     )
 }

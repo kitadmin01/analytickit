@@ -1,5 +1,5 @@
-import api from 'lib/api'
-import { PropertyOperator } from '~/types'
+importapifrom'lib/api'
+import {PropertyOperator}from '~/types'
 
 describe('API helper', () => {
     let fakeFetch: jest.Mock<any, any>
@@ -22,16 +22,16 @@ describe('API helper', () => {
                 },
                 10,
                 2
-            )
+)
 
-            expect(fakeFetch).toHaveBeenCalledWith(
+expect(fakeFetch).toHaveBeenCalledWith(
                 '/api/projects/2/events?properties=%5B%7B%22key%22%3A%22something%22%2C%22value%22%3A%22is_set%22%2C%22operator%22%3A%22is_set%22%2C%22type%22%3A%22event%22%7D%5D&limit=10&orderBy=%5B%22-timestamp%22%5D',
                 { signal: undefined }
-            )
-        })
-    })
+)
+})
+})
 
-    describe('getting URLs', () => {
+describe('getting URLs', () => {
         const testCases = [
             {
                 url: 'relative/url',

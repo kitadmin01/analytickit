@@ -26,15 +26,15 @@ export function ToolbarApp(props: ToolbarProps = {}): JSX.Element {
                   styleLink.href = `${jsURL}/static/toolbar.css`
                   styleLink.onload = () => setDidLoadStyles(true)
                   const shadowRoot =
-                      shadowRef.current?.shadowRoot || window.document.getElementById('__POSTHOG_TOOLBAR__')?.shadowRoot
-                  shadowRoot?.getElementById('posthog-toolbar-styles')?.appendChild(styleLink)
+                      shadowRef.current?.shadowRoot || window.document.getElementById('__analytickit_TOOLBAR__')?.shadowRoot
+                  shadowRoot?.getElementById('analytickit-toolbar-styles')?.appendChild(styleLink)
               }
     )
 
     return (
         <>
-            <root.div id="__POSTHOG_TOOLBAR__" className="ph-no-capture" ref={shadowRef}>
-                <div id="posthog-toolbar-styles" />
+            <root.div id="__analytickit_TOOLBAR__" className="ph-no-capture" ref={shadowRef}>
+                <div id="analytickit-toolbar-styles" />
                 {didRender && (didLoadStyles || props.disableExternalStyles) ? <ToolbarContainer /> : null}
                 <ToastContainer
                     autoClose={60000}

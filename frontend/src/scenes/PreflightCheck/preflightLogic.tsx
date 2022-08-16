@@ -1,7 +1,7 @@
 import { actions, events, kea, listeners, path, reducers, selectors } from 'kea'
 import api from 'lib/api'
 import { PreflightStatus, Realm } from '~/types'
-import posthog from 'posthog-js'
+import analytickit from 'analytickit-js'
 import { getAppContext } from 'lib/utils/getAppContext'
 import type { preflightLogicType } from './preflightLogicType'
 import { urls } from 'scenes/urls'
@@ -246,16 +246,16 @@ export const preflightLogic = kea<preflightLogicType>([
         },
         registerInstrumentationProps: async (_, breakpoint) => {
             await breakpoint(100)
-            if (posthog && values.preflight) {
-                posthog.register({
-                    posthog_version: values.preflight.posthog_version,
+            if (analytickit && values.preflight) {
+                analytickit.register({
+                    analytickit_version: values.preflight.analytickit_version,
                     realm: values.realm,
                     email_service_available: values.preflight.email_service_available,
                     slack_service_available: values.preflight.slack_service?.available,
                 })
 
                 if (values.preflight.site_url) {
-                    posthog.group('instance', values.preflight.site_url, {
+                    analytickit.group('instance', values.preflight.site_url, {
                         site_url: values.preflight.site_url,
                     })
                 }

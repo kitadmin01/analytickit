@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
-import { useWindowSize } from './useWindowSize'
-import { getActiveBreakpointValue } from 'lib/utils/responsiveUtils'
+import{useEffect, useState}from 'react'
+import {useWindowSize }from './useWindowSize'
+import { getActiveBreakpointValue}from 'lib/utils/responsiveUtils'
 
 export const useBreakpoint = (): number => {
-    const { width } = useWindowSize()
-    const [breakpoint, setBreakpoint] = useState(getActiveBreakpointValue)
+const { width}= useWindowSize()
+const [breakpoint, setBreakpoint] = useState(getActiveBreakpointValue)
 
-    useEffect(() => {
+useEffect(() => {
         setBreakpoint(getActiveBreakpointValue)
     }, [width])
 

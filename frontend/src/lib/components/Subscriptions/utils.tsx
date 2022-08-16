@@ -1,5 +1,5 @@
 import React from 'react'
-import { LemonSelectOptions } from '@posthog/lemon-ui'
+import { LemonSelectOptions } from '@analytickit/lemon-ui'
 import { range } from 'lib/utils'
 import { urls } from 'scenes/urls'
 import { InsightShortId, SlackChannelType } from '~/types'

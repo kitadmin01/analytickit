@@ -32,7 +32,7 @@
                      WHERE team_id = 2
                      GROUP BY id
                      HAVING is_deleted = 0)
-                  WHERE has(['1@posthog.com'], replaceRegexpAll(JSONExtractRaw(properties, 'email'), '^"|"$', '')) ) ))
+                  WHERE has(['1@analytickit.com'], replaceRegexpAll(JSONExtractRaw(properties, 'email'), '^"|"$', '')) ) ))
          OR (distinct_id IN
                (SELECT distinct_id
                 FROM
@@ -52,7 +52,7 @@
                         WHERE team_id = 2
                         GROUP BY id
                         HAVING is_deleted = 0)
-                     WHERE has(['2@posthog.com'], replaceRegexpAll(JSONExtractRaw(properties, 'email'), '^"|"$', '')) ) )))
+                     WHERE has(['2@analytickit.com'], replaceRegexpAll(JSONExtractRaw(properties, 'email'), '^"|"$', '')) ) )))
   '
 ---
 # name: test_parse_groups_persons_edge_case_with_single_filter
@@ -61,7 +61,7 @@
     <class 'dict'> {
       'kglobalperson_0': 'email',
       'vglobalperson_0': <class 'list'> [
-        '1@posthog.com',
+        '1@analytickit.com',
       ],
     },
   )
@@ -100,7 +100,7 @@
       'vglobal_0': <class 'list'> [
         'value',
       ],
-      'vglobalperson_1': '%posthog%',
+      'vglobalperson_1': '%analytickit%',
     },
   )
 ---
@@ -113,7 +113,7 @@
       'vglobal_0': <class 'list'> [
         'value',
       ],
-      'vglobalperson_1': '%posthog%',
+      'vglobalperson_1': '%analytickit%',
     },
   )
 ---
@@ -126,7 +126,7 @@
       'vglobal_0': <class 'list'> [
         'value',
       ],
-      'vpersonquery_global_1': '%posthog%',
+      'vpersonquery_global_1': '%analytickit%',
     },
   )
 ---

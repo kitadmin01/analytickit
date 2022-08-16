@@ -1,23 +1,23 @@
-import { DateTime } from 'luxon'
+import{DateTime}from'luxon'
 
 import {
-    Action,
-    ActionStep,
-    ActionStepUrlMatching,
-    Element,
-    Hub,
-    Person,
-    PreIngestionEvent,
-    PropertyOperator,
-    RawAction,
-} from '../../../src/types'
-import { createHub } from '../../../src/utils/db/hub'
-import { UUIDT } from '../../../src/utils/utils'
-import { ActionMatcher, castingCompare } from '../../../src/worker/ingestion/action-matcher'
-import { LazyPersonContainer } from '../../../src/worker/ingestion/lazy-person-container'
-import { commonUserId } from '../../helpers/plugins'
-import { insertRow, resetTestDatabase } from '../../helpers/sql'
-import { KafkaProducerWrapper } from './../../../src/utils/db/kafka-producer-wrapper'
+Action,
+ActionStep,
+ActionStepUrlMatching,
+Element,
+Hub,
+Person,
+PreIngestionEvent,
+PropertyOperator,
+RawAction,
+}from '../../../src/types'
+import {createHub }from '../../../src/utils/db/hub'
+import {UUIDT}from '../../../src/utils/utils'
+import {ActionMatcher, castingCompare}from '../../../src/worker/ingestion/action-matcher'
+import {LazyPersonContainer}from '../../../src/worker/ingestion/lazy-person-container'
+import {commonUserId}from '../../helpers/plugins'
+import {insertRow, resetTestDatabase}from '../../helpers/sql'
+import {KafkaProducerWrapper}from './../../../src/utils/db/kafka-producer-wrapper'
 
 jest.mock('../../../src/utils/status')
 
@@ -72,9 +72,9 @@ describe('ActionMatcher', () => {
                     properties: null,
                     ...partialStep,
                 } as ActionStep)
-        )
-        await insertRow(hub.db.postgres, 'posthog_action', action)
-        await Promise.all(steps.map((step) => insertRow(hub.db.postgres, 'posthog_actionstep', step)))
+)
+await insertRow(hub.db.postgres, 'analytickit_action', action)
+        await Promise.all(steps.map((step) => insertRow(hub.db.postgres, 'analytickit_actionstep', step)))
         await hub.actionManager.reloadAction(action.team_id, action.id)
         return { ...action, steps, hooks: [] }
     }
@@ -527,14 +527,14 @@ describe('ActionMatcher', () => {
                 },
             ])
 
-            const eventPosthog = createTestEvent({
-                properties: { $current_url: 'http://posthog.com/pricing' },
+            const eventanalytickit = createTestEvent({
+                properties: { $current_url: 'http://analytickit.com/pricing' },
             })
             const eventExample = createTestEvent({
                 properties: { $current_url: 'https://example.com/' },
             })
 
-            expect(await actionMatcher.match(eventPosthog, personContainer)).toEqual([])
+            expect(await actionMatcher.match(eventanalytickit, personContainer)).toEqual([])
             expect(await actionMatcher.match(eventExample, personContainer)).toEqual([
                 actionDefinition,
                 actionDefinitionEmptyMatching,
@@ -764,8 +764,8 @@ describe('ActionMatcher', () => {
                 true,
                 new UUIDT().toString(),
                 ['cohort']
-            )
-            await hub.db.addPersonToCohort(testCohort.id, cohortPerson.id, testCohort.version)
+)
+await hub.db.addPersonToCohort(testCohort.id, cohortPerson.id, testCohort.version)
 
             const eventExamplePersonBad = createTestEvent({
                 event: 'meow',
@@ -784,20 +784,20 @@ describe('ActionMatcher', () => {
                 await actionMatcher.match(
                     eventExamplePersonOk,
                     new LazyPersonContainer(actionDefinition.team_id, eventExamplePersonOk.distinctId, hub)
-                )
-            ).toEqual([actionDefinition, actionDefinitionAllUsers])
+)
+).toEqual([actionDefinition, actionDefinitionAllUsers])
             expect(
                 await actionMatcher.match(
                     eventExamplePersonBad,
                     new LazyPersonContainer(actionDefinition.team_id, eventExamplePersonBad.distinctId, hub)
-                )
-            ).toEqual([actionDefinitionAllUsers])
+)
+).toEqual([actionDefinitionAllUsers])
             expect(
                 await actionMatcher.match(
                     eventExamplePersonUnknown,
                     new LazyPersonContainer(actionDefinition.team_id, eventExamplePersonUnknown.distinctId, hub)
-                )
-            ).toEqual([actionDefinitionAllUsers])
+)
+).toEqual([actionDefinitionAllUsers])
         })
 
         it('returns a match in case of a CH static cohort match', async () => {
@@ -831,13 +831,13 @@ describe('ActionMatcher', () => {
                 true,
                 new UUIDT().toString(),
                 [eventExamplePersonOk.distinctId]
-            )
+)
 
-            hub.db.kafkaProducer = {} as KafkaProducerWrapper
+hub.db.kafkaProducer = {} as KafkaProducerWrapper
 
-            // mocking the query to not have to create a whole kafka produce
-            // topic to insert a person into person_static_cohort
-            jest.spyOn(hub.db, 'clickhouseQuery')
+// mocking the query to not have to create a whole kafka produce
+// topic to insert a person into person_static_cohort
+jest.spyOn(hub.db, 'clickhouseQuery')
                 .mockReturnValueOnce({
                     rows: 1,
                 } as any)
@@ -849,15 +849,15 @@ describe('ActionMatcher', () => {
                 await actionMatcher.match(
                     eventExamplePersonOk,
                     new LazyPersonContainer(actionDefinition.team_id, eventExamplePersonOk.distinctId, hub)
-                )
-            ).toEqual([actionDefinition])
+)
+).toEqual([actionDefinition])
 
             expect(
                 await actionMatcher.match(
                     eventExamplePersonOk,
                     new LazyPersonContainer(actionDefinition.team_id, eventExamplePersonOk.distinctId, hub)
-                )
-            ).toEqual([])
+)
+).toEqual([])
         })
 
         it('returns a match in case of element href equals', async () => {

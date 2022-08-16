@@ -1,18 +1,18 @@
-import { initKeaTests } from '~/test/init'
+import{initKeaTests}from'~/test/init'
 import {
-    EVENT_DEFINITIONS_PER_PAGE,
-    eventDefinitionsTableLogic,
-    PROPERTY_DEFINITIONS_PER_EVENT,
+EVENT_DEFINITIONS_PER_PAGE,
+eventDefinitionsTableLogic,
+PROPERTY_DEFINITIONS_PER_EVENT,
 } from 'scenes/data-management/events/eventDefinitionsTableLogic'
-import { api, MOCK_TEAM_ID } from 'lib/api.mock'
-import { expectLogic, partial } from 'kea-test-utils'
-import { mockEvent, mockEventDefinitions, mockEventPropertyDefinitions } from '~/test/mocks'
-import { useMocks } from '~/mocks/jest'
-import { organizationLogic } from 'scenes/organizationLogic'
-import { combineUrl, router } from 'kea-router'
-import { keyMappingKeys } from 'lib/components/PropertyKeyInfo'
-import { urls } from 'scenes/urls'
-import { CombinedEventType } from '~/types'
+import {api, MOCK_TEAM_ID}from 'lib/api.mock'
+import {expectLogic, partial}from 'kea-test-utils'
+import {mockEvent, mockEventDefinitions, mockEventPropertyDefinitions }from '~/test/mocks'
+import {useMocks}from '~/mocks/jest'
+import {organizationLogic}from 'scenes/organizationLogic'
+import {combineUrl, router} from 'kea-router'
+import {keyMappingKeys}from 'lib/components/PropertyKeyInfo'
+import { urls}from 'scenes/urls'
+import {CombinedEventType}from '~/types'
 
 describe('eventDefinitionsTableLogic', () => {
     let logic: ReturnType<typeof eventDefinitionsTableLogic.build>
@@ -189,9 +189,9 @@ describe('eventDefinitionsTableLogic', () => {
             await expectLogic(logic, () => {
                 logic.actions.loadEventDefinitions(
                     `api/projects/${MOCK_TEAM_ID}/event_definitions?limit=50&offset=50&event_type=event`
-                )
-            })
-                .toDispatchActions(['loadEventDefinitions', 'loadEventDefinitionsSuccess'])
+)
+})
+.toDispatchActions(['loadEventDefinitions', 'loadEventDefinitionsSuccess'])
                 .toFinishAllListeners()
                 .toMatchValues({
                     eventDefinitions: partial({
@@ -270,8 +270,8 @@ describe('eventDefinitionsTableLogic', () => {
             expect(api.get).toHaveBeenNthCalledWith(
                 2,
                 `api/projects/${MOCK_TEAM_ID}/events?event=event1&limit=1&orderBy=%5B%22-timestamp%22%5D`
-            )
-            expect(api.get).toHaveBeenNthCalledWith(3, startingUrl)
+)
+expect(api.get).toHaveBeenNthCalledWith(3, startingUrl)
 
             await expectLogic(logic, () => {
                 logic.actions.loadPropertiesForEvent(eventDefinition, startingUrl)
@@ -328,9 +328,9 @@ describe('eventDefinitionsTableLogic', () => {
                 logic.actions.loadPropertiesForEvent(
                     eventDefinition,
                     `api/projects/${MOCK_TEAM_ID}/property_definitions?limit=5&offset=5`
-                )
-            })
-                .toDispatchActions(['loadPropertiesForEvent', 'loadPropertiesForEventSuccess'])
+)
+})
+.toDispatchActions(['loadPropertiesForEvent', 'loadPropertiesForEventSuccess'])
                 .toMatchValues({
                     eventPropertiesCacheMap: partial({
                         [eventDefinition.id]: partial({

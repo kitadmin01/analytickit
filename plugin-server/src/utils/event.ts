@@ -1,10 +1,10 @@
-import { PluginEvent, ProcessedPluginEvent } from '@posthog/plugin-scaffold'
-import { KafkaMessage } from 'kafkajs'
+import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {KafkaMessage}from 'kafkajs'
 
-import { ClickhouseEventKafka, IngestionEvent } from '../types'
-import { chainToElements } from './db/elements-chain'
-import { personInitialAndUTMProperties } from './db/utils'
-import { clickHouseTimestampToISO } from './utils'
+import {ClickhouseEventKafka, IngestionEvent}from '../types'
+import {chainToElements}from './db/elements-chain'
+import {personInitialAndUTMProperties }from './db/utils'
+import {clickHouseTimestampToISO}from './utils'
 
 export function convertToProcessedPluginEvent(event: IngestionEvent): ProcessedPluginEvent {
     const timestamp = typeof event.timestamp === 'string' ? event.timestamp : event.timestamp.toUTC().toISO()

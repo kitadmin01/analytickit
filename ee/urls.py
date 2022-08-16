@@ -4,7 +4,7 @@ from django.urls.conf import path
 from rest_framework_extensions.routers import NestedRegistryItem
 
 from ee.api import integration
-from posthog.api.routing import DefaultRouterPlusPlus
+from analytickit.api.routing import DefaultRouterPlusPlus
 
 from .api import (
     authentication,
@@ -18,10 +18,10 @@ from .api import (
 
 
 def extend_api_router(
-    root_router: DefaultRouterPlusPlus,
-    *,
-    projects_router: NestedRegistryItem,
-    project_dashboards_router: NestedRegistryItem
+        root_router: DefaultRouterPlusPlus,
+        *,
+        projects_router: NestedRegistryItem,
+        project_dashboards_router: NestedRegistryItem
 ) -> None:
     root_router.register(r"license", license.LicenseViewSet)
     root_router.register(r"debug_ch_queries", debug_ch_queries.DebugCHQueries, "debug_ch_queries")

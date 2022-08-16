@@ -7,20 +7,19 @@ from sentry_sdk import capture_exception
 from ee.tasks.subscriptions.email_subscriptions import send_email_subscription_report
 from ee.tasks.subscriptions.slack_subscriptions import send_slack_subscription_report
 from ee.tasks.subscriptions.subscription_utils import generate_assets
-from posthog.celery import app
-from posthog.internal_metrics import incr
-from posthog.models.subscription import Subscription
+from analytickit.celery import app
+from analytickit.internal_metrics import incr
+from analytickit.models.subscription import Subscription
 
 logger = structlog.get_logger(__name__)
 
 
 def _deliver_subscription_report(
-    subscription_id: int, previous_value: Optional[str] = None, invite_message: Optional[str] = None
+        subscription_id: int, previous_value: Optional[str] = None, invite_message: Optional[str] = None
 ) -> None:
-
     subscription = (
         Subscription.objects.prefetch_related("dashboard__insights")
-        .select_related("created_by", "insight", "dashboard",)
+        .select_related("created_by", "insight", "dashboard", )
         .get(pk=subscription_id)
     )
 
@@ -96,6 +95,6 @@ def deliver_subscription_report(subscription_id: int) -> None:
 
 @app.task()
 def handle_subscription_value_change(
-    subscription_id: int, previous_value: str, invite_message: Optional[str] = None
+        subscription_id: int, previous_value: str, invite_message: Optional[str] = None
 ) -> None:
     return _deliver_subscription_report(subscription_id, previous_value, invite_message)

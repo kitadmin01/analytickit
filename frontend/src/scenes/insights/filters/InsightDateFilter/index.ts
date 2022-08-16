@@ -1,1 +1,1 @@
-export * from './InsightDateFilter'
+export* from './InsightDateFilter'

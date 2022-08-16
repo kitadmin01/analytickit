@@ -1,4 +1,4 @@
-import posthoganalytics
+import analytickitanalytics
 import requests
 from django.conf import settings
 from django.db.models import QuerySet
@@ -8,9 +8,9 @@ from rest_framework import mixins, request, serializers, viewsets
 from rest_framework.response import Response
 
 from ee.models.license import License, LicenseError
-from posthog.event_usage import groups
-from posthog.models.organization import Organization
-from posthog.models.team import Team
+from analytickit.event_usage import groups
+from analytickit.models.organization import Organization
+from analytickit.models.team import Team
 
 
 class LicenseSerializer(serializers.ModelSerializer):
@@ -27,11 +27,11 @@ class LicenseSerializer(serializers.ModelSerializer):
         read_only_fields = ["plan", "valid_until", "max_users"]
 
     def validate(self, data):
-        validation = requests.post("https://license.posthog.com/licenses/activate", data={"key": data["key"]})
+        validation = requests.post("https://license.analytickit.com/licenses/activate", data={"key": data["key"]})
         resp = validation.json()
         user = self.context["request"].user
         if not validation.ok:
-            posthoganalytics.capture(
+            analytickitanalytics.capture(
                 user.distinct_id,
                 "license key activation failure",
                 properties={"error": validation.content},
@@ -39,7 +39,7 @@ class LicenseSerializer(serializers.ModelSerializer):
             )
             raise LicenseError(resp["code"], resp["detail"])
 
-        posthoganalytics.capture(
+        analytickitanalytics.capture(
             user.distinct_id,
             "license key activation success",
             properties={},
@@ -65,7 +65,7 @@ class LicenseViewSet(
 
     def destroy(self, request: request.Request, pk=None, **kwargs) -> Response:
         license = get_object_or_404(License, pk=pk)
-        validation = requests.post("https://license.posthog.com/licenses/deactivate", data={"key": license.key})
+        validation = requests.post("https://license.analytickit.com/licenses/deactivate", data={"key": license.key})
         validation.raise_for_status()
 
         has_another_valid_license = License.objects.filter(valid_until__gte=now()).exclude(pk=pk).exists()

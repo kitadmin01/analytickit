@@ -1,11 +1,11 @@
-import Simmer, { Simmer as SimmerType } from '@posthog/simmerjs'
-import { cssEscape } from 'lib/utils/cssEscape'
-import { ActionStepType, ActionStepUrlMatching } from '~/types'
-import { ActionStepForm, BoxColor } from '~/toolbar/types'
-import { querySelectorAllDeep } from 'query-selector-shadow-dom'
-import { toolbarLogic } from '~/toolbar/toolbarLogic'
-import { combineUrl, encodeParams } from 'kea-router'
-import { CLICK_TARGET_SELECTOR, CLICK_TARGETS, escapeRegex, TAGS_TO_IGNORE } from 'lib/actionUtils'
+importSimmer, {Simmer as SimmerType}from '@analytickit/simmerjs'
+import {cssEscape}from 'lib/utils/cssEscape'
+import {ActionStepType, ActionStepUrlMatching}from '~/types'
+import {ActionStepForm, BoxColor}from '~/toolbar/types'
+import {querySelectorAllDeep}from 'query-selector-shadow-dom'
+import {toolbarLogic}from '~/toolbar/toolbarLogic'
+import {combineUrl, encodeParams}from 'kea-router'
+import {CLICK_TARGET_SELECTOR, CLICK_TARGETS, escapeRegex, TAGS_TO_IGNORE}from 'lib/actionUtils'
 
 let simmer: SimmerType
 
@@ -56,7 +56,7 @@ export function elementToActionStep(element: HTMLElement, dataAttributes: string
 }
 
 export function getToolbarElement(): HTMLElement | null {
-    return window.document.getElementById('__POSTHOG_TOOLBAR__') || null
+    return window.document.getElementById('__analytickit_TOOLBAR__') || null
 }
 
 export function getShadowRoot(): ShadowRoot | null {
@@ -148,7 +148,7 @@ export function getAllClickTargets(startNode: Document | HTMLElement | ShadowRoo
     })
 
     const shadowElements = allElements
-        .filter((el) => el.shadowRoot && el.getAttribute('id') !== '__POSTHOG_TOOLBAR__')
+        .filter((el) => el.shadowRoot && el.getAttribute('id') !== '__analytickit_TOOLBAR__')
         .map((el: HTMLElement) => (el.shadowRoot ? getAllClickTargets(el.shadowRoot) : []))
         .reduce((a, b) => [...a, ...b], [])
     const selectedElements = [...elements, ...pointerElements, ...shadowElements]
@@ -223,11 +223,11 @@ export function getElementForStep(step: ActionStepForm, allElements?: HTMLElemen
                 TAGS_TO_IGNORE.indexOf(e.tagName.toLowerCase()) === -1 &&
                 e.innerText?.trim() === textToSearch &&
                 (e.matches(CLICK_TARGET_SELECTOR) || hasCursorPointer(e))
-        )
-        elements = elements.filter((e) => !elements.find((e2) => isParentOf(e2, e)))
-    }
+)
+elements = elements.filter((e) => !elements.find((e2) => isParentOf(e2, e)))
+}
 
-    if (elements.length === 1) {
+if(elements.length === 1) {
         return elements[0]
     }
 
@@ -323,8 +323,8 @@ export function stepToDatabaseFormat(step: ActionStepForm): ActionStepType {
 }
 
 export function clearSessionToolbarToken(): void {
-    window.sessionStorage?.removeItem('_postHogEditorParams')
-    window.localStorage?.removeItem('_postHogEditorParams')
+    window.sessionStorage?.removeItem('_analytickitEditorParams')
+    window.localStorage?.removeItem('_analytickitEditorParams')
 }
 
 export function getRectForElement(element: HTMLElement): DOMRect {

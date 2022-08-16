@@ -1,8 +1,8 @@
-import { Hub, LogLevel, PluginCapabilities } from '../../src/types'
-import { createHub } from '../../src/utils/db/hub'
-import { getVMPluginCapabilities, shouldSetupPluginInServer } from '../../src/worker/vm/capabilities'
-import { createPluginConfigVM } from '../../src/worker/vm/vm'
-import { pluginConfig39 } from '../helpers/plugins'
+import{Hub, LogLevel, PluginCapabilities}from '../../src/types'
+import {createHub }from '../../src/utils/db/hub'
+import { getVMPluginCapabilities, shouldSetupPluginInServer}from '../../src/worker/vm/capabilities'
+import {createPluginConfigVM}from '../../src/worker/vm/vm'
+import {pluginConfig39}from '../helpers/plugins'
 
 describe('capabilities', () => {
     describe('getVMPluginCapabilities()', () => {
@@ -66,8 +66,8 @@ describe('capabilities', () => {
                 const shouldSetupPlugin = shouldSetupPluginInServer(
                     {},
                     { methods: ['processEvent', 'onEvent'], scheduled_tasks: ['runEveryMinute'], jobs: ['someJob'] }
-                )
-                expect(shouldSetupPlugin).toEqual(false)
+)
+expect(shouldSetupPlugin).toEqual(false)
             })
 
             it('returns false if the plugin has no capabilities', () => {
@@ -79,8 +79,8 @@ describe('capabilities', () => {
                         pluginScheduledTasks: true,
                     },
                     {}
-                )
-                expect(shouldSetupPlugin).toEqual(false)
+)
+expect(shouldSetupPlugin).toEqual(false)
             })
         })
 
@@ -98,8 +98,8 @@ describe('capabilities', () => {
                         scheduled_tasks: ['runEveryMinute'],
                         jobs: ['someJob'],
                     }
-                )
-                expect(shouldSetupPlugin).toEqual(false)
+)
+expect(shouldSetupPlugin).toEqual(false)
             })
         })
 
@@ -108,16 +108,16 @@ describe('capabilities', () => {
                 const shouldSetupPlugin = shouldSetupPluginInServer(
                     { pluginScheduledTasks: true },
                     { scheduled_tasks: ['runEveryMinute'] }
-                )
-                expect(shouldSetupPlugin).toEqual(true)
+)
+expect(shouldSetupPlugin).toEqual(true)
             })
 
             it('returns false if plugin has no scheduled tasks and the server has only pluginScheduledTasks capability', () => {
                 const shouldSetupPlugin = shouldSetupPluginInServer(
                     { pluginScheduledTasks: true },
                     { scheduled_tasks: [] }
-                )
-                expect(shouldSetupPlugin).toEqual(false)
+)
+expect(shouldSetupPlugin).toEqual(false)
             })
         })
 
@@ -140,12 +140,12 @@ describe('capabilities', () => {
                     const shouldSetupPlugin = shouldSetupPluginInServer(
                         { processAsyncHandlers: true },
                         { methods: [method] }
-                    )
-                    expect(shouldSetupPlugin).toEqual(true)
+)
+expect(shouldSetupPlugin).toEqual(true)
                 }
-            )
+)
 
-            it('returns false if plugin has none of onEvent, onSnapshot, or exportEvents and the server has only processAsyncHandlers capability', () => {
+it('returns false if plugin has none of onEvent, onSnapshot, or exportEvents and the server has only processAsyncHandlers capability', () => {
                 const shouldSetupPlugin = shouldSetupPluginInServer({ processAsyncHandlers: true }, { methods: [] })
                 expect(shouldSetupPlugin).toEqual(false)
             })

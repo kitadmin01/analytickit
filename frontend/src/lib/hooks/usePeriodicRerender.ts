@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import{useEffect, useState}from 'react'
 
 export function usePeriodicRerender(milliseconds: number): void {
     const [, setTick] = useState(0)

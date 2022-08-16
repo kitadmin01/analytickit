@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from posthog.constants import INSIGHT_FUNNELS
-from posthog.models.filters import Filter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.queries.funnels.test.breakdown_cases import FunnelStepResult, assert_funnel_breakdown_result_is_correct
-from posthog.test.base import APIBaseTest, snapshot_clickhouse_queries
-from posthog.test.test_journeys import journeys_for
+from analytickit.constants import INSIGHT_FUNNELS
+from analytickit.models.filters import Filter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.queries.funnels.test.breakdown_cases import FunnelStepResult, assert_funnel_breakdown_result_is_correct
+from analytickit.test.base import APIBaseTest, snapshot_clickhouse_queries
+from analytickit.test.test_journeys import journeys_for
 
 
 def funnel_breakdown_group_test_factory(Funnel, FunnelPerson, _create_event, _create_action, _create_person):

@@ -1,6 +1,6 @@
 import api from 'lib/api'
 import { delay } from 'lib/utils'
-import posthog from 'posthog-js'
+import analytickit from 'analytickit-js'
 import { ExportedAssetType, ExporterFormat } from '~/types'
 import { lemonToast } from '../lemonToast'
 import { useEffect, useState } from 'react'
@@ -63,7 +63,7 @@ export async function triggerExport(asset: TriggerExportProps): Promise<void> {
                     await downloadExportedAsset(exportedAsset)
 
                     trackingProperties.total_time_ms = performance.now() - startTime
-                    posthog.capture('export succeeded', trackingProperties)
+                    analytickit.capture('export succeeded', trackingProperties)
 
                     resolve('Export complete')
                     return
@@ -77,7 +77,7 @@ export async function triggerExport(asset: TriggerExportProps): Promise<void> {
             reject('Content not loaded in time...')
         } catch (e: any) {
             trackingProperties.total_time_ms = performance.now() - startTime
-            posthog.capture('export failed', trackingProperties)
+            analytickit.capture('export failed', trackingProperties)
             reject(`Export failed: ${JSON.stringify(e)}`)
         }
     })

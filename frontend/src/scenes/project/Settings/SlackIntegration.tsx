@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useActions, useValues } from 'kea'
 import { getSlackAppManifest, integrationsLogic } from './integrationsLogic'
 import { CodeSnippet, Language } from 'scenes/ingestion/frameworks/CodeSnippet'
-import { LemonButton, Link } from '@posthog/lemon-ui'
+import { LemonButton, Link } from '@analytickit/lemon-ui'
 import { IconDelete, IconSlack } from 'lib/components/icons'
 import { UserActivityIndicator } from 'lib/components/UserActivityIndicator/UserActivityIndicator'
 import { urls } from 'scenes/urls'
@@ -19,7 +19,7 @@ export function SlackIntegration(): JSX.Element {
         LemonDialog.open({
             title: `Do you want to disconnect from Slack?`,
             description:
-                'This cannot be undone. PostHog resources configured to use Slack will remain but will stop working.',
+                'This cannot be undone. analytickit resources configured to use Slack will remain but will stop working.',
             primaryButton: {
                 children: 'Yes, disconnect',
                 status: 'danger',
@@ -41,7 +41,7 @@ export function SlackIntegration(): JSX.Element {
                 Integrate with Slack directly to get more advanced options such as sending webhook events to{' '}
                 <b>different channels</b> and <b>subscribing to an Insight or Dashboard</b> for regular reports to Slack
                 channels of your choice. Guidance on integrating with Slack available{' '}
-                <a href="https://posthog.com/docs/integrate/third-party/slack">in our docs</a>.
+                <a href="https://analytickit.com/docs/integrate/third-party/slack">in our docs</a>.
             </p>
 
             <p>
@@ -113,7 +113,7 @@ export function SlackIntegration(): JSX.Element {
                     )
                 ) : (
                     <p className="text-muted">
-                        This PostHog instance is not configured for Slack. Please contact the instance owner to
+                        This analytickit instance is not configured for Slack. Please contact the instance owner to
                         configure it.
                     </p>
                 )}

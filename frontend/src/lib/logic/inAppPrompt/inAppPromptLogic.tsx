@@ -30,7 +30,7 @@ import {
     IconCoffee,
 } from 'lib/components/icons'
 import { Lettermark } from 'lib/components/Lettermark/Lettermark'
-import posthog from 'posthog-js'
+import analytickit from 'analytickit-js'
 
 /** To be extended with other types of notifications e.g. modals, bars */
 export type PromptType = 'tooltip'
@@ -89,7 +89,7 @@ export type PromptUserState = {
 const NEW_SEQUENCE_DELAY = 1000
 
 const iconMap = {
-    home: <Lettermark name="PostHog" />,
+    home: <Lettermark name="analytickit" />,
     'live-events': <IconLive />,
     dashboard: <IconGauge />,
     insight: <IconBarChart />,
@@ -472,7 +472,7 @@ export const inAppPromptLogic = kea<inAppPromptLogicType>([
         },
     })),
     afterMount(({ actions }) => {
-        posthog.onFeatureFlags((_, variants) => {
+        analytickit.onFeatureFlags((_, variants) => {
             if (variants[FEATURE_FLAGS.IN_APP_PROMPTS_EXPERIMENT] === 'test') {
                 actions.syncState({ forceRun: true })
             }

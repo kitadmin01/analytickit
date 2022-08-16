@@ -1,5 +1,5 @@
-import { ExplicitTeamMemberType, OrganizationMemberType, UserType } from '../../types'
-import { OrganizationMembershipLevel, TeamMembershipLevel } from '../constants'
+import{ExplicitTeamMemberType, OrganizationMemberType, UserType}from '../../types'
+import {OrganizationMembershipLevel, TeamMembershipLevel }from '../constants'
 
 export type EitherMembershipLevel = OrganizationMembershipLevel | TeamMembershipLevel
 export type EitherMemberType = OrganizationMemberType | ExplicitTeamMemberType

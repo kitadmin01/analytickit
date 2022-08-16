@@ -4,22 +4,22 @@ from typing import List, Tuple, Union
 import structlog
 from celery import group
 
-from posthog.models.dashboard_tile import get_tiles_ordered_by_position
-from posthog.models.exported_asset import ExportedAsset
-from posthog.models.insight import Insight
-from posthog.models.sharing_configuration import SharingConfiguration
-from posthog.models.subscription import Subscription
-from posthog.tasks import exporter
+from analytickit.models.dashboard_tile import get_tiles_ordered_by_position
+from analytickit.models.exported_asset import ExportedAsset
+from analytickit.models.insight import Insight
+from analytickit.models.sharing_configuration import SharingConfiguration
+from analytickit.models.subscription import Subscription
+from analytickit.tasks import exporter
 
 logger = structlog.get_logger(__name__)
 
-UTM_TAGS_BASE = "utm_source=posthog&utm_campaign=subscription_report"
+UTM_TAGS_BASE = "utm_source=analytickit&utm_campaign=subscription_report"
 
 DEFAULT_MAX_ASSET_COUNT = 6
 
 
 def generate_assets(
-    resource: Union[Subscription, SharingConfiguration], max_asset_count: int = DEFAULT_MAX_ASSET_COUNT
+        resource: Union[Subscription, SharingConfiguration], max_asset_count: int = DEFAULT_MAX_ASSET_COUNT
 ) -> Tuple[List[Insight], List[ExportedAsset]]:
     insights = []
 

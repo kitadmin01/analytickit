@@ -1,59 +1,59 @@
-import { actions, connect, kea, listeners, path, reducers, selectors } from 'kea'
+import{actions, connect, kea, listeners, path, reducers, selectors}from 'kea'
 import equal from 'fast-deep-equal'
-import { urlToAction } from 'kea-router'
-import { loaders } from 'kea-loaders'
+import {urlToAction}from 'kea-router'
+import {loaders}from 'kea-loaders'
 import Fuse from 'fuse.js'
 import api from 'lib/api'
-import { eventToDescription, sum, toParams } from 'lib/utils'
-import type { sessionRecordingLogicType } from './sessionRecordingLogicType'
+import {eventToDescription, sum, toParams}from 'lib/utils'
+import type {sessionRecordingLogicType} from './sessionRecordingLogicType'
 import {
-    EventType,
-    PlayerPosition,
-    RecordingConsoleLog,
-    RecordingEventsFilters,
-    RecordingEventType,
-    RecordingSegment,
-    RecordingStartAndEndTime,
-    RRWebRecordingConsoleLogPayload,
-    SessionPlayerData,
-    SessionRecordingEvents,
-    SessionRecordingId,
-    SessionRecordingMeta,
-    SessionRecordingTab,
-    SessionRecordingUsageType,
-} from '~/types'
-import { eventUsageLogic, RecordingWatchedSource } from 'lib/utils/eventUsageLogic'
-import { teamLogic } from '../teamLogic'
-import { eventWithTime } from 'rrweb/typings/types'
-import { getKeyMapping } from 'lib/components/PropertyKeyInfo'
-import { dayjs } from 'lib/dayjs'
+EventType,
+PlayerPosition,
+RecordingConsoleLog,
+RecordingEventsFilters,
+RecordingEventType,
+RecordingSegment,
+RecordingStartAndEndTime,
+RRWebRecordingConsoleLogPayload,
+SessionPlayerData,
+SessionRecordingEvents,
+SessionRecordingId,
+SessionRecordingMeta,
+SessionRecordingTab,
+SessionRecordingUsageType,
+}from '~/types'
+import {eventUsageLogic, RecordingWatchedSource}from 'lib/utils/eventUsageLogic'
+import {teamLogic }from '../teamLogic'
+import {eventWithTime}from 'rrweb/typings/types'
+import {getKeyMapping}from 'lib/components/PropertyKeyInfo'
+import {dayjs}from 'lib/dayjs'
 import {
-    getPlayerPositionFromEpochTime,
-    getPlayerTimeFromPlayerPosition,
-    guessPlayerPositionFromEpochTimeWithoutWindowId,
-} from './player/playerUtils'
+getPlayerPositionFromEpochTime,
+getPlayerTimeFromPlayerPosition,
+guessPlayerPositionFromEpochTimeWithoutWindowId,
+}from './player/playerUtils'
 
 const IS_TEST_MODE = process.env.NODE_ENV === 'test'
 
 const CONSOLE_LOG_PLUGIN_NAME = 'rrweb/console@1'
 
 export interface UnparsedRecordingSegment {
-    start_time: string
-    end_time: string
-    window_id: string
-    is_active: boolean
+start_time: string
+end_time: string
+window_id: string
+is_active: boolean
 }
 
 export interface UnparsedMetadata {
-    session_id: string
-    viewed: boolean
-    segments: UnparsedRecordingSegment[]
-    start_and_end_times_by_window_id: Record<string, Record<string, string>>
+session_id: string
+viewed: boolean
+segments: UnparsedRecordingSegment[]
+start_and_end_times_by_window_id: Record< string, Record<string, string>>
 }
 
 export const parseMetadataResponse = (metadata?: UnparsedMetadata): SessionRecordingMeta => {
-    const segments: RecordingSegment[] =
-        metadata?.segments.map((segment: UnparsedRecordingSegment): RecordingSegment => {
+const segments: RecordingSegment[] =
+metadata?.segments.map((segment: UnparsedRecordingSegment): RecordingSegment => {
             const windowStartTime = +dayjs(metadata?.start_and_end_times_by_window_id[segment.window_id].start_time)
             const startTimeEpochMs = +dayjs(segment?.start_time)
             const endTimeEpochMs = +dayjs(segment?.end_time)
@@ -209,10 +209,10 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                     performance.now() - cache.startTime,
                     SessionRecordingUsageType.LOADED,
                     0
-                )
-            }
-            // Not always accurate that recording is playable after first chunk is loaded, but good guesstimate for now
-            if (values.chunkPaginationIndex === 1) {
+)
+}
+// Not always accurate that recording is playable after first chunk is loaded, but good guesstimate for now
+if (values.chunkPaginationIndex === 1) {
                 actions.reportUsage(values.sessionPlayerData, performance.now() - cache.startTime)
             }
         },
@@ -226,11 +226,11 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                 eventUsageLogic.actions.reportRecordingEventsFetched(
                     values.sessionEventsData?.events?.length ?? 0,
                     performance.now() - cache.eventsStartTime
-                )
-                cache.eventsStartTime = null
-            }
-        },
-        reportUsage: async ({ recordingData, loadTime }, breakpoint) => {
+)
+cache.eventsStartTime = null
+}
+},
+reportUsage: async ({ recordingData, loadTime }, breakpoint) => {
             await breakpoint()
             eventUsageLogic.actions.reportRecording(
                 recordingData,
@@ -238,17 +238,17 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                 loadTime,
                 SessionRecordingUsageType.VIEWED,
                 0
-            )
-            await breakpoint(IS_TEST_MODE ? 1 : 10000)
+)
+await breakpoint(IS_TEST_MODE ? 1 : 10000)
             eventUsageLogic.actions.reportRecording(
                 recordingData,
                 values.source,
                 loadTime,
                 SessionRecordingUsageType.ANALYZED,
                 10
-            )
-        },
-        setTab: ({ tab }) => {
+)
+},
+setTab: ({ tab }) => {
             if (tab === SessionRecordingTab.CONSOLE) {
                 eventUsageLogic.findMounted()?.actions?.reportRecordingConsoleViewed(values.orderedConsoleLogs.length)
             }
@@ -274,24 +274,27 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                     })
                     const response = await api.get(
                         `api/projects/${values.currentTeamId}/session_recordings/${sessionRecordingId}?${params}`
-                    )
-                    const unparsedMetadata: UnparsedMetadata | undefined = response.result?.session_recording
-                    const metadata = parseMetadataResponse(unparsedMetadata)
-                    const bufferedTo = calculateBufferedTo(
-                        metadata.segments,
-                        values.sessionPlayerData.snapshotsByWindowId,
-                        metadata.startAndEndTimesByWindowId
-                    )
-                    breakpoint()
-                    return {
-                        ...values.sessionPlayerData,
-                        person: response.result?.person,
-                        metadata,
-                        bufferedTo,
-                        snapshotsByWindowId: { ...values.sessionPlayerData.snapshotsByWindowId } ?? {},
-                    }
-                },
-                loadRecordingSnapshots: async ({ sessionRecordingId, url }, breakpoint): Promise<SessionPlayerData> => {
+)
+const unparsedMetadata: UnparsedMetadata | undefined = response.result?.session_recording
+const metadata = parseMetadataResponse(unparsedMetadata)
+const bufferedTo = calculateBufferedTo(
+metadata.segments,
+values.sessionPlayerData.snapshotsByWindowId,
+metadata.startAndEndTimesByWindowId
+)
+breakpoint()
+return {
+...values.sessionPlayerData,
+person: response.result?.person,
+metadata,
+bufferedTo,
+snapshotsByWindowId: {
+...values.sessionPlayerData.snapshotsByWindowId}?? {
+
+},
+}
+},
+loadRecordingSnapshots: async ({ sessionRecordingId, url }, breakpoint): Promise<SessionPlayerData> => {
                     const apiUrl =
                         url || `api/projects/${values.currentTeamId}/session_recordings/${sessionRecordingId}/snapshots`
                     const response = await api.get(apiUrl)
@@ -307,20 +310,20 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                         values.sessionPlayerData.metadata?.segments,
                         snapshotsByWindowId,
                         values.sessionPlayerData.metadata?.startAndEndTimesByWindowId
-                    )
-                    return {
-                        ...values.sessionPlayerData,
-                        bufferedTo,
-                        snapshotsByWindowId,
-                        next: response.result?.next,
-                    }
-                },
-            },
-        ],
-        sessionEventsData: [
-            null as null | SessionRecordingEvents,
-            {
-                loadEvents: async ({ url }, breakpoint) => {
+)
+return {
+...values.sessionPlayerData,
+bufferedTo,
+snapshotsByWindowId,
+next: response.result?.next,
+}
+},
+},
+],
+sessionEventsData: [
+null as null | SessionRecordingEvents,
+{
+loadEvents: async ({ url }, breakpoint) => {
                     if (!values.eventsApiParams) {
                         return values.sessionEventsData
                     }
@@ -351,8 +354,8 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                                     eventEpochTimeToAttempt,
                                     values.sessionPlayerData?.metadata?.startAndEndTimesByWindowId,
                                     values.sessionPlayerData?.metadata?.segments
-                                )
-                                if (eventPlayerPosition) {
+)
+if (eventPlayerPosition) {
                                     isOutOfBandEvent = true
                                     break
                                 }
@@ -362,9 +365,9 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                                     eventEpochTimeToAttempt,
                                     event.properties?.$window_id ?? '', // If there is no window_id on the event to match the recording metadata
                                     values.sessionPlayerData.metadata.startAndEndTimesByWindowId
-                                )
-                            }
-                            if (eventPlayerPosition !== null) {
+)
+}
+if (eventPlayerPosition !== null) {
                                 break
                             }
                         }
@@ -372,8 +375,8 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                             const eventPlayerTime = getPlayerTimeFromPlayerPosition(
                                 eventPlayerPosition,
                                 values.sessionPlayerData.metadata.segments
-                            )
-                            if (eventPlayerTime !== null) {
+)
+if (eventPlayerTime !== null) {
                                 eventsWithPlayerData.push({
                                     ...event,
                                     playerTime: eventPlayerTime,
@@ -458,8 +461,8 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                             const parsedPayload = payload
                                 ?.map?.((item) =>
                                     item && item.startsWith('"') && item.endsWith('"') ? item.slice(1, -1) : item
-                                )
-                                .join(' ')
+)
+.join(' ')
 
                             // Parse the trace string
                             let parsedTraceString
@@ -515,12 +518,12 @@ export const sessionRecordingLogic = kea<sessionRecordingLogicType>([
                     equal(
                         sessionPlayerData.metadata.segments.slice(-1)[0].endPlayerPosition,
                         sessionPlayerData.bufferedTo
-                    )
-                )
-            },
-        ],
-    }),
-    urlToAction(({ actions, values, cache }) => {
+)
+)
+},
+],
+}),
+urlToAction(({ actions, values, cache }) => {
         const urlToAction = (
             _: any,
             params: {

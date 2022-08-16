@@ -1,5 +1,5 @@
-import { PluginsAccessLevel } from '../../lib/constants'
-import { OrganizationType } from '../../types'
+import{PluginsAccessLevel}from'../../lib/constants'
+import {OrganizationType}from '../../types'
 
 export function canGloballyManagePlugins(organization: OrganizationType | null | undefined): boolean {
     if (!organization) {

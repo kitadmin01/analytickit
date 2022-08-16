@@ -1,7 +1,7 @@
-import { StorageExtension } from '@posthog/plugin-scaffold'
+import{StorageExtension}from'@analytickit/plugin-scaffold'
 
-import { Hub, PluginConfig } from '../../../types'
-import { postgresGet } from '../utils'
+import {Hub, PluginConfig}from '../../../types'
+import {postgresGet }from '../utils'
 
 export function createStorage(server: Hub, pluginConfig: PluginConfig): StorageExtension {
     const get = async function (key: string, defaultValue: unknown): Promise<unknown> {
@@ -20,17 +20,17 @@ export function createStorage(server: Hub, pluginConfig: PluginConfig): StorageE
         } else {
             await server.db.postgresQuery(
                 `
-                    INSERT INTO posthog_pluginstorage ("plugin_config_id", "key", "value")
+                    INSERT INTO analytickit_pluginstorage ("plugin_config_id", "key", "value")
                     VALUES ($1, $2, $3)
                     ON CONFLICT ("plugin_config_id", "key")
                     DO UPDATE SET value = $3
                 `,
                 [pluginConfig.id, key, JSON.stringify(value)],
                 'storageSet'
-            )
-        }
+)
+}
 
-        server.statsd?.increment('vm_extension_storage_set', {
+server.statsd?.increment('vm_extension_storage_set', {
             plugin: pluginConfig.plugin?.name ?? '?',
             team_id: pluginConfig.team_id.toString(),
         })
@@ -42,15 +42,15 @@ export function createStorage(server: Hub, pluginConfig: PluginConfig): StorageE
 
     const del = async function (key: string): Promise<void> {
         await server.db.postgresQuery(
-            'DELETE FROM posthog_pluginstorage WHERE "plugin_config_id"=$1 AND "key"=$2',
+            'DELETE FROM analytickit_pluginstorage WHERE "plugin_config_id"=$1 AND "key"=$2',
             [pluginConfig.id, key],
             'storageDelete'
-        )
-    }
+)
+}
 
-    return {
-        get,
-        set,
-        del,
-    }
+return {
+get,
+set,
+del,
+}
 }

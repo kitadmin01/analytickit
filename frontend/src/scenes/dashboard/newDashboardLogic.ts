@@ -1,32 +1,32 @@
-import { actions, connect, kea, listeners, path, reducers } from 'kea'
-import type { newDashboardLogicType } from './newDashboardLogicType'
-import { DashboardRestrictionLevel } from 'lib/constants'
-import { DashboardType } from '~/types'
+import{actions, connect, kea, listeners, path, reducers} from 'kea'
+import type {newDashboardLogicType} from './newDashboardLogicType'
+import {DashboardRestrictionLevel }from 'lib/constants'
+import { DashboardType}from '~/types'
 import api from 'lib/api'
-import { teamLogic } from 'scenes/teamLogic'
-import { router } from 'kea-router'
-import { urls } from 'scenes/urls'
-import { dashboardsModel } from '~/models/dashboardsModel'
-import { forms } from 'kea-forms'
+import { teamLogic}from 'scenes/teamLogic'
+import {router}from 'kea-router'
+import { urls}from 'scenes/urls'
+import {dashboardsModel}from '~/models/dashboardsModel'
+import {forms}from 'kea-forms'
 
 export interface NewDashboardForm {
-    name: string
-    description: ''
-    show: boolean
-    useTemplate: string
-    restrictionLevel: DashboardRestrictionLevel
+name: string
+description: ''
+show: boolean
+useTemplate: string
+restrictionLevel: DashboardRestrictionLevel
 }
 
 const defaultFormValues: NewDashboardForm = {
-    name: '',
-    description: '',
-    show: false,
-    useTemplate: '',
-    restrictionLevel: DashboardRestrictionLevel.EveryoneInProjectCanEdit,
+name: '',
+description: '',
+show: false,
+useTemplate: '',
+restrictionLevel: DashboardRestrictionLevel.EveryoneInProjectCanEdit,
 }
 
 export const newDashboardLogic = kea<newDashboardLogicType>([
-    path(['scenes', 'dashboard', 'newDashboardLogic']),
+path(['scenes', 'dashboard', 'newDashboardLogic']),
     connect(dashboardsModel),
     actions({
         showNewDashboardModal: true,
@@ -59,10 +59,10 @@ export const newDashboardLogic = kea<newDashboardLogicType>([
                         use_template: useTemplate,
                         restriction_level: restrictionLevel,
                     } as Partial<DashboardType>
-                )
-                actions.hideNewDashboardModal()
-                actions.resetNewDashboard()
-                dashboardsModel.actions.addDashboardSuccess(result)
+)
+actions.hideNewDashboardModal()
+actions.resetNewDashboard()
+dashboardsModel.actions.addDashboardSuccess(result)
                 if (show) {
                     breakpoint()
                     router.actions.push(urls.dashboard(result.id))

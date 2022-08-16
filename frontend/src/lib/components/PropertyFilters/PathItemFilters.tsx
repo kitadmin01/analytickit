@@ -7,7 +7,7 @@ import { PathItemSelector } from './components/PathItemSelector'
 import { PropertyFilterButton } from './components/PropertyFilterButton'
 import { SimpleOption, TaxonomicFilterGroupType } from '../TaxonomicFilter/types'
 import { objectsEqual } from 'lib/utils'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import { IconPlusMini } from '../icons'
 
 interface PropertyFiltersProps {

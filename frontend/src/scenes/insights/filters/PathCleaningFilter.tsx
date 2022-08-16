@@ -7,7 +7,7 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { useActions, useValues } from 'kea'
 import { pathsLogic } from 'scenes/paths/pathsLogic'
 import { insightLogic } from 'scenes/insights/insightLogic'
-import { LemonSwitch } from '@posthog/lemon-ui'
+import { LemonSwitch } from '@analytickit/lemon-ui'
 import { teamLogic } from 'scenes/teamLogic'
 
 export function PathCleaningFilter(): JSX.Element {

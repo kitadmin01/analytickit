@@ -1,43 +1,43 @@
-import * as Sentry from '@sentry/node'
-import { StatsD } from 'hot-shots'
-import { CompressionCodecs, CompressionTypes, Message, Producer, ProducerRecord } from 'kafkajs'
+import* as Sentry from '@sentry/node'
+import {StatsD}from 'hot-shots'
+import {CompressionCodecs, CompressionTypes, Message, Producer, ProducerRecord }from 'kafkajs'
 // @ts-expect-error no type definitions
 import SnappyCodec from 'kafkajs-snappy'
 
-import { runInSpan } from '../../sentry'
-import { PluginsServerConfig } from '../../types'
-import { instrumentQuery } from '../metrics'
-import { timeoutGuard } from './utils'
+import {runInSpan}from '../../sentry'
+import {PluginsServerConfig}from '../../types'
+import {instrumentQuery}from '../metrics'
+import {timeoutGuard}from './utils'
 
 CompressionCodecs[CompressionTypes.Snappy] = SnappyCodec
 
 /** This class wraps kafkajs producer, adding batching to optimize performance.
- *
- * As messages get queued, we flush the queue in the following cases.
- *
- * 1. Message size + current batch exceeds max batch message size
- * 2. Too much time passed
- * 3. Too many messages queued.
- *
- * We also flush the queue regularly to avoid dropping any messages as the program quits.
- */
+*
+* As messages get queued, we flush the queue in the following cases.
+*
+* 1. Message size + current batch exceeds max batch message size
+* 2. Too much time passed
+* 3. Too many messages queued.
+*
+* We also flush the queue regularly to avoid dropping any messages as the program quits.
+*/
 export class KafkaProducerWrapper {
-    /** Kafka producer used for syncing Postgres and ClickHouse person data. */
-    private producer: Producer
-    /** StatsD instance used to do instrumentation */
-    private statsd: StatsD | undefined
+/** Kafka producer used for syncing Postgres and ClickHouse person data. */
+private producer: Producer
+/** StatsD instance used to do instrumentation */
+private statsd: StatsD | undefined
 
-    lastFlushTime: number
-    currentBatch: Array<ProducerRecord>
-    currentBatchSize: number
+lastFlushTime: number
+currentBatch: Array < ProducerRecord>
+currentBatchSize: number
 
-    flushFrequencyMs: number
-    maxQueueSize: number
-    maxBatchSize: number
+flushFrequencyMs: number
+maxQueueSize: number
+maxBatchSize: number
 
-    flushInterval: NodeJS.Timeout
+flushInterval: NodeJS.Timeout
 
-    constructor(producer: Producer, statsd: StatsD | undefined, serverConfig: PluginsServerConfig) {
+constructor(producer: Producer, statsd: StatsD | undefined, serverConfig: PluginsServerConfig) {
         this.producer = producer
         this.statsd = statsd
 
@@ -83,10 +83,10 @@ export class KafkaProducerWrapper {
                     }
                 }
             }
-        )
-    }
+)
+}
 
-    async queueMessages(kafkaMessages: ProducerRecord[]): Promise<void> {
+async queueMessages(kafkaMessages: ProducerRecord[]): Promise<void> {
         for (const message of kafkaMessages) {
             await this.queueMessage(message)
         }
@@ -129,7 +129,7 @@ export class KafkaProducerWrapper {
                         estimatedSize: batchSize,
                     },
                 })
-                // :TODO: Implement some retrying, https://github.com/PostHog/plugin-server/issues/511
+                // :TODO: Implement some retrying, https://github.com/analytickit/plugin-server/issues/511
                 this.statsd?.increment('query.kafka_send.failure')
                 throw err
             } finally {

@@ -15,9 +15,9 @@ from social_core.exceptions import AuthFailed, AuthMissingParameter
 
 from ee.api.test.base import APILicensedTest
 from ee.models.license import License
-from posthog.constants import AvailableFeature
-from posthog.models import OrganizationMembership, User
-from posthog.models.organization_domain import OrganizationDomain
+from analytickit.constants import AvailableFeature
+from analytickit.models import OrganizationMembership, User
+from analytickit.models.organization_domain import OrganizationDomain
 
 SAML_MOCK_SETTINGS = {
     "SOCIAL_AUTH_SAML_SECURITY_CONFIG": {
@@ -102,12 +102,12 @@ class TestEELoginPrecheckAPI(APILicensedTest):
 
 
 class TestEEAuthenticationAPI(APILicensedTest):
-    CONFIG_EMAIL = "user7@posthog.com"
+    CONFIG_EMAIL = "user7@analytickit.com"
 
     def create_enforced_domain(self, **kwargs) -> OrganizationDomain:
         return OrganizationDomain.objects.create(
             **{
-                "domain": "posthog.com",
+                "domain": "analytickit.com",
                 "organization": self.organization,
                 "verified_at": timezone.now(),
                 "sso_enforcement": "google-oauth2",
@@ -162,9 +162,9 @@ class TestEEAuthenticationAPI(APILicensedTest):
     def test_cannot_reset_password_with_enforced_sso(self):
         self.create_enforced_domain()
         with self.settings(
-            **GOOGLE_MOCK_SETTINGS, EMAIL_HOST="localhost", SITE_URL="https://my.posthog.net",
+                **GOOGLE_MOCK_SETTINGS, EMAIL_HOST="localhost", SITE_URL="https://my.analytickit.net",
         ):
-            response = self.client.post("/api/reset/", {"email": "i_dont_exist@posthog.com"})
+            response = self.client.post("/api/reset/", {"email": "i_dont_exist@analytickit.com"})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.json(),
@@ -177,7 +177,7 @@ class TestEEAuthenticationAPI(APILicensedTest):
         )
         self.assertEqual(len(mail.outbox), 0)
 
-    @patch("posthog.models.organization_domain.logger.warning")
+    @patch("analytickit.models.organization_domain.logger.warning")
     def test_cannot_enforce_sso_without_a_license(self, mock_warning):
         self.client.logout()
         self.license.valid_until = timezone.now() - datetime.timedelta(days=1)
@@ -200,8 +200,8 @@ class TestEEAuthenticationAPI(APILicensedTest):
 
         # Ensure warning is properly logged for debugging
         mock_warning.assert_called_with(
-            "🤑🚪 SSO is enforced for domain posthog.com but the organization does not have the proper license.",
-            domain="posthog.com",
+            "🤑🚪 SSO is enforced for domain analytickit.com but the organization does not have the proper license.",
+            domain="analytickit.com",
             organization=str(self.organization.id),
         )
 
@@ -224,7 +224,7 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
         super().setUpTestData()
 
         cls.organization_domain = OrganizationDomain.objects.create(
-            domain="posthog.com",
+            domain="analytickit.com",
             verified_at=timezone.now(),
             organization=cls.organization,
             jit_provisioning_enabled=True,
@@ -252,7 +252,6 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
     # SAML Metadata
 
     def test_can_get_saml_metadata(self):
-
         self.client.force_login(self.user)
 
         OrganizationMembership.objects.filter(organization=self.organization, user=self.user).update(
@@ -281,7 +280,7 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
 
     def test_login_precheck_with_available_but_unenforced_saml(self):
         response = self.client.post(
-            "/api/login/precheck", {"email": "helloworld@posthog.com"}
+            "/api/login/precheck", {"email": "helloworld@analytickit.com"}
         )  # Note Google OAuth is not configured
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {"sso_enforcement": None, "saml_available": True})
@@ -289,7 +288,7 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
     # Initiate SAML flow
 
     def test_can_initiate_saml_flow(self):
-        response = self.client.get("/login/saml/?email=hellohello@posthog.com")
+        response = self.client.get("/login/saml/?email=hellohello@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         # Assert user is redirected to the IdP's login page
@@ -331,15 +330,14 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
 
     @freeze_time("2021-08-25T22:09:14.252Z")  # Ensures the SAML timestamp validation passes
     def test_can_login_with_saml(self):
+        user = User.objects.create(email="engineering@analytickit.com", distinct_id=str(uuid.uuid4()))
 
-        user = User.objects.create(email="engineering@posthog.com", distinct_id=str(uuid.uuid4()))
-
-        response = self.client.get("/login/saml/?email=engineering@posthog.com")
+        response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 
@@ -373,12 +371,12 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
         For example in this case we receive the user's first name at `urn:oid:2.5.4.42` instead of `first_name`.
         """
 
-        response = self.client.get("/login/saml/?email=engineering@posthog.com")
+        response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 
@@ -401,8 +399,8 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
         # User is created
         self.assertEqual(User.objects.count(), user_count + 1)
         user = cast(User, User.objects.last())
-        self.assertEqual(user.first_name, "PostHog")
-        self.assertEqual(user.email, "engineering@posthog.com")
+        self.assertEqual(user.first_name, "analytickit")
+        self.assertEqual(user.email, "engineering@analytickit.com")
         self.assertEqual(user.organization, self.organization)
         self.assertEqual(user.team, self.team)
         self.assertEqual(user.organization_memberships.count(), 1)
@@ -436,12 +434,12 @@ LERK8jfXCMVmWPTy830CtQaZX2AJyBwHG4ElP2BOZNbFAvGzrKaBmK2Ym/OJxkhx
 YotAcSbU3p5bzd11wpyebYHB"""
         self.organization_domain.save()
 
-        response = self.client.get("/login/saml/?email=engineering@posthog.com")
+        response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 
@@ -454,7 +452,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
         with self.assertRaises(AuthFailed) as e:
             response = self.client.post(
                 "/complete/saml/",
-                {"SAMLResponse": saml_response, "RelayState": str(self.organization_domain.id),},
+                {"SAMLResponse": saml_response, "RelayState": str(self.organization_domain.id), },
                 format="multipart",
                 follow=True,
             )
@@ -472,12 +470,12 @@ YotAcSbU3p5bzd11wpyebYHB"""
         self.organization_domain.jit_provisioning_enabled = False
         self.organization_domain.save()
 
-        response = self.client.get("/login/saml/?email=engineering@posthog.com")
+        response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 
@@ -506,12 +504,12 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
     @freeze_time("2021-08-25T23:53:51.000Z")
     def test_cannot_create_account_without_first_name_in_payload(self):
-        response = self.client.get("/login/saml/?email=engineering@posthog.com")
+        response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 
@@ -535,9 +533,9 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
     @freeze_time("2021-08-25T22:09:14.252Z")
     def test_cannot_login_with_saml_on_unverified_domain(self):
-        User.objects.create(email="engineering@posthog.com", distinct_id=str(uuid.uuid4()))
+        User.objects.create(email="engineering@analytickit.com", distinct_id=str(uuid.uuid4()))
 
-        response = self.client.get("/login/saml/?email=engineering@posthog.com")
+        response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         # Note we "unverify" the domain after the initial request because we want to test the actual login process (not SAML initiation)
@@ -546,7 +544,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 
@@ -571,14 +569,13 @@ YotAcSbU3p5bzd11wpyebYHB"""
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_saml_can_be_enforced(self):
-
         User.objects.create_and_join(
-            organization=self.organization, email="engineering@posthog.com", password=self.CONFIG_PASSWORD
+            organization=self.organization, email="engineering@analytickit.com", password=self.CONFIG_PASSWORD
         )
 
         # Can log in regularly with SAML configured
         response = self.client.post(
-            "/api/login", {"email": "engineering@posthog.com", "password": self.CONFIG_PASSWORD}
+            "/api/login", {"email": "engineering@analytickit.com", "password": self.CONFIG_PASSWORD}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {"success": True})
@@ -587,7 +584,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
         self.organization_domain.sso_enforcement = "saml"
         self.organization_domain.save()
         response = self.client.post(
-            "/api/login", {"email": "engineering@posthog.com", "password": self.CONFIG_PASSWORD}
+            "/api/login", {"email": "engineering@analytickit.com", "password": self.CONFIG_PASSWORD}
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
@@ -601,7 +598,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
         )
 
         # Login precheck returns SAML info
-        response = self.client.post("/api/login/precheck", {"email": "engineering@posthog.com"})
+        response = self.client.post("/api/login/precheck", {"email": "engineering@analytickit.com"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {"sso_enforcement": "saml", "saml_available": True})
 
@@ -618,7 +615,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
         # Cannot start SAML flow
         with self.assertRaises(AuthFailed) as e:
-            response = self.client.get("/login/saml/?email=engineering@posthog.com")
+            response = self.client.get("/login/saml/?email=engineering@analytickit.com")
         self.assertEqual(
             str(e.exception), "Authentication failed: Your organization does not have the required license to use SAML."
         )
@@ -626,7 +623,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
         # Attempting to use SAML fails
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
         )
         _session.save()
 

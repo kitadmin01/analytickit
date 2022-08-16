@@ -53,8 +53,8 @@ function createEntry(entry) {
                 '~': path.resolve(__dirname, 'frontend', 'src'),
                 lib: path.resolve(__dirname, 'frontend', 'src', 'lib'),
                 scenes: path.resolve(__dirname, 'frontend', 'src', 'scenes'),
-                '@posthog/apps-common': path.resolve(__dirname, 'frontend', '@posthog', 'apps-common', 'src'),
-                '@posthog/lemon-ui': path.resolve(__dirname, 'frontend', '@posthog', 'lemon-ui', 'src'),
+                '@analytickit/apps-common': path.resolve(__dirname, 'frontend', '@analytickit', 'apps-common', 'src'),
+                '@analytickit/lemon-ui': path.resolve(__dirname, 'frontend', '@analytickit', 'lemon-ui', 'src'),
                 storybook: path.resolve(__dirname, '.storybook'),
                 types: path.resolve(__dirname, 'frontend', 'types'),
                 public: path.resolve(__dirname, 'frontend', 'public'),
@@ -180,13 +180,13 @@ function createEntry(entry) {
                       // we need these only once per build
                       new HtmlWebpackPlugin({
                           alwaysWriteToDisk: true,
-                          title: 'PostHog',
+                          title: 'analytickit',
                           template: path.join(__dirname, 'frontend', 'src', 'index.html'),
                       }),
 
                       new HtmlWebpackPlugin({
                           alwaysWriteToDisk: true,
-                          title: 'PostHog',
+                          title: 'analytickit',
                           filename: 'layout.html',
                           inject: false,
                           template: path.join(__dirname, 'frontend', 'src', 'layout.ejs'),

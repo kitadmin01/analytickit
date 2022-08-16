@@ -1,12 +1,12 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
-import { DateTime } from 'luxon'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {DateTime} from 'luxon'
 
-import { Hub, Person } from '../../../../src/types'
-import { createHub } from '../../../../src/utils/db/hub'
-import { UUIDT } from '../../../../src/utils/utils'
-import { prepareEventStep } from '../../../../src/worker/ingestion/event-pipeline/4-prepareEventStep'
-import { LazyPersonContainer } from '../../../../src/worker/ingestion/lazy-person-container'
-import { resetTestDatabase } from '../../../helpers/sql'
+import {Hub, Person}from '../../../../src/types'
+import {createHub}from '../../../../src/utils/db/hub'
+import { UUIDT}from '../../../../src/utils/utils'
+import {prepareEventStep}from '../../../../src/worker/ingestion/event-pipeline/4-prepareEventStep'
+import {LazyPersonContainer}from '../../../../src/worker/ingestion/lazy-person-container'
+import {resetTestDatabase}from '../../../helpers/sql'
 
 jest.mock('../../../../src/utils/status')
 
@@ -107,7 +107,7 @@ describe('prepareEventStep()', () => {
     })
 
     it('does not continue if event is ignored', async () => {
-        await hub.db.postgresQuery('UPDATE posthog_team SET session_recording_opt_in = $1', [false], 'testRecordings')
+        await hub.db.postgresQuery('UPDATE analytickit_team SET session_recording_opt_in = $1', [false], 'testRecordings')
 
         const response = await prepareEventStep(runner, { ...pluginEvent, event: '$snapshot' }, personContainer)
 

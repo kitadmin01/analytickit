@@ -1,13 +1,13 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
-import { DateTime } from 'luxon'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {DateTime} from 'luxon'
 
-import { Hub, Person } from '../../../src/types'
-import { createHub } from '../../../src/utils/db/hub'
-import { UUIDT } from '../../../src/utils/utils'
-import { LazyPersonContainer } from '../../../src/worker/ingestion/lazy-person-container'
-import { PersonState } from '../../../src/worker/ingestion/person-state'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../../helpers/clickhouse'
-import { insertRow, resetTestDatabase } from '../../helpers/sql'
+import {Hub, Person}from '../../../src/types'
+import { createHub}from '../../../src/utils/db/hub'
+import {UUIDT}from '../../../src/utils/utils'
+import {LazyPersonContainer}from '../../../src/worker/ingestion/lazy-person-container'
+import { PersonState}from '../../../src/worker/ingestion/person-state'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../../helpers/clickhouse'
+import {insertRow, resetTestDatabase}from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 jest.setTimeout(60000) // 60 sec timeout
@@ -57,10 +57,10 @@ describe('PersonState.update()', () => {
             hub.personManager,
             personContainer,
             uuid
-        )
-    }
+)
+}
 
-    async function fetchPersonsRows() {
+async function fetchPersonsRows() {
         const query = `SELECT * FROM person FINAL`
         return (await hub.db.clickhouseQuery(query)).data
     }
@@ -79,10 +79,10 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 0,
             })
-        )
+)
 
-        const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhousePersons.length).toEqual(1)
+const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhousePersons.length).toEqual(1)
         expect(clickhousePersons[0]).toEqual(
             expect.objectContaining({
                 id: uuid.toString(),
@@ -90,10 +90,10 @@ describe('PersonState.update()', () => {
                 created_at: '2020-01-01 12:00:05.000',
                 version: 0,
             })
-        )
-    })
+)
+})
 
-    it('handles person being created in a race condition', async () => {
+it('handles person being created in a race condition', async () => {
         const state = personState({ event: '$pageview', distinct_id: 'new-user' })
         await state.personContainer.get() // Pre-load person, with it returning undefined (e.g. as by buffer step)
 
@@ -116,8 +116,8 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 0,
             })
-        )
-        expect(person).toEqual(racePerson)
+)
+expect(person).toEqual(racePerson)
 
         const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
         expect(clickhouseRows.length).toEqual(1)
@@ -147,8 +147,8 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 0,
             })
-        )
-        expect(person).toEqual(racePerson)
+)
+expect(person).toEqual(racePerson)
 
         const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
         expect(clickhouseRows.length).toEqual(1)
@@ -175,10 +175,10 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 0,
             })
-        )
+)
 
-        const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhousePersons.length).toEqual(1)
+const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhousePersons.length).toEqual(1)
         expect(clickhousePersons[0]).toEqual(
             expect.objectContaining({
                 id: uuid.toString(),
@@ -186,10 +186,10 @@ describe('PersonState.update()', () => {
                 created_at: '2020-01-01 12:00:05.000',
                 version: 0,
             })
-        )
-    })
+)
+})
 
-    it('updates person properties if needed', async () => {
+it('updates person properties if needed', async () => {
         await hub.db.createPerson(timestamp, { b: 3, c: 4 }, {}, {}, 2, null, false, uuid.toString(), ['new-user'])
 
         const personContainer = await personState({
@@ -212,10 +212,10 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 1,
             })
-        )
+)
 
-        const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhousePersons.length).toEqual(1)
+const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhousePersons.length).toEqual(1)
         expect(clickhousePersons[0]).toEqual(
             expect.objectContaining({
                 id: uuid.toString(),
@@ -223,10 +223,10 @@ describe('PersonState.update()', () => {
                 created_at: '2020-01-01 12:00:05.000',
                 version: 1,
             })
-        )
-    })
+)
+})
 
-    it('updating with cached person data skips checking if person is new', async () => {
+it('updating with cached person data skips checking if person is new', async () => {
         const person = await hub.db.createPerson(timestamp, { b: 3, c: 4 }, {}, {}, 2, null, false, uuid.toString(), [
             'new-user',
         ])
@@ -254,10 +254,10 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 1,
             })
-        )
+)
 
-        const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhouseRows.length).toEqual(1)
+const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhouseRows.length).toEqual(1)
     })
 
     it('does not update person if not needed', async () => {
@@ -282,10 +282,10 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 0,
             })
-        )
+)
 
-        const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhouseRows.length).toEqual(1)
+const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhouseRows.length).toEqual(1)
     })
 
     // This is a regression test
@@ -310,9 +310,9 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 0,
             })
-        )
-        const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhousePersons.length).toEqual(1)
+)
+const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhousePersons.length).toEqual(1)
         expect(clickhousePersons[0]).toEqual(
             expect.objectContaining({
                 id: uuid.toString(),
@@ -320,10 +320,10 @@ describe('PersonState.update()', () => {
                 created_at: '2020-01-01 12:00:05.000',
                 version: 0,
             })
-        )
-    })
+)
+})
 
-    it('merges people on $identify event', async () => {
+it('merges people on $identify event', async () => {
         await hub.db.createPerson(timestamp, { a: 1, b: 2 }, {}, {}, 2, null, false, uuid.toString(), ['old-user'])
         await hub.db.createPerson(timestamp, { b: 3, c: 4 }, {}, {}, 2, null, false, uuid2.toString(), ['new-user'])
 
@@ -347,9 +347,9 @@ describe('PersonState.update()', () => {
                 is_identified: true,
                 version: 1,
             })
-        )
-        const distinctIds = await hub.db.fetchDistinctIdValues(persons[0])
-        expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
+)
+const distinctIds = await hub.db.fetchDistinctIdValues(persons[0])
+expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
 
         const clickhousePersons = await delayUntilEventIngested(() => fetchPersonsRows(), 2)
         expect(clickhousePersons.length).toEqual(2)
@@ -368,9 +368,9 @@ describe('PersonState.update()', () => {
                     version: 100,
                 }),
             ])
-        )
+)
 
-        expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
+expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
         expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
     })
 
@@ -397,10 +397,10 @@ describe('PersonState.update()', () => {
                 is_identified: true,
                 version: 1,
             })
-        )
+)
 
-        const distinctIds = await hub.db.fetchDistinctIdValues(person!)
-        expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
+const distinctIds = await hub.db.fetchDistinctIdValues(person!)
+expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
 
         const clickhousePersons = await delayUntilEventIngested(() => fetchPersonsRows())
         expect(clickhousePersons.length).toEqual(1)
@@ -412,9 +412,9 @@ describe('PersonState.update()', () => {
                 created_at: '2020-01-01 12:00:05.000',
                 version: 1,
             })
-        )
+)
 
-        expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
+expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
         expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
     })
 
@@ -442,9 +442,9 @@ describe('PersonState.update()', () => {
                 is_identified: true,
                 version: 1,
             })
-        )
-        const distinctIds = await hub.db.fetchDistinctIdValues(persons[0])
-        expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
+)
+const distinctIds = await hub.db.fetchDistinctIdValues(persons[0])
+expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
 
         expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
         expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
@@ -477,9 +477,9 @@ describe('PersonState.update()', () => {
                 is_identified: true,
                 version: 1,
             })
-        )
+)
 
-        expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
+expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
         expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
 
         const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
@@ -509,10 +509,10 @@ describe('PersonState.update()', () => {
                 is_identified: true,
                 version: 0,
             })
-        )
+)
 
-        const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhouseRows.length).toEqual(1)
+const clickhouseRows = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhouseRows.length).toEqual(1)
     })
 
     it('does not merge already identified users', async () => {
@@ -563,9 +563,9 @@ describe('PersonState.update()', () => {
                 is_identified: true,
                 version: 1,
             })
-        )
-        const distinctIds = await hub.db.fetchDistinctIdValues(persons[0])
-        expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
+)
+const distinctIds = await hub.db.fetchDistinctIdValues(persons[0])
+expect(distinctIds).toEqual(expect.arrayContaining(['new-user', 'old-user']))
 
         const clickhousePersons = await delayUntilEventIngested(() => fetchPersonsRows(), 2)
         expect(clickhousePersons.length).toEqual(2)
@@ -584,9 +584,9 @@ describe('PersonState.update()', () => {
                     version: 100,
                 }),
             ])
-        )
+)
 
-        expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
+expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
         expect(hub.db.fetchPerson).toHaveBeenCalledTimes(2)
     })
 
@@ -601,8 +601,8 @@ describe('PersonState.update()', () => {
             false,
             uuid.toString(),
             ['old-user']
-        )
-        await hub.db.createPerson(timestamp, {}, {}, {}, 2, null, false, uuid2.toString(), ['new-user'])
+)
+await hub.db.createPerson(timestamp, {}, {}, {}, 2, null, false, uuid2.toString(), ['new-user'])
         const mergedPersonContainer = await personState({
             event: '$identify',
             distinct_id: 'new-user',
@@ -640,10 +640,10 @@ describe('PersonState.update()', () => {
                 created_at: timestamp,
                 version: 2,
             })
-        )
+)
 
-        const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
-        expect(clickhousePersons.length).toEqual(2)
+const clickhousePersons = await delayUntilEventIngested(fetchPersonsRows)
+expect(clickhousePersons.length).toEqual(2)
         expect(clickhousePersons).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
@@ -661,9 +661,9 @@ describe('PersonState.update()', () => {
                     version: 2,
                 }),
             ])
-        )
+)
 
-        expect(hub.db.fetchPerson).toHaveBeenCalledTimes(1) // It does a single reset after failing once
+expect(hub.db.fetchPerson).toHaveBeenCalledTimes(1) // It does a single reset after failing once
         expect(hub.personManager.isNewPerson).toHaveBeenCalledTimes(0)
     })
 
@@ -682,16 +682,16 @@ describe('PersonState.update()', () => {
                 false,
                 uuid2.toString(),
                 ['new_distinct_id']
-            )
+)
 
-            // existing overrides
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+// existing overrides
+await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: anonPerson.id,
                 feature_flag_key: 'beta-feature',
                 hash_key: 'example_id',
             })
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: anonPerson.id,
                 feature_flag_key: 'multivariate-flag',
@@ -716,11 +716,11 @@ describe('PersonState.update()', () => {
             expect(person.is_identified).toEqual(true)
 
             const result = await hub.db.postgresQuery(
-                `SELECT "feature_flag_key", "person_id", "hash_key" FROM "posthog_featureflaghashkeyoverride" WHERE "team_id" = $1`,
+                `SELECT "feature_flag_key", "person_id", "hash_key" FROM "analytickit_featureflaghashkeyoverride" WHERE "team_id" = $1`,
                 [2],
                 'testQueryHashKeyOverride'
-            )
-            expect(result.rows).toEqual(
+)
+expect(result.rows).toEqual(
                 expect.arrayContaining([
                     {
                         feature_flag_key: 'beta-feature',
@@ -733,10 +733,10 @@ describe('PersonState.update()', () => {
                         hash_key: 'example_id',
                     },
                 ])
-            )
-        })
+)
+})
 
-        test('feature flag hash key overrides with some conflicts handled gracefully', async () => {
+test('feature flag hash key overrides with some conflicts handled gracefully', async () => {
             const anonPerson = await hub.db.createPerson(timestamp, {}, {}, {}, 2, null, false, uuid.toString(), [
                 'anonymous_id',
             ])
@@ -750,23 +750,23 @@ describe('PersonState.update()', () => {
                 false,
                 uuid2.toString(),
                 ['new_distinct_id']
-            )
+)
 
-            // existing overrides for both anonPerson and identifiedPerson
-            // which implies a clash when anonPerson is deleted
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+// existing overrides for both anonPerson and identifiedPerson
+// which implies a clash when anonPerson is deleted
+await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: anonPerson.id,
                 feature_flag_key: 'beta-feature',
                 hash_key: 'example_id',
             })
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: identifiedPerson.id,
                 feature_flag_key: 'beta-feature',
                 hash_key: 'different_id',
             })
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: anonPerson.id,
                 feature_flag_key: 'multivariate-flag',
@@ -791,11 +791,11 @@ describe('PersonState.update()', () => {
             expect(person.is_identified).toEqual(true)
 
             const result = await hub.db.postgresQuery(
-                `SELECT "feature_flag_key", "person_id", "hash_key" FROM "posthog_featureflaghashkeyoverride" WHERE "team_id" = $1`,
+                `SELECT "feature_flag_key", "person_id", "hash_key" FROM "analytickit_featureflaghashkeyoverride" WHERE "team_id" = $1`,
                 [2],
                 'testQueryHashKeyOverride'
-            )
-            expect(result.rows).toEqual(
+)
+expect(result.rows).toEqual(
                 expect.arrayContaining([
                     {
                         feature_flag_key: 'beta-feature',
@@ -808,10 +808,10 @@ describe('PersonState.update()', () => {
                         hash_key: 'other_different_id',
                     },
                 ])
-            )
-        })
+)
+})
 
-        test('feature flag hash key overrides with no old overrides but existing new person overrides', async () => {
+test('feature flag hash key overrides with no old overrides but existing new person overrides', async () => {
             await hub.db.createPerson(timestamp, {}, {}, {}, 2, null, false, uuid.toString(), ['anonymous_id'])
             const identifiedPerson = await hub.db.createPerson(
                 timestamp,
@@ -823,15 +823,15 @@ describe('PersonState.update()', () => {
                 false,
                 uuid2.toString(),
                 ['new_distinct_id']
-            )
+)
 
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: identifiedPerson.id,
                 feature_flag_key: 'beta-feature',
                 hash_key: 'example_id',
             })
-            await insertRow(hub.db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(hub.db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: 2,
                 person_id: identifiedPerson.id,
                 feature_flag_key: 'multivariate-flag',
@@ -853,11 +853,11 @@ describe('PersonState.update()', () => {
             expect(person.is_identified).toEqual(true)
 
             const result = await hub.db.postgresQuery(
-                `SELECT "feature_flag_key", "person_id", "hash_key" FROM "posthog_featureflaghashkeyoverride" WHERE "team_id" = $1`,
+                `SELECT "feature_flag_key", "person_id", "hash_key" FROM "analytickit_featureflaghashkeyoverride" WHERE "team_id" = $1`,
                 [2],
                 'testQueryHashKeyOverride'
-            )
-            expect(result.rows).toEqual(
+)
+expect(result.rows).toEqual(
                 expect.arrayContaining([
                     {
                         feature_flag_key: 'beta-feature',
@@ -870,7 +870,7 @@ describe('PersonState.update()', () => {
                         hash_key: 'different_id',
                     },
                 ])
-            )
-        })
-    })
+)
+})
+})
 })

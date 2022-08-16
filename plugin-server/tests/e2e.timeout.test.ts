@@ -1,13 +1,13 @@
-import { KAFKA_EVENTS_PLUGIN_INGESTION } from '../src/config/kafka-topics'
-import { startPluginsServer } from '../src/main/pluginsServer'
-import { Hub, LogLevel, PluginsServerConfig } from '../src/types'
-import { delay, UUIDT } from '../src/utils/utils'
-import { makePiscina } from '../src/worker/piscina'
-import { createPosthog, DummyPostHog } from '../src/worker/vm/extensions/posthog'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from './helpers/clickhouse'
-import { resetKafka } from './helpers/kafka'
-import { pluginConfig39 } from './helpers/plugins'
-import { resetTestDatabase } from './helpers/sql'
+import{KAFKA_EVENTS_PLUGIN_INGESTION}from'../src/config/kafka-topics'
+import {startPluginsServer}from '../src/main/pluginsServer'
+import {Hub, LogLevel, PluginsServerConfig}from '../src/types'
+import {delay, UUIDT} from '../src/utils/utils'
+import {makePiscina}from '../src/worker/piscina'
+import { createanalytickit, Dummyanalytickit}from '../src/worker/vm/extensions/analytickit'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from './helpers/clickhouse'
+import {resetKafka}from './helpers/kafka'
+import { pluginConfig39}from './helpers/plugins'
+import {resetTestDatabase}from './helpers/sql'
 
 jest.setTimeout(60000) // 60 sec timeout
 
@@ -21,7 +21,7 @@ const extraServerConfig: Partial<PluginsServerConfig> = {
 describe('e2e ingestion timeout', () => {
     let hub: Hub
     let stopServer: () => Promise<void>
-    let posthog: DummyPostHog
+    let analytickit: Dummyanalytickit
 
     beforeAll(async () => {
         await resetKafka(extraServerConfig)
@@ -43,7 +43,7 @@ describe('e2e ingestion timeout', () => {
         const startResponse = await startPluginsServer(extraServerConfig, makePiscina)
         hub = startResponse.hub
         stopServer = startResponse.stop
-        posthog = createPosthog(hub, pluginConfig39)
+        analytickit = createanalytickit(hub, pluginConfig39)
     })
 
     afterEach(async () => {
@@ -53,7 +53,7 @@ describe('e2e ingestion timeout', () => {
     test('event captured, processed, ingested', async () => {
         expect((await hub.db.fetchEvents()).length).toBe(0)
         const uuid = new UUIDT().toString()
-        await posthog.capture('custom event', { name: 'haha', uuid, randomProperty: 'lololo' })
+        await analytickit.capture('custom event', { name: 'haha', uuid, randomProperty: 'lololo' })
         await delayUntilEventIngested(() => hub.db.fetchEvents())
 
         await hub.kafkaProducer.flush()

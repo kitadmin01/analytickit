@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db import migrations
 from django.db.models import Q
 
-from posthog.models.tag import tagify
+from analytickit.models.tag import tagify
 
 
 def forwards(apps, schema_editor):
@@ -14,8 +14,8 @@ def forwards(apps, schema_editor):
     logger = structlog.get_logger(__name__)
     logger.info("ee/0012_migrate_tags_v2_start")
 
-    Tag = apps.get_model("posthog", "Tag")
-    TaggedItem = apps.get_model("posthog", "TaggedItem")
+    Tag = apps.get_model("analytickit", "Tag")
+    TaggedItem = apps.get_model("analytickit", "TaggedItem")
     EnterpriseEventDefinition = apps.get_model("ee", "EnterpriseEventDefinition")
     EnterprisePropertyDefinition = apps.get_model("ee", "EnterprisePropertyDefinition")
 
@@ -24,7 +24,7 @@ def forwards(apps, schema_editor):
 
     # Collect event definition tags and taggeditems
     event_definition_paginator = Paginator(
-        EnterpriseEventDefinition.objects.exclude(Q(deprecated_tags__isnull=True) | Q(deprecated_tags=[]),)
+        EnterpriseEventDefinition.objects.exclude(Q(deprecated_tags__isnull=True) | Q(deprecated_tags=[]), )
         .order_by("created_at")
         .values_list("deprecated_tags", "team_id", "id"),
         batch_size,
@@ -46,7 +46,7 @@ def forwards(apps, schema_editor):
 
     # Collect property definition tags and taggeditems
     property_definition_paginator = Paginator(
-        EnterprisePropertyDefinition.objects.exclude(Q(deprecated_tags__isnull=True) | Q(deprecated_tags=[]),)
+        EnterprisePropertyDefinition.objects.exclude(Q(deprecated_tags__isnull=True) | Q(deprecated_tags=[]), )
         .order_by("updated_at")
         .values_list("deprecated_tags", "team_id", "id"),
         batch_size,
@@ -82,14 +82,14 @@ def forwards(apps, schema_editor):
     # scenario, all tags already exist and get is made for every tag.
     for offset in range(0, len(tags_to_create), batch_size):
         logger.info("tagged_item_batch_create_start", limit=batch_size, offset=offset)
-        batch = tags_to_create[offset : (offset + batch_size)]
+        batch = tags_to_create[offset: (offset + batch_size)]
 
         # Find tags that were created, and not already existing
         created_tags = Tag.objects.in_bulk([t.id for t in batch])
 
         # Tags that are in `tags_to_create` but not in `created_tags` are tags that already exist
         # in the db and must be fetched individually.
-        createable_batch = createables[offset : (offset + batch_size)]
+        createable_batch = createables[offset: (offset + batch_size)]
         for tag, tagged_item in createable_batch:
             if tag.id in created_tags:
                 tagged_item.tag_id = created_tags[tag.id].id
@@ -105,7 +105,7 @@ def forwards(apps, schema_editor):
 
 
 def reverse(apps, schema_editor):
-    TaggedItem = apps.get_model("posthog", "TaggedItem")
+    TaggedItem = apps.get_model("analytickit", "TaggedItem")
     TaggedItem.objects.filter(Q(event_definition_id__isnull=False) | Q(property_definition_id__isnull=False)).delete()
     # Cascade deletes tag objects
 
@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("ee", "0011_add_tags_back"),
-        ("posthog", "0218_uniqueness_constraint_tagged_items"),
+        ("analytickit", "0218_uniqueness_constraint_tagged_items"),
     ]
 
     operations = [migrations.RunPython(forwards, reverse)]

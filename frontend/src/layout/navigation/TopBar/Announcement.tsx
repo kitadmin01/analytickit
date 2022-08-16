@@ -20,9 +20,9 @@ export function Announcement(): JSX.Element | null {
     if (preflight?.demo) {
         message = (
             <b>
-                Welcome to PostHog's demo environment. To level up,{' '}
-                <a href="https://posthog.com/signup" target="_blank" rel="noopener">
-                    deploy your own PostHog instance, or sign up for PostHog Cloud
+                Welcome to analytickit's demo environment. To level up,{' '}
+                <a href="https://analytickit.com/signup" target="_blank" rel="noopener">
+                    deploy your own analytickit instance, or sign up for analytickit Cloud
                 </a>
                 .
             </b>

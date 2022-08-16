@@ -10,7 +10,7 @@ import { EventsTable } from 'scenes/events'
 import { useActions, useValues } from 'kea'
 import { WebPerformanceWaterfallChart } from 'scenes/performance/WebPerformanceWaterfallChart'
 import { IconPlay } from 'lib/components/icons'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 
 /*
  * link to SessionRecording from table and chart
@@ -101,9 +101,9 @@ export const WebPerformance = (): JSX.Element => {
                                 have all performance information.
                             </p>
                             <p>
-                                To capture performance information you must be using posthog-js and set{' '}
+                                To capture performance information you must be using analytickit-js and set{' '}
                                 <code>_capture_performance</code> to true. See the{' '}
-                                <a href="https://posthog.com/docs/integrate/client/js#config" target="_blank">
+                                <a href="https://analytickit.com/docs/integrate/client/js#config" target="_blank">
                                     config instructions in our handbook
                                 </a>
                             </p>

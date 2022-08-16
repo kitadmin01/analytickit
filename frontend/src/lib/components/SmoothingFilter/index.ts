@@ -1,1 +1,1 @@
-export * from './SmoothingFilter'
+export* from './SmoothingFilter'

@@ -4,14 +4,14 @@ import { useValues } from 'kea'
 import { teamLogic } from 'scenes/teamLogic'
 
 function FlutterInstallSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.YAML}>{'posthog_flutter: # insert version number'}</CodeSnippet>
+    return <CodeSnippet language={Language.YAML}>{'analytickit_flutter: # insert version number'}</CodeSnippet>
 }
 
 function FlutterCaptureSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Dart}>
             {
-                "import 'package:posthog_flutter/posthog_flutter.dart';\n\nPosthog.screen(\n\tscreenName: 'Example Screen',\n);"
+                "import 'package:analytickit_flutter/analytickit_flutter.dart';\n\nanalytickit.screen(\n\tscreenName: 'Example Screen',\n);"
             }
         </CodeSnippet>
     )
@@ -23,11 +23,11 @@ function FlutterAndroidSetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.XML}>
-            {'<application>\n\t<activity>\n\t\t[...]\n\t</activity>\n\t<meta-data android:name="com.posthog.posthog.API_KEY" android:value="' +
+            {'<application>\n\t<activity>\n\t\t[...]\n\t</activity>\n\t<meta-data android:name="com.analytickit.analytickit.API_KEY" android:value="' +
                 currentTeam?.api_token +
-                '" />\n\t<meta-data android:name="com.posthog.posthog.POSTHOG_HOST" android:value="' +
+                '" />\n\t<meta-data android:name="com.analytickit.analytickit.analytickit_HOST" android:value="' +
                 url +
-                '" />\n\t<meta-data android:name="com.posthog.posthog.TRACK_APPLICATION_LIFECYCLE_EVENTS" android:value="false" />\n\t<meta-data android:name="com.posthog.posthog.DEBUG" android:value="false" />\n</application>'}
+                '" />\n\t<meta-data android:name="com.analytickit.analytickit.TRACK_APPLICATION_LIFECYCLE_EVENTS" android:value="false" />\n\t<meta-data android:name="com.analytickit.analytickit.DEBUG" android:value="false" />\n</application>'}
         </CodeSnippet>
     )
 }
@@ -38,11 +38,11 @@ function FlutterIOSSetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.XML}>
-            {'<dict>\n\t[...]\n\t<key>com.posthog.posthog.API_KEY</key>\n\t<string>' +
+            {'<dict>\n\t[...]\n\t<key>com.analytickit.analytickit.API_KEY</key>\n\t<string>' +
                 currentTeam?.api_token +
-                '</string>\n\t<key>com.posthog.posthog.POSTHOG_HOST</key>\n\t<string>' +
+                '</string>\n\t<key>com.analytickit.analytickit.analytickit_HOST</key>\n\t<string>' +
                 url +
-                '</string>\n\t<key>com.posthog.posthog.TRACK_APPLICATION_LIFECYCLE_EVENTS</key>\n\t<false/>\n\t<false/>\n\t[...]\n</dict>'}
+                '</string>\n\t<key>com.analytickit.analytickit.TRACK_APPLICATION_LIFECYCLE_EVENTS</key>\n\t<false/>\n\t<false/>\n\t[...]\n</dict>'}
         </CodeSnippet>
     )
 }

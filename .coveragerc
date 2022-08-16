@@ -1,6 +1,6 @@
 [run]
 source = 
-    posthog/
+    analytickit/
     ee/
 
 branch = true

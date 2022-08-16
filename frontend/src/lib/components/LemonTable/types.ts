@@ -1,25 +1,25 @@
-import { HTMLProps, ReactNode } from 'react'
+import{HTMLProps, ReactNode}from 'react'
 
 export interface TableCellRepresentation {
-    children?: any
-    props?: HTMLProps<HTMLTableCellElement>
+children?: any
+props?: HTMLProps < HTMLTableCellElement>
 }
 
 export type TableCellRenderResult =
-    | TableCellRepresentation
-    | ReactNode
-    | JSX.Element
-    | string
-    | number
-    | false
-    | null
-    | undefined
+| TableCellRepresentation
+| ReactNode
+| JSX.Element
+| string
+| number
+| false
+| null
+| undefined
 
-export interface LemonTableColumn<T extends Record<string, any>, D extends keyof T | undefined> {
-    title?: string | React.ReactNode
-    key?: string
-    dataIndex?: D
-    render?: (dataValue: D extends keyof T ? T[D] : undefined, record: T, recordIndex: number) => TableCellRenderResult
+export interface LemonTableColumn < T extends Record<string, any>, D extends keyof T | undefined> {
+title?: string | React.ReactNode
+key?: string
+dataIndex?: D
+render?:(dataValue: D extends keyof T ? T[D] : undefined, record: T, recordIndex: number) => TableCellRenderResult
     /** Sorting function. Set to `true` if using manual pagination, in which case you'll also have to provide `sorting` on the table. */
     sorter?: ((a: T, b: T) => number) | true
     className?: string

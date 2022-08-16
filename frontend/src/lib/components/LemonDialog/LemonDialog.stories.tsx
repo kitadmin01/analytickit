@@ -2,7 +2,7 @@ import React from 'react'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import { LemonDialog, LemonDialogProps } from './LemonDialog'
 import { LemonButton } from '../LemonButton'
-import { Link } from '@posthog/lemon-ui'
+import { Link } from '@analytickit/lemon-ui'
 import { CodeSnippet, Language } from 'scenes/ingestion/frameworks/CodeSnippet'
 
 export default {
@@ -32,7 +32,7 @@ export default {
         docs: {
             description: {
                 component: `
-[Related Figma area](https://www.figma.com/file/Y9G24U4r04nEjIDGIEGuKI/PostHog-Design-System-One?node-id=3139%3A1388)
+[Related Figma area](https://www.figma.com/file/Y9G24U4r04nEjIDGIEGuKI/analytickit-Design-System-One?node-id=3139%3A1388)
                 
 Dialogs are blocking prompts that force a user decision or action. 
 When a dialog presents a desctructive choice, the actions should align with that destructive / warning color palette options.
@@ -82,7 +82,7 @@ Customised.args = {
         <>
             This action cannot be undone. If you opt to delete the organization and its corresponding events, the events
             will not be immediately removed. Instead these events will be deleted on a set schedule during non-peak
-            usage times. <Link href="https://posthog.com">Learn more</Link>
+            usage times. <Link href="https://analytickit.com">Learn more</Link>
         </>
     ),
     primaryButton: {

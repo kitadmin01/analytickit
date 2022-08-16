@@ -4,11 +4,11 @@ from rest_framework import request, response
 from rest_framework.decorators import action
 
 from ee.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
-from posthog.api.person import PersonViewSet, should_paginate
-from posthog.constants import FUNNEL_CORRELATION_PERSON_LIMIT, FUNNEL_CORRELATION_PERSON_OFFSET, INSIGHT_FUNNELS
-from posthog.decorators import cached_function
-from posthog.models import Filter
-from posthog.utils import format_query_params_absolute_url
+from analytickit.api.person import PersonViewSet, should_paginate
+from analytickit.constants import FUNNEL_CORRELATION_PERSON_LIMIT, FUNNEL_CORRELATION_PERSON_OFFSET, INSIGHT_FUNNELS
+from analytickit.decorators import cached_function
+from analytickit.models import Filter
+from analytickit.utils import format_query_params_absolute_url
 
 
 class EnterprisePersonViewSet(PersonViewSet):
@@ -36,7 +36,7 @@ class EnterprisePersonViewSet(PersonViewSet):
 
     @cached_function
     def calculate_funnel_correlation_persons(
-        self, request: request.Request
+            self, request: request.Request
     ) -> Dict[str, Tuple[list, Optional[str], Optional[str]]]:
         if request.user.is_anonymous or not self.team:
             return {"result": ([], None, None)}

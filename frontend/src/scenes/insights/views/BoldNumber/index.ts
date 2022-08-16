@@ -1,1 +1,1 @@
-export { BoldNumber } from './BoldNumber'
+export{BoldNumber}from'./BoldNumber'

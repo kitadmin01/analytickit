@@ -6,12 +6,12 @@ from rest_framework import exceptions, serializers, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from ee.models.explicit_team_membership import ExplicitTeamMembership
-from posthog.api.routing import StructuredViewSetMixin
-from posthog.api.shared import UserBasicSerializer
-from posthog.models.organization import OrganizationMembership
-from posthog.models.team import Team
-from posthog.models.user import User
-from posthog.permissions import TeamMemberStrictManagementPermission
+from analytickit.api.routing import StructuredViewSetMixin
+from analytickit.api.shared import UserBasicSerializer
+from analytickit.models.organization import OrganizationMembership
+from analytickit.models.team import Team
+from analytickit.models.user import User
+from analytickit.permissions import TeamMemberStrictManagementPermission
 
 
 class ExplicitTeamMemberSerializer(serializers.ModelSerializer):
@@ -114,9 +114,9 @@ class ExplicitTeamMemberViewSet(
 
     def get_permissions(self):
         if (
-            self.action == "destroy"
-            and self.request.user.is_authenticated
-            and self.kwargs.get("parent_membership__user__uuid") == str(self.request.user.uuid)
+                self.action == "destroy"
+                and self.request.user.is_authenticated
+                and self.kwargs.get("parent_membership__user__uuid") == str(self.request.user.uuid)
         ):
             # Special case: allow already authenticated users to leave projects
             return []

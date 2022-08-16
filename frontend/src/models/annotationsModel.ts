@@ -1,17 +1,17 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { toParams, deleteWithUndo } from 'lib/utils'
-import { now, dayjs } from 'lib/dayjs'
-import { getNextKey } from 'lib/components/Annotations/utils'
-import type { annotationsModelType } from './annotationsModelType'
-import { AnnotationScope, AnnotationType } from '~/types'
-import { teamLogic } from 'scenes/teamLogic'
-import { userLogic } from 'scenes/userLogic'
+import {toParams, deleteWithUndo}from 'lib/utils'
+import {now, dayjs }from 'lib/dayjs'
+import { getNextKey}from 'lib/components/Annotations/utils'
+import type {annotationsModelType}from './annotationsModelType'
+import {AnnotationScope, AnnotationType }from '~/types'
+import { teamLogic}from 'scenes/teamLogic'
+import {userLogic}from 'scenes/userLogic'
 
 export const annotationsModel = kea<annotationsModelType>({
-    path: ['models', 'annotationsModel'],
-    actions: {
-        createGlobalAnnotation: (content: string, date_marker: string, insightNumericId?: number) => ({
+path: ['models', 'annotationsModel'],
+actions: {
+createGlobalAnnotation: (content: string, date_marker: string, insightNumericId?: number) => ({
             content,
             date_marker,
             created_at: now(),
@@ -29,10 +29,10 @@ export const annotationsModel = kea<annotationsModelType>({
                         scope: 'organization',
                         deleted: false,
                     })}`
-                )
-                return response.results
-            },
-            createGlobalAnnotation: async ({ insightNumericId, content, date_marker, created_at }) => {
+)
+return response.results
+},
+createGlobalAnnotation: async({ insightNumericId, content, date_marker, created_at }) => {
                 await api.create(`api/projects/${teamLogic.values.currentTeamId}/annotations`, {
                     content,
                     date_marker: (dayjs.isDayjs(date_marker) ? date_marker : dayjs(date_marker)).toISOString(),

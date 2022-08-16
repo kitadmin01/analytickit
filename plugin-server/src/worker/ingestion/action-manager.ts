@@ -1,17 +1,17 @@
-import { Action, PluginServerCapabilities, Team } from '../../types'
-import { DB } from '../../utils/db/db'
-import { status } from '../../utils/status'
+import{Action, PluginServerCapabilities, Team}from '../../types'
+import {DB}from '../../utils/db/db'
+import {status}from '../../utils/status'
 
 export type ActionMap = Record<Action['id'], Action>
 type ActionCache = Record<Team['id'], ActionMap>
 
 export class ActionManager {
-    private ready: boolean
-    private db: DB
-    private actionCache: ActionCache
-    private capabilities: PluginServerCapabilities
+private ready: boolean
+private db: DB
+private actionCache: ActionCache
+private capabilities: PluginServerCapabilities
 
-    constructor(db: DB, capabilities: PluginServerCapabilities) {
+constructor(db: DB, capabilities: PluginServerCapabilities) {
         this.ready = false
         this.db = db
         this.capabilities = capabilities
@@ -58,14 +58,14 @@ export class ActionManager {
                 wasCachedAlready
                     ? `Refetched action ID ${actionId} (team ID ${teamId}) from DB`
                     : `Fetched new action ID ${actionId} (team ID ${teamId}) from DB`
-            )
-            this.actionCache[teamId][actionId] = refetchedAction
-        } else if (wasCachedAlready) {
-            delete this.actionCache[teamId][actionId]
-        }
-    }
+)
+this.actionCache[teamId][actionId] = refetchedAction
+}else if (wasCachedAlready) {
+delete this.actionCache[teamId][actionId]
+}
+}
 
-    public dropAction(teamId: Team['id'], actionId: Action['id']): void {
+public dropAction(teamId: Team['id'], actionId: Action['id']): void {
         if (!this.capabilities.processAsyncHandlers) {
             return
         }
@@ -79,7 +79,7 @@ export class ActionManager {
             status.info(
                 '🍿',
                 `Tried to delete action ID ${actionId} (team ID ${teamId}) from cache, but it wasn't found in cache, so did nothing instead`
-            )
-        }
-    }
+)
+}
+}
 }

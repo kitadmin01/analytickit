@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useRef } from 'react'
+import{DependencyList, useEffect, useRef}from 'react'
 
 export type KeyboardEventHandler = (event: KeyboardEvent) => void
 export type EventHandler = (event: Event) => void
@@ -36,13 +36,13 @@ export function useEventListener(
             if (!element?.addEventListener) {
                 console.warn(
                     `Could not start listening to ${eventName} on ${(element as Element)?.localName ?? 'window'}!`
-                )
-                return
-            }
-            // Create event listener that calls handler function stored in ref
-            const eventListener: EventHandler = (event) => savedHandler.current(event)
-            // Add event listener
-            element.addEventListener(eventName, eventListener)
+)
+return
+}
+// Create event listener that calls handler function stored in ref
+const eventListener: EventHandler = (event) => savedHandler.current(event)
+// Add event listener
+element.addEventListener(eventName, eventListener)
             // Remove event listener on cleanup
             return () => {
                 element?.removeEventListener(eventName, eventListener)
@@ -50,5 +50,5 @@ export function useEventListener(
         },
 
         [eventName, element, ...(deps || [])] // Re-run if eventName or element changes
-    )
+)
 }

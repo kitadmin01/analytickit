@@ -1,13 +1,13 @@
-import { StatsD } from 'hot-shots'
+import{StatsD}from'hot-shots'
 
-import { PluginsServerConfig } from '../../types'
+import {PluginsServerConfig}from '../../types'
 
 export class PromiseManager {
-    pendingPromises: Set<Promise<any>>
-    config: PluginsServerConfig
-    statsd?: StatsD
+pendingPromises: Set < Promise<any>>
+config: PluginsServerConfig
+statsd?: StatsD
 
-    constructor(config: PluginsServerConfig, statsd?: StatsD) {
+constructor(config: PluginsServerConfig, statsd?: StatsD) {
         this.pendingPromises = new Set()
         this.config = config
         this.statsd = statsd

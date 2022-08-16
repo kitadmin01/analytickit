@@ -16,7 +16,7 @@ import { insightLogic } from 'scenes/insights/insightLogic'
 import { toLocalFilters } from 'scenes/insights/filters/ActionFilter/entityFilterLogic'
 import { Tooltip } from '../Tooltip'
 import { LemonTag } from '../LemonTag/LemonTag'
-import { LemonSelect, LemonSelectOptions, LemonSelectSection } from '@posthog/lemon-ui'
+import { LemonSelect, LemonSelectOptions, LemonSelectSection } from '@analytickit/lemon-ui'
 
 interface ChartFilterProps {
     filters: FilterType

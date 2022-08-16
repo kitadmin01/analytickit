@@ -1,14 +1,14 @@
-import { ChartDisplayType, Entity, EntityTypes, FilterType, FunnelVizType, InsightType, PathType } from '~/types'
-import { deepCleanFunnelExclusionEvents, getClampedStepRangeFilter, isStepsUndefined } from 'scenes/funnels/funnelUtils'
-import { getDefaultEventName } from 'lib/utils/getAppContext'
-import { defaultFilterTestAccounts } from 'scenes/insights/insightLogic'
-import { BIN_COUNT_AUTO, FEATURE_FLAGS, RETENTION_FIRST_TIME, ShownAsValue } from 'lib/constants'
-import { autocorrectInterval } from 'lib/utils'
-import { DEFAULT_STEP_LIMIT } from 'scenes/paths/pathsLogic'
-import { isTrendsInsight } from 'scenes/insights/sharedUtils'
-import { FeatureFlagsSet } from 'lib/logic/featureFlagLogic'
-import { smoothingOptions } from 'lib/components/SmoothingFilter/smoothings'
-import { LocalFilter, toLocalFilters } from '../filters/ActionFilter/entityFilterLogic'
+import{ChartDisplayType, Entity, EntityTypes, FilterType, FunnelVizType, InsightType, PathType}from '~/types'
+import {deepCleanFunnelExclusionEvents, getClampedStepRangeFilter, isStepsUndefined}from 'scenes/funnels/funnelUtils'
+import {getDefaultEventName} from 'lib/utils/getAppContext'
+import {defaultFilterTestAccounts}from 'scenes/insights/insightLogic'
+import {BIN_COUNT_AUTO, FEATURE_FLAGS, RETENTION_FIRST_TIME, ShownAsValue}from 'lib/constants'
+import {autocorrectInterval}from 'lib/utils'
+import {DEFAULT_STEP_LIMIT}from 'scenes/paths/pathsLogic'
+import {isTrendsInsight}from 'scenes/insights/sharedUtils'
+import {FeatureFlagsSet} from 'lib/logic/featureFlagLogic'
+import {smoothingOptions}from 'lib/components/SmoothingFilter/smoothings'
+import {LocalFilter, toLocalFilters} from '../filters/ActionFilter/entityFilterLogic'
 
 export function getDefaultEvent(): Entity {
     const event = getDefaultEventName()
@@ -250,9 +250,9 @@ export function cleanFilters(
             if (
                 !smoothingOptions[cleanSearchParams.interval].find(
                     (option) => option.value === cleanSearchParams.smoothing_intervals
-                )
-            ) {
-                if (cleanSearchParams.smoothing_intervals !== 1) {
+)
+) {
+if(cleanSearchParams.smoothing_intervals !== 1) {
                     cleanSearchParams.smoothing_intervals = 1
                 }
             }

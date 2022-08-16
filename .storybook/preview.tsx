@@ -2,7 +2,7 @@ import * as React from 'react'
 import '~/styles'
 import './storybook.scss'
 import { worker } from '~/mocks/browser'
-import { loadPostHogJS } from '~/loadPostHogJS'
+import { loadanalytickitJS } from '~/loadanalytickitJS'
 import { KeaStory } from './kea-story'
 import { getStorybookAppContext } from 'storybook/app-context'
 import { useAvailableFeatures } from '~/mocks/features'
@@ -11,22 +11,22 @@ const setupMsw = () => {
     // Make sure the msw worker is started
     worker.start()
     ;(window as any).__mockServiceWorker = worker
-    ;(window as any).POSTHOG_APP_CONTEXT = getStorybookAppContext()
+    ;(window as any).analytickit_APP_CONTEXT = getStorybookAppContext()
 }
 setupMsw()
 
-const setupPosthogJs = () => {
-    // Make sure we don't hit production posthog. We want to control requests to,
+const setupanalytickitJs = () => {
+    // Make sure we don't hit production analytickit. We want to control requests to,
     // e.g. `/decide/` for feature flags
-    window.JS_POSTHOG_HOST = window.location.origin
+    window.JS_analytickit_HOST = window.location.origin
 
     // We don't be doing any authn so we can just use a fake key
-    window.JS_POSTHOG_API_KEY = 'dummy-key'
+    window.JS_analytickit_API_KEY = 'dummy-key'
 
-    loadPostHogJS()
+    loadanalytickitJS()
 }
 
-setupPosthogJs()
+setupanalytickitJs()
 
 // Setup storybook global parameters. See https://storybook.js.org/docs/react/writing-stories/parameters#global-parameters
 export const parameters = {

@@ -6,9 +6,9 @@ import { teamLogic } from 'scenes/teamLogic'
 function NodeInstallSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Bash}>
-            {`npm install posthog-node
+            {`npm install analytickit-node
 # OR
-yarn add posthog-node`}
+yarn add analytickit-node`}
         </CodeSnippet>
     )
 }
@@ -18,9 +18,9 @@ function NodeSetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.JavaScript}>
-            {`import PostHog from 'posthog-node'
+            {`import analytickit from 'analytickit-node'
 
-const client = new PostHog(
+const client = new analytickit(
     '${currentTeam?.api_token}',
     { host: '${window.location.origin}' }
 )`}

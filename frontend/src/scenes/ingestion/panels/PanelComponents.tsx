@@ -29,7 +29,7 @@ export function PanelFooter(): JSX.Element {
                             setVerify(true)
                         }}
                     >
-                        Try PostHog with the exploration bookmarklet
+                        Try analytickit with the exploration bookmarklet
                     </LemonButton>
                     <LemonButton
                         className="mt-2"

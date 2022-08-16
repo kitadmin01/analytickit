@@ -4,20 +4,20 @@ from typing import Dict, Optional, cast
 import pytz
 
 from ee.models.license import License, LicenseManager
-from posthog.test.base import APIBaseTest
+from analytickit.test.base import APIBaseTest
 
 
 class LicensedTestMixin:
     """
-    Test API using Django REST Framework test suite, for licensed PostHog (mainly enterprise edition).
+    Test API using Django REST Framework test suite, for licensed analytickit (mainly enterprise edition).
     """
 
     CONFIG_LICENSE_PLAN: Optional[str] = "enterprise"
     license: License = None  # type: ignore
 
     def license_required_response(
-        self,
-        message: str = "This feature is part of the premium PostHog offering. To use it, get a self-hosted license: https://license.posthog.com",
+            self,
+            message: str = "This feature is part of the premium analytickit offering. To use it, get a self-hosted license: https://license.analytickit.com",
     ) -> Dict[str, Optional[str]]:
         return {
             "type": "server_error",

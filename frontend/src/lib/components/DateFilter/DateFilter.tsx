@@ -7,7 +7,7 @@ import { Tooltip } from 'lib/components/Tooltip'
 import { dateFilterLogic } from './dateFilterLogic'
 import { RollingDateRangeFilter } from './RollingDateRangeFilter'
 import { useActions, useValues } from 'kea'
-import { LemonButtonWithPopup, LemonDivider, LemonButton } from '@posthog/lemon-ui'
+import { LemonButtonWithPopup, LemonDivider, LemonButton } from '@analytickit/lemon-ui'
 import { IconCalendar } from '../icons'
 
 export interface DateFilterProps {

@@ -1,4 +1,4 @@
-import { LemonInput } from '@posthog/lemon-ui'
+import { LemonInput } from '@analytickit/lemon-ui'
 import { useActions, useValues } from 'kea'
 import { LemonButton } from 'lib/components/LemonButton'
 import { LemonModal } from 'lib/components/LemonModal'
@@ -48,7 +48,7 @@ export function AddDomainModal(): JSX.Element {
             }
         >
             <LemonInput
-                placeholder="posthog.com"
+                placeholder="analytickit.com"
                 autoFocus
                 value={newDomain}
                 onChange={setNewDomain}
@@ -56,7 +56,7 @@ export function AddDomainModal(): JSX.Element {
             />
             {submitted && errored && (
                 <span className="text-danger text-xs">
-                    Please enter a valid domain or subdomain name (e.g. my.posthog.com)
+                    Please enter a valid domain or subdomain name (e.g. my.analytickit.com)
                 </span>
             )}
         </LemonModal>

@@ -1,6 +1,6 @@
-import { KafkaMessage } from 'kafkajs'
+import{KafkaMessage}from'kafkajs'
 
-import { formPluginEvent, normalizeEvent } from '../../src/utils/event'
+import {formPluginEvent, normalizeEvent} from '../../src/utils/event'
 
 describe('normalizeEvent()', () => {
     describe('distinctId', () => {

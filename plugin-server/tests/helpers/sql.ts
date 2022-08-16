@@ -1,63 +1,63 @@
-import { Pool, PoolClient } from 'pg'
+import{Pool, PoolClient}from 'pg'
 
-import { defaultConfig } from '../../src/config/config'
+import { defaultConfig}from '../../src/config/config'
 import {
-    Hub,
-    Plugin,
-    PluginAttachmentDB,
-    PluginConfig,
-    PluginsServerConfig,
-    PropertyOperator,
-    RawAction,
-    RawOrganization,
-    Team,
-} from '../../src/types'
-import { UUIDT } from '../../src/utils/utils'
+Hub,
+Plugin,
+PluginAttachmentDB,
+PluginConfig,
+PluginsServerConfig,
+PropertyOperator,
+RawAction,
+RawOrganization,
+Team,
+}from '../../src/types'
+import {UUIDT}from '../../src/utils/utils'
 import {
-    commonOrganizationId,
-    commonOrganizationMembershipId,
-    commonUserId,
-    commonUserUuid,
-    makePluginObjects,
-} from './plugins'
+commonOrganizationId,
+commonOrganizationMembershipId,
+commonUserId,
+commonUserUuid,
+makePluginObjects,
+}from './plugins'
 
 export interface ExtraDatabaseRows {
-    plugins?: Omit<Plugin, 'id'>[]
-    pluginConfigs?: Omit<PluginConfig, 'id'>[]
-    pluginAttachments?: Omit<PluginAttachmentDB, 'id'>[]
+plugins?: Omit < Plugin, 'id'>[]
+pluginConfigs?: Omit < PluginConfig, 'id'>[]
+pluginAttachments?: Omit < PluginAttachmentDB, 'id'>[]
 }
 
 export const POSTGRES_TRUNCATE_TABLES_QUERY = `
 TRUNCATE TABLE
-    posthog_personalapikey,
-    posthog_featureflag,
-    posthog_featureflaghashkeyoverride,
-    posthog_annotation,
-    posthog_dashboarditem,
-    posthog_dashboard,
-    posthog_cohortpeople,
-    posthog_cohort,
-    posthog_actionstep,
-    posthog_action_events,
-    posthog_action,
-    posthog_instancesetting,
-    posthog_sessionrecordingevent,
-    posthog_persondistinctid,
-    posthog_person,
-    posthog_event,
-    posthog_pluginstorage,
-    posthog_pluginattachment,
-    posthog_pluginconfig,
-    posthog_pluginsourcefile,
-    posthog_plugin,
-    posthog_eventdefinition,
-    posthog_propertydefinition,
-    posthog_grouptypemapping,
-    posthog_team,
-    posthog_organizationmembership,
-    posthog_organization,
-    posthog_user,
-    posthog_eventbuffer
+analytickit_personalapikey,
+analytickit_featureflag,
+analytickit_featureflaghashkeyoverride,
+analytickit_annotation,
+analytickit_dashboarditem,
+analytickit_dashboard,
+analytickit_cohortpeople,
+analytickit_cohort,
+analytickit_actionstep,
+analytickit_action_events,
+analytickit_action,
+analytickit_instancesetting,
+analytickit_sessionrecordingevent,
+analytickit_persondistinctid,
+analytickit_person,
+analytickit_event,
+analytickit_pluginstorage,
+analytickit_pluginattachment,
+analytickit_pluginconfig,
+analytickit_pluginsourcefile,
+analytickit_plugin,
+analytickit_eventdefinition,
+analytickit_propertydefinition,
+analytickit_grouptypemapping,
+analytickit_team,
+analytickit_organizationmembership,
+analytickit_organization,
+analytickit_user,
+analytickit_eventbuffer
 CASCADE
 `
 
@@ -79,7 +79,7 @@ export async function resetTestDatabase(
     const teamIdToCreate = teamIds[0]
     await createUserTeamAndOrganization(db, teamIdToCreate)
     if (withExtendedTestData) {
-        await insertRow(db, 'posthog_action', {
+        await insertRow(db, 'analytickit_action', {
             id: teamIdToCreate + 67,
             team_id: teamIdToCreate,
             name: 'Test Action',
@@ -93,7 +93,7 @@ export async function resetTestDatabase(
             updated_at: new Date().toISOString(),
             last_calculated_at: new Date().toISOString(),
         } as RawAction)
-        await insertRow(db, 'posthog_actionstep', {
+        await insertRow(db, 'analytickit_actionstep', {
             id: teamIdToCreate + 911,
             action_id: teamIdToCreate + 67,
             tag_name: null,
@@ -107,13 +107,13 @@ export async function resetTestDatabase(
             properties: [{ type: 'event', operator: PropertyOperator.Exact, key: 'foo', value: ['bar'] }],
         })
         for (const plugin of mocks.pluginRows.concat(extraRows.plugins ?? [])) {
-            await insertRow(db, 'posthog_plugin', plugin)
+            await insertRow(db, 'analytickit_plugin', plugin)
         }
         for (const pluginConfig of mocks.pluginConfigRows.concat(extraRows.pluginConfigs ?? [])) {
-            await insertRow(db, 'posthog_pluginconfig', pluginConfig)
+            await insertRow(db, 'analytickit_pluginconfig', pluginConfig)
         }
         for (const pluginAttachment of mocks.pluginAttachmentRows.concat(extraRows.pluginAttachments ?? [])) {
-            await insertRow(db, 'posthog_pluginattachment', pluginAttachment)
+            await insertRow(db, 'analytickit_pluginattachment', pluginAttachment)
         }
     }
     await db.end()
@@ -143,7 +143,7 @@ export async function insertRow(db: Pool, table: string, objectProvided: Record<
         const dependentQueries: Promise<void>[] = []
         if (source__plugin_json) {
             dependentQueries.push(
-                insertRow(db, 'posthog_pluginsourcefile', {
+                insertRow(db, 'analytickit_pluginsourcefile', {
                     id: new UUIDT().toString(),
                     filename: 'plugin.json',
                     source: source__plugin_json,
@@ -151,11 +151,11 @@ export async function insertRow(db: Pool, table: string, objectProvided: Record<
                     error: null,
                     transpiled: null,
                 })
-            )
-        }
-        if (source__index_ts) {
+)
+}
+if (source__index_ts) {
             dependentQueries.push(
-                insertRow(db, 'posthog_pluginsourcefile', {
+                insertRow(db, 'analytickit_pluginsourcefile', {
                     id: new UUIDT().toString(),
                     filename: 'index.ts',
                     source: source__index_ts,
@@ -163,11 +163,11 @@ export async function insertRow(db: Pool, table: string, objectProvided: Record<
                     error: null,
                     transpiled: null,
                 })
-            )
-        }
-        if (source__frontend_tsx) {
+)
+}
+if (source__frontend_tsx) {
             dependentQueries.push(
-                insertRow(db, 'posthog_pluginsourcefile', {
+                insertRow(db, 'analytickit_pluginsourcefile', {
                     id: new UUIDT().toString(),
                     filename: 'frontend.tsx',
                     source: source__frontend_tsx,
@@ -175,9 +175,9 @@ export async function insertRow(db: Pool, table: string, objectProvided: Record<
                     error: null,
                     transpiled: null,
                 })
-            )
-        }
-        await Promise.all(dependentQueries)
+)
+}
+await Promise.all(dependentQueries)
     } catch (error) {
         console.error(`Error on table ${table} when inserting object:\n`, object, '\n', error)
         throw error
@@ -192,20 +192,20 @@ export async function createUserTeamAndOrganization(
     organizationId: string = commonOrganizationId,
     organizationMembershipId: string = commonOrganizationMembershipId
 ): Promise<void> {
-    await insertRow(db, 'posthog_user', {
+    await insertRow(db, 'analytickit_user', {
         id: userId,
         uuid: userUuid,
         password: 'gibberish',
         first_name: 'PluginTest',
         last_name: 'User',
-        email: `test${userId}@posthog.com`,
+        email: `test${userId}@analytickit.com`,
         distinct_id: `plugin_test_user_distinct_id_${userId}`,
         is_staff: false,
         is_active: false,
         date_joined: new Date().toISOString(),
         events_column_config: { active: 'DEFAULT' },
     })
-    await insertRow(db, 'posthog_organization', {
+    await insertRow(db, 'analytickit_organization', {
         id: organizationId,
         name: 'TEST ORG',
         plugins_access_level: 9,
@@ -219,7 +219,7 @@ export async function createUserTeamAndOrganization(
         is_member_join_email_enabled: false,
         slug: Math.round(Math.random() * 10000),
     } as RawOrganization)
-    await insertRow(db, 'posthog_organizationmembership', {
+    await insertRow(db, 'analytickit_organizationmembership', {
         id: organizationMembershipId,
         organization_id: organizationId,
         user_id: userId,
@@ -227,7 +227,7 @@ export async function createUserTeamAndOrganization(
         joined_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     })
-    await insertRow(db, 'posthog_team', {
+    await insertRow(db, 'analytickit_team', {
         id: teamId,
         organization_id: organizationId,
         app_urls: [],
@@ -257,7 +257,7 @@ export async function createUserTeamAndOrganization(
 }
 
 export async function getTeams(hub: Hub): Promise<Team[]> {
-    return (await hub.db.postgresQuery('SELECT * FROM posthog_team ORDER BY id', undefined, 'fetchAllTeams')).rows
+    return (await hub.db.postgresQuery('SELECT * FROM analytickit_team ORDER BY id', undefined, 'fetchAllTeams')).rows
 }
 
 export async function getFirstTeam(hub: Hub): Promise<Team> {
@@ -295,7 +295,7 @@ export async function getErrorForPluginConfig(id: number): Promise<any> {
     const db = new Pool({ connectionString: defaultConfig.DATABASE_URL! })
     let error
     try {
-        const response = await db.query('SELECT * FROM posthog_pluginconfig WHERE id = $1', [id])
+        const response = await db.query('SELECT * FROM analytickit_pluginconfig WHERE id = $1', [id])
         error = response.rows[0]['error']
     } catch {}
 

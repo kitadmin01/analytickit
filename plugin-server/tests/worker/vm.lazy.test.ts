@@ -1,11 +1,11 @@
-import { RetryError } from '@posthog/plugin-scaffold'
+import{RetryError}from'@analytickit/plugin-scaffold'
 
-import { PluginLogEntrySource, PluginLogEntryType, PluginTaskType } from '../../src/types'
-import { status } from '../../src/utils/status'
-import { LazyPluginVM } from '../../src/worker/vm/lazy'
-import { createPluginConfigVM } from '../../src/worker/vm/vm'
-import { plugin60, pluginConfig39 } from '../helpers/plugins'
-import { disablePlugin } from '../helpers/sqlMock'
+import {PluginLogEntrySource, PluginLogEntryType, PluginTaskType}from '../../src/types'
+import { status}from '../../src/utils/status'
+import {LazyPluginVM }from '../../src/worker/vm/lazy'
+import { createPluginConfigVM}from '../../src/worker/vm/vm'
+import {plugin60, pluginConfig39}from '../helpers/plugins'
+import {disablePlugin}from '../helpers/sqlMock'
 
 jest.mock('../../src/utils/db/error')
 jest.mock('../../src/utils/status')
@@ -85,11 +85,11 @@ describe('LazyPluginVM', () => {
                     source: PluginLogEntrySource.System,
                     type: PluginLogEntryType.Info,
                 })
-            )
-        })
-    })
+)
+})
+})
 
-    describe('VM creation fails', () => {
+describe('VM creation fails', () => {
         const error = new Error()
         let vm = createVM()
         jest.useFakeTimers()
@@ -149,8 +149,8 @@ describe('LazyPluginVM', () => {
                     instanceId: undefined,
                     message: expect.stringContaining('setupPlugin failed with RetryError (attempt 1/5)'),
                 })
-            )
-            await lazyVm._setupPlugin(mockVm as any)
+)
+await lazyVm._setupPlugin(mockVm as any)
             await lazyVm._setupPlugin(mockVm as any)
             await lazyVm._setupPlugin(mockVm as any)
 
@@ -214,8 +214,8 @@ describe('LazyPluginVM', () => {
                     instanceId: undefined,
                     message: expect.stringContaining('setupPlugin failed with RetryError (attempt 1/5)'),
                 })
-            )
-            await lazyVm._setupPlugin(mockVm as any)
+)
+await lazyVm._setupPlugin(mockVm as any)
             await lazyVm._setupPlugin(mockVm as any)
             await lazyVm._setupPlugin(mockVm as any)
 
@@ -249,12 +249,12 @@ describe('LazyPluginVM', () => {
             // Setup never succeeds
             await expect(lazyVm._setupPlugin(mockVm as any)).rejects.toThrow(
                 'setupPlugin failed with RetryError (attempt 5/5) for plugin test-maxmind-plugin'
-            )
+)
 
-            // Plugin gets disabled due to failure
-            expect(disablePlugin).toHaveBeenCalledTimes(1)
+// Plugin gets disabled due to failure
+expect(disablePlugin).toHaveBeenCalledTimes(1)
             // An email to project members about the failure is queued
-            expect(mockServer.db.celeryApplyAsync).toHaveBeenCalledWith('posthog.tasks.email.send_fatal_plugin_error', [
+            expect(mockServer.db.celeryApplyAsync).toHaveBeenCalledWith('analytickit.tasks.email.send_fatal_plugin_error', [
                 pluginConfig39.id,
                 null,
                 'RetryError (attempt 5/5)',

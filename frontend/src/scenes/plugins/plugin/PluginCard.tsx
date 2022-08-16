@@ -28,7 +28,7 @@ import { canInstallPlugins } from '../access'
 import { LinkButton } from 'lib/components/LinkButton'
 import { PluginUpdateButton } from './PluginUpdateButton'
 import { Tooltip } from 'lib/components/Tooltip'
-import { LemonSwitch } from '@posthog/lemon-ui'
+import { LemonSwitch } from '@analytickit/lemon-ui'
 import { organizationLogic } from 'scenes/organizationLogic'
 import { PluginsAccessLevel } from 'lib/constants'
 

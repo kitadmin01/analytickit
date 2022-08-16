@@ -7,8 +7,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from ee.tasks.slack import handle_slack_event
-from posthog.api.integration import IntegrationSerializer
-from posthog.models.integration import Integration, SlackIntegration, SlackIntegrationError
+from analytickit.api.integration import IntegrationSerializer
+from analytickit.models.integration import Integration, SlackIntegration, SlackIntegrationError
 
 
 class PublicIntegrationViewSet(viewsets.GenericViewSet):

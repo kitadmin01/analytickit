@@ -1,4 +1,4 @@
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import clsx from 'clsx'
 import React from 'react'
 import { IconClose } from '../icons'

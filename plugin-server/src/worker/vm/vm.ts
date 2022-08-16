@@ -1,27 +1,27 @@
-import { RetryError } from '@posthog/plugin-scaffold'
-import { randomBytes } from 'crypto'
-import { VM } from 'vm2'
+import{RetryError}from'@analytickit/plugin-scaffold'
+import {randomBytes} from 'crypto'
+import {VM}from 'vm2'
 
-import { Hub, PluginConfig, PluginConfigVMResponse } from '../../types'
-import { createCache } from './extensions/cache'
-import { createConsole } from './extensions/console'
-import { createGeoIp } from './extensions/geoip'
-import { createGoogle } from './extensions/google'
-import { createJobs } from './extensions/jobs'
-import { createPosthog } from './extensions/posthog'
-import { createStorage } from './extensions/storage'
-import { createUtils } from './extensions/utilities'
-import { imports } from './imports'
-import { transformCode } from './transforms'
-import { upgradeExportEvents } from './upgrades/export-events'
-import { addHistoricalEventsExportCapability } from './upgrades/historical-export/export-historical-events'
+import {Hub, PluginConfig, PluginConfigVMResponse}from '../../types'
+import {createCache}from './extensions/cache'
+import {createConsole }from './extensions/console'
+import {createGeoIp}from './extensions/geoip'
+import {createGoogle}from './extensions/google'
+import {createJobs} from './extensions/jobs'
+import {createanalytickit}from './extensions/analytickit'
+import {createStorage}from './extensions/storage'
+import {createUtils}from './extensions/utilities'
+import { imports}from './imports'
+import {transformCode}from './transforms'
+import {upgradeExportEvents}from './upgrades/export-events'
+import {addHistoricalEventsExportCapability}from './upgrades/historical-export/export-historical-events'
 
 export class TimeoutError extends RetryError {
-    name = 'TimeoutError'
-    caller?: string = undefined
-    pluginConfig?: PluginConfig = undefined
+name = 'TimeoutError'
+caller?: string = undefined
+pluginConfig?: PluginConfig = undefined
 
-    constructor(message: string, caller?: string, pluginConfig?: PluginConfig) {
+constructor(message: string, caller?: string, pluginConfig?: PluginConfig) {
         super(message)
         this.caller = caller
         this.pluginConfig = pluginConfig
@@ -51,11 +51,11 @@ export function createPluginConfigVM(
         sandbox: {},
     })
 
-    // Add PostHog utilities to virtual machine
+    // Add analytickit utilities to virtual machine
     vm.freeze(createConsole(hub, pluginConfig), 'console')
-    vm.freeze(createPosthog(hub, pluginConfig), 'posthog')
+    vm.freeze(createanalytickit(hub, pluginConfig), 'analytickit')
 
-    // Add non-PostHog utilities to virtual machine
+    // Add non-analytickit utilities to virtual machine
     vm.freeze(imports['node-fetch'], 'fetch')
     vm.freeze(createGoogle(), 'google')
 
@@ -101,9 +101,9 @@ export function createPluginConfigVM(
             utils: createUtils(hub, pluginConfig.id),
         },
         '__pluginHostMeta'
-    )
+)
 
-    vm.run(`
+vm.run(`
         // two ways packages could export themselves (plus "global")
         const module = { exports: {} };
         let exports = {};

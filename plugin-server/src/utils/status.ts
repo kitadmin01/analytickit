@@ -1,24 +1,24 @@
-import { StructuredLogger } from 'structlog'
-import { threadId } from 'worker_threads'
+import{StructuredLogger}from'structlog'
+import {threadId}from 'worker_threads'
 
-import { PluginsServerConfig } from '../types'
-import { isProdEnv } from './env-utils'
+import {PluginsServerConfig}from '../types'
+import {isProdEnv}from './env-utils'
 
 export type StatusMethod = (icon: string, ...message: any[]) => void
 
 export interface StatusBlueprint {
-    debug: StatusMethod
-    info: StatusMethod
-    warn: StatusMethod
-    error: StatusMethod
+debug: StatusMethod
+info: StatusMethod
+warn: StatusMethod
+error: StatusMethod
 }
 
 export class Status implements StatusBlueprint {
-    mode?: string
-    logger: StructuredLogger
-    prompt: string
+mode?: string
+logger: StructuredLogger
+prompt: string
 
-    constructor(mode?: string) {
+constructor(mode?: string) {
         this.mode = mode
         const loggerOptions: Record<string, any> = {
             pathStackDepth: 1,

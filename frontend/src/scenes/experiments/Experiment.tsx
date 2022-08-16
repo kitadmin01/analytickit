@@ -692,7 +692,7 @@ export function Experiment(): JSX.Element {
                                     {significanceBannerDetails}{' '}
                                     {experimentData?.end_date ? '' : "We don't recommend ending this experiment yet."}{' '}
                                     See our{' '}
-                                    <a href="https://posthog.com/docs/user-guides/experimentation#funnel-experiment-calculations">
+                                    <a href="https://analytickit.com/docs/user-guides/experimentation#funnel-experiment-calculations">
                                         {' '}
                                         experimentation guide{' '}
                                     </a>

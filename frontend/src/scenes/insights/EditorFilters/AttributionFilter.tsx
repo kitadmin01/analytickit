@@ -2,7 +2,7 @@ import React from 'react'
 import { useActions, useValues } from 'kea'
 import { trendsLogic } from 'scenes/trends/trendsLogic'
 import { BreakdownAttributionType, EditorFilterProps, StepOrderValue } from '~/types'
-import { LemonSelect } from '@posthog/lemon-ui'
+import { LemonSelect } from '@analytickit/lemon-ui'
 import { funnelLogic } from 'scenes/funnels/funnelLogic'
 
 export function Attribution({ filters, insightProps }: EditorFilterProps): JSX.Element {

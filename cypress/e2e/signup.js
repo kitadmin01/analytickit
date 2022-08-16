@@ -7,7 +7,7 @@ describe('Signup', () => {
     })
 
     it('Cannot create acount with existing email', () => {
-        cy.get('[data-attr=signup-email]').type('test@posthog.com').should('have.value', 'test@posthog.com')
+        cy.get('[data-attr=signup-email]').type('test@analytickit.com').should('have.value', 'test@analytickit.com')
         cy.get('[data-attr=password]').type('12345678').should('have.value', '12345678')
         cy.get('[data-attr=signup-first-name]').type('Jane').should('have.value', 'Jane')
         cy.get('[data-attr=signup-organization-name]').type('Hogflix Movies').should('have.value', 'Hogflix Movies')
@@ -35,7 +35,7 @@ describe('Signup', () => {
     })
 
     it('Can create user account', () => {
-        const email = `new_user+${Math.floor(Math.random() * 10000)}@posthog.com`
+        const email = `new_user+${Math.floor(Math.random() * 10000)}@analytickit.com`
         cy.get('[data-attr=signup-email]').type(email).should('have.value', email)
         cy.get('[data-attr=password]').type('12345678').should('have.value', '12345678')
         cy.get('[data-attr=signup-first-name]').type('Alice').should('have.value', 'Alice')

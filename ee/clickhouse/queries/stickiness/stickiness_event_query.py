@@ -1,5 +1,5 @@
-from posthog.models.group.util import get_aggregation_target_field
-from posthog.queries.stickiness.stickiness_event_query import StickinessEventsQuery
+from analytickit.models.group.util import get_aggregation_target_field
+from analytickit.queries.stickiness.stickiness_event_query import StickinessEventsQuery
 
 
 class ClickhouseStickinessEventsQuery(StickinessEventsQuery):

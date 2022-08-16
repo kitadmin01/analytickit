@@ -1,9 +1,9 @@
-import { ConsoleExtension } from '@posthog/plugin-scaffold'
+import{ConsoleExtension}from'@analytickit/plugin-scaffold'
 
-import { Hub, PluginConfig, PluginLogEntrySource, PluginLogEntryType } from '../../../types'
-import { isDevEnv } from '../../../utils/env-utils'
-import { status } from '../../../utils/status'
-import { pluginDigest } from '../../../utils/utils'
+import {Hub, PluginConfig, PluginLogEntrySource, PluginLogEntryType}from '../../../types'
+import {isDevEnv}from '../../../utils/env-utils'
+import {status}from '../../../utils/status'
+import {pluginDigest}from '../../../utils/utils'
 
 function consoleFormat(...args: unknown[]): string {
     return args

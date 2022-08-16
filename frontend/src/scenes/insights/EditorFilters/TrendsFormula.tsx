@@ -3,7 +3,7 @@ import { EditorFilterProps } from '~/types'
 import { useActions } from 'kea'
 import { trendsLogic } from 'scenes/trends/trendsLogic'
 import { Tooltip } from 'lib/components/Tooltip'
-import { LemonButton, LemonInput } from '@posthog/lemon-ui'
+import { LemonButton, LemonInput } from '@analytickit/lemon-ui'
 import { IconDelete, IconPlusMini } from 'lib/components/icons'
 
 // When updating this regex, remember to update the regex with the same name in mixins/common.py

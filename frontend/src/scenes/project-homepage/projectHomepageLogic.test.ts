@@ -1,8 +1,8 @@
-import { expectLogic } from 'kea-test-utils'
-import { useMocks } from '~/mocks/jest'
-import { initKeaTests } from '~/test/init'
-import { DashboardType } from '~/types'
-import { projectHomepageLogic } from './projectHomepageLogic'
+import{expectLogic}from'kea-test-utils'
+import {useMocks}from '~/mocks/jest'
+import {initKeaTests} from '~/test/init'
+import {DashboardType}from '~/types'
+import {projectHomepageLogic}from './projectHomepageLogic'
 import _dashboardJson from '../dashboard/__mocks__/dashboard.json'
 
 const dashboardJson = _dashboardJson as any as DashboardType

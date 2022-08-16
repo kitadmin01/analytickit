@@ -1,10 +1,10 @@
-import { DateTimePropertyTypeFormat, PropertyType, UnixTimestampPropertyTypeFormat } from '../../types'
+import{DateTimePropertyTypeFormat, PropertyType, UnixTimestampPropertyTypeFormat}from '../../types'
 
 // magic copied from https://stackoverflow.com/a/54930905
 // allows candidate to be typed as any
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const isNumericString = (candidate: any): boolean => {
-    return !(candidate instanceof Array) && candidate - parseFloat(candidate) + 1 >= 0
+return !(candidate instanceof Array) && candidate - parseFloat(candidate) + 1 >= 0
 }
 
 export const unixTimestampPropertyTypeFormatPatterns: Record<keyof typeof UnixTimestampPropertyTypeFormat, RegExp> = {

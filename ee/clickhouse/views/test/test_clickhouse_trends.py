@@ -11,27 +11,27 @@ from django.test import Client
 from freezegun import freeze_time
 
 from ee.api.test.base import LicensedTestMixin
-from posthog.api.test.test_cohort import create_cohort_ok
-from posthog.api.test.test_event_definition import create_organization, create_team, create_user
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.instance_setting import set_instance_setting
-from posthog.models.team import Team
-from posthog.test.base import (
+from analytickit.api.test.test_cohort import create_cohort_ok
+from analytickit.api.test.test_event_definition import create_organization, create_team, create_user
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.instance_setting import set_instance_setting
+from analytickit.models.team import Team
+from analytickit.test.base import (
     APIBaseTest,
     ClickhouseTestMixin,
     _create_person,
     snapshot_clickhouse_queries,
     test_with_materialized_columns,
 )
-from posthog.test.test_journeys import journeys_for, update_or_create_person
+from analytickit.test.test_journeys import journeys_for, update_or_create_person
 
 
 @pytest.mark.django_db
 @pytest.mark.ee
 def test_includes_only_intervals_within_range(client: Client):
     """
-    This is the case highlighted by https://github.com/PostHog/posthog/issues/2675
+    This is the case highlighted by https://github.com/analytickit/analytickit/issues/2675
 
     Here the issue is that we request, for instance, 14 days as the
     date_from, display at weekly intervals but previously we
@@ -49,7 +49,7 @@ def test_includes_only_intervals_within_range(client: Client):
 
     #  I'm creating a cohort here so that I can use as a breakdown, just because
     #  this is what was used demonstrated in
-    #  https://github.com/PostHog/posthog/issues/2675 but it might not be the
+    #  https://github.com/analytickit/analytickit/issues/2675 but it might not be the
     #  simplest way to reproduce
 
     # "2021-09-19" is a sunday, i.e. beginning of week
@@ -443,7 +443,7 @@ def get_trends(client, request: Union[TrendsRequestBreakdown, TrendsRequest], te
 
     filtered_data = {k: v for k, v in data.items() if v is not None}
 
-    return client.get(f"/api/projects/{team.id}/insights/trend/", data=filtered_data,)
+    return client.get(f"/api/projects/{team.id}/insights/trend/", data=filtered_data, )
 
 
 def get_trends_ok(client: Client, request: TrendsRequest, team: Team):
@@ -461,7 +461,7 @@ class NormalizedTrendResult:
 
 
 def get_trends_time_series_ok(
-    client: Client, request: TrendsRequest, team: Team, with_order: bool = False
+        client: Client, request: TrendsRequest, team: Team, with_order: bool = False
 ) -> Dict[str, Dict[str, NormalizedTrendResult]]:
     data = get_trends_ok(client=client, request=request, team=team)
     res = {}
@@ -514,15 +514,13 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_insight_trends_basic(self):
-
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)}, ],
         }
         created_people = journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -555,14 +553,13 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
 
     def test_insight_trends_entity_overlap(self):
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)},],
-            "3": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)}, ],
+            "3": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)}, ],
         }
         created_people = journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -611,15 +608,13 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_insight_trends_clean_arg(self):
-
         events_by_actor = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)}, ],
         }
         created_actors = journeys_for(events_by_actor, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -646,10 +641,9 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_insight_trends_aggregate(self):
-
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3)}, ],
         }
         created_people = journeys_for(events_by_person, self.team)
 
@@ -684,7 +678,6 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
 
     @snapshot_clickhouse_queries
     def test_insight_trends_cumulative(self):
-
         _create_person(team_id=self.team.pk, distinct_ids=["p1"], properties={"key": "some_val"})
         _create_person(team_id=self.team.pk, distinct_ids=["p2"], properties={"key": "some_val"})
         _create_person(team_id=self.team.pk, distinct_ids=["p3"], properties={"key": "some_val"})
@@ -694,8 +687,8 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
                 {"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "val"}},
                 {"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}},
             ],
-            "p2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "notval"}},],
-            "p3": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}},],
+            "p2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "notval"}}, ],
+            "p3": [{"event": "$pageview", "timestamp": datetime(2012, 1, 14, 3), "properties": {"key": "val"}}, ],
         }
         created_people = journeys_for(events_by_person, self.team)
 
@@ -862,8 +855,8 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
     @test_with_materialized_columns(["key"])
     def test_breakdown_with_filter(self):
         events_by_person = {
-            "person1": [{"event": "sign up", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "val"}},],
-            "person2": [{"event": "sign up", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "oh"}},],
+            "person1": [{"event": "sign up", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "val"}}, ],
+            "person2": [{"event": "sign up", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "oh"}}, ],
         }
         created_people = journeys_for(events_by_person, self.team)
 
@@ -871,7 +864,7 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
             params = TrendsRequestBreakdown(
                 date_from="-14d",
                 breakdown="key",
-                events=[{"id": "sign up", "name": "sign up", "type": "events", "order": 0,}],
+                events=[{"id": "sign up", "name": "sign up", "type": "events", "order": 0, }],
                 properties=[{"key": "key", "value": "oh", "operator": "not_icontains"}],
             )
             data_response = get_trends_time_series_ok(self.client, params, self.team)
@@ -889,7 +882,7 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
                 date_from="-14d",
                 breakdown="key",
                 display="ActionsPie",
-                events=[{"id": "sign up", "name": "sign up", "type": "events", "order": 0,}],
+                events=[{"id": "sign up", "name": "sign up", "type": "events", "order": 0, }],
             )
             aggregate_response = get_trends_aggregate_ok(self.client, params, self.team)
             aggregate_person_response = get_people_from_url_ok(
@@ -916,7 +909,7 @@ class ClickhouseTestTrends(ClickhouseTestMixin, LicensedTestMixin, APIBaseTest):
             request = TrendsRequest(
                 date_from="-7d",
                 compare=True,
-                events=[{"id": "$pageview", "name": "$pageview", "type": "events", "order": 0,}],
+                events=[{"id": "$pageview", "name": "$pageview", "type": "events", "order": 0, }],
             )
             data_response = get_trends_time_series_ok(self.client, request, self.team)
 
@@ -978,7 +971,7 @@ class ClickhouseTestTrendsGroups(ClickhouseTestMixin, LicensedTestMixin, APIBase
             date_from="2020-01-01 00:00:00",
             date_to="2020-01-12 00:00:00",
             events=[
-                {"id": "$pageview", "type": "events", "order": 0, "math": "unique_group", "math_group_type_index": 0,}
+                {"id": "$pageview", "type": "events", "order": 0, "math": "unique_group", "math_group_type_index": 0, }
             ],
         )
         data_response = get_trends_time_series_ok(self.client, request, self.team)
@@ -1028,13 +1021,12 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         set_instance_setting("STRICT_CACHING_TEAMS", "all")
 
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)}, ],
         }
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1058,12 +1050,11 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         assert data["$pageview"]["2012-01-15"].value == 0
 
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 15, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 15, 3)}, ],
         }
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1103,7 +1094,6 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1153,7 +1143,6 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1205,7 +1194,6 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequestBreakdown(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1234,7 +1222,7 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         assert data["$action - 2"]["2012-01-15"].value == 0
 
         events_by_person = {
-            "1": [{"event": "$action", "timestamp": datetime(2012, 1, 15, 3), "properties": {"key": "2"}},],
+            "1": [{"event": "$action", "timestamp": datetime(2012, 1, 15, 3), "properties": {"key": "2"}}, ],
             "2": [
                 {"event": "$action", "timestamp": datetime(2012, 1, 13, 3), "properties": {"key": "2"}}
             ],  # this won't be counted
@@ -1242,7 +1230,6 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequestBreakdown(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1289,7 +1276,6 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequestBreakdown(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1347,7 +1333,6 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-15T04:01:34.000Z"):
-
             request = TrendsRequestBreakdown(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1396,13 +1381,12 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         set_instance_setting("STRICT_CACHING_TEAMS", "all")
 
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 13, 3)}, ],
         }
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-14T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",
@@ -1425,13 +1409,12 @@ class ClickhouseTestTrendsCaching(ClickhouseTestMixin, LicensedTestMixin, APIBas
         assert data["$pageview"]["2012-01-14"].value == 0
 
         events_by_person = {
-            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 15, 3)},],
-            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 16, 3)},],
+            "1": [{"event": "$pageview", "timestamp": datetime(2012, 1, 15, 3)}, ],
+            "2": [{"event": "$pageview", "timestamp": datetime(2012, 1, 16, 3)}, ],
         }
         journeys_for(events_by_person, self.team)
 
         with freeze_time("2012-01-16T04:01:34.000Z"):
-
             request = TrendsRequest(
                 date_from="-14d",
                 display="ActionsLineGraph",

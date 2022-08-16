@@ -1,61 +1,61 @@
-import api from 'lib/api'
-import { kea } from 'kea'
-import type { systemStatusLogicType } from './systemStatusLogicType'
-import { userLogic } from 'scenes/userLogic'
+importapifrom'lib/api'
+import {kea}from 'kea'
+import type {systemStatusLogicType}from './systemStatusLogicType'
+import {userLogic} from 'scenes/userLogic'
 import {
-    SystemStatus,
-    SystemStatusRow,
-    SystemStatusQueriesResult,
-    SystemStatusAnalyzeResult,
-    OrganizationType,
-    UserType,
-    PreflightStatus,
-    InstanceSetting,
-} from '~/types'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import { organizationLogic } from 'scenes/organizationLogic'
-import { OrganizationMembershipLevel } from 'lib/constants'
-import { isUserLoggedIn } from 'lib/utils'
-import { lemonToast } from 'lib/components/lemonToast'
+SystemStatus,
+SystemStatusRow,
+SystemStatusQueriesResult,
+SystemStatusAnalyzeResult,
+OrganizationType,
+UserType,
+PreflightStatus,
+InstanceSetting,
+}from '~/types'
+import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
+import {organizationLogic }from 'scenes/organizationLogic'
+import { OrganizationMembershipLevel}from 'lib/constants'
+import {isUserLoggedIn}from 'lib/utils'
+import {lemonToast}from 'lib/components/lemonToast'
 
 export enum ConfigMode {
-    View = 'view',
-    Edit = 'edit',
-    Saving = 'saving',
+View = 'view',
+Edit = 'edit',
+Saving = 'saving',
 }
 
 export type InstanceStatusTabName = 'overview' | 'metrics' | 'settings' | 'staff_users' | 'kafka_inspector'
 
 /**
- * We whitelist the specific instance settings that can be edited via the /instance/status page.
- * Even if some settings are editable in the frontend according to the API, we may don't want to expose them here.
- * For example: async migrations settings are handled in their own page.
- */
+* We whitelist the specific instance settings that can be edited via the /instance/status page.
+* Even if some settings are editable in the frontend according to the API, we may don't want to expose them here.
+* For example: async migrations settings are handled in their own page.
+*/
 const EDITABLE_INSTANCE_SETTINGS = [
-    'RECORDINGS_TTL_WEEKS',
-    'EMAIL_ENABLED',
-    'EMAIL_HOST',
-    'EMAIL_PORT',
-    'EMAIL_HOST_USER',
-    'EMAIL_HOST_PASSWORD',
-    'EMAIL_USE_TLS',
-    'EMAIL_USE_SSL',
-    'EMAIL_DEFAULT_FROM',
-    'EMAIL_REPLY_TO',
-    'AGGREGATE_BY_DISTINCT_IDS_TEAMS',
-    'ENABLE_ACTOR_ON_EVENTS_TEAMS',
-    'GEOIP_PROPERTY_OVERRIDES_TEAMS',
-    'STRICT_CACHING_TEAMS',
-    'SLACK_APP_CLIENT_ID',
-    'SLACK_APP_CLIENT_SECRET',
-    'SLACK_APP_SIGNING_SECRET',
-    'PARALLEL_DASHBOARD_ITEM_CACHE',
+'RECORDINGS_TTL_WEEKS',
+'EMAIL_ENABLED',
+'EMAIL_HOST',
+'EMAIL_PORT',
+'EMAIL_HOST_USER',
+'EMAIL_HOST_PASSWORD',
+'EMAIL_USE_TLS',
+'EMAIL_USE_SSL',
+'EMAIL_DEFAULT_FROM',
+'EMAIL_REPLY_TO',
+'AGGREGATE_BY_DISTINCT_IDS_TEAMS',
+'ENABLE_ACTOR_ON_EVENTS_TEAMS',
+'GEOIP_PROPERTY_OVERRIDES_TEAMS',
+'STRICT_CACHING_TEAMS',
+'SLACK_APP_CLIENT_ID',
+'SLACK_APP_CLIENT_SECRET',
+'SLACK_APP_SIGNING_SECRET',
+'PARALLEL_DASHBOARD_ITEM_CACHE',
 ]
 
 export const systemStatusLogic = kea<systemStatusLogicType>({
-    path: ['scenes', 'instance', 'SystemStatus', 'systemStatusLogic'],
-    actions: {
-        setTab: (tab: InstanceStatusTabName) => ({ tab }),
+path: ['scenes', 'instance', 'SystemStatus', 'systemStatusLogic'],
+actions: {
+setTab:(tab: InstanceStatusTabName) => ({ tab }),
         setOpenSections: (sections: string[]) => ({ sections }),
         setAnalyzeModalOpen: (isOpen: boolean) => ({ isOpen }),
         setAnalyzeQuery: (query: string) => ({ query }),

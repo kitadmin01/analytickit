@@ -59,7 +59,7 @@ export function Sidebar(): JSX.Element {
                     <InviteMembersButton center={true} type="primary" />
                     <LemonDivider thick dashed className="my-6" />
                     <div className="IngestionSidebar__help">
-                        <a href={`https://posthog.com/slack${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
+                        <a href={`https://analytickit.com/slack${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
                             <LemonButton
                                 icon={<IconQuestionAnswer />}
                                 fullWidth
@@ -71,7 +71,7 @@ export function Sidebar(): JSX.Element {
                             </LemonButton>
                         </a>
                         <a
-                            href={`https://posthog.com/docs/integrate/ingest-live-data${HELP_UTM_TAGS}`}
+                            href={`https://analytickit.com/docs/integrate/ingest-live-data${HELP_UTM_TAGS}`}
                             rel="noopener"
                             target="_blank"
                             className="mt-2"

@@ -1,8 +1,8 @@
-import { PluginEvent, ProcessedPluginEvent } from '@posthog/plugin-scaffold'
-import { captureException } from '@sentry/minimal'
+import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {captureException}from '@sentry/minimal'
 
-import { Hub, PluginConfig, PluginError } from '../../types'
-import { setError } from './sql'
+import {Hub, PluginConfig, PluginError }from '../../types'
+import {setError}from './sql'
 
 export async function processError(
     server: Hub,

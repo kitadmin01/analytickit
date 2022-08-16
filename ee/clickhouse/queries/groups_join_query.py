@@ -1,10 +1,10 @@
 from typing import Dict, Optional, Tuple, Union
 
 from ee.clickhouse.queries.column_optimizer import EnterpriseColumnOptimizer
-from posthog.models import Filter
-from posthog.models.filters.path_filter import PathFilter
-from posthog.models.filters.retention_filter import RetentionFilter
-from posthog.models.filters.stickiness_filter import StickinessFilter
+from analytickit.models import Filter
+from analytickit.models.filters.path_filter import PathFilter
+from analytickit.models.filters.retention_filter import RetentionFilter
+from analytickit.models.filters.stickiness_filter import StickinessFilter
 
 
 class GroupsJoinQuery:
@@ -17,12 +17,12 @@ class GroupsJoinQuery:
     _column_optimizer: EnterpriseColumnOptimizer
 
     def __init__(
-        self,
-        filter: Union[Filter, PathFilter, RetentionFilter, StickinessFilter],
-        team_id: int,
-        column_optimizer: Optional[EnterpriseColumnOptimizer] = None,
-        join_key: Optional[str] = None,
-        using_person_on_events: bool = False,
+            self,
+            filter: Union[Filter, PathFilter, RetentionFilter, StickinessFilter],
+            team_id: int,
+            column_optimizer: Optional[EnterpriseColumnOptimizer] = None,
+            join_key: Optional[str] = None,
+            using_person_on_events: bool = False,
     ) -> None:
         self._filter = filter
         self._team_id = team_id

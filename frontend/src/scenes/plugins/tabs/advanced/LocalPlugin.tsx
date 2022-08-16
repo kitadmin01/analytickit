@@ -22,7 +22,7 @@ export function LocalPlugin(): JSX.Element {
                             value={localPluginUrl}
                             disabled={loading}
                             onChange={(e) => setLocalPluginUrl(e.target.value)}
-                            placeholder="/var/posthog/plugins/helloworldplugin"
+                            placeholder="/var/analytickit/plugins/helloworldplugin"
                         />
                     </Col>
                     <Col>

@@ -1,37 +1,37 @@
-import { actions, afterMount, beforeUnmount, kea, key, listeners, path, props, reducers } from 'kea'
+import{actions, afterMount, beforeUnmount, kea, key, listeners, path, props, reducers}from 'kea'
 import api from 'lib/api'
-import { cohortsModel } from '~/models/cohortsModel'
-import { ENTITY_MATCH_TYPE } from 'lib/constants'
+import {cohortsModel}from '~/models/cohortsModel'
+import {ENTITY_MATCH_TYPE}from 'lib/constants'
 import {
-    AnyCohortCriteriaType,
-    AnyCohortGroupType,
-    CohortCriteriaGroupFilter,
-    CohortGroupType,
-    CohortType,
-    FilterLogicalOperator,
-} from '~/types'
-import { personsLogic } from 'scenes/persons/personsLogic'
-import { lemonToast } from 'lib/components/lemonToast'
-import { urls } from 'scenes/urls'
-import { router } from 'kea-router'
-import { actionToUrl } from 'kea-router'
-import { loaders } from 'kea-loaders'
-import { forms } from 'kea-forms'
+AnyCohortCriteriaType,
+AnyCohortGroupType,
+CohortCriteriaGroupFilter,
+CohortGroupType,
+CohortType,
+FilterLogicalOperator,
+}from '~/types'
+import {personsLogic}from 'scenes/persons/personsLogic'
+import { lemonToast}from 'lib/components/lemonToast'
+import {urls}from 'scenes/urls'
+import {router}from 'kea-router'
+import {actionToUrl}from 'kea-router'
+import {loaders}from 'kea-loaders'
+import {forms}from 'kea-forms'
 import {
-    applyAllCriteriaGroup,
-    applyAllNestedCriteria,
-    cleanCriteria,
-    createCohortFormData,
-    isCohortCriteriaGroup,
-    validateGroup,
+applyAllCriteriaGroup,
+applyAllNestedCriteria,
+cleanCriteria,
+createCohortFormData,
+isCohortCriteriaGroup,
+validateGroup,
 } from 'scenes/cohorts/cohortUtils'
-import { NEW_COHORT, NEW_CRITERIA, NEW_CRITERIA_GROUP } from 'scenes/cohorts/CohortFilters/constants'
-import type { cohortEditLogicType } from './cohortEditLogicType'
-import { CohortLogicProps } from 'scenes/cohorts/cohortLogic'
-import { processCohort } from 'lib/utils'
+import {NEW_COHORT, NEW_CRITERIA, NEW_CRITERIA_GROUP}from 'scenes/cohorts/CohortFilters/constants'
+import type {cohortEditLogicType}from './cohortEditLogicType'
+import {CohortLogicProps} from 'scenes/cohorts/cohortLogic'
+import {processCohort}from 'lib/utils'
 
 export const cohortEditLogic = kea<cohortEditLogicType>([
-    props({} as CohortLogicProps),
+props({} as CohortLogicProps),
     key((props) => props.id || 'new'),
     path(['scenes', 'cohorts', 'cohortLogicEdit']),
 
@@ -87,9 +87,9 @@ export const cohortEditLogic = kea<cohortEditLogicType>([
                                 ...criteriaList.slice(criteriaIndex),
                             ],
                             groupIndex
-                        )
-                    }
-                    return applyAllCriteriaGroup(state, (groupList) => [
+)
+}
+return applyAllCriteriaGroup(state, (groupList) => [
                         ...groupList.slice(0, groupIndex),
                         groupList[groupIndex],
                         ...groupList.slice(groupIndex),
@@ -101,9 +101,9 @@ export const cohortEditLogic = kea<cohortEditLogicType>([
                             state,
                             (criteriaList) => [...criteriaList, NEW_CRITERIA],
                             groupIndex
-                        )
-                    }
-                    return applyAllCriteriaGroup(state, (groupList) => [...groupList, NEW_CRITERIA_GROUP])
+)
+}
+return applyAllCriteriaGroup(state, (groupList) => [...groupList, NEW_CRITERIA_GROUP])
                 },
                 removeFilter: (state, { groupIndex, criteriaIndex }) => {
                     if (criteriaIndex !== undefined) {
@@ -114,9 +114,9 @@ export const cohortEditLogic = kea<cohortEditLogicType>([
                                 ...criteriaList.slice(criteriaIndex + 1),
                             ],
                             groupIndex
-                        )
-                    }
-                    return applyAllCriteriaGroup(state, (groupList) => [
+)
+}
+return applyAllCriteriaGroup(state, (groupList) => [
                         ...groupList.slice(0, groupIndex),
                         ...groupList.slice(groupIndex + 1),
                     ])
@@ -240,9 +240,9 @@ export const cohortEditLogic = kea<cohortEditLogicType>([
                         breakpoint()
                         actions.checkIfFinishedCalculating(newCohort)
                     }, 1000)
-                )
-            } else {
-                actions.setCohort(cohort)
+)
+}else {
+actions.setCohort(cohort)
                 cohortsModel.actions.updateCohort(cohort)
                 personsLogic.findMounted({ syncWithUrl: true })?.actions.loadCohorts() // To ensure sync on person page
                 if (values.pollTimeout) {
@@ -255,13 +255,13 @@ export const cohortEditLogic = kea<cohortEditLogicType>([
                         {
                             toastId: `cohort-calculation-error-${key}`,
                         }
-                    )
-                }
-            }
-        },
-    })),
+)
+}
+}
+},
+})),
 
-    actionToUrl(({ values }) => ({
+actionToUrl(({ values }) => ({
         saveCohortSuccess: () => urls.cohort(values.cohort.id),
     })),
 

@@ -1,43 +1,43 @@
-import { kea } from 'kea'
-import { router } from 'kea-router'
-import api, { PaginatedResponse } from 'lib/api'
-import { convertPropertiesToPropertyGroup, fromParamsGivenUrl, isGroupType, toParams } from 'lib/utils'
+import{kea}from'kea'
+import {router}from 'kea-router'
+import api, {PaginatedResponse}from 'lib/api'
+import {convertPropertiesToPropertyGroup, fromParamsGivenUrl, isGroupType, toParams}from 'lib/utils'
 import {
-    ActionFilter,
-    FilterType,
-    InsightType,
-    FunnelVizType,
-    FunnelCorrelationResultsType,
-    ActorType,
-    GraphDataset,
-    ChartDisplayType,
-    FilterLogicalOperator,
-} from '~/types'
-import type { personsModalLogicType } from './personsModalLogicType'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { TrendActors } from 'scenes/trends/types'
-import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
-import { filterTrendsClientSideParams } from 'scenes/insights/sharedUtils'
-import { FEATURE_FLAGS } from 'lib/constants'
-import { cohortsModel } from '~/models/cohortsModel'
-import { dayjs } from 'lib/dayjs'
-import { groupsModel } from '~/models/groupsModel'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { lemonToast } from 'lib/components/lemonToast'
-import { urls } from 'scenes/urls'
+ActionFilter,
+FilterType,
+InsightType,
+FunnelVizType,
+FunnelCorrelationResultsType,
+ActorType,
+GraphDataset,
+ChartDisplayType,
+FilterLogicalOperator,
+}from '~/types'
+import type {personsModalLogicType}from './personsModalLogicType'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import {TrendActors }from 'scenes/trends/types'
+import {cleanFilters}from 'scenes/insights/utils/cleanFilters'
+import {filterTrendsClientSideParams}from 'scenes/insights/sharedUtils'
+import { FEATURE_FLAGS}from 'lib/constants'
+import {cohortsModel}from '~/models/cohortsModel'
+import {dayjs}from 'lib/dayjs'
+import {groupsModel}from '~/models/groupsModel'
+import {featureFlagLogic} from 'lib/logic/featureFlagLogic'
+import {lemonToast}from 'lib/components/lemonToast'
+import {urls}from 'scenes/urls'
 
 export interface PersonsModalParams {
-    action?: ActionFilter
-    label: string // Contains the step name
-    date_from: string | number
-    date_to: string | number
-    filters: Partial<FilterType>
-    breakdown_value?: string | number
-    saveOriginal?: boolean
-    searchTerm?: string
-    funnelStep?: number
-    pathsDropoff?: boolean
-    pointValue?: number // The y-axis value of the data point (i.e. count, unique persons, ...)
+action?: ActionFilter
+label: string // Contains the step name
+date_from: string | number
+date_to: string | number
+filters: Partial < FilterType>
+breakdown_value?: string | number
+saveOriginal?: boolean
+searchTerm?: string
+funnelStep?: number
+pathsDropoff?: boolean
+pointValue?: number // The y-axis value of the data point (i.e. count, unique persons, ...)
     crossDataset?: GraphDataset[]
     seriesId?: number
 }
@@ -285,17 +285,17 @@ export const personsModalLogic = kea<personsModalLogicType>({
                     const filterParams = parsePeopleParams(
                         { label, action, target_date: date_from, lifecycle_type: breakdown_value },
                         filters
-                    )
-                    actors = await api.get(`api/person/lifecycle/?${filterParams}${searchTermParam}`)
-                } else if (filters.insight === InsightType.STICKINESS) {
-                    const filterParams = parsePeopleParams(
-                        { label, action, date_from, date_to, breakdown_value },
-                        filters
-                    )
-                    actors = await api.get(`api/person/stickiness/?${filterParams}${searchTermParam}`)
-                } else if (funnelStep || filters.funnel_viz_type === FunnelVizType.Trends) {
-                    let params
-                    if (filters.funnel_viz_type === FunnelVizType.Trends) {
+)
+actors = await api.get(`api/person/lifecycle/?${filterParams}${searchTermParam}`)
+}else if (filters.insight === InsightType.STICKINESS) {
+const filterParams = parsePeopleParams(
+{label, action, date_from, date_to, breakdown_value},
+filters
+)
+actors = await api.get(`api/person/stickiness/?${filterParams}${searchTermParam}`)
+}else if (funnelStep || filters.funnel_viz_type === FunnelVizType.Trends) {
+let params
+if (filters.funnel_viz_type === FunnelVizType.Trends) {
                         // funnel trends
                         const entrance_period_start = dayjs(date_from).format('YYYY-MM-DD HH:mm:ss')
                         params = { ...filters, entrance_period_start, drop_off: false }
@@ -313,67 +313,67 @@ export const personsModalLogic = kea<personsModalLogicType>({
                                 FunnelCorrelationResultsType.Properties,
                                 'person modal',
                                 filters.funnel_correlation_person_entity
-                            )
-                        }
-                    }
-                    const cleanedParams = cleanFilters(params)
-                    const funnelParams = toParams(cleanedParams)
-                    let includeRecordingsParam = ''
-                    if (values.featureFlags[FEATURE_FLAGS.RECORDINGS_IN_INSIGHTS]) {
+)
+}
+}
+const cleanedParams = cleanFilters(params)
+const funnelParams = toParams(cleanedParams)
+let includeRecordingsParam = ''
+if (values.featureFlags[FEATURE_FLAGS.RECORDINGS_IN_INSIGHTS]) {
                         includeRecordingsParam = 'include_recordings=true&'
                     }
                     actors = await api.create(
                         `api/person/funnel/?${includeRecordingsParam}${funnelParams}${searchTermParam}`
-                    )
-                } else if (filters.insight === InsightType.PATHS) {
-                    const cleanedParams = cleanFilters(filters)
-                    const pathParams = toParams(cleanedParams)
+)
+}else if (filters.insight === InsightType.PATHS) {
+const cleanedParams = cleanFilters(filters)
+const pathParams = toParams(cleanedParams)
 
-                    let includeRecordingsParam = ''
-                    if (values.featureFlags[FEATURE_FLAGS.RECORDINGS_IN_INSIGHTS]) {
+let includeRecordingsParam = ''
+if (values.featureFlags[FEATURE_FLAGS.RECORDINGS_IN_INSIGHTS]) {
                         includeRecordingsParam = 'include_recordings=true&'
                     }
                     actors = await api.create(
                         `api/person/path/?${includeRecordingsParam}${searchTermParam}`,
                         cleanedParams
-                    )
+)
 
-                    // Manually populate URL data so that cohort creation can use this information
-                    const pathsParams = {
-                        url: `api/person/path/paths/?${pathParams}`,
-                        funnelStep,
-                        breakdown_value,
-                        label,
-                        date_from,
-                        action,
-                        pathsDropoff,
-                        crossDataset,
-                        seriesId,
-                    }
-                    actions.setUrl(pathsParams)
+// Manually populate URL data so that cohort creation can use this information
+const pathsParams = {
+url: `api/person/path/paths/?${pathParams}`,
+funnelStep,
+breakdown_value,
+label,
+date_from,
+action,
+pathsDropoff,
+crossDataset,
+seriesId,
+}
+actions.setUrl(pathsParams)
                 } else {
                     actors = await api.actions.getPeople(
                         { label, action, date_from, date_to, breakdown_value },
                         filters,
                         searchTerm
-                    )
-                }
-                breakpoint()
-                const peopleResult = {
-                    people: actors?.results[0]?.people,
-                    count: actors?.results[0]?.count || 0,
-                    action,
-                    label,
-                    day: date_from,
-                    breakdown_value,
-                    next: actors?.next,
-                    funnelStep,
-                    pathsDropoff,
-                    crossDataset,
-                    seriesId,
-                } as TrendActors
+)
+}
+breakpoint()
+const peopleResult = {
+people: actors?.results[0]?.people,
+count: actors?.results[0]?.count || 0,
+action,
+label,
+day: date_from,
+breakdown_value,
+next: actors?.next,
+funnelStep,
+pathsDropoff,
+crossDataset,
+seriesId,
+}as TrendActors
 
-                eventUsageLogic.actions.reportPersonsModalViewed(peopleParams, peopleResult.count, !!actors?.next)
+eventUsageLogic.actions.reportPersonsModalViewed(peopleParams, peopleResult.count, !!actors?.next)
 
                 if (saveOriginal) {
                     actions.saveFirstLoadedActors(peopleResult)

@@ -9,13 +9,21 @@
             "protocol": "inspector",
             "restart": true,
             "internalConsoleOptions": "openOnSessionStart",
-            "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/@posthog/piscina/**"],
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/@analytickit/piscina/**"
+            ],
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node-dev",
-            "runtimeArgs": ["--inspect", "--exit-child"],
-            "args": ["src/index.ts"],
+            "runtimeArgs": [
+                "--inspect",
+                "--exit-child"
+            ],
+            "args": [
+                "src/index.ts"
+            ],
             "env": {
                 "NODE_ENV": "dev",
-                "BASE_DIR": "${workspaceFolder}/../posthog"
+                "BASE_DIR": "${workspaceFolder}/../analytickit"
             }
         },
         {
@@ -25,13 +33,21 @@
             "protocol": "inspector",
             "restart": true,
             "internalConsoleOptions": "openOnSessionStart",
-            "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/@posthog/piscina/**"],
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/@analytickit/piscina/**"
+            ],
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node-dev",
-            "runtimeArgs": ["--inspect", "--exit-child"],
-            "args": ["src/index.ts"],
+            "runtimeArgs": [
+                "--inspect",
+                "--exit-child"
+            ],
+            "args": [
+                "src/index.ts"
+            ],
             "env": {
                 "NODE_ENV": "dev",
-                "BASE_DIR": "${workspaceFolder}/../posthog"
+                "BASE_DIR": "${workspaceFolder}/../analytickit"
             }
         },
         {
@@ -43,9 +59,13 @@
             "disableOptimisticBPs": true,
             "program": "${workspaceFolder}/node_modules/.bin/jest",
             "cwd": "${workspaceFolder}",
-            "args": ["--runInBand", "--forceExit", "--watchAll=false"],
+            "args": [
+                "--runInBand",
+                "--forceExit",
+                "--watchAll=false"
+            ],
             "env": {
-                "DATABASE_URL": "postgres://localhost:5432/test_posthog"
+                "DATABASE_URL": "postgres://localhost:5432/test_analytickit"
             }
         }
     ]

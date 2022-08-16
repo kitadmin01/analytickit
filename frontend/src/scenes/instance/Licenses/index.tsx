@@ -180,9 +180,9 @@ export function Licenses(): JSX.Element {
                 title="Licenses"
                 caption={
                     <>
-                        Here you can add and manage your PostHog enterprise licenses. When you activate a license key,
+                        Here you can add and manage your analytickit enterprise licenses. When you activate a license key,
                         enterprise functionality will be enabled immediately. Contact{' '}
-                        <a href="mailto:sales@posthog.com">sales@posthog.com</a> to buy a license or if you have any
+                        <a href="mailto:sales@analytickit.com">sales@analytickit.com</a> to buy a license or if you have any
                         issues with a license.
                     </>
                 }

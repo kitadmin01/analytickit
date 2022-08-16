@@ -17,22 +17,21 @@ from social_core.backends.saml import (
 from social_core.exceptions import AuthFailed, AuthMissingParameter
 from social_django.utils import load_backend, load_strategy
 
-from posthog.constants import AvailableFeature
-from posthog.models.organization import OrganizationMembership
-from posthog.models.organization_domain import OrganizationDomain
+from analytickit.constants import AvailableFeature
+from analytickit.models.organization import OrganizationMembership
+from analytickit.models.organization_domain import OrganizationDomain
 
 
 @api_view(["GET"])
 def saml_metadata_view(request, *args, **kwargs):
-
     if (
-        not request.user.organization_memberships.get(organization=request.user.organization).level
-        >= OrganizationMembership.Level.ADMIN
+            not request.user.organization_memberships.get(organization=request.user.organization).level
+                >= OrganizationMembership.Level.ADMIN
     ):
         raise PermissionDenied("You need to be an administrator or owner to access this resource.")
 
     complete_url = reverse("social:complete", args=("saml",))
-    saml_backend = load_backend(load_strategy(request), "saml", redirect_uri=complete_url,)
+    saml_backend = load_backend(load_strategy(request), "saml", redirect_uri=complete_url, )
     metadata, errors = saml_backend.generate_metadata_xml()
 
     if not errors:

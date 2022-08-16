@@ -1,6 +1,6 @@
-import { PropertyGroupFilter, AnyPropertyFilter, EventDefinition, PropertyFilter, PropertyOperator } from '~/types'
-import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
-import { flattenPropertyGroup, isPropertyGroup } from 'lib/utils'
+import{PropertyGroupFilter, AnyPropertyFilter, EventDefinition, PropertyFilter, PropertyOperator}from '~/types'
+import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import {flattenPropertyGroup, isPropertyGroup}from 'lib/utils'
 
 export function parseProperties(
     input: AnyPropertyFilter[] | PropertyGroupFilter | Record<string, string> | null | undefined
@@ -29,7 +29,7 @@ export function isValidPropertyFilter(filter: AnyPropertyFilter): filter is Prop
         !!filter && // is not falsy
         'key' in filter && // has a "key" property
         Object.values(filter).some((v) => !!v) // contains some properties with values
-    )
+)
 }
 
 export function isValidPathCleanFilter(filter: Record<string, any>): boolean {

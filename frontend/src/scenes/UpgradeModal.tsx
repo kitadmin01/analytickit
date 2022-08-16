@@ -12,7 +12,7 @@ export function UpgradeModal(): JSX.Element {
 
     return (
         <Modal
-            title="Unleash PostHog's Full Power"
+            title="Unleash analytickit's Full Power"
             okText="Upgrade Now"
             cancelText="Maybe Later"
             onOk={takeToPricing}
@@ -20,7 +20,7 @@ export function UpgradeModal(): JSX.Element {
             visible={!!featureName}
         >
             <p>
-                <b>{featureName && capitalizeFirstLetter(featureName)}</b> is an advanced PostHog feature.
+                <b>{featureName && capitalizeFirstLetter(featureName)}</b> is an advanced analytickit feature.
             </p>
             {featureCaption && <p>{featureCaption}</p>}
             <p>Upgrade now and get access to this, as well as to other powerful enhancements.</p>

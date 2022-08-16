@@ -5,31 +5,30 @@ from django.test import TestCase
 from django.test.client import Client
 
 from ee.clickhouse.views.test.funnel.util import EventPattern
-from posthog.api.test.test_organization import create_organization
-from posthog.api.test.test_team import create_team
-from posthog.api.test.test_user import create_user
-from posthog.models.instance_setting import override_instance_config
-from posthog.test.base import ClickhouseTestMixin, snapshot_clickhouse_queries, test_with_materialized_columns
-from posthog.test.test_journeys import create_all_events, update_or_create_person
-from posthog.utils import encode_get_request_params
+from analytickit.api.test.test_organization import create_organization
+from analytickit.api.test.test_team import create_team
+from analytickit.api.test.test_user import create_user
+from analytickit.models.instance_setting import override_instance_config
+from analytickit.test.base import ClickhouseTestMixin, snapshot_clickhouse_queries, test_with_materialized_columns
+from analytickit.test.test_journeys import create_all_events, update_or_create_person
+from analytickit.utils import encode_get_request_params
 
 
 class RetentionTests(TestCase, ClickhouseTestMixin):
     @snapshot_clickhouse_queries
     def test_retention_test_account_filters(self):
-
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
         team.test_account_filters = [
-            {"key": "email", "type": "person", "value": "posthog.com", "operator": "not_icontains"}
+            {"key": "email", "type": "person", "value": "analytickit.com", "operator": "not_icontains"}
         ]
         team.save()
 
-        update_or_create_person(distinct_ids=["person 1"], team_id=team.pk, properties={"email": "posthog.com"})
+        update_or_create_person(distinct_ids=["person 1"], team_id=team.pk, properties={"email": "analytickit.com"})
         update_or_create_person(distinct_ids=["person 2"], team_id=team.pk)
         update_or_create_person(distinct_ids=["person 3"], team_id=team.pk)
 
@@ -60,7 +59,7 @@ class RetentionTests(TestCase, ClickhouseTestMixin):
         retention_by_cohort_by_period = get_by_cohort_by_period_for_response(client=self.client, response=retention)
 
         assert retention_by_cohort_by_period == {
-            "Day 0": {"1": ["person 2"], "2": [],},
+            "Day 0": {"1": ["person 2"], "2": [], },
             "Day 1": {"1": ["person 3"]},
         }
 
@@ -68,7 +67,7 @@ class RetentionTests(TestCase, ClickhouseTestMixin):
     def test_retention_aggregation_by_distinct_id_and_retrieve_people(self):
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -77,9 +76,10 @@ class RetentionTests(TestCase, ClickhouseTestMixin):
 
         setup_user_activity_by_day(
             daily_activity={
-                "2020-01-01": {"person 1": [{"event": "target event",}], "another one": [{"event": "target event",}],},
+                "2020-01-01": {"person 1": [{"event": "target event", }],
+                               "another one": [{"event": "target event", }], },
                 "2020-01-02": {"person 1": [{"event": "target event"}], "person 2": [{"event": "target event"}]},
-                "2020-01-03": {"another one": [{"event": "target event"}],},
+                "2020-01-03": {"another one": [{"event": "target event"}], },
             },
             team=team,
         )
@@ -129,7 +129,7 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
     def test_can_get_retention_cohort_breakdown(self):
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -163,14 +163,14 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
         retention_by_cohort_by_period = get_by_cohort_by_period_for_response(client=self.client, response=retention)
 
         assert retention_by_cohort_by_period == {
-            "Day 0": {"1": ["person 1", "person 2"], "2": ["person 1"],},
+            "Day 0": {"1": ["person 1", "person 2"], "2": ["person 1"], },
             "Day 1": {"1": ["person 3"]},
         }
 
     def test_can_get_retention_cohort_breakdown_with_retention_type_target(self):
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -204,7 +204,7 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
         retention_by_cohort_by_period = get_by_cohort_by_period_for_response(client=self.client, response=retention)
 
         assert retention_by_cohort_by_period == {
-            "Day 0": {"1": ["person 1", "person 2"], "2": ["person 1"],},
+            "Day 0": {"1": ["person 1", "person 2"], "2": ["person 1"], },
             "Day 1": {"1": ["person 3", "person 1"]},
         }
 
@@ -217,7 +217,7 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
         """
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -277,7 +277,7 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
         """
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -343,7 +343,7 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
         """
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -356,7 +356,7 @@ class BreakdownTests(TestCase, ClickhouseTestMixin):
                     "person 1": [{"event": "target event", "properties": {"os": "Chrome"}}],
                     "person 2": [{"event": "target event", "properties": {"os": "Safari"}}],
                 },
-                "2020-01-02": {"person 1": [{"event": "target event"}], "person 2": [{"event": "target event"}],},
+                "2020-01-02": {"person 1": [{"event": "target event"}], "person 2": [{"event": "target event"}], },
             },
             team=team,
         )
@@ -394,7 +394,7 @@ class IntervalTests(TestCase, ClickhouseTestMixin):
     def test_can_get_retention_week_interval(self):
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -426,7 +426,7 @@ class IntervalTests(TestCase, ClickhouseTestMixin):
         retention_by_cohort_by_period = get_by_cohort_by_period_for_response(client=self.client, response=retention)
 
         assert retention_by_cohort_by_period == {
-            "Week 0": {"1": ["person 1"], "2": [],},
+            "Week 0": {"1": ["person 1"], "2": [], },
             "Week 1": {"1": ["person 2"]},
         }
 
@@ -434,18 +434,18 @@ class IntervalTests(TestCase, ClickhouseTestMixin):
 class RegressionTests(TestCase, ClickhouseTestMixin):
     def test_can_get_actors_and_use_percent_char_filter(self):
         """
-        References https://github.com/PostHog/posthog/issues/7747
+        References https://github.com/analytickit/analytickit/issues/7747
 
         Essentially we were performing a double string substitution, which
         causes issues if, in that case, we use a string substitution that
         includes a '%' character, and then run substitution again.
 
         This was the case for instance when you wanted to filter out test users
-        e.g. by postgres LIKE matching '%posthog.com%'
+        e.g. by postgres LIKE matching '%analytickit.com%'
         """
         organization = create_organization(name="test")
         team = create_team(organization=organization)
-        user = create_user(email="test@posthog.com", password="1234", organization=organization)
+        user = create_user(email="test@analytickit.com", password="1234", organization=organization)
 
         self.client.force_login(user)
 
@@ -460,7 +460,8 @@ class RegressionTests(TestCase, ClickhouseTestMixin):
                 date_to="2020-01-08",
                 period="Week",
                 retention_type="retention_first_time",
-                properties=[{"key": "email", "value": "posthog.com", "operator": "not_icontains", "type": "person"}],
+                properties=[
+                    {"key": "email", "value": "analytickit.com", "operator": "not_icontains", "type": "person"}],
             ),
         )
 

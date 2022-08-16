@@ -4,9 +4,9 @@ from unittest.mock import patch
 from django.core.cache import cache
 from rest_framework import status
 
-from posthog.constants import INSIGHT_FUNNELS
-from posthog.models.person import Person
-from posthog.test.base import APIBaseTest, ClickhouseTestMixin, _create_event, _create_person
+from analytickit.constants import INSIGHT_FUNNELS
+from analytickit.models.person import Person
+from analytickit.test.base import APIBaseTest, ClickhouseTestMixin, _create_event, _create_person
 
 
 class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
@@ -47,7 +47,7 @@ class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
             "interval": "day",
             "actions": json.dumps([]),
             "events": json.dumps(
-                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2},]
+                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2}, ]
             ),
             "properties": json.dumps([]),
             "funnel_window_days": 14,
@@ -74,7 +74,7 @@ class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
             "interval": "day",
             "actions": json.dumps([]),
             "events": json.dumps(
-                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2},]
+                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2}, ]
             ),
             "properties": json.dumps([]),
             "funnel_window_days": 14,
@@ -109,7 +109,7 @@ class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
             "interval": "day",
             "actions": json.dumps([]),
             "events": json.dumps(
-                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2},]
+                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2}, ]
             ),
             "properties": json.dumps([]),
             "funnel_window_days": 14,
@@ -138,7 +138,7 @@ class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
         self.assertEqual(10, len(people))
         self.assertEqual(None, j["next"])
 
-    @patch("posthog.models.person.util.delete_person")
+    @patch("analytickit.models.person.util.delete_person")
     def test_basic_pagination_with_deleted(self, delete_person_patch):
         cache.clear()
         self._create_sample_data(110, delete=True)
@@ -147,7 +147,7 @@ class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
             "interval": "day",
             "actions": json.dumps([]),
             "events": json.dumps(
-                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2},]
+                [{"id": "step one", "order": 0}, {"id": "step two", "order": 1}, {"id": "step three", "order": 2}, ]
             ),
             "properties": json.dumps([]),
             "funnel_window_days": 14,
@@ -176,7 +176,7 @@ class TestFunnelPerson(ClickhouseTestMixin, APIBaseTest):
             "filter_test_accounts": "false",
             "new_entity": json.dumps([]),
             "events": json.dumps(
-                [{"id": "sign up", "order": 0}, {"id": "play movie", "order": 1}, {"id": "buy", "order": 2},]
+                [{"id": "sign up", "order": 0}, {"id": "play movie", "order": 1}, {"id": "buy", "order": 2}, ]
             ),
             "insight": INSIGHT_FUNNELS,
             "date_from": "2020-01-01",
@@ -274,7 +274,7 @@ class TestFunnelCorrelationActors(ClickhouseTestMixin, APIBaseTest):
 
         request_data = {
             "events": json.dumps(
-                [{"id": "user signed up", "type": "events", "order": 0}, {"id": "paid", "type": "events", "order": 1},]
+                [{"id": "user signed up", "type": "events", "order": 0}, {"id": "paid", "type": "events", "order": 1}, ]
             ),
             "insight": INSIGHT_FUNNELS,
             "date_from": "2020-01-01",

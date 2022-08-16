@@ -1,26 +1,28 @@
-import { kea } from 'kea'
-import { router } from 'kea-router'
+import{kea}from'kea'
+import {router}from 'kea-router'
 import api from 'lib/api'
-import { lemonToast } from 'lib/components/lemonToast'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { PersonType } from '~/types'
-import type { mergeSplitPersonLogicType } from './mergeSplitPersonLogicType'
-import { personsLogic } from './personsLogic'
+import {lemonToast}from 'lib/components/lemonToast'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import {PersonType }from '~/types'
+import type {mergeSplitPersonLogicType}from './mergeSplitPersonLogicType'
+import {personsLogic}from './personsLogic'
 
 export enum ActivityType {
-    SPLIT = 'split',
-    MERGE = 'merge',
+SPLIT = 'split',
+MERGE = 'merge',
 }
 
 export interface SplitPersonLogicProps {
-    person: PersonType
+person: PersonType
 }
 
 export type PersonUuids = NonNullable<PersonType['uuid']>[]
 
 export const mergeSplitPersonLogic = kea<mergeSplitPersonLogicType>({
-    props: {} as SplitPersonLogicProps,
-    key: (props) => props.person.id ?? 'new',
+props: {
+
+}as SplitPersonLogicProps,
+key: (props) => props.person.id ?? 'new',
     path: (key) => ['scenes', 'persons', 'mergeSplitPersonLogic', key],
     connect: () => ({
         actions: [
@@ -91,8 +93,8 @@ export const mergeSplitPersonLogic = kea<mergeSplitPersonLogicType>({
                         if (splitAction.success) {
                             lemonToast.success(
                                 'Person succesfully split. This may take up to a couple of minutes to complete'
-                            )
-                            eventUsageLogic.actions.reportPersonSplit(values.person.distinct_ids.length)
+)
+eventUsageLogic.actions.reportPersonSplit(values.person.distinct_ids.length)
                             actions.setSplitMergeModalShown(false)
                             router.actions.push('/persons')
                             return true

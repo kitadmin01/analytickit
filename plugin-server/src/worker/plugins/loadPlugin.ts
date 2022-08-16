@@ -1,11 +1,11 @@
-import * as fs from 'fs'
+import* as fs from 'fs'
 import * as path from 'path'
 
-import { Hub, Plugin, PluginConfig, PluginJsonConfig } from '../../types'
-import { processError } from '../../utils/db/error'
-import { status } from '../../utils/status'
-import { pluginDigest } from '../../utils/utils'
-import { transpileFrontend } from '../frontend/transpile'
+import {Hub, Plugin, PluginConfig, PluginJsonConfig}from '../../types'
+import { processError}from '../../utils/db/error'
+import {status }from '../../utils/status'
+import {pluginDigest}from '../../utils/utils'
+import {transpileFrontend}from '../frontend/transpile'
 
 function readFileIfExists(baseDir: string, plugin: Plugin, file: string): string | null {
     const fullPath = path.resolve(baseDir, plugin.url!.substring(5), file)
@@ -58,8 +58,8 @@ export async function loadPlugin(hub: Hub, pluginConfig: PluginConfig): Promise<
                         plugin.id,
                         frontendFilename,
                         typeof error === 'string' ? error : [error.message, error.stack].filter((a) => !!a).join('\n')
-                    )
-                    hub.statsd?.increment(`transpile_frontend.ERROR`, {
+)
+hub.statsd?.increment(`transpile_frontend.ERROR`, {
                         plugin: plugin.name ?? '?',
                         pluginId: `${plugin.id ?? '?'}`,
                     })
@@ -93,13 +93,13 @@ export async function loadPlugin(hub: Hub, pluginConfig: PluginConfig): Promise<
                     `Could not load source code for ${pluginDigest(plugin)}. Tried: ${
                         config['main'] || 'index.ts, index.js'
                     }`
-                )
-                return false
-            }
-        }
-    } catch (error) {
-        pluginConfig.vm?.failInitialization!()
-        await processError(hub, pluginConfig, error)
+)
+return false
+}
+}
+}catch (error) {
+pluginConfig.vm?.failInitialization!()
+await processError(hub, pluginConfig, error)
     }
     return false
 }

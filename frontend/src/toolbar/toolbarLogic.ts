@@ -1,17 +1,19 @@
-import { kea } from 'kea'
-import type { toolbarLogicType } from './toolbarLogicType'
-import { ToolbarProps } from '~/types'
-import { clearSessionToolbarToken } from '~/toolbar/utils'
-import { posthog } from '~/toolbar/posthog'
-import { actionsTabLogic } from '~/toolbar/actions/actionsTabLogic'
-import { toolbarButtonLogic } from '~/toolbar/button/toolbarButtonLogic'
-import type { PostHog } from 'posthog-js'
+import{kea}from'kea'
+import type {toolbarLogicType}from './toolbarLogicType'
+import {ToolbarProps}from '~/types'
+import {clearSessionToolbarToken} from '~/toolbar/utils'
+import {analytickit}from '~/toolbar/analytickit'
+import {actionsTabLogic}from '~/toolbar/actions/actionsTabLogic'
+import {toolbarButtonLogic }from '~/toolbar/button/toolbarButtonLogic'
+import type {analytickit}from 'analytickit-js'
 
 export const toolbarLogic = kea<toolbarLogicType>({
-    path: ['toolbar', 'toolbarLogic'],
-    props: {} as ToolbarProps,
+path: ['toolbar', 'toolbarLogic'],
+props: {
 
-    actions: () => ({
+}as ToolbarProps,
+
+actions:() => ({
         authenticate: true,
         logout: true,
         tokenExpired: true,
@@ -29,7 +31,7 @@ export const toolbarLogic = kea<toolbarLogicType>({
         userIntent: [props.userIntent || null, { logout: () => null, clearUserIntent: () => null }],
         buttonVisible: [true, { showButton: () => true, hideButton: () => false, logout: () => false }],
         dataAttributes: [(props.dataAttributes || []) as string[]],
-        posthog: [(props.posthog ?? null) as PostHog | null],
+        analytickit: [(props.analytickit ?? null) as analytickit | null],
     }),
 
     selectors: ({ selectors }) => ({
@@ -43,18 +45,18 @@ export const toolbarLogic = kea<toolbarLogicType>({
 
     listeners: ({ values, props }) => ({
         authenticate: () => {
-            posthog.capture('toolbar authenticate', { is_authenticated: values.isAuthenticated })
+            analytickit.capture('toolbar authenticate', { is_authenticated: values.isAuthenticated })
             const encodedUrl = encodeURIComponent(window.location.href)
             window.location.href = `${values.apiURL}/authorize_and_redirect/?redirect=${encodedUrl}`
             clearSessionToolbarToken()
         },
         logout: () => {
-            posthog.capture('toolbar logout')
+            analytickit.capture('toolbar logout')
             clearSessionToolbarToken()
         },
         tokenExpired: () => {
-            posthog.capture('toolbar token expired')
-            console.log('PostHog Toolbar API token expired. Clearing session.')
+            analytickit.capture('toolbar token expired')
+            console.log('analytickit Toolbar API token expired. Clearing session.')
             clearSessionToolbarToken()
         },
         processUserIntent: async () => {
@@ -71,14 +73,14 @@ export const toolbarLogic = kea<toolbarLogicType>({
             if (props.instrument) {
                 const distinctId = props.distinctId
                 if (distinctId) {
-                    posthog.identify(distinctId, props.userEmail ? { email: props.userEmail } : {})
+                    analytickit.identify(distinctId, props.userEmail ? { email: props.userEmail } : {})
                 }
-                posthog.optIn()
+                analytickit.optIn()
             }
             if (props.userIntent) {
                 actions.processUserIntent()
             }
-            posthog.capture('toolbar loaded', { is_authenticated: values.isAuthenticated })
+            analytickit.capture('toolbar loaded', { is_authenticated: values.isAuthenticated })
         },
     }),
 })

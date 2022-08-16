@@ -56,7 +56,7 @@ export function CreateProjectModal({
             All organization members will be able to access the new project upon creation, but you can make it private
             in its settings to restrict access.
             <br />
-            <a href="https://posthog.com/docs/user-guides/organizations-and-projects" target="_blank" rel="noopener">
+            <a href="https://analytickit.com/docs/user-guides/organizations-and-projects" target="_blank" rel="noopener">
                 Learn more about projects in Docs.
             </a>
         </p>

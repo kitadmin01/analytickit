@@ -212,7 +212,7 @@ export const WithSideAction = (): JSX.Element => {
 export const AsLinks = (): JSX.Element => {
     return (
         <div className="flex gap-2">
-            <LemonButton href="https://posthog.com">External link with "href"</LemonButton>
+            <LemonButton href="https://analytickit.com">External link with "href"</LemonButton>
 
             <LemonButton to={urls.projectHomepage()}>Internal link with "to"</LemonButton>
         </div>

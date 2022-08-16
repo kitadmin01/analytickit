@@ -63,7 +63,7 @@ export interface HelpButtonProps {
     customKey?: string
     /** Whether the component should be an inline element as opposed to a block element. */
     inline?: boolean
-    /** Whether only options abount contact with PostHog should be shown (e.g. leaving docs out). */
+    /** Whether only options abount contact with analytickit should be shown (e.g. leaving docs out). */
     contactOnly?: boolean
 }
 
@@ -85,7 +85,7 @@ export function HelpButton({
         <Popup
             overlay={
                 <>
-                    <a href={`https://posthog.com/questions${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
+                    <a href={`https://analytickit.com/questions${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
                         <LemonButton
                             icon={<IconQuestionAnswer />}
                             status="stealth"
@@ -98,7 +98,7 @@ export function HelpButton({
                             Ask us a question
                         </LemonButton>
                     </a>
-                    <a href="https://github.com/PostHog/posthog/issues/new/choose" rel="noopener" target="_blank">
+                    <a href="https://github.com/analytickit/analytickit/issues/new/choose" rel="noopener" target="_blank">
                         <LemonButton
                             icon={<IconGithub />}
                             status="stealth"
@@ -111,7 +111,7 @@ export function HelpButton({
                             Create an issue on GitHub
                         </LemonButton>
                     </a>
-                    <a href="mailto:hey@posthog.com" target="_blank">
+                    <a href="mailto:hey@analytickit.com" target="_blank">
                         <LemonButton
                             icon={<IconMail />}
                             status="stealth"
@@ -125,7 +125,7 @@ export function HelpButton({
                         </LemonButton>
                     </a>
                     {!contactOnly && (
-                        <a href={`https://posthog.com/docs${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
+                        <a href={`https://analytickit.com/docs${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
                             <LemonButton
                                 icon={<IconArticle />}
                                 status="stealth"

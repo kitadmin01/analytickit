@@ -1,43 +1,43 @@
-import { ReaderModel } from '@maxmind/geoip2-node'
-import Piscina from '@posthog/piscina'
+import{ReaderModel}from'@maxmind/geoip2-node'
+import Piscina from '@analytickit/piscina'
 import * as Sentry from '@sentry/node'
-import { Server } from 'http'
-import { KafkaJSProtocolError } from 'kafkajs'
-import net, { AddressInfo } from 'net'
+import { Server}from 'http'
+import {KafkaJSProtocolError }from 'kafkajs'
+import net, { AddressInfo}from 'net'
 import * as schedule from 'node-schedule'
 
-import { defaultConfig } from '../config/config'
+import {defaultConfig }from '../config/config'
 import {
-    Hub,
-    JobQueueConsumerControl,
-    PluginScheduleControl,
-    PluginServerCapabilities,
-    PluginsServerConfig,
+Hub,
+JobQueueConsumerControl,
+PluginScheduleControl,
+PluginServerCapabilities,
+PluginsServerConfig,
 } from '../types'
-import { createHub } from '../utils/db/hub'
-import { killProcess } from '../utils/kill'
-import { captureEventLoopMetrics } from '../utils/metrics'
-import { cancelAllScheduledJobs } from '../utils/node-schedule'
-import { PubSub } from '../utils/pubsub'
-import { status } from '../utils/status'
-import { delay, getPiscinaStats, stalenessCheck } from '../utils/utils'
-import { KafkaQueue } from './ingestion-queues/kafka-queue'
-import { startQueues } from './ingestion-queues/queue'
-import { startJobQueueConsumer } from './job-queues/job-queue-consumer'
-import { createHttpServer } from './services/http-server'
-import { createMmdbServer, performMmdbStalenessCheck, prepareMmdb } from './services/mmdb'
-import { startPluginSchedules } from './services/schedule'
+import {createHub}from '../utils/db/hub'
+import {killProcess} from '../utils/kill'
+import {captureEventLoopMetrics}from '../utils/metrics'
+import {cancelAllScheduledJobs}from '../utils/node-schedule'
+import { PubSub}from '../utils/pubsub'
+import {status}from '../utils/status'
+import {delay, getPiscinaStats, stalenessCheck}from '../utils/utils'
+import {KafkaQueue}from './ingestion-queues/kafka-queue'
+import {startQueues }from './ingestion-queues/queue'
+import {startJobQueueConsumer}from './job-queues/job-queue-consumer'
+import {createHttpServer}from './services/http-server'
+import {createMmdbServer, performMmdbStalenessCheck, prepareMmdb}from './services/mmdb'
+import {startPluginSchedules}from './services/schedule'
 
-const { version } = require('../../package.json')
+const {version }= require('../../package.json')
 
 // TODO: refactor this into a class, removing the need for many different Servers
 export type ServerInstance = {
-    hub: Hub
-    piscina: Piscina
-    queue: KafkaQueue | null
-    mmdb?: ReaderModel
-    mmdbUpdateJob?: schedule.Job
-    stop: () => Promise<void>
+hub: Hub
+piscina: Piscina
+queue: KafkaQueue | null
+mmdb?: ReaderModel
+mmdbUpdateJob?: schedule.Job
+stop: () => Promise<void>
 }
 
 export async function startPluginsServer(
@@ -99,8 +99,8 @@ export async function startPluginsServer(
                           resolve()
                       }
                   })
-        )
-        if (piscina) {
+)
+if (piscina) {
             await stopPiscina(piscina)
         }
         await closeHub?.()
@@ -158,15 +158,15 @@ export async function startPluginsServer(
             serverInstance.mmdbUpdateJob = schedule.scheduleJob(
                 '0 */4 * * *',
                 async () => await performMmdbStalenessCheck(serverInstance)
-            )
-            mmdbServer = await createMmdbServer(serverInstance)
-            serverConfig.INTERNAL_MMDB_SERVER_PORT = (mmdbServer.address() as AddressInfo).port
-            hub.INTERNAL_MMDB_SERVER_PORT = serverConfig.INTERNAL_MMDB_SERVER_PORT
-        }
+)
+mmdbServer = await createMmdbServer(serverInstance)
+serverConfig.INTERNAL_MMDB_SERVER_PORT = (mmdbServer.address() as AddressInfo).port
+hub.INTERNAL_MMDB_SERVER_PORT = serverConfig.INTERNAL_MMDB_SERVER_PORT
+}
 
-        piscina = makePiscina(serverConfig)
+piscina = makePiscina(serverConfig)
 
-        if (hub.capabilities.pluginScheduledTasks) {
+if (hub.capabilities.pluginScheduledTasks) {
             pluginScheduleControl = await startPluginSchedules(hub, piscina)
         }
         if (hub.capabilities.ingestion || hub.capabilities.processPluginJobs) {
@@ -202,19 +202,19 @@ export async function startPluginsServer(
 
         if (hub.jobQueueManager) {
             const queueString = hub.jobQueueManager.getJobQueueTypesAsString()
-            await hub!.db!.redisSet('@posthog-plugin-server/enabled-job-queues', queueString)
+            await hub!.db!.redisSet('@analytickit-plugin-server/enabled-job-queues', queueString)
         }
 
         // every 5 minutes all ActionManager caches are reloaded for eventual consistency
         schedule.scheduleJob('*/5 * * * *', async () => {
             await piscina?.broadcastTask({ task: 'reloadAllActions' })
         })
-        // every 5 seconds set Redis keys @posthog-plugin-server/ping and @posthog-plugin-server/version
+        // every 5 seconds set Redis keys @analytickit-plugin-server/ping and @analytickit-plugin-server/version
         schedule.scheduleJob('*/5 * * * * *', async () => {
-            await hub!.db!.redisSet('@posthog-plugin-server/ping', new Date().toISOString(), 60, {
+            await hub!.db!.redisSet('@analytickit-plugin-server/ping', new Date().toISOString(), 60, {
                 jsonSerialize: false,
             })
-            await hub!.db!.redisSet('@posthog-plugin-server/version', version, undefined, { jsonSerialize: false })
+            await hub!.db!.redisSet('@analytickit-plugin-server/version', version, undefined, { jsonSerialize: false })
         })
         // every 10 seconds sends stuff to StatsD
         schedule.scheduleJob('*/10 * * * * *', () => {
@@ -267,12 +267,12 @@ export async function startPluginsServer(
                         {
                             extra,
                         }
-                    )
-                    console.log(
+)
+console.log(
                         `Plugin Server has not ingested events for over ${serverConfig.STALENESS_RESTART_SECONDS} seconds! Rebooting.`,
                         extra
-                    )
-                    hub?.statsd?.increment(`alerts.stale_plugin_server_restarted`)
+)
+hub?.statsd?.increment(`alerts.stale_plugin_server_restarted`)
 
                     killProcess()
                 }

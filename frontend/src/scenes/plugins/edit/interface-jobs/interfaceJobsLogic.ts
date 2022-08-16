@@ -1,19 +1,21 @@
-import type { FormInstance } from 'antd/lib/form/hooks/useForm.d'
-import { kea } from 'kea'
+importtype{FormInstance}from'antd/lib/form/hooks/useForm.d'
+import {kea}from 'kea'
 import api from 'lib/api'
-import type { interfaceJobsLogicType } from './interfaceJobsLogicType'
-import { pluginsLogic } from 'scenes/plugins/pluginsLogic'
-import { JobSpec } from '~/types'
-import { lemonToast } from 'lib/components/lemonToast'
+import type {interfaceJobsLogicType}from './interfaceJobsLogicType'
+import {pluginsLogic}from 'scenes/plugins/pluginsLogic'
+import {JobSpec} from '~/types'
+import {lemonToast }from 'lib/components/lemonToast'
 
 export const interfaceJobsLogic = kea<interfaceJobsLogicType>({
-    props: {} as {
-        jobName: string
-        pluginConfigId: number
-        pluginId: number
-        jobSpecPayload: JobSpec['payload']
-    },
-    key: (props) => {
+props: {
+
+}as {
+jobName: string
+pluginConfigId: number
+pluginId: number
+jobSpecPayload: JobSpec['payload']
+},
+key:(props) => {
         return `${props.pluginId}_${props.jobName}`
     },
     path: (key) => ['scenes', 'plugins', 'edit', 'interface-jobs', 'interfaceJobsLogic', key],

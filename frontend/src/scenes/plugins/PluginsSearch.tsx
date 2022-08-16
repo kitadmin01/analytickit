@@ -1,7 +1,7 @@
 import React from 'react'
 import { useActions, useValues } from 'kea'
 import { pluginsLogic } from 'scenes/plugins/pluginsLogic'
-import { LemonInput } from '@posthog/lemon-ui'
+import { LemonInput } from '@analytickit/lemon-ui'
 
 export function PluginsSearch(): JSX.Element {
     const { searchTerm, rearranging } = useValues(pluginsLogic)

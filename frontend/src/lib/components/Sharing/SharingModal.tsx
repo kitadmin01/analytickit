@@ -3,7 +3,7 @@ import { InsightModel, InsightShortId, InsightType } from '~/types'
 import { useActions, useValues } from 'kea'
 import { sharingLogic } from './sharingLogic'
 import { Skeleton } from 'antd'
-import { LemonButton, LemonDivider, LemonSwitch } from '@posthog/lemon-ui'
+import { LemonButton, LemonDivider, LemonSwitch } from '@analytickit/lemon-ui'
 import { copyToClipboard } from 'lib/utils'
 import { IconGlobeLock, IconInfo, IconLink, IconLockLemon, IconUnfoldLess, IconUnfoldMore } from '../icons'
 import { CodeSnippet, Language } from 'scenes/ingestion/frameworks/CodeSnippet'
@@ -157,10 +157,10 @@ export function SharingModal({
                                                 label={
                                                     <div className="flex">
                                                         <div className="mr-2" style={{ lineHeight: '1.5rem' }}>
-                                                            Show PostHog branding
+                                                            Show analytickit branding
                                                         </div>
                                                         {!whitelabelAvailable ? (
-                                                            <Tooltip title="Upgrade to PostHog Scale to hide PostHog branding">
+                                                            <Tooltip title="Upgrade to analytickit Scale to hide analytickit branding">
                                                                 <IconLockLemon />
                                                             </Tooltip>
                                                         ) : null}

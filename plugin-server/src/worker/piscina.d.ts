@@ -1,4 +1,4 @@
-import Piscina from '@posthog/piscina'
+importPiscinafrom'@analytickit/piscina'
 
-import { PluginsServerConfig } from '../types'
-export const makePiscina: (config: PluginsServerConfig) => Piscina
+import {PluginsServerConfig }from '../types'
+export const makePiscina:(config: PluginsServerConfig) => Piscina

@@ -6,7 +6,7 @@ import { SceneExport } from 'scenes/sceneTypes'
 import { billingLogic } from './billingLogic'
 import { BillingSubscribedTheme } from './BillingSubscribed'
 import { compactNumber } from 'lib/utils'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 
 export const scene: SceneExport = {
     component: BillingLocked,
@@ -22,8 +22,8 @@ export function BillingLocked(): JSX.Element | null {
             </div>
             <p>
                 You've used <strong>{compactNumber(billing.current_usage)}</strong> events this month. To continue using
-                PostHog, you'll need to enter a credit card. See{' '}
-                <a href="https://posthog.com/pricing" target="_blank">
+                analytickit, you'll need to enter a credit card. See{' '}
+                <a href="https://analytickit.com/pricing" target="_blank">
                     our website for pricing information.
                 </a>
                 <br />

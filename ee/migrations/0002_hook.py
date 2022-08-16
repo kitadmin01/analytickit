@@ -4,13 +4,12 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import posthog.models.utils
+import analytickit.models.utils
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("posthog", "0082_personalapikey"),
+        ("analytickit", "0082_personalapikey"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("ee", "0001_initial"),
     ]
@@ -26,7 +25,7 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.CharField(
-                        default=posthog.models.utils.generate_random_token,
+                        default=analytickit.models.utils.generate_random_token,
                         max_length=50,
                         primary_key=True,
                         serialize=False,
@@ -36,7 +35,7 @@ class Migration(migrations.Migration):
                 (
                     "team",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="rest_hooks", to="posthog.Team"
+                        on_delete=django.db.models.deletion.CASCADE, related_name="rest_hooks", to="analytickit.Team"
                     ),
                 ),
                 (
@@ -48,6 +47,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False,},
+            options={"abstract": False, },
         ),
     ]

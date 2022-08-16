@@ -1,7 +1,7 @@
-import { expectLogic } from 'kea-test-utils'
-import { dayjs } from 'lib/dayjs'
-import { dateMapping } from 'lib/utils'
-import { dateFilterLogic, DateFilterLogicPropsType } from './dateFilterLogic'
+import{expectLogic}from'kea-test-utils'
+import {dayjs}from 'lib/dayjs'
+import {dateMapping}from 'lib/utils'
+import {dateFilterLogic, DateFilterLogicPropsType }from './dateFilterLogic'
 
 describe('dateFilterLogic', () => {
     let props: DateFilterLogicPropsType

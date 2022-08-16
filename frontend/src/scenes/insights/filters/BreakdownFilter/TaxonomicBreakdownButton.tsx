@@ -10,7 +10,7 @@ import { PropertyKeyInfo } from 'lib/components/PropertyKeyInfo'
 import { useValues } from 'kea'
 import { groupsModel } from '~/models/groupsModel'
 import { insightLogic } from 'scenes/insights/insightLogic'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import { IconPlusMini } from 'lib/components/icons'
 
 export interface TaxonomicBreakdownButtonProps {

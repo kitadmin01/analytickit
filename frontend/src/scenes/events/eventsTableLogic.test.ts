@@ -1,13 +1,13 @@
-import { eventsTableLogic } from 'scenes/events/eventsTableLogic'
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { router } from 'kea-router'
-import { lemonToast } from 'lib/components/lemonToast'
-import { EmptyPropertyFilter, EventType, PropertyFilter, PropertyOperator } from '~/types'
-import { urls } from 'scenes/urls'
+import{eventsTableLogic}from'scenes/events/eventsTableLogic'
+import {expectLogic }from 'kea-test-utils'
+import {initKeaTests} from '~/test/init'
+import {router}from 'kea-router'
+import { lemonToast}from 'lib/components/lemonToast'
+import {EmptyPropertyFilter, EventType, PropertyFilter, PropertyOperator }from '~/types'
+import { urls}from 'scenes/urls'
 import api from 'lib/api'
-import { fromParamsGivenUrl } from 'lib/utils'
-import { useMocks } from '~/mocks/jest'
+import { fromParamsGivenUrl}from 'lib/utils'
+import {useMocks}from '~/mocks/jest'
 
 const errorToastSpy = jest.spyOn(lemonToast, 'error')
 

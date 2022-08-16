@@ -25,7 +25,7 @@ import {
 import './FeatureFlagInstructions.scss'
 
 const UTM_TAGS = '?utm_medium=in-product&utm_campaign=feature-flag'
-const DOC_BASE_URL = 'https://posthog.com/docs/'
+const DOC_BASE_URL = 'https://analytickit.com/docs/'
 const FF_ANCHOR = '#feature-flags'
 
 const OPTIONS = [

@@ -86,7 +86,7 @@ export const keyMapping: KeyMappingInterface = {
         $lib: {
             label: 'Library',
             description: 'What library was used to send the event.',
-            examples: ['web', 'posthog-ios'],
+            examples: ['web', 'analytickit-ios'],
         },
         $lib_version: {
             label: 'Library Version',
@@ -96,7 +96,7 @@ export const keyMapping: KeyMappingInterface = {
         $initial_referrer: {
             label: 'Initial Referrer URL',
             description: 'URL of where the user initially came from (first-touch).',
-            examples: ['https://google.com/search?q=posthog&rlz=1C...'],
+            examples: ['https://google.com/search?q=analytickit&rlz=1C...'],
         },
         $initial_referring_domain: {
             label: 'Initial Referring Domain',
@@ -106,7 +106,7 @@ export const keyMapping: KeyMappingInterface = {
         $referrer: {
             label: 'Referrer URL',
             description: 'URL of where the user came from most recently (last-touch).',
-            examples: ['https://google.com/search?q=posthog&rlz=1C...'],
+            examples: ['https://google.com/search?q=analytickit&rlz=1C...'],
         },
         $referring_domain: {
             label: 'Referring Domain',
@@ -118,7 +118,7 @@ export const keyMapping: KeyMappingInterface = {
             description: (
                 <span>
                     This variable will be set to the distinct ID if you've called{' '}
-                    <pre style={{ display: 'inline' }}>posthog.identify('distinct id')</pre>. If the user is anonymous,
+                    <pre style={{ display: 'inline' }}>analytickit.identify('distinct id')</pre>. If the user is anonymous,
                     it'll be empty.
                 </span>
             ),
@@ -148,7 +148,7 @@ export const keyMapping: KeyMappingInterface = {
             description: (
                 <span>
                     Distinct ID either given by calling{' '}
-                    <pre style={{ display: 'inline' }}>posthog.identify('distinct id')</pre> or generated automatically
+                    <pre style={{ display: 'inline' }}>analytickit.identify('distinct id')</pre> or generated automatically
                     if the user is anonymous.
                 </span>
             ),
@@ -531,8 +531,8 @@ export const keyMapping: KeyMappingInterface = {
             label: 'Session duration',
             description: (
                 <span>
-                    The duration of the session being tracked. Learn more about how PostHog tracks sessions in{' '}
-                    <a href="https://posthog.com/docs/user-guides/sessions">our documentation.</a>
+                    The duration of the session being tracked. Learn more about how analytickit tracks sessions in{' '}
+                    <a href="https://analytickit.com/docs/user-guides/sessions">our documentation.</a>
                     <br /> <br />
                     Note, if the duration is formatted as a single number (not 'HH:MM:SS'), it's in seconds.
                 </span>
@@ -550,7 +550,7 @@ export const keyMapping: KeyMappingInterface = {
         $app_namespace: {
             label: 'App Namespace',
             description: 'The namespace of the app as identified in the app store',
-            examples: ['com.posthog.app'],
+            examples: ['com.analytickit.app'],
         },
         $app_version: {
             label: 'App Version',
@@ -617,16 +617,16 @@ export const keyMapping: KeyMappingInterface = {
                     Filter on the <code>href</code> attribute of the element.
                 </span>
             ),
-            examples: ['https://posthog.com/about'],
+            examples: ['https://analytickit.com/about'],
         },
     },
 }
 
 export const keyMappingKeys = Object.keys(keyMapping.event)
 
-export function isPostHogProp(key: string): boolean {
+export function isanalytickitProp(key: string): boolean {
     /*
-    Returns whether a given property is a PostHog-defined property. If the property is custom-defined, 
+    Returns whether a given property is a analytickit-defined property. If the property is custom-defined,
         function will return false.
     */
     if (Object.keys(keyMapping.event).includes(key) || Object.keys(keyMapping.element).includes(key)) {

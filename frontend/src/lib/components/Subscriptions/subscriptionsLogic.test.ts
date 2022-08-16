@@ -1,30 +1,31 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { useMocks } from '~/mocks/jest'
-import { subscriptionsLogic } from './subscriptionsLogic'
-import { InsightModel, InsightShortId, InsightType, PropertyOperator, SubscriptionType } from '~/types'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {useMocks} from '~/mocks/jest'
+import {subscriptionsLogic}from './subscriptionsLogic'
+import {InsightModel, InsightShortId, InsightType, PropertyOperator, SubscriptionType}from '~/types'
 
 const Insight1 = '1' as InsightShortId
 const Insight2 = '2' as InsightShortId
 
 export const fixtureSubscriptionResponse = (id: number, args: Partial<SubscriptionType> = {}): SubscriptionType =>
-    ({
-        id,
-        title: 'My example subscription',
-        target_type: 'email',
-        target_value: 'ben@posthog.com,geoff@other-company.com',
-        frequency: 'monthly',
-        interval: 2,
-        start_date: '2022-01-01T00:09:00',
-        byweekday: ['wednesday'],
-        bysetpos: 1,
-        ...args,
-    } as SubscriptionType)
+({
+id,
+title: 'My example subscription',
+target_type: 'email',
+target_value: 'ben@analytickit.com,geoff@other-company.com',
+frequency: 'monthly',
+interval: 2,
+start_date: '2022-01-01T00:09:00',
+byweekday: ['wednesday'],
+bysetpos: 1,
+...args,
+}as SubscriptionType)
 
 const API_FILTERS = {
-    insight: InsightType.TRENDS as InsightType,
-    events: [{ id: 3 }],
-    properties: [{ value: 'a', operator: PropertyOperator.Exact, key: 'a', type: 'a' }],
+insight: InsightType.TRENDS as InsightType,
+events: [{id: 3}],
+properties: [{value: 'a', operator: PropertyOperator.Exact, key: 'a', type: 'a'
+}],
 }
 function fixtureInsightResponse(id: number, data?: Partial<InsightModel>): Partial<InsightModel> {
     return {

@@ -66,7 +66,7 @@ function EmailUnavailable(): JSX.Element {
                 <ul>
                     <li>
                         Password reset is unavailable because email service is not configured.{' '}
-                        <a href="https://posthog.com/docs/self-host/configure/email?utm_medium=in-product&utm_campaign=password-reset">
+                        <a href="https://analytickit.com/docs/self-host/configure/email?utm_medium=in-product&utm_campaign=password-reset">
                             Read the docs
                         </a>{' '}
                         on how to set this up.

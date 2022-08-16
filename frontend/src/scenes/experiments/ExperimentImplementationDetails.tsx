@@ -37,15 +37,15 @@ export function ExperimentImplementationDetails({ experiment }: ExperimentImplem
             </Row>
             <b>Implement your experiment in code</b>
             <CodeSnippet language={Language.JavaScript} wrap>
-                {`if (posthog.getFeatureFlag('${experiment?.feature_flag_key ?? ''}') === '${currentVariant}') {
+                {`if (analytickit.getFeatureFlag('${experiment?.feature_flag_key ?? ''}') === '${currentVariant}') {
     // where '${currentVariant}' is the variant, run your code here
 }`}
             </CodeSnippet>
             <b>Test that it works</b>
             <CodeSnippet language={Language.JavaScript}>
-                {`posthog.feature_flags.override({'${experiment?.feature_flag_key}': '${currentVariant}'})`}
+                {`analytickit.feature_flags.override({'${experiment?.feature_flag_key}': '${currentVariant}'})`}
             </CodeSnippet>
-            <a target="_blank" rel="noopener noreferrer" href="https://posthog.com/docs/user-guides/feature-flags">
+            <a target="_blank" rel="noopener noreferrer" href="https://analytickit.com/docs/user-guides/feature-flags">
                 <Row align="middle">
                     Experiment implementation guide
                     <IconOpenInNew className="ml-2" />

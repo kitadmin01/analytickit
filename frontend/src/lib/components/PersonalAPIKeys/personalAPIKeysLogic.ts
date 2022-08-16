@@ -1,13 +1,13 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { PersonalAPIKeyType } from '~/types'
-import type { personalAPIKeysLogicType } from './personalAPIKeysLogicType'
-import { copyToClipboard } from 'lib/utils'
-import { lemonToast } from '../lemonToast'
+import {PersonalAPIKeyType}from '~/types'
+import type {personalAPIKeysLogicType}from './personalAPIKeysLogicType'
+import {copyToClipboard}from 'lib/utils'
+import {lemonToast} from '../lemonToast'
 
 export const personalAPIKeysLogic = kea<personalAPIKeysLogicType>({
-    path: ['lib', 'components', 'PersonalAPIKeys', 'personalAPIKeysLogic'],
-    loaders: ({ values }) => ({
+path: ['lib', 'components', 'PersonalAPIKeys', 'personalAPIKeysLogic'],
+loaders:({ values }) => ({
         keys: [
             [] as PersonalAPIKeyType[],
             {

@@ -1,25 +1,25 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { toParams } from 'lib/utils'
-import { SavedFunnel, InsightType } from '~/types'
-import type { funnelsModelType } from './funnelsModelType'
-import { teamLogic } from '../scenes/teamLogic'
+import {toParams}from 'lib/utils'
+import {SavedFunnel, InsightType}from '~/types'
+import type {funnelsModelType }from './funnelsModelType'
+import { teamLogic}from '../scenes/teamLogic'
 
 const parseSavedFunnel = (result: Record<string, any>): SavedFunnel => {
-    return {
-        filters: result.filters,
-        type: InsightType.FUNNELS,
-        id: result.id,
-        createdAt: result.created_at,
-        name: result.name,
-        saved: result.saved,
-        created_by: result.created_by,
-    }
+return {
+filters: result.filters,
+type: InsightType.FUNNELS,
+id: result.id,
+createdAt: result.created_at,
+name: result.name,
+saved: result.saved,
+created_by: result.created_by,
+}
 }
 
 export const funnelsModel = kea<funnelsModelType>({
-    path: ['models', 'funnelsModel'],
-    loaders: ({ values, actions }) => ({
+path: ['models', 'funnelsModel'],
+loaders: ({ values, actions }) => ({
         funnels: {
             __default: [] as SavedFunnel[],
             loadFunnels: async () => {
@@ -30,9 +30,9 @@ export const funnelsModel = kea<funnelsModelType>({
                         limit: 5,
                         insight: InsightType.FUNNELS,
                     })}`
-                )
-                const results = response.results.map((result: Record<string, any>) => parseSavedFunnel(result))
-                actions.setNext(response.next)
+)
+const results = response.results.map((result: Record<string, any>) => parseSavedFunnel(result))
+actions.setNext(response.next)
                 return results
             },
             deleteFunnel: async (funnelId: number) => {

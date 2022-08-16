@@ -1,36 +1,36 @@
-import { clamp, delay } from 'lib/utils'
+import{clamp, delay}from 'lib/utils'
 import api from 'lib/api'
 import {
-    FilterType,
-    FunnelStepRangeEntityFilter,
-    FunnelRequestParams,
-    FunnelResult,
-    FunnelStep,
-    FunnelStepWithNestedBreakdown,
-    BreakdownKeyType,
-    FunnelsTimeConversionBins,
-    FunnelAPIResponse,
-    FunnelStepReference,
-    TeamType,
-    FlattenedFunnelStepByBreakdown,
-    FunnelConversionWindow,
-} from '~/types'
-import { dayjs } from 'lib/dayjs'
-import { combineUrl } from 'kea-router'
+FilterType,
+FunnelStepRangeEntityFilter,
+FunnelRequestParams,
+FunnelResult,
+FunnelStep,
+FunnelStepWithNestedBreakdown,
+BreakdownKeyType,
+FunnelsTimeConversionBins,
+FunnelAPIResponse,
+FunnelStepReference,
+TeamType,
+FlattenedFunnelStepByBreakdown,
+FunnelConversionWindow,
+}from '~/types'
+import {dayjs}from 'lib/dayjs'
+import {combineUrl}from 'kea-router'
 
 const EMPTY_BREAKDOWN_KEY = '__empty_string__'
 const EMPTY_BREAKDOWN_VALUE = '(empty string)'
 export const EMPTY_BREAKDOWN_VALUES = {
-    rowKey: EMPTY_BREAKDOWN_KEY,
-    breakdown: [EMPTY_BREAKDOWN_KEY], // unique key not to be used by backend in calculating breakdowns
-    breakdown_value: [EMPTY_BREAKDOWN_VALUE],
-    isEmpty: true,
+rowKey: EMPTY_BREAKDOWN_KEY,
+breakdown: [EMPTY_BREAKDOWN_KEY], // unique key not to be used by backend in calculating breakdowns
+breakdown_value: [EMPTY_BREAKDOWN_VALUE],
+isEmpty: true,
 }
 
-export function getReferenceStep<T>(steps: T[], stepReference: FunnelStepReference, index?: number): T {
-    // Step to serve as denominator of percentage calculations.
-    // step[0] is full-funnel conversion, previous is relative.
-    if (!index || index <= 0) {
+export function getReferenceStep < T>(steps: T[], stepReference: FunnelStepReference, index?: number): T {
+// Step to serve as denominator of percentage calculations.
+// step[0] is full-funnel conversion, previous is relative.
+if (!index || index <= 0) {
         return steps[0]
     }
     switch (stepReference) {
@@ -51,7 +51,7 @@ export function getLastFilledStep(steps: FunnelStep[], index?: number): FunnelSt
             .slice(0, firstIndex)
             .reverse()
             .find((s) => s.count > 0) || steps[0]
-    )
+)
 }
 
 export function getBreakdownMaxIndex(breakdown?: FunnelStep[]): number | undefined {
@@ -95,17 +95,17 @@ export function aggregateBreakdownResult(
                     },
                 ],
                 []
-            )
-            .sort((a, b) => b.count - a.count)
+)
+.sort((a, b) => b.count - a.count)
             .reduce(
                 (allEntries, breakdown, order) => ({
                     ...allEntries,
                     [breakdown.breakdown_value.join('_')]: { ...breakdown, order },
                 }),
                 {}
-            )
+)
 
-        return breakdownList[0].map((step, i) => ({
+return breakdownList[0].map((step, i) => ({
             ...step,
             count: breakdownList.reduce((total, breakdownSteps) => total + breakdownSteps[i].count, 0),
             breakdown: breakdownProperty,
@@ -121,8 +121,8 @@ export function aggregateBreakdownResult(
                         },
                     ],
                     []
-                )
-                .sort((a, b) => a.order - b.order),
+)
+.sort((a, b) => a.order - b.order),
             average_conversion_time: null,
             people: [],
         }))
@@ -143,7 +143,7 @@ export function isValidBreakdownParameter(
         (Array.isArray(breakdowns) && breakdowns.length > 0) ||
         ['string', 'null', 'undefined', 'number'].includes(typeof breakdown) ||
         Array.isArray(breakdown)
-    )
+)
 }
 
 export function getVisibilityIndex(step: FunnelStep, key?: BreakdownKeyType): string {
@@ -166,9 +166,9 @@ export async function pollFunnel<T = FunnelStep[] | FunnelsTimeConversionBins>(
     let result = await api.create(
         `api/projects/${teamId}/insights/funnel/${refresh ? '?refresh=true' : ''}`,
         bodyParams
-    )
-    const start = window.performance.now()
-    while (result.result?.loading && (window.performance.now() - start) / 1000 < SECONDS_TO_POLL) {
+)
+const start = window.performance.now()
+while(result.result?.loading && (window.performance.now() - start) / 1000 < SECONDS_TO_POLL) {
         await delay(1000)
         result = await api.create(`api/projects/${teamId}/insights/funnel`, bodyParams)
     }

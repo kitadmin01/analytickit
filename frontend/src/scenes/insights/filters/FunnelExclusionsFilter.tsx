@@ -9,7 +9,7 @@ import { ANTD_TOOLTIP_PLACEMENTS } from 'lib/utils'
 import { FunnelStepRangeEntityFilter, ActionFilter as ActionFilterType, EntityTypes } from '~/types'
 import { insightLogic } from 'scenes/insights/insightLogic'
 import { MathAvailability } from 'scenes/insights/filters/ActionFilter/ActionFilterRow/ActionFilterRow'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import { IconDelete } from 'lib/components/icons'
 
 function ExclusionRowSuffix({

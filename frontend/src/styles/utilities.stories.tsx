@@ -1,4 +1,4 @@
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import React from 'react'
 
 export default {

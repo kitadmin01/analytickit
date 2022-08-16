@@ -41,7 +41,7 @@ const Template = (
                               createMockSubscription(),
                               createMockSubscription({
                                   title: 'Weekly C-level report',
-                                  target_value: 'james@posthog.com',
+                                  target_value: 'james@analytickit.com',
                                   frequency: 'weekly',
                                   interval: 1,
                               }),

@@ -1,15 +1,15 @@
-import { LogicWrapper } from 'kea'
-import { ActionType, CohortType, EventDefinition, PersonProperty, PropertyDefinition } from '~/types'
+import{LogicWrapper}from'kea'
+import {ActionType, CohortType, EventDefinition, PersonProperty, PropertyDefinition}from '~/types'
 import Fuse from 'fuse.js'
 
 export interface SimpleOption {
-    name: string
+name: string
 }
 
 export interface TaxonomicFilterProps {
-    groupType?: TaxonomicFilterGroupType
-    value?: TaxonomicFilterValue
-    onChange?: (group: TaxonomicFilterGroup, value: TaxonomicFilterValue, item: any) => void
+groupType?: TaxonomicFilterGroupType
+value?: TaxonomicFilterValue
+onChange?:(group: TaxonomicFilterGroup, value: TaxonomicFilterValue, item: any) => void
     onClose?: () => void
     taxonomicGroupTypes: TaxonomicFilterGroupType[]
     taxonomicFilterLogicKey?: string

@@ -1,8 +1,8 @@
-import { handleLoginRedirect, loginLogic } from 'scenes/authentication/loginLogic'
-import { initKeaTests } from '~/test/init'
-import { router } from 'kea-router'
-import { initKea } from '~/initKea'
-import { testUtilsPlugin } from 'kea-test-utils'
+import{handleLoginRedirect, loginLogic}from 'scenes/authentication/loginLogic'
+import {initKeaTests}from '~/test/init'
+import {router}from 'kea-router'
+import {initKea}from '~/initKea'
+import {testUtilsPlugin}from 'kea-test-utils'
 
 describe('loginLogic', () => {
     describe('parseLoginRedirectURL', () => {

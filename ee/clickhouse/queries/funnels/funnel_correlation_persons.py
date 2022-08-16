@@ -4,16 +4,16 @@ from django.db.models.query import QuerySet
 from rest_framework.exceptions import ValidationError
 
 from ee.clickhouse.queries.funnels.funnel_correlation import FunnelCorrelation
-from posthog.constants import FUNNEL_CORRELATION_PERSON_LIMIT, FunnelCorrelationType, PropertyOperatorType
-from posthog.models import Person
-from posthog.models.entity import Entity
-from posthog.models.filters.filter import Filter
-from posthog.models.filters.mixins.utils import cached_property
-from posthog.models.group import Group
-from posthog.models.team import Team
-from posthog.models.utils import PersonPropertiesMode
-from posthog.queries.actor_base_query import ActorBaseQuery, SerializedGroup, SerializedPerson
-from posthog.queries.funnels.funnel_event_query import FunnelEventQuery
+from analytickit.constants import FUNNEL_CORRELATION_PERSON_LIMIT, FunnelCorrelationType, PropertyOperatorType
+from analytickit.models import Person
+from analytickit.models.entity import Entity
+from analytickit.models.filters.filter import Filter
+from analytickit.models.filters.mixins.utils import cached_property
+from analytickit.models.group import Group
+from analytickit.models.team import Team
+from analytickit.models.utils import PersonPropertiesMode
+from analytickit.queries.actor_base_query import ActorBaseQuery, SerializedGroup, SerializedPerson
+from analytickit.queries.funnels.funnel_event_query import FunnelEventQuery
 
 
 class FunnelCorrelationActors(ActorBaseQuery):
@@ -42,7 +42,7 @@ class FunnelCorrelationActors(ActorBaseQuery):
             )
 
     def get_actors(
-        self,
+            self,
     ) -> Tuple[Union[QuerySet[Person], QuerySet[Group]], Union[List[SerializedGroup], List[SerializedPerson]]]:
         if self._filter.correlation_type == FunnelCorrelationType.PROPERTIES:
             return _FunnelPropertyCorrelationActors(self._filter, self._team, self._base_uri).get_actors()
@@ -62,7 +62,6 @@ class _FunnelEventsCorrelationActors(ActorBaseQuery):
         return self._filter.aggregation_group_type_index
 
     def actor_query(self, limit_actors: Optional[bool] = True):
-
         if not self._filter.correlation_person_entity:
             raise ValidationError("No entity for persons specified")
 
@@ -82,9 +81,9 @@ class _FunnelEventsCorrelationActors(ActorBaseQuery):
             if self._team.actor_on_events_querying_enabled
             else PersonPropertiesMode.USING_PERSON_PROPERTIES_COLUMN,
             person_id_joined_alias=f"""{
-                event_query.DISTINCT_ID_TABLE_ALIAS
-                if not self._team.actor_on_events_querying_enabled
-                else event_query.EVENT_TABLE_ALIAS}.person_id""",
+            event_query.DISTINCT_ID_TABLE_ALIAS
+            if not self._team.actor_on_events_querying_enabled
+            else event_query.EVENT_TABLE_ALIAS}.person_id""",
         )
 
         conversion_filter = (

@@ -1,9 +1,9 @@
-import Piscina from '@posthog/piscina'
+importPiscinafrom'@analytickit/piscina'
 
-import { KafkaQueue } from '../src/main/ingestion-queues/kafka-queue'
-import { startQueues } from '../src/main/ingestion-queues/queue'
-import { Hub, LogLevel } from '../src/types'
-import { createHub } from '../src/utils/db/hub'
+import {KafkaQueue }from '../src/main/ingestion-queues/kafka-queue'
+import {startQueues}from '../src/main/ingestion-queues/queue'
+import {Hub, LogLevel}from '../src/types'
+import {createHub}from '../src/utils/db/hub'
 
 jest.setTimeout(60000) // 60 sec timeout
 jest.mock('../src/main/ingestion-queues/kafka-queue')

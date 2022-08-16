@@ -20,7 +20,7 @@ interface ToastOptionsWithButton extends ToastOptions {
 export const GET_HELP_BUTTON: ToastButton = {
     label: 'Get help',
     action: () => {
-        window.open('https://posthog.com/support?utm_medium=in-product&utm_campaign=error-toast', '_blank')
+        window.open('https://analytickit.com/support?utm_medium=in-product&utm_campaign=error-toast', '_blank')
     },
 }
 

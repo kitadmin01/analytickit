@@ -1,5 +1,5 @@
 import React from 'react'
-import { LemonButton, LemonDivider, LemonInput, LemonTag } from '@posthog/lemon-ui'
+import { LemonButton, LemonDivider, LemonInput, LemonTag } from '@analytickit/lemon-ui'
 import { useActions, useValues } from 'kea'
 import { PropertyKeyInfo } from 'lib/components/PropertyKeyInfo'
 import { cohortsModel } from '~/models/cohortsModel'

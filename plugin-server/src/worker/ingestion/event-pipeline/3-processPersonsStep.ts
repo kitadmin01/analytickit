@@ -1,10 +1,10 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
 
-import { normalizeEvent } from '../../../utils/event'
-import { LazyPersonContainer } from '../lazy-person-container'
-import { updatePersonState } from '../person-state'
-import { parseEventTimestamp } from '../timestamps'
-import { EventPipelineRunner, StepResult } from './runner'
+import {normalizeEvent }from '../../../utils/event'
+import {LazyPersonContainer }from '../lazy-person-container'
+import {updatePersonState}from '../person-state'
+import {parseEventTimestamp}from '../timestamps'
+import {EventPipelineRunner, StepResult}from './runner'
 
 export async function processPersonsStep(
     runner: EventPipelineRunner,
@@ -23,7 +23,7 @@ export async function processPersonsStep(
         runner.hub.statsd,
         runner.hub.personManager,
         personContainer
-    )
+)
 
-    return runner.nextStep('prepareEventStep', event, newPersonContainer)
+return runner.nextStep('prepareEventStep', event, newPersonContainer)
 }

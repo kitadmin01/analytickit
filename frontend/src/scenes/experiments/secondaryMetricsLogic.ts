@@ -1,44 +1,44 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { teamLogic } from 'scenes/teamLogic'
+import {teamLogic}from 'scenes/teamLogic'
 import {
-    ChartDisplayType,
-    Experiment,
-    FilterType,
-    FunnelVizType,
-    InsightModel,
-    InsightShortId,
-    InsightType,
-    SecondaryExperimentMetric,
-} from '~/types'
-import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
-import { FunnelLayout } from 'lib/constants'
-import { funnelLogic } from 'scenes/funnels/funnelLogic'
-import { trendsLogic } from 'scenes/trends/trendsLogic'
+ChartDisplayType,
+Experiment,
+FilterType,
+FunnelVizType,
+InsightModel,
+InsightShortId,
+InsightType,
+SecondaryExperimentMetric,
+}from '~/types'
+import {cleanFilters}from 'scenes/insights/utils/cleanFilters'
+import {FunnelLayout}from 'lib/constants'
+import {funnelLogic} from 'scenes/funnels/funnelLogic'
+import {trendsLogic}from 'scenes/trends/trendsLogic'
 
-import type { secondaryMetricsLogicType } from './secondaryMetricsLogicType'
-import { dayjs } from 'lib/dayjs'
+import type {secondaryMetricsLogicType}from './secondaryMetricsLogicType'
+import {dayjs}from 'lib/dayjs'
 
 const DEFAULT_DURATION = 14
 const BASIC_TRENDS_INSIGHT = {
-    name: '',
-    filters: {
-        insight: InsightType.TRENDS,
-        events: [{ id: '$pageview', name: '$pageview', type: 'events', order: 0 }],
-    },
+name: '',
+filters: {
+insight: InsightType.TRENDS,
+events: [{id: '$pageview', name: '$pageview', type: 'events', order: 0}],
+},
 }
 
 const BASIC_FUNNELS_INSIGHT = {
-    name: '',
-    filters: {
-        insight: InsightType.FUNNELS,
-        events: [{ id: '$pageview', name: '$pageview', type: 'events', order: 0 }],
-        layout: FunnelLayout.horizontal,
-    },
+name: '',
+filters: {
+insight: InsightType.FUNNELS,
+events: [{id: '$pageview', name: '$pageview', type: 'events', order: 0 }],
+layout: FunnelLayout.horizontal,
+},
 }
 
 export interface SecondaryMetricsProps {
-    onMetricsChange: (metrics: SecondaryExperimentMetric[]) => void
+onMetricsChange: (metrics: SecondaryExperimentMetric[]) => void
     initialMetrics: SecondaryExperimentMetric[]
 }
 
@@ -150,8 +150,8 @@ export const secondaryMetricsLogic = kea<secondaryMetricsLogicType>({
             const createdInsight: InsightModel = await api.create(
                 `api/projects/${teamLogic.values.currentTeamId}/insights`,
                 newInsight
-            )
-            actions.setPreviewInsightId(createdInsight.short_id)
+)
+actions.setPreviewInsightId(createdInsight.short_id)
         },
         setFilters: ({ filters }) => {
             if (filters.insight === InsightType.FUNNELS) {

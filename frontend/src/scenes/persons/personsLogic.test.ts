@@ -1,9 +1,9 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { personsLogic } from './personsLogic'
-import { router } from 'kea-router'
-import { PropertyOperator } from '~/types'
-import { useMocks } from '~/mocks/jest'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {personsLogic} from './personsLogic'
+import {router }from 'kea-router'
+import {PropertyOperator} from '~/types'
+import {useMocks }from '~/mocks/jest'
 import api from 'lib/api'
 
 describe('personsLogic', () => {

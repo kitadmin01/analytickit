@@ -1,9 +1,9 @@
-import { expectLogic } from 'kea-test-utils'
-import { pathsLogic } from 'scenes/paths/pathsLogic'
-import { insightLogic } from 'scenes/insights/insightLogic'
-import { InsightShortId, InsightType } from '~/types'
-import { useMocks } from '~/mocks/jest'
-import { initKeaTests } from '~/test/init'
+import{expectLogic}from'kea-test-utils'
+import {pathsLogic}from 'scenes/paths/pathsLogic'
+import {insightLogic} from 'scenes/insights/insightLogic'
+import {InsightShortId, InsightType}from '~/types'
+import {useMocks}from '~/mocks/jest'
+import {initKeaTests}from '~/test/init'
 
 jest.mock('lib/api')
 

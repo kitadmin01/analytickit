@@ -1,61 +1,61 @@
-import { isBreakpoint, kea } from 'kea'
+import{isBreakpoint, kea}from 'kea'
 import api from 'lib/api'
-import { dashboardsModel } from '~/models/dashboardsModel'
-import { router } from 'kea-router'
-import { clearDOMTextSelection, isUserLoggedIn, toParams } from 'lib/utils'
-import { insightsModel } from '~/models/insightsModel'
-import { DashboardPrivilegeLevel, OrganizationMembershipLevel } from 'lib/constants'
-import { DashboardEventSource, eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import {dashboardsModel} from '~/models/dashboardsModel'
+import {router}from 'kea-router'
+import { clearDOMTextSelection, isUserLoggedIn, toParams}from 'lib/utils'
+import {insightsModel}from '~/models/insightsModel'
+import {DashboardPrivilegeLevel, OrganizationMembershipLevel}from 'lib/constants'
+import {DashboardEventSource, eventUsageLogic}from 'lib/utils/eventUsageLogic'
 import {
-    AnyPropertyFilter,
-    Breadcrumb,
-    ChartDisplayType,
-    DashboardLayoutSize,
-    DashboardMode,
-    DashboardPlacement,
-    DashboardType,
-    FilterType,
-    InsightModel,
-    InsightShortId,
-    InsightType,
-} from '~/types'
-import type { dashboardLogicType } from './dashboardLogicType'
-import { Layout, Layouts } from 'react-grid-layout'
-import { insightLogic } from 'scenes/insights/insightLogic'
-import { teamLogic } from '../teamLogic'
-import { urls } from 'scenes/urls'
-import { userLogic } from 'scenes/userLogic'
-import { mergeWithDashboardTile } from 'scenes/insights/utils/dashboardTiles'
-import { dayjs, now } from 'lib/dayjs'
+AnyPropertyFilter,
+Breadcrumb,
+ChartDisplayType,
+DashboardLayoutSize,
+DashboardMode,
+DashboardPlacement,
+DashboardType,
+FilterType,
+InsightModel,
+InsightShortId,
+InsightType,
+}from '~/types'
+import type {dashboardLogicType}from './dashboardLogicType'
+import {Layout, Layouts}from 'react-grid-layout'
+import {insightLogic}from 'scenes/insights/insightLogic'
+import {teamLogic} from '../teamLogic'
+import { urls}from 'scenes/urls'
+import {userLogic}from 'scenes/userLogic'
+import {mergeWithDashboardTile}from 'scenes/insights/utils/dashboardTiles'
+import {dayjs, now }from 'lib/dayjs'
 
-export const BREAKPOINTS: Record<DashboardLayoutSize, number> = {
-    sm: 1024,
-    xs: 0,
+export const BREAKPOINTS: Record < DashboardLayoutSize, number> = {
+sm: 1024,
+xs: 0,
 }
-export const BREAKPOINT_COLUMN_COUNTS: Record<DashboardLayoutSize, number> = { sm: 12, xs: 1 }
+export const BREAKPOINT_COLUMN_COUNTS: Record < DashboardLayoutSize, number> = {sm: 12, xs: 1}
 export const MIN_ITEM_WIDTH_UNITS = 3
 export const MIN_ITEM_HEIGHT_UNITS = 5
 
 const IS_TEST_MODE = process.env.NODE_ENV === 'test'
 
 export interface DashboardLogicProps {
-    id?: number
-    dashboard?: DashboardType
-    placement?: DashboardPlacement
+id?: number
+dashboard?: DashboardType
+placement?: DashboardPlacement
 }
 
 export interface RefreshStatus {
-    loading?: boolean
-    refreshed?: boolean
-    error?: boolean
-    timer?: Date | null
+loading?: boolean
+refreshed?: boolean
+error?: boolean
+timer?: Date | null
 }
 
 export const AUTO_REFRESH_INITIAL_INTERVAL_SECONDS = 300
 
 export const dashboardLogic = kea<dashboardLogicType>({
-    path: ['scenes', 'dashboard', 'dashboardLogic'],
-    connect: () => ({
+path: ['scenes', 'dashboard', 'dashboardLogic'],
+connect: () => ({
         values: [teamLogic, ['currentTeamId']],
         logic: [dashboardsModel, insightsModel, eventUsageLogic],
     }),
@@ -656,23 +656,23 @@ export const dashboardLogic = kea<dashboardLogicType>({
             actions.setRefreshStatuses(
                 items.map((item) => item.short_id),
                 true
-            )
+)
 
-            // array of functions that reload each item
-            const fetchItemFunctions = items.map((dashboardItem) => async () => {
-                try {
-                    breakpoint()
+// array of functions that reload each item
+const fetchItemFunctions = items.map((dashboardItem) => async () => {
+try {
+breakpoint()
 
-                    const refreshedDashboardItem = await api.get(
-                        `api/projects/${values.currentTeamId}/insights/${dashboardItem.id}/?${toParams({
+const refreshedDashboardItem = await api.get(
+`api/projects/${values.currentTeamId}/insights/${dashboardItem.id}/?${toParams({
                             refresh: true,
                             from_dashboard: dashboardId, // needed to load insight in correct context
                         })}`
-                    )
-                    breakpoint()
+)
+breakpoint()
 
-                    // reload the cached results inside the insight's logic
-                    if (dashboardItem.filters.insight) {
+// reload the cached results inside the insight's logic
+if (dashboardItem.filters.insight) {
                         const itemResultLogic = insightLogic?.findMounted({
                             dashboardItemId: dashboardItem.short_id,
                             dashboardId: dashboardId,
@@ -681,10 +681,10 @@ export const dashboardLogic = kea<dashboardLogicType>({
                         itemResultLogic?.actions.setInsight(
                             { ...dashboardItem, result: refreshedDashboardItem.result },
                             { fromPersistentApi: true }
-                        )
-                    }
+)
+}
 
-                    dashboardsModel.actions.updateDashboardItem(refreshedDashboardItem, [dashboardId])
+dashboardsModel.actions.updateDashboardItem(refreshedDashboardItem, [dashboardId])
                     actions.setRefreshStatus(dashboardItem.short_id)
                 } catch (e: any) {
                     if (isBreakpoint(e)) {

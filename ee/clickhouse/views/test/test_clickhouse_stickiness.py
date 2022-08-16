@@ -4,14 +4,14 @@ from django.test.client import Client
 from freezegun.api import freeze_time
 
 from ee.clickhouse.queries.stickiness import ClickhouseStickiness
-from posthog.api.test.test_stickiness import get_stickiness_time_series_ok, stickiness_test_factory
-from posthog.models.action import Action
-from posthog.models.action_step import ActionStep
-from posthog.models.filters.stickiness_filter import StickinessFilter
-from posthog.models.group.util import create_group
-from posthog.queries.util import get_earliest_timestamp
-from posthog.test.base import ClickhouseTestMixin, _create_event, _create_person, snapshot_clickhouse_queries
-from posthog.test.test_journeys import journeys_for
+from analytickit.api.test.test_stickiness import get_stickiness_time_series_ok, stickiness_test_factory
+from analytickit.models.action import Action
+from analytickit.models.action_step import ActionStep
+from analytickit.models.filters.stickiness_filter import StickinessFilter
+from analytickit.models.group.util import create_group
+from analytickit.queries.util import get_earliest_timestamp
+from analytickit.test.base import ClickhouseTestMixin, _create_event, _create_person, snapshot_clickhouse_queries
+from analytickit.test.test_journeys import journeys_for
 
 
 def _create_action(**kwargs):
@@ -29,7 +29,9 @@ def get_people_from_url_ok(client: Client, url: str):
     return response.json()["results"][0]["people"]
 
 
-class TestClickhouseStickiness(ClickhouseTestMixin, stickiness_test_factory(ClickhouseStickiness, _create_event, _create_person, _create_action, get_earliest_timestamp)):  # type: ignore
+class TestClickhouseStickiness(ClickhouseTestMixin,
+                               stickiness_test_factory(ClickhouseStickiness, _create_event, _create_person,
+                                                       _create_action, get_earliest_timestamp)):  # type: ignore
     @snapshot_clickhouse_queries
     def test_filter_by_group_properties(self):
         create_group(

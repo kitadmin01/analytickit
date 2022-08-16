@@ -12,7 +12,7 @@ export function ToolbarSettings(): JSX.Element {
             <Row style={{ flexFlow: 'row' }}>
                 <Col>
                     <Switch
-                        id="posthog-toolbar-switch"
+                        id="analytickit-toolbar-switch"
                         onChange={() => {
                             updateUser({
                                 toolbar_mode: user?.toolbar_mode === 'disabled' ? 'toolbar' : 'disabled',
@@ -28,9 +28,9 @@ export function ToolbarSettings(): JSX.Element {
                         style={{
                             marginLeft: '10px',
                         }}
-                        htmlFor="posthog-toolbar-switch"
+                        htmlFor="analytickit-toolbar-switch"
                     >
-                        Enable PostHog Toolbar, which gives access to heatmaps, stats and allows you to create actions,
+                        Enable analytickit Toolbar, which gives access to heatmaps, stats and allows you to create actions,
                         right there on your website!
                     </label>
                 </Col>

@@ -1,10 +1,10 @@
-export enum NodeEnv {
+exportenumNodeEnv {
     Development = 'dev',
     Production = 'prod',
     Test = 'test',
 }
 
-export function stringToBoolean(value: unknown, strict?: false): boolean
+exportfunctionstringToBoolean(value: unknown, strict?: false): boolean
 export function stringToBoolean(value: unknown, strict: true): boolean | null
 export function stringToBoolean(value: unknown, strict = false): boolean | null {
     const stringValue = String(value).toLowerCase()

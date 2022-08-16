@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 
 from ee.clickhouse.queries.enterprise_cohort_query import check_negation_clause
-from posthog.client import sync_execute
-from posthog.constants import PropertyOperatorType
-from posthog.models.action import Action
-from posthog.models.action_step import ActionStep
-from posthog.models.cohort import Cohort
-from posthog.models.filters.filter import Filter
-from posthog.models.property import Property, PropertyGroup
-from posthog.queries.cohort_query import CohortQuery
-from posthog.test.base import (
+from analytickit.client import sync_execute
+from analytickit.constants import PropertyOperatorType
+from analytickit.models.action import Action
+from analytickit.models.action_step import ActionStep
+from analytickit.models.cohort import Cohort
+from analytickit.models.filters.filter import Filter
+from analytickit.models.property import Property, PropertyGroup
+from analytickit.queries.cohort_query import CohortQuery
+from analytickit.test.base import (
     BaseTest,
     ClickhouseTestMixin,
     _create_event,
@@ -44,20 +44,20 @@ def _create_cohort(**kwargs):
 class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_basic_query(self):
-
         action1 = Action.objects.create(team=self.team, name="action1")
         ActionStep.objects.create(
-            event="$autocapture", action=action1, url="https://posthog.com/feedback/123", url_matching=ActionStep.EXACT,
+            event="$autocapture", action=action1, url="https://analytickit.com/feedback/123",
+            url_matching=ActionStep.EXACT,
         )
 
         # satiesfies all conditions
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
             event="$autocapture",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
             distinct_id="p1",
             timestamp=datetime.now() - timedelta(days=2),
         )
@@ -71,12 +71,12 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # doesn't satisfy action
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
             event="$autocapture",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
             distinct_id="p2",
             timestamp=datetime.now() - timedelta(weeks=3),
         )
@@ -90,12 +90,12 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # doesn't satisfy property condition
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "testXX@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "testXX@analytickit.com"}
         )
         _create_event(
             team=self.team,
             event="$autocapture",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
             distinct_id="p3",
             timestamp=datetime.now() - timedelta(days=2),
         )
@@ -145,7 +145,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                                     "value": "performed_event_first_time",
                                     "type": "behavioral",
                                 },
-                                {"key": "email", "value": "test@posthog.com", "type": "person"},
+                                {"key": "email", "value": "test@analytickit.com", "type": "person"},
                             ],
                         },
                     ],
@@ -163,7 +163,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -174,7 +174,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -210,7 +210,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_multiple(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -229,7 +229,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -267,11 +267,11 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_lte_1_times(self):
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -282,7 +282,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -327,7 +327,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_can_handle_many_performed_multiple_filters(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -338,7 +338,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -349,7 +349,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p3 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -427,7 +427,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_stopped_performing_event(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -438,7 +438,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -500,13 +500,13 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_restarted_performing_event(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test2", "email": "test2@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test2", "email": "test2@analytickit.com"}
         )
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@analytickit.com"}
         )
 
         # P1 events (proper restarting sequence)
@@ -609,10 +609,10 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_first_time(self):
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test2", "email": "test2@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test2", "email": "test2@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -660,7 +660,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_regularly(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p1", 3, [1, 1, 1])
@@ -697,10 +697,10 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_regularly_with_variable_event_counts_in_each_period(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test2", "email": "test2@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test2", "email": "test2@analytickit.com"}
         )
         # p1 gets variable number of events in each period
         _make_event_sequence(self.team, "p1", 3, [0, 1, 2])
@@ -769,17 +769,17 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_person_props_only(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test1@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test1@analytickit.com"}
         )
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test2@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test2@analytickit.com"}
         )
         p3 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test3", "email": "test3@analytickit.com"}
         )
         # doesn't match
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test3", "email": "test4@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test3", "email": "test4@analytickit.com"}
         )
 
         filter = Filter(
@@ -790,15 +790,15 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                         {
                             "type": "OR",
                             "values": [
-                                {"key": "email", "value": "test1@posthog.com", "type": "person"},
-                                {"key": "email", "value": "test2@posthog.com", "type": "person"},
+                                {"key": "email", "value": "test1@analytickit.com", "type": "person"},
+                                {"key": "email", "value": "test2@analytickit.com", "type": "person"},
                             ],
                         },
                         {
                             "type": "AND",
                             "values": [
                                 {"key": "name", "value": "test3", "type": "person"},
-                                {"key": "email", "value": "test3@posthog.com", "type": "person"},
+                                {"key": "email", "value": "test3@analytickit.com", "type": "person"},
                             ],
                         },
                     ],
@@ -816,20 +816,20 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     @snapshot_clickhouse_queries
     def test_person_properties_with_pushdowns(self):
-
         action1 = Action.objects.create(team=self.team, name="action1")
         ActionStep.objects.create(
-            event="$autocapture", action=action1, url="https://posthog.com/feedback/123", url_matching=ActionStep.EXACT,
+            event="$autocapture", action=action1, url="https://analytickit.com/feedback/123",
+            url_matching=ActionStep.EXACT,
         )
 
         # satiesfies all conditions
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
             event="$autocapture",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
             distinct_id="p1",
             timestamp=datetime.now() - timedelta(days=2),
         )
@@ -843,12 +843,12 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # doesn't satisfy action
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
             event="$autocapture",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
             distinct_id="p2",
             timestamp=datetime.now() - timedelta(weeks=3),
         )
@@ -862,12 +862,12 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # satisfies special condition (not pushed down person property in OR group)
         p3 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "special", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "special", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
             event="$autocapture",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
             distinct_id="p3",
             timestamp=datetime.now() - timedelta(days=2),
         )
@@ -911,7 +911,8 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                                     "value": "performed_event_first_time",
                                     "type": "behavioral",
                                 },
-                                {"key": "email", "value": "test@posthog.com", "type": "person"},  # this is pushed down
+                                {"key": "email", "value": "test@analytickit.com", "type": "person"},
+                                # this is pushed down
                             ],
                         },
                     ],
@@ -927,10 +928,10 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @test_with_materialized_columns(person_properties=["$sample_field"])
     @snapshot_clickhouse_queries
     def test_person(self):
-
         # satiesfies all conditions
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "$sample_field": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"],
+            properties={"name": "test", "$sample_field": "test@analytickit.com"}
         )
         filter = Filter(
             data={
@@ -945,7 +946,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                             "value": "performed_event",
                             "type": "behavioral",
                         },
-                        {"key": "$sample_field", "value": "test@posthog.com", "type": "person"},
+                        {"key": "$sample_field", "value": "test@analytickit.com", "type": "person"},
                     ],
                 },
             }
@@ -1057,7 +1058,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_negation(self):
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1068,7 +1069,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1102,7 +1103,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_negation_with_simplify_filters(self):
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1113,7 +1114,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1124,7 +1125,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p3 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1171,7 +1172,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     def test_negation_dynamic_time_bound_with_performed_event(self):
         # invalid dude because $pageview happened too early
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1191,7 +1192,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # invalid dude because no new_view event
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1203,7 +1204,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # valid dude because $pageview happened a long time ago
         p3 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1223,7 +1224,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # valid dude because $pageview did not happen
         p4 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1269,7 +1270,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     def test_negation_dynamic_time_bound_with_performed_event_sequence(self):
         # invalid dude because $pageview sequence happened too early
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         # pageview sequence that happens today, and 2 days ago
         _make_event_sequence(self.team, "p1", 2, [1, 1])
@@ -1283,13 +1284,13 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # invalid dude because no new_view event
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _make_event_sequence(self.team, "p2", 2, [1, 1])
 
         # valid dude because $pageview sequence happened a long time ago
         p3 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1315,7 +1316,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # valid dude because $pageview sequence did not happen
         p4 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1327,7 +1328,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # valid dude because $pageview sequence did not complete, even if one pageview happened
         p5 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p5"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p5"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1346,7 +1347,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # valid dude because $pageview sequence delay was long enough, even if it happened too early
         p6 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p6"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p6"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         # pageview sequence that happens today, and 4 days ago
         _make_event_sequence(self.team, "p6", 4, [1, 1])
@@ -1404,7 +1405,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         flush_persons_and_events()
 
         filter = Filter(
-            data={"properties": {"type": "AND", "values": [{"key": "id", "value": cohort.pk, "type": "cohort"}],},},
+            data={"properties": {"type": "AND", "values": [{"key": "id", "value": cohort.pk, "type": "cohort"}], }, },
         )
 
         q, params = CohortQuery(filter=filter, team=self.team).get_query()
@@ -1532,7 +1533,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                     "type": "OR",
                     "values": [
                         {"key": "id", "value": cohort.pk, "type": "precalculated-cohort"},
-                        {"key": "name", "value": "test2", "type": "person",},
+                        {"key": "name", "value": "test2", "type": "person", },
                     ],
                 },
             }
@@ -1558,7 +1559,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1628,18 +1629,18 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
         # passes filters for cohortCeption and main cohort
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _make_event_sequence(self.team, "p2", 2, [1, 1])
         _make_event_sequence(self.team, "p2", 6, [1, 1], event="$new_view")
 
         # passes filters for neither cohortCeption nor main cohort
-        _create_person(team_id=self.team.pk, distinct_ids=["p3"], properties={"email": "test@posthog.com"})
+        _create_person(team_id=self.team.pk, distinct_ids=["p3"], properties={"email": "test@analytickit.com"})
         _make_event_sequence(self.team, "p3", 2, [1, 1])
 
         # passes filters for mainCohort but not cohortCeption
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _make_event_sequence(self.team, "p4", 6, [1, 1])
         _make_event_sequence(self.team, "p4", 6, [1, 1], event="$new_view")
@@ -1700,15 +1701,14 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     @snapshot_clickhouse_queries
     def test_static_cohort_filter(self):
-
         p1 = _create_person(team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "name": "test"})
-        cohort = _create_cohort(team=self.team, name="cohort1", groups=[], is_static=True,)
+        cohort = _create_cohort(team=self.team, name="cohort1", groups=[], is_static=True, )
         flush_persons_and_events()
         cohort.insert_users_by_list(["p1"])
 
         filter = Filter(
             data={
-                "properties": {"type": "OR", "values": [{"key": "id", "value": cohort.pk, "type": "static-cohort"}],},
+                "properties": {"type": "OR", "values": [{"key": "id", "value": cohort.pk, "type": "static-cohort"}], },
             }
         )
 
@@ -1720,10 +1720,10 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_static_cohort_filter_with_extra(self):
         p1 = _create_person(team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "name": "test"})
-        cohort = _create_cohort(team=self.team, name="cohort1", groups=[], is_static=True,)
+        cohort = _create_cohort(team=self.team, name="cohort1", groups=[], is_static=True, )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -1787,13 +1787,13 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_performed_event_sequence(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p1", 2, [1, 1])
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -1834,13 +1834,13 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_sequence_with_restarted(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p1", 2, [1, 1])
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -1898,7 +1898,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_performed_event_sequence_with_extra_conditions(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p1", 2, [1, 1])
@@ -1920,7 +1920,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -1972,7 +1972,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_performed_event_sequence_with_person_properties(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p1", 2, [1, 1])
@@ -1994,7 +1994,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2006,7 +2006,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test22", "email": "test22@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test22", "email": "test22@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p3", 2, [1, 1])
@@ -2056,7 +2056,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                             "value": "performed_event_multiple",
                             "type": "behavioral",
                         },
-                        {"key": "email", "value": "test@posthog.com", "type": "person"},  # pushed down
+                        {"key": "email", "value": "test@analytickit.com", "type": "person"},  # pushed down
                     ],
                 },
             },
@@ -2069,7 +2069,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_multiple_performed_event_sequence(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _make_event_sequence(self.team, "p1", 2, [1, 1])
@@ -2091,7 +2091,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2153,7 +2153,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_performed_event_sequence_and_clause_with_additional_event(self):
         p1 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2173,7 +2173,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2225,10 +2225,10 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
     @snapshot_clickhouse_queries
     def test_unwrapping_static_cohort_filter_hidden_in_layers_of_cohorts(self):
         _create_person(team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test", "name": "test"})
-        cohort_static = _create_cohort(team=self.team, name="cohort static", groups=[], is_static=True,)
+        cohort_static = _create_cohort(team=self.team, name="cohort static", groups=[], is_static=True, )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
         _create_event(
             team=self.team,
@@ -2315,7 +2315,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_unwrap_with_negated_cohort(self):
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test2", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test2", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2334,7 +2334,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p2 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2346,7 +2346,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test2", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test2", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2394,7 +2394,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                             "type": "behavioral",
                         },
                         {"key": "name", "value": "test2", "type": "person", "negation": True},
-                        {"key": "id", "value": cohort1.pk, "type": "cohort", "negation": True,},
+                        {"key": "id", "value": cohort1.pk, "type": "cohort", "negation": True, },
                     ],
                 }
             },
@@ -2404,7 +2404,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
             data={
                 "properties": {
                     "type": "OR",
-                    "values": [{"key": "id", "value": cohort2.pk, "type": "cohort"},],  # p3 fits in here
+                    "values": [{"key": "id", "value": cohort2.pk, "type": "cohort"}, ],  # p3 fits in here
                 },
             },
             team=self.team,
@@ -2417,7 +2417,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
     def test_unwrap_multiple_levels(self):
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test2", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p1"], properties={"name": "test2", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2436,7 +2436,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p2"], properties={"name": "test", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2448,7 +2448,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         _create_person(
-            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test2", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p3"], properties={"name": "test2", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2460,7 +2460,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
         )
 
         p4 = _create_person(
-            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test3", "email": "test@posthog.com"}
+            team_id=self.team.pk, distinct_ids=["p4"], properties={"name": "test3", "email": "test@analytickit.com"}
         )
 
         _create_event(
@@ -2508,7 +2508,7 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                             "type": "behavioral",
                         },
                         {"key": "name", "value": "test2", "type": "person", "negation": True},
-                        {"key": "id", "value": cohort1.pk, "type": "cohort", "negation": True,},
+                        {"key": "id", "value": cohort1.pk, "type": "cohort", "negation": True, },
                     ],
                 }
             },
@@ -2523,14 +2523,14 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
                     "type": "AND",
                     "values": [
                         {"key": "name", "value": "test3", "type": "person"},
-                        {"key": "id", "value": cohort2.pk, "type": "cohort", "negation": True,},
+                        {"key": "id", "value": cohort2.pk, "type": "cohort", "negation": True, },
                     ],
                 }
             },
         )
 
         filter = Filter(
-            data={"properties": {"type": "OR", "values": [{"key": "id", "value": cohort3.pk, "type": "cohort"},],},},
+            data={"properties": {"type": "OR", "values": [{"key": "id", "value": cohort3.pk, "type": "cohort"}, ], }, },
             team=self.team,
         )
 
@@ -2542,12 +2542,11 @@ class TestCohortQuery(ClickhouseTestMixin, BaseTest):
 
 class TestCohortNegationValidation(BaseTest):
     def test_basic_valid_negation_tree(self):
-
         property_group = PropertyGroup(
             type=PropertyOperatorType.AND,
             values=[
-                Property(key="name", value="test", type="person",),
-                Property(key="email", value="xxx", type="person", negation=True,),
+                Property(key="name", value="test", type="person", ),
+                Property(key="email", value="xxx", type="person", negation=True, ),
             ],
         )
 
@@ -2556,22 +2555,21 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, True)
 
     def test_valid_negation_tree_with_extra_layers(self):
-
         property_group = PropertyGroup(
             type=PropertyOperatorType.OR,
             values=[
                 PropertyGroup(
-                    type=PropertyOperatorType.AND, values=[Property(key="name", value="test", type="person",),],
+                    type=PropertyOperatorType.AND, values=[Property(key="name", value="test", type="person", ), ],
                 ),
                 PropertyGroup(
                     type=PropertyOperatorType.AND,
                     values=[
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                         PropertyGroup(
-                            type=PropertyOperatorType.OR, values=[Property(key="email", value="xxx", type="person",),]
+                            type=PropertyOperatorType.OR, values=[Property(key="email", value="xxx", type="person", ), ]
                         ),
                     ],
                 ),
@@ -2583,23 +2581,22 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, True)
 
     def test_invalid_negation_tree_with_extra_layers(self):
-
         property_group = PropertyGroup(
             type=PropertyOperatorType.OR,
             values=[
                 PropertyGroup(
-                    type=PropertyOperatorType.AND, values=[Property(key="name", value="test", type="person",),],
+                    type=PropertyOperatorType.AND, values=[Property(key="name", value="test", type="person", ), ],
                 ),
                 PropertyGroup(
                     type=PropertyOperatorType.AND,
                     values=[
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                     ],
                 ),
@@ -2611,23 +2608,22 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, True)
 
     def test_valid_negation_tree_with_extra_layers_recombining_at_top(self):
-
         property_group = PropertyGroup(
             type=PropertyOperatorType.AND,  # top level AND protects the 2 negations from being invalid
             values=[
                 PropertyGroup(
-                    type=PropertyOperatorType.OR, values=[Property(key="name", value="test", type="person",),],
+                    type=PropertyOperatorType.OR, values=[Property(key="name", value="test", type="person", ), ],
                 ),
                 PropertyGroup(
                     type=PropertyOperatorType.AND,
                     values=[
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                     ],
                 ),
@@ -2639,24 +2635,23 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, True)
 
     def test_invalid_negation_tree_no_positive_filter(self):
-
         property_group = PropertyGroup(
             type=PropertyOperatorType.AND,
             values=[
                 PropertyGroup(
                     type=PropertyOperatorType.OR,
-                    values=[Property(key="name", value="test", type="person", negation=True,),],
+                    values=[Property(key="name", value="test", type="person", negation=True, ), ],
                 ),
                 PropertyGroup(
                     type=PropertyOperatorType.AND,
                     values=[
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                         PropertyGroup(
                             type=PropertyOperatorType.OR,
-                            values=[Property(key="email", value="xxx", type="person", negation=True,),],
+                            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
                         ),
                     ],
                 ),
@@ -2668,7 +2663,6 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, False)
 
     def test_empty_property_group(self):
-
         property_group = PropertyGroup(
             type=PropertyOperatorType.AND, values=[],  # type: ignore
         )
@@ -2678,9 +2672,9 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, False)
 
     def test_basic_invalid_negation_tree(self):
-
         property_group = PropertyGroup(
-            type=PropertyOperatorType.AND, values=[Property(key="email", value="xxx", type="person", negation=True,),],
+            type=PropertyOperatorType.AND,
+            values=[Property(key="email", value="xxx", type="person", negation=True, ), ],
         )
 
         has_pending_neg, has_reg = check_negation_clause(property_group)
@@ -2688,9 +2682,8 @@ class TestCohortNegationValidation(BaseTest):
         self.assertEqual(has_reg, False)
 
     def test_basic_valid_negation_tree_with_no_negations(self):
-
         property_group = PropertyGroup(
-            type=PropertyOperatorType.AND, values=[Property(key="name", value="test", type="person",),],
+            type=PropertyOperatorType.AND, values=[Property(key="name", value="test", type="person", ), ],
         )
 
         has_pending_neg, has_reg = check_negation_clause(property_group)

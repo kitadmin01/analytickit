@@ -1,4 +1,4 @@
-import { AnnotationType } from '~/types'
+import{AnnotationType}from'~/types'
 
 export function getNextKey(arr: AnnotationType[]): number {
     if (arr.length === 0) {

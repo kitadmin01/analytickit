@@ -1,6 +1,6 @@
-import { cleanFilters } from './cleanFilters'
-import { FilterType, FunnelVizType, InsightType } from '~/types'
-import { FEATURE_FLAGS, ShownAsValue } from 'lib/constants'
+import{cleanFilters}from'./cleanFilters'
+import {FilterType, FunnelVizType, InsightType}from '~/types'
+import {FEATURE_FLAGS, ShownAsValue}from 'lib/constants'
 
 describe('cleanFilters', () => {
     it('removes shownas if moving from stickiness to trends', () => {
@@ -8,8 +8,8 @@ describe('cleanFilters', () => {
             cleanFilters(
                 { insight: InsightType.TRENDS, shown_as: ShownAsValue.STICKINESS },
                 { insight: InsightType.STICKINESS, shown_as: ShownAsValue.STICKINESS }
-            )
-        ).toEqual(expect.objectContaining({ insight: InsightType.TRENDS, shown_as: undefined }))
+)
+).toEqual(expect.objectContaining({ insight: InsightType.TRENDS, shown_as: undefined }))
     })
 
     it('removes breakdown when adding breakdowns', () => {
@@ -20,16 +20,16 @@ describe('cleanFilters', () => {
                 funnel_viz_type: FunnelVizType.Steps,
             },
             { breakdown: '$browser', insight: InsightType.FUNNELS, funnel_viz_type: FunnelVizType.Steps }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdown', undefined)
+expect(cleanedFilters).toHaveProperty('breakdown', undefined)
 
         expect(cleanedFilters).toEqual(
             expect.objectContaining({ breakdowns: [{ property: '$browser', type: 'event' }] })
-        )
-    })
+)
+})
 
-    it('adds breakdown_type when adding breakdown', () => {
+it('adds breakdown_type when adding breakdown', () => {
         const cleanedFilters = cleanFilters(
             {
                 breakdown: '$thing',
@@ -38,9 +38,9 @@ describe('cleanFilters', () => {
                 funnel_viz_type: FunnelVizType.Steps,
             },
             { insight: InsightType.FUNNELS, funnel_viz_type: FunnelVizType.Steps }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdown', '$thing')
+expect(cleanedFilters).toHaveProperty('breakdown', '$thing')
         expect(cleanedFilters).toHaveProperty('breakdown_type', 'event')
     })
 
@@ -53,9 +53,9 @@ describe('cleanFilters', () => {
                 funnel_viz_type: FunnelVizType.Steps,
             },
             { insight: InsightType.FUNNELS, funnel_viz_type: FunnelVizType.Steps }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', [{ property: '$browser', type: 'event' }])
+expect(cleanedFilters).toHaveProperty('breakdowns', [{ property: '$browser', type: 'event' }])
         expect(cleanedFilters).toHaveProperty('breakdown_type', 'event')
     })
 
@@ -101,9 +101,9 @@ describe('cleanFilters', () => {
                 insight: InsightType.FUNNELS,
                 funnel_viz_type: FunnelVizType.Steps,
             }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
+expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown_type', undefined)
     })
@@ -124,9 +124,9 @@ describe('cleanFilters', () => {
                 insight: InsightType.FUNNELS,
                 funnel_viz_type: FunnelVizType.Steps,
             }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
+expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown_type', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown_group_type_index', undefined)
@@ -145,9 +145,9 @@ describe('cleanFilters', () => {
                 insight: InsightType.FUNNELS,
                 funnel_viz_type: FunnelVizType.Steps,
             }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
+expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown', 'one thing')
         expect(cleanedFilters).toHaveProperty('breakdown_type', 'event')
         expect(cleanedFilters).toHaveProperty('breakdown_group_type_index', undefined)
@@ -166,9 +166,9 @@ describe('cleanFilters', () => {
                 breakdown_type: 'event',
                 insight: InsightType.TRENDS,
             }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
+expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown', 'one thing')
         expect(cleanedFilters).toHaveProperty('breakdown_type', 'event')
         expect(cleanedFilters).toHaveProperty('breakdown_group_type_index', undefined)
@@ -193,9 +193,9 @@ describe('cleanFilters', () => {
                 insight: InsightType.FUNNELS,
                 funnel_viz_type: FunnelVizType.Steps,
             }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
+expect(cleanedFilters).toHaveProperty('breakdowns', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown', 'one thing')
         expect(cleanedFilters).toHaveProperty('breakdown_type', 'event')
         expect(cleanedFilters).toHaveProperty('breakdown_group_type_index', undefined)
@@ -218,9 +218,9 @@ describe('cleanFilters', () => {
                 insight: InsightType.TRENDS,
             },
             featureFlags
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('breakdowns', [{ property: 'one thing', type: 'event' }])
+expect(cleanedFilters).toHaveProperty('breakdowns', [{ property: 'one thing', type: 'event' }])
         expect(cleanedFilters).toHaveProperty('breakdown', undefined)
         expect(cleanedFilters).toHaveProperty('breakdown_type', 'event')
         expect(cleanedFilters).toHaveProperty('breakdown_group_type_index', undefined)
@@ -236,8 +236,8 @@ describe('cleanFilters', () => {
                 interval: 'day',
                 smoothing_intervals: 3,
             }
-        )
+)
 
-        expect(cleanedFilters).toHaveProperty('smoothing_intervals', 1)
+expect(cleanedFilters).toHaveProperty('smoothing_intervals', 1)
     })
 })

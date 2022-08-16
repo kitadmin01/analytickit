@@ -6,10 +6,10 @@ from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthentic
 from rest_framework.request import Request
 
 from ee.models.dashboard_privilege import DashboardPrivilege
-from posthog.api.routing import StructuredViewSetMixin
-from posthog.api.shared import UserBasicSerializer
-from posthog.models import Dashboard, Team, User
-from posthog.permissions import TeamMemberAccessPermission
+from analytickit.api.routing import StructuredViewSetMixin
+from analytickit.api.shared import UserBasicSerializer
+from analytickit.models import Dashboard, Team, User
+from analytickit.permissions import TeamMemberAccessPermission
 
 
 class CanEditDashboardCollaborator(BasePermission):

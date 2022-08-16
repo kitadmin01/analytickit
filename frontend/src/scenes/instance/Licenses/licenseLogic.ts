@@ -1,10 +1,10 @@
-import api from 'lib/api'
-import { kea } from 'kea'
-import type { licenseLogicType } from './licenseLogicType'
-import { APIErrorType, LicensePlan, LicenseType } from '~/types'
-import { preflightLogic } from '../../PreflightCheck/preflightLogic'
-import { lemonToast } from 'lib/components/lemonToast'
-import { dayjs } from 'lib/dayjs'
+importapifrom'lib/api'
+import {kea}from 'kea'
+import type {licenseLogicType}from './licenseLogicType'
+import {APIErrorType, LicensePlan, LicenseType}from '~/types'
+import {preflightLogic}from '../../PreflightCheck/preflightLogic'
+import { lemonToast}from 'lib/components/lemonToast'
+import {dayjs}from 'lib/dayjs'
 
 export function isLicenseExpired(license: LicenseType): boolean {
     return new Date(license.valid_until) < new Date()
@@ -35,8 +35,8 @@ export const licenseLogic = kea<licenseLogicType>({
                         const license = await api.licenses.create(key)
                         lemonToast.success(
                             `Activated license – you can now use all features of the ${license.plan} plan. Refreshing the page...`
-                        )
-                        actions.setError(null)
+)
+actions.setError(null)
                         setTimeout(() => {
                             window.location.reload() // Permissions, projects etc will be out of date at this point, so refresh
                         }, 4000)
@@ -59,17 +59,17 @@ export const licenseLogic = kea<licenseLogicType>({
                     } catch (response) {
                         lemonToast.error(
                             (response as APIErrorType).detail ||
-                                'We were unable to automatically cancel your license. Please contact sales@posthog.com for support.'
-                        )
-                        return values.licenses
-                    }
-                },
-            },
-        ],
-    }),
-    reducers: {
-        licenses: {
-            addLicense: (state, { license }) => [license, ...state],
+                                'We were unable to automatically cancel your license. Please contact sales@analytickit.com for support.'
+)
+return values.licenses
+}
+},
+},
+],
+}),
+reducers: {
+licenses: {
+addLicense:(state, { license }) => [license, ...state],
         },
         error: [
             null as null | APIErrorType,

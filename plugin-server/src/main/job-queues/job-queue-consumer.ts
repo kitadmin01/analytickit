@@ -1,13 +1,13 @@
-import Piscina from '@posthog/piscina'
-import { TaskList } from 'graphile-worker'
+importPiscinafrom'@analytickit/piscina'
+import {TaskList} from 'graphile-worker'
 
-import { EnqueuedBufferJob, EnqueuedPluginJob, Hub, JobQueueConsumerControl } from '../../types'
-import { killProcess } from '../../utils/kill'
-import { status } from '../../utils/status'
-import { logOrThrowJobQueueError } from '../../utils/utils'
-import { pauseQueueIfWorkerFull } from '../ingestion-queues/queue'
-import { runInstrumentedFunction } from '../utils'
-import { runBufferEventPipeline } from './buffer'
+import {EnqueuedBufferJob, EnqueuedPluginJob, Hub, JobQueueConsumerControl}from '../../types'
+import {killProcess }from '../../utils/kill'
+import {status}from '../../utils/status'
+import {logOrThrowJobQueueError}from '../../utils/utils'
+import { pauseQueueIfWorkerFull}from '../ingestion-queues/queue'
+import {runInstrumentedFunction}from '../utils'
+import {runBufferEventPipeline}from './buffer'
 
 export async function startJobQueueConsumer(hub: Hub, piscina: Piscina): Promise<JobQueueConsumerControl> {
     status.info('🔄', 'Starting job queue consumer, trying to get lock...')

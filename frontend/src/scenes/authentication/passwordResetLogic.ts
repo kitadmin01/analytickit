@@ -1,25 +1,25 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { lemonToast } from 'lib/components/lemonToast'
-import type { passwordResetLogicType } from './passwordResetLogicType'
+import {lemonToast}from 'lib/components/lemonToast'
+import type {passwordResetLogicType} from './passwordResetLogicType'
 
 export interface ResponseType {
-    success: boolean
-    errorCode?: string
-    errorDetail?: string
+success: boolean
+errorCode?: string
+errorDetail?: string
 }
 export interface ResetResponseType extends ResponseType {
-    email?: string
+email?: string
 }
 
 export interface ValidatedTokenResponseType extends ResponseType {
-    token?: string
-    uuid?: string
+token?: string
+uuid?: string
 }
 
 export const passwordResetLogic = kea<passwordResetLogicType>({
-    path: ['scenes', 'authentication', 'passwordResetLogic'],
-    loaders: ({ values }) => ({
+path: ['scenes', 'authentication', 'passwordResetLogic'],
+loaders:({ values }) => ({
         resetResponse: [
             null as ResetResponseType | null,
             {

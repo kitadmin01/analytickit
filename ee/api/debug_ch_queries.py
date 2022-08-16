@@ -3,7 +3,7 @@ import json
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 
-from posthog.utils import get_safe_cache
+from analytickit.utils import get_safe_cache
 
 
 class DebugCHQueries(mixins.ListModelMixin, viewsets.GenericViewSet):

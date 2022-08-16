@@ -59,7 +59,7 @@ export function DemoWarnings(): JSX.Element | null {
         },
         invite_teammates: {
             message: 'Invite your team',
-            description: <>Get more out of PostHog by inviting your team for free.</>,
+            description: <>Get more out of analytickit by inviting your team for free.</>,
             action: (
                 <Button data-attr="invite-warning-cta" type="primary" onClick={showInviteModal}>
                     <UserAddOutlined />

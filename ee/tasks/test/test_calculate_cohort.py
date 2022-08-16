@@ -4,16 +4,17 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from posthog.client import sync_execute
-from posthog.models.cohort import Cohort
-from posthog.models.person import Person
-from posthog.tasks.calculate_cohort import insert_cohort_from_insight_filter
-from posthog.tasks.test.test_calculate_cohort import calculate_cohort_test_factory
-from posthog.test.base import ClickhouseTestMixin, _create_event, _create_person
+from analytickit.client import sync_execute
+from analytickit.models.cohort import Cohort
+from analytickit.models.person import Person
+from analytickit.tasks.calculate_cohort import insert_cohort_from_insight_filter
+from analytickit.tasks.test.test_calculate_cohort import calculate_cohort_test_factory
+from analytickit.test.base import ClickhouseTestMixin, _create_event, _create_person
 
 
-class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_factory(_create_event, _create_person)):  # type: ignore
-    @patch("posthog.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
+class TestClickhouseCalculateCohort(ClickhouseTestMixin,
+                                    calculate_cohort_test_factory(_create_event, _create_person)):  # type: ignore
+    @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_stickiness_cohort(self, _insert_cohort_from_insight_filter):
         _create_person(team_id=self.team.pk, distinct_ids=["blabla"])
         _create_event(
@@ -77,7 +78,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
         people = Person.objects.filter(cohort__id=cohort.pk)
         self.assertEqual(people.count(), 1)
 
-    @patch("posthog.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
+    @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_trends_cohort(self, _insert_cohort_from_insight_filter):
         _create_person(team_id=self.team.pk, distinct_ids=["blabla"])
         with freeze_time("2021-01-01 00:06:34"):
@@ -161,7 +162,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
             },
         )
 
-    @patch("posthog.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
+    @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_trends_cohort_arg_test(self, _insert_cohort_from_insight_filter):
         # prior to 8124, subtitute parameters was called on insight cohorting which caused '%' in LIKE arguments to be interepreted as a missing parameter
 
@@ -171,7 +172,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
                 team=self.team,
                 event="$pageview",
                 distinct_id="blabla",
-                properties={"$domain": "https://app.posthog.com/123"},
+                properties={"$domain": "https://app.analytickit.com/123"},
                 timestamp="2021-01-01T12:00:00Z",
             )
 
@@ -180,7 +181,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
                 team=self.team,
                 event="$pageview",
                 distinct_id="blabla",
-                properties={"$domain": "https://app.posthog.com/123"},
+                properties={"$domain": "https://app.analytickit.com/123"},
                 timestamp="2021-01-01T12:00:00Z",
             )
 
@@ -194,7 +195,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
             "insight": "TRENDS",
             "interval": "day",
             "properties": json.dumps(
-                [{"key": "$domain", "value": "app.posthog.com", "operator": "icontains", "type": "event"}]
+                [{"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}]
             ),
         }
 
@@ -215,7 +216,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
                 "entity_type": "events",
                 "insight": "TRENDS",
                 "interval": "day",
-                "properties": '[{"key": "$domain", "value": "app.posthog.com", "operator": "icontains", "type": "event"}]',
+                "properties": '[{"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}]',
             },
         )
         insert_cohort_from_insight_filter(
@@ -237,7 +238,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
                     }
                 ],
                 "properties": [
-                    {"key": "$domain", "value": "app.posthog.com", "operator": "icontains", "type": "event"}
+                    {"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}
                 ],
                 "entity_id": "$pageview",
                 "entity_type": "events",
@@ -265,7 +266,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin, calculate_cohort_test_f
             },
         )
 
-    @patch("posthog.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
+    @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_funnels_cohort(self, _insert_cohort_from_insight_filter):
         _create_person(team_id=self.team.pk, distinct_ids=["blabla"])
         with freeze_time("2021-01-01 00:06:34"):

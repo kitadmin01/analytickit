@@ -6,7 +6,7 @@ import { userLogic } from 'scenes/userLogic'
 import { IconEmojiPeople, IconLock } from '../icons'
 import { LemonButton } from '../LemonButton'
 import './PayGateMini.scss'
-import { FEATURE_MINIMUM_PLAN, POSTHOG_CLOUD_STANDARD_PLAN } from 'lib/constants'
+import { FEATURE_MINIMUM_PLAN, analytickit_CLOUD_STANDARD_PLAN } from 'lib/constants'
 import { capitalizeFirstLetter } from 'lib/utils'
 
 export interface PayGateMiniProps {
@@ -52,7 +52,7 @@ export function PayGateMini({ feature, style, children, overrideShouldShowGate }
     let gateVariant: 'add-card' | 'contact-sales' | 'check-licensing' | null = null
     if (!overrideShouldShowGate && !hasAvailableFeature(feature)) {
         if (preflight?.cloud) {
-            if (planRequired === POSTHOG_CLOUD_STANDARD_PLAN) {
+            if (planRequired === analytickit_CLOUD_STANDARD_PLAN) {
                 gateVariant = 'add-card'
             } else {
                 gateVariant = 'contact-sales'
@@ -74,9 +74,9 @@ export function PayGateMini({ feature, style, children, overrideShouldShowGate }
                 to={gateVariant === 'add-card' ? '/organization/billing' : undefined}
                 href={
                     gateVariant === 'contact-sales'
-                        ? `mailto:sales@posthog.com?subject=Inquiring about ${featureSummary.umbrella}`
+                        ? `mailto:sales@analytickit.com?subject=Inquiring about ${featureSummary.umbrella}`
                         : gateVariant === 'check-licensing'
-                        ? 'https://posthog.com/pricing'
+                        ? 'https://analytickit.com/pricing'
                         : undefined
                 }
                 type="secondary"

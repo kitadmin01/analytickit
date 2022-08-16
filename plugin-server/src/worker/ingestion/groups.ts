@@ -1,7 +1,7 @@
-import { Properties } from '@posthog/plugin-scaffold'
+import{Properties}from'@analytickit/plugin-scaffold'
 
-import { TeamId } from '../../types'
-import { GroupTypeManager } from './group-type-manager'
+import {TeamId }from '../../types'
+import {GroupTypeManager}from './group-type-manager'
 
 export async function addGroupProperties(
     teamId: TeamId,

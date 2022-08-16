@@ -1,20 +1,20 @@
-import Piscina from '@posthog/piscina'
+importPiscinafrom'@analytickit/piscina'
 import IORedis from 'ioredis'
 
-import { ONE_HOUR } from '../src/config/constants'
-import { startPluginsServer } from '../src/main/pluginsServer'
-import { LogLevel, PluginsServerConfig } from '../src/types'
-import { Hub } from '../src/types'
-import { delay, UUIDT } from '../src/utils/utils'
-import { makePiscina } from '../src/worker/piscina'
-import { createPosthog, DummyPostHog } from '../src/worker/vm/extensions/posthog'
-import { writeToFile } from '../src/worker/vm/extensions/test-utils'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from './helpers/clickhouse'
-import { resetKafka } from './helpers/kafka'
-import { pluginConfig39 } from './helpers/plugins'
-import { resetTestDatabase } from './helpers/sql'
+import {ONE_HOUR}from '../src/config/constants'
+import {startPluginsServer}from '../src/main/pluginsServer'
+import {LogLevel, PluginsServerConfig}from '../src/types'
+import {Hub}from '../src/types'
+import {delay, UUIDT}from '../src/utils/utils'
+import {makePiscina}from '../src/worker/piscina'
+import {createanalytickit, Dummyanalytickit}from '../src/worker/vm/extensions/analytickit'
+import {writeToFile}from '../src/worker/vm/extensions/test-utils'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from './helpers/clickhouse'
+import {resetKafka }from './helpers/kafka'
+import {pluginConfig39}from './helpers/plugins'
+import {resetTestDatabase}from './helpers/sql'
 
-const { console: testConsole } = writeToFile
+const {console: testConsole}= writeToFile
 
 jest.mock('../src/utils/status')
 jest.setTimeout(60000) // 60 sec timeout
@@ -67,7 +67,7 @@ export async function runEveryMinute() {}
 describe('E2E', () => {
     let hub: Hub
     let stopServer: () => Promise<void>
-    let posthog: DummyPostHog
+    let analytickit: Dummyanalytickit
     let piscina: Piscina
     let redis: IORedis.Redis
 
@@ -84,7 +84,7 @@ describe('E2E', () => {
         piscina = startResponse.piscina
         stopServer = startResponse.stop
         redis = await hub.redisPool.acquire()
-        posthog = createPosthog(hub, pluginConfig39)
+        analytickit = createanalytickit(hub, pluginConfig39)
     })
 
     afterEach(async () => {
@@ -102,7 +102,7 @@ describe('E2E', () => {
                 event: 'custom event',
                 properties: { name: 'haha', uuid },
             }
-            await posthog.capture(event.event, event.properties)
+            await analytickit.capture(event.event, event.properties)
 
             await delayUntilEventIngested(() => hub.db.fetchEvents())
 
@@ -136,7 +136,7 @@ describe('E2E', () => {
                 event: '$autocapture',
                 properties: properties,
             }
-            await posthog.capture(event.event, event.properties)
+            await analytickit.capture(event.event, event.properties)
 
             await delayUntilEventIngested(() => hub.db.fetchEvents(), 1)
 
@@ -153,7 +153,7 @@ describe('E2E', () => {
         test('snapshot captured, processed, ingested', async () => {
             expect((await hub.db.fetchSessionRecordingEvents()).length).toBe(0)
 
-            await posthog.capture('$snapshot', { $session_id: '1234abc', $snapshot_data: 'yes way' })
+            await analytickit.capture('$snapshot', { $session_id: '1234abc', $snapshot_data: 'yes way' })
 
             await delayUntilEventIngested(() => hub.db.fetchSessionRecordingEvents())
 
@@ -175,7 +175,7 @@ describe('E2E', () => {
                 return logs.filter(({ type, source }) => type === 'INFO' && source !== 'SYSTEM')
             }
 
-            await posthog.capture('custom event', { name: 'hehe', uuid: new UUIDT().toString() })
+            await analytickit.capture('custom event', { name: 'hehe', uuid: new UUIDT().toString() })
             await hub.kafkaProducer.flush()
 
             await delayUntilEventIngested(() => hub.db.fetchEvents())
@@ -188,23 +188,23 @@ describe('E2E', () => {
                     type: 'INFO',
                     message: 'amogus',
                 })
-            )
-        })
-    })
+)
+})
+})
 
-    // TODO: we should enable this test again - they are enabled on self-hosted
-    // historical exports are currently disabled
-    describe.skip('export historical events', () => {
+// TODO: we should enable this test again - they are enabled on self-hosted
+// historical exports are currently disabled
+describe.skip('export historical events', () => {
         const awaitHistoricalEventLogs = async () =>
             await new Promise((resolve) => {
                 resolve(testConsole.read().filter((log) => log[0] === 'exported historical event'))
             })
 
         test('export historical events', async () => {
-            await posthog.capture('historicalEvent1')
-            await posthog.capture('historicalEvent2')
-            await posthog.capture('historicalEvent3')
-            await posthog.capture('historicalEvent4')
+            await analytickit.capture('historicalEvent1')
+            await analytickit.capture('historicalEvent2')
+            await analytickit.capture('historicalEvent3')
+            await analytickit.capture('historicalEvent4')
 
             await delayUntilEventIngested(() => hub.db.fetchEvents(), 4)
 
@@ -236,23 +236,23 @@ describe('E2E', () => {
             expect(exportedEventsCountAfterJob).toEqual(4)
             expect(exportedEvents.map((e) => e.event)).toEqual(
                 expect.arrayContaining(['historicalEvent1', 'historicalEvent2', 'historicalEvent3', 'historicalEvent4'])
-            )
-            expect(Object.keys(exportedEvents[0].properties)).toEqual(
+)
+expect(Object.keys(exportedEvents[0].properties)).toEqual(
                 expect.arrayContaining([
                     '$$historical_export_source_db',
                     '$$is_historical_export_event',
                     '$$historical_export_timestamp',
                 ])
-            )
+)
 
-            expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
+expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
         })
 
         test('export historical events with specified timestamp boundaries', async () => {
-            await posthog.capture('historicalEvent1')
-            await posthog.capture('historicalEvent2')
-            await posthog.capture('historicalEvent3')
-            await posthog.capture('historicalEvent4')
+            await analytickit.capture('historicalEvent1')
+            await analytickit.capture('historicalEvent2')
+            await analytickit.capture('historicalEvent3')
+            await analytickit.capture('historicalEvent4')
 
             await delayUntilEventIngested(() => hub.db.fetchEvents(), 4)
 
@@ -275,16 +275,16 @@ describe('E2E', () => {
             expect(exportedEventsCountAfterJob).toEqual(4)
             expect(exportedEvents.map((e) => e.event)).toEqual(
                 expect.arrayContaining(['historicalEvent1', 'historicalEvent2', 'historicalEvent3', 'historicalEvent4'])
-            )
-            expect(Object.keys(exportedEvents[0].properties)).toEqual(
+)
+expect(Object.keys(exportedEvents[0].properties)).toEqual(
                 expect.arrayContaining([
                     '$$historical_export_source_db',
                     '$$is_historical_export_event',
                     '$$historical_export_timestamp',
                 ])
-            )
+)
 
-            expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
+expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
         })
 
         test('correct $elements included in historical event', async () => {
@@ -294,7 +294,7 @@ describe('E2E', () => {
                     { tag_name: 'div', nth_child: 1, nth_of_type: 2, $el_text: '💻' },
                 ],
             }
-            await posthog.capture('$autocapture', properties)
+            await analytickit.capture('$autocapture', properties)
 
             await delayUntilEventIngested(() => hub.db.fetchEvents(), 1)
 
@@ -316,9 +316,9 @@ describe('E2E', () => {
                     '$$is_historical_export_event',
                     '$$historical_export_timestamp',
                 ])
-            )
+)
 
-            expect(exportedEvents[0].properties['$elements']).toEqual([
+expect(exportedEvents[0].properties['$elements']).toEqual([
                 {
                     attr_class: 'btn btn-sm',
                     attributes: { attr__class: 'btn btn-sm' },

@@ -1,16 +1,16 @@
-import { LemonSelectOption } from 'lib/components/LemonSelect'
-import { humanFriendlyDuration, humanFriendlyNumber, percentage } from 'lib/utils'
-import { ChartDisplayType } from '~/types'
+import{LemonSelectOption}from'lib/components/LemonSelect'
+import {humanFriendlyDuration, humanFriendlyNumber, percentage}from 'lib/utils'
+import {ChartDisplayType}from '~/types'
 
 const formats = ['numeric', 'duration', 'duration_ms', 'percentage', 'percentage_scaled'] as const
 export type AggregationAxisFormat = typeof formats[number]
 
-export const aggregationAxisFormatSelectOptions: Record<AggregationAxisFormat, LemonSelectOption> = {
-    numeric: {
-        label: 'None',
-    },
-    duration: {
-        label: 'Duration (s)',
+export const aggregationAxisFormatSelectOptions: Record< AggregationAxisFormat, LemonSelectOption> = {
+numeric: {
+label: 'None',
+},
+duration: {
+label: 'Duration(s)',
     },
     duration_ms: {
         label: 'Duration (ms)',

@@ -1,9 +1,9 @@
-import { expectLogic } from 'kea-test-utils'
-import { trendsLogic } from 'scenes/trends/trendsLogic'
-import { InsightShortId, InsightType } from '~/types'
-import { insightLogic } from 'scenes/insights/insightLogic'
-import { useMocks } from '~/mocks/jest'
-import { initKeaTests } from '~/test/init'
+import{expectLogic}from'kea-test-utils'
+import {trendsLogic}from 'scenes/trends/trendsLogic'
+import {InsightShortId, InsightType}from '~/types'
+import {insightLogic}from 'scenes/insights/insightLogic'
+import {useMocks}from '~/mocks/jest'
+import {initKeaTests}from '~/test/init'
 
 const Insight123 = '123' as InsightShortId
 

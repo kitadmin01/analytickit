@@ -1,21 +1,21 @@
-import { KeaPlugin, resetContext } from 'kea'
-import { localStoragePlugin } from 'kea-localstorage'
-import { routerPlugin } from 'kea-router'
-import { loadersPlugin } from 'kea-loaders'
-import { windowValuesPlugin } from 'kea-window-values'
-import { identifierToHuman } from 'lib/utils'
-import { waitForPlugin } from 'kea-waitfor'
-import { lemonToast } from 'lib/components/lemonToast'
-import { subscriptionsPlugin } from 'kea-subscriptions'
-import { formsPlugin } from 'kea-forms'
+import{KeaPlugin, resetContext}from 'kea'
+import {localStoragePlugin }from 'kea-localstorage'
+import {routerPlugin} from 'kea-router'
+import {loadersPlugin}from 'kea-loaders'
+import {windowValuesPlugin}from 'kea-window-values'
+import {identifierToHuman}from 'lib/utils'
+import {waitForPlugin}from 'kea-waitfor'
+import {lemonToast}from 'lib/components/lemonToast'
+import {subscriptionsPlugin} from 'kea-subscriptions'
+import {formsPlugin}from 'kea-forms'
 
 /*
 Actions for which we don't want to show error alerts,
 mostly to avoid user confusion.
 */
 const ERROR_FILTER_WHITELIST = [
-    'loadPreflight', // Gracefully handled if it fails
-    'loadUser', // App won't load (unless loading from shared dashboards)
+'loadPreflight', // Gracefully handled if it fails
+'loadUser', // App won't load (unless loading from shared dashboards)
     'loadFunnels', // Special error handling on insights
     'loadResults', // Special error handling on insights
     'authenticate', // Special error handling on login
@@ -66,11 +66,11 @@ export function initKea({ routerHistory, routerLocation, beforePlugins }: InitKe
                     ) {
                         lemonToast.error(
                             `${identifierToHuman(actionKey)} on reducer ${identifierToHuman(reducerKey)} failed: ${
-                                error.status !== 0 ? error.detail || 'PostHog may be offline' : 'PostHog may be offline'
+                                error.status !== 0 ? error.detail || 'analytickit may be offline' : 'analytickit may be offline'
                             }`
-                        )
-                    }
-                    if (!errorsSilenced) {
+)
+}
+if(!errorsSilenced) {
                         console.error(error)
                     }
                     ;(window as any).Sentry?.captureException(error)

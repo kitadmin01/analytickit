@@ -1,22 +1,22 @@
-import { Properties } from '@posthog/plugin-scaffold'
-import { DateTime } from 'luxon'
+import{Properties}from'@analytickit/plugin-scaffold'
+import {DateTime} from 'luxon'
 
 import {
-    Group,
-    GroupTypeIndex,
-    PropertiesLastOperation,
-    PropertiesLastUpdatedAt,
-    PropertyUpdateOperation,
-    TeamId,
-} from '../../types'
-import { DB } from '../../utils/db/db'
-import { RaceConditionError } from '../../utils/utils'
+Group,
+GroupTypeIndex,
+PropertiesLastOperation,
+PropertiesLastUpdatedAt,
+PropertyUpdateOperation,
+TeamId,
+}from '../../types'
+import {DB}from '../../utils/db/db'
+import { RaceConditionError}from '../../utils/utils'
 
 interface PropertiesUpdate {
-    updated: boolean
-    properties: Properties
-    properties_last_updated_at: PropertiesLastUpdatedAt
-    properties_last_operation: PropertiesLastOperation
+updated: boolean
+properties: Properties
+properties_last_updated_at: PropertiesLastUpdatedAt
+properties_last_operation: PropertiesLastOperation
 }
 
 export async function upsertGroup(
@@ -42,9 +42,9 @@ export async function upsertGroup(
                 group?.properties_last_updated_at || {},
                 group?.properties_last_operation || {},
                 timestamp
-            )
+)
 
-            if (!group) {
+if (!group) {
                 propertiesUpdate.updated = true
             }
 
@@ -60,10 +60,10 @@ export async function upsertGroup(
                         propertiesUpdate.properties_last_operation,
                         version,
                         client
-                    )
-                } else {
-                    // :TRICKY: insertGroup will raise a RaceConditionError if group was inserted in-between fetch and this
-                    await db.insertGroup(
+)
+}else {
+// :TRICKY: insertGroup will raise a RaceConditionError if group was inserted in-between fetch and this
+await db.insertGroup(
                         teamId,
                         groupTypeIndex,
                         groupKey,
@@ -73,14 +73,14 @@ export async function upsertGroup(
                         propertiesUpdate.properties_last_operation,
                         version,
                         client
-                    )
-                }
-            }
+)
+}
+}
 
-            return [propertiesUpdate, createdAt, version]
-        })
+return [propertiesUpdate, createdAt, version]
+})
 
-        if (propertiesUpdate.updated) {
+if (propertiesUpdate.updated) {
             await db.upsertGroupClickhouse(
                 teamId,
                 groupTypeIndex,
@@ -88,10 +88,10 @@ export async function upsertGroup(
                 propertiesUpdate.properties,
                 createdAt,
                 version
-            )
-        }
-    } catch (error) {
-        if (error instanceof RaceConditionError) {
+)
+}
+}catch (error) {
+if (error instanceof RaceConditionError) {
             // Try again - lock the row and insert!
             return upsertGroup(db, teamId, groupTypeIndex, groupKey, properties, timestamp)
         }
@@ -137,13 +137,13 @@ export function calculateUpdateSingleProperty(
             timestamp,
             getPropertiesLastOperationOrSet(currentPropertiesLastOperation, key),
             getPropertyLastUpdatedAtDateTimeOrEpoch(currentPropertiesLastUpdatedAt, key)
-        )
-    ) {
-        result.updated = true
-        result.properties[key] = value
-        result.properties_last_operation[key] = operation
-        result.properties_last_updated_at[key] = timestamp.toISO()
-    }
+)
+) {
+result.updated = true
+result.properties[key] = value
+result.properties_last_operation[key] = operation
+result.properties_last_updated_at[key] = timestamp.toISO()
+}
 }
 
 export function calculateUpdateForMerge(
@@ -172,9 +172,9 @@ export function calculateUpdateForMerge(
             timestamp,
             currentPropertiesLastOperation,
             currentPropertiesLastUpdatedAt
-        )
-    })
-    return result
+)
+})
+return result
 }
 
 export function calculateUpdate(
@@ -206,10 +206,10 @@ export function calculateUpdate(
                 timestamp,
                 currentPropertiesLastOperation,
                 currentPropertiesLastUpdatedAt
-            )
-        })
-    })
-    return result
+)
+})
+})
+return result
 }
 
 function getPropertyLastUpdatedAtDateTimeOrEpoch(

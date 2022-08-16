@@ -1,20 +1,20 @@
-import { captureException } from '@sentry/node'
-import { StatsD } from 'hot-shots'
-import { format } from 'util'
+import{captureException}from'@sentry/node'
+import {StatsD} from 'hot-shots'
+import {format}from 'util'
 
-import { Action, Hook, IngestionEvent, IngestionPersonData } from '../../types'
-import { DB } from '../../utils/db/db'
+import {Action, Hook, IngestionEvent, IngestionPersonData}from '../../types'
+import {DB} from '../../utils/db/db'
 import fetch from '../../utils/fetch'
-import { stringify } from '../../utils/utils'
-import { LazyPersonContainer } from './lazy-person-container'
-import { OrganizationManager } from './organization-manager'
-import { SiteUrlManager } from './site-url-manager'
-import { TeamManager } from './team-manager'
+import {stringify}from '../../utils/utils'
+import {LazyPersonContainer }from './lazy-person-container'
+import { OrganizationManager}from './organization-manager'
+import {SiteUrlManager}from './site-url-manager'
+import {TeamManager}from './team-manager'
 
 export enum WebhookType {
-    Slack = 'slack',
-    Discord = 'discord',
-    Teams = 'teams',
+Slack = 'slack',
+Discord = 'discord',
+Teams = 'teams',
 }
 
 export function determineWebhookType(url: string): WebhookType {
@@ -39,9 +39,9 @@ export function getUserDetails(
     }
     const userName = stringify(
         person.properties?.email || person.properties?.name || person.properties?.username || event.distinctId
-    )
-    let userMarkdown: string
-    if (webhookType === WebhookType.Slack) {
+)
+let userMarkdown: string
+if (webhookType === WebhookType.Slack) {
         userMarkdown = `<${siteUrl}/person/${event.distinctId}|${userName}>`
     } else {
         userMarkdown = `[${userName}](${siteUrl}/person/${event.distinctId})`
@@ -152,8 +152,8 @@ export async function getFormattedMessage(
                 siteUrl,
                 webhookType,
                 tokenParts
-            )
-            values.push(value)
+)
+values.push(value)
             markdownValues.push(markdownValue)
         }
         messageText = format(tokenizedMessage, ...values)
@@ -243,9 +243,9 @@ export class HookCommander {
             personContainer,
             siteUrl || '',
             webhookType
-        )
-        let message: Record<string, any>
-        if (webhookType === WebhookType.Slack) {
+)
+let message: Record < string, any>
+if(webhookType === WebhookType.Slack) {
             message = {
                 text: messageText,
                 blocks: [{ type: 'section', text: { type: 'mrkdwn', text: messageMarkdown } }],

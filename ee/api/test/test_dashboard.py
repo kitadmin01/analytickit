@@ -6,10 +6,10 @@ from rest_framework import status
 from ee.api.test.base import APILicensedTest
 from ee.models.explicit_team_membership import ExplicitTeamMembership
 from ee.models.license import License
-from posthog.models import OrganizationMembership
-from posthog.models.dashboard import Dashboard
-from posthog.models.sharing_configuration import SharingConfiguration
-from posthog.models.user import User
+from analytickit.models import OrganizationMembership
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.sharing_configuration import SharingConfiguration
+from analytickit.models.user import User
 
 
 class TestDashboardEnterpriseAPI(APILicensedTest):
@@ -210,7 +210,7 @@ class TestDashboardEnterpriseAPI(APILicensedTest):
         self.organization.update_available_features()
         self.organization.save()
 
-        response = self.client.get(f"/api/projects/{self.team.id}/dashboards/{dashboard.id}",)
+        response = self.client.get(f"/api/projects/{self.team.id}/dashboards/{dashboard.id}", )
         response_data = response.json()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

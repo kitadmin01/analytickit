@@ -15,7 +15,7 @@ import { urls } from 'scenes/urls'
 import { Link } from 'lib/components/Link'
 import { Animation } from 'lib/components/Animation/Animation'
 import { AnimationType } from 'lib/animations/animations'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 
 export function InsightEmptyState(): JSX.Element {
     return (
@@ -57,7 +57,7 @@ export function InsightTimeoutState({ isLoading }: { isLoading: boolean }): JSX.
                     <li>
                         <a
                             data-attr="insight-timeout-raise-issue"
-                            href="https://github.com/PostHog/posthog/issues/new?labels=performance&template=performance_issue_report.md"
+                            href="https://github.com/analytickit/analytickit/issues/new?labels=performance&template=performance_issue_report.md"
                             target="_blank"
                             rel="noreferrer noopener"
                         >
@@ -69,7 +69,7 @@ export function InsightTimeoutState({ isLoading }: { isLoading: boolean }): JSX.
                         Get in touch with us{' '}
                         <a
                             data-attr="insight-timeout-slack"
-                            href="https://posthog.com/slack"
+                            href="https://analytickit.com/slack"
                             rel="noopener noreferrer"
                             target="_blank"
                         >
@@ -79,8 +79,8 @@ export function InsightTimeoutState({ isLoading }: { isLoading: boolean }): JSX.
                     </li>
                     <li>
                         Email us at{' '}
-                        <a data-attr="insight-timeout-email" href="mailto:hey@posthog.com">
-                            hey@posthog.com
+                        <a data-attr="insight-timeout-email" href="mailto:hey@analytickit.com">
+                            hey@analytickit.com
                         </a>
                         .
                     </li>
@@ -114,7 +114,7 @@ export function InsightErrorState({ excludeDetail, title }: InsightErrorStatePro
                             <li>
                                 <a
                                     data-attr="insight-error-raise-issue"
-                                    href="https://github.com/PostHog/posthog/issues/new?labels=bug&template=bug_report.md"
+                                    href="https://github.com/analytickit/analytickit/issues/new?labels=bug&template=bug_report.md"
                                     target="_blank"
                                     rel="noreferrer noopener"
                                 >
@@ -126,7 +126,7 @@ export function InsightErrorState({ excludeDetail, title }: InsightErrorStatePro
                                 Get in touch with us{' '}
                                 <a
                                     data-attr="insight-error-slack"
-                                    href="https://posthog.com/slack"
+                                    href="https://analytickit.com/slack"
                                     rel="noopener noreferrer"
                                     target="_blank"
                                 >
@@ -138,9 +138,9 @@ export function InsightErrorState({ excludeDetail, title }: InsightErrorStatePro
                                 Email us at{' '}
                                 <a
                                     data-attr="insight-error-email"
-                                    href="mailto:hey@posthog.com?subject=Insight%20graph%20error"
+                                    href="mailto:hey@analytickit.com?subject=Insight%20graph%20error"
                                 >
-                                    hey@posthog.com
+                                    hey@analytickit.com
                                 </a>
                                 .
                             </li>
@@ -186,12 +186,12 @@ export function FunnelSingleStepState({ actionable = true }: { actionable?: bool
                 <div className="mt-4">
                     <a
                         data-attr="funnels-single-step-help"
-                        href="https://posthog.com/docs/user-guides/funnels?utm_medium=in-product&utm_campaign=funnel-empty-state"
+                        href="https://analytickit.com/docs/user-guides/funnels?utm_medium=in-product&utm_campaign=funnel-empty-state"
                         target="_blank"
                         rel="noopener"
                         className="flex items-center justify-center"
                     >
-                        Learn more about funnels in PostHog docs
+                        Learn more about funnels in analytickit docs
                         <IconOpenInNew style={{ marginLeft: 4, fontSize: '0.85em' }} />
                     </a>
                 </div>
@@ -215,11 +215,11 @@ export function FunnelInvalidExclusionState(): JSX.Element {
                 <div className="mt-4">
                     <a
                         data-attr="insight-funnels-emptystate-help"
-                        href="https://posthog.com/docs/user-guides/funnels?utm_medium=in-product&utm_campaign=funnel-exclusion-filter-state"
+                        href="https://analytickit.com/docs/user-guides/funnels?utm_medium=in-product&utm_campaign=funnel-exclusion-filter-state"
                         target="_blank"
                         rel="noopener"
                     >
-                        Learn more about funnels in PostHog docs
+                        Learn more about funnels in analytickit docs
                         <IconOpenInNew style={{ marginLeft: 4, fontSize: '0.85em' }} />
                     </a>
                 </div>

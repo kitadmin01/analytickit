@@ -6,9 +6,9 @@ from rest_framework import exceptions, serializers, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from ee.models.hook import Hook
-from posthog.api.routing import StructuredViewSetMixin
-from posthog.models.user import User
-from posthog.permissions import OrganizationMemberPermissions, TeamMemberAccessPermission
+from analytickit.api.routing import StructuredViewSetMixin
+from analytickit.models.user import User
+from analytickit.permissions import OrganizationMemberPermissions, TeamMemberAccessPermission
 
 
 class HookSerializer(serializers.ModelSerializer):

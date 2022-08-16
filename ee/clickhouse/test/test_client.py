@@ -6,9 +6,9 @@ from clickhouse_driver.errors import ServerException
 from django.test import TestCase
 from freezegun import freeze_time
 
-from posthog import client
-from posthog.client import CACHE_TTL, _deserialize, _key_hash, cache_sync_execute, sync_execute
-from posthog.test.base import ClickhouseTestMixin
+from analytickit import client
+from analytickit.client import CACHE_TTL, _deserialize, _key_hash, cache_sync_execute, sync_execute
+from analytickit.test.base import ClickhouseTestMixin
 
 
 class ClickhouseClientTestCase(TestCase, ClickhouseTestMixin):
@@ -83,7 +83,7 @@ class ClickhouseClientTestCase(TestCase, ClickhouseTestMixin):
         self.assertTrue(result.error)
         self.assertEqual(result.error_message, "Requesting team is not executing team")
 
-    @patch("posthog.client.execute_with_progress")
+    @patch("analytickit.client.execute_with_progress")
     def test_async_query_client_is_lazy(self, execute_sync_mock):
         query = "SELECT 4 + 4"
         team_id = 2
@@ -98,7 +98,7 @@ class ClickhouseClientTestCase(TestCase, ClickhouseTestMixin):
         # Assert that we only called clickhouse once
         execute_sync_mock.assert_called_once()
 
-    @patch("posthog.client.execute_with_progress")
+    @patch("analytickit.client.execute_with_progress")
     def test_async_query_client_is_lazy_but_not_too_lazy(self, execute_sync_mock):
         query = "SELECT 8 + 8"
         team_id = 2
@@ -113,7 +113,7 @@ class ClickhouseClientTestCase(TestCase, ClickhouseTestMixin):
         # Assert that we called clickhouse twice
         self.assertEqual(execute_sync_mock.call_count, 2)
 
-    @patch("posthog.client.execute_with_progress")
+    @patch("analytickit.client.execute_with_progress")
     def test_async_query_client_manual_query_uuid(self, execute_sync_mock):
         # This is a unique test because technically in the test pattern `SELECT 8 + 8` is already
         # in redis. This tests to make sure it is treated as a unique run of that query

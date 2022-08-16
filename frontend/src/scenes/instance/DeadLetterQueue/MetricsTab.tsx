@@ -8,7 +8,7 @@ import { LemonButton } from 'lib/components/LemonButton'
 import { Spinner } from 'lib/components/Spinner/Spinner'
 import { IconRefresh } from 'lib/components/icons'
 
-// keep in sync with posthog/api/dead_letter_queue.py
+// keep in sync with analytickit/api/dead_letter_queue.py
 const ROWS_LIMIT = 10
 
 export function MetricsTab(): JSX.Element {

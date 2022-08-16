@@ -26,7 +26,7 @@ import { InsightEmptyState } from 'scenes/insights/EmptyStates'
 import { useResizeObserver } from 'lib/hooks/useResizeObserver'
 import { PersonsModal } from 'scenes/trends/PersonsModal'
 import { personsModalLogic } from 'scenes/trends/personsModalLogic'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 
 const DEFAULT_PATHS_ID = 'default_paths'
 const HIDE_PATH_CARD_HEIGHT = 30

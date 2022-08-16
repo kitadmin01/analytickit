@@ -17,7 +17,7 @@ export function NotFound({ object }: NotFoundProps): JSX.Element {
                 It’s possible this {object} may have been deleted or its sharing settings changed. Please check with the
                 person who sent you here, or{' '}
                 <Link
-                    to={`https://posthog.com/support?utm_medium=in-product&utm_campaign=${object}-not-found`}
+                    to={`https://analytickit.com/support?utm_medium=in-product&utm_campaign=${object}-not-found`}
                     target="_blank"
                     rel="noopener"
                 >

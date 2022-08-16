@@ -20,14 +20,14 @@ describe('Feature Flags', () => {
         cy.get('[data-attr=feature-flag-instructions-select-option-PHP]').click()
         cy.get('[data-attr=feature-flag-instructions-snippet]').should(
             'contain',
-            /if (PostHog::isFeatureEnabled('.*', 'some distinct id')) {/
+            /if (analytickit::isFeatureEnabled('.*', 'some distinct id')) {/
         )
         cy.get('[data-attr=feature-flag-instructions-snippet]').should('contain', /    \/\/ do something here/)
         cy.get('[data-attr=feature-flag-instructions-snippet]').should('contain', /}/)
         cy.get('[data-attr=feature-flag-doc-link]').should(
             'have.attr',
             'href',
-            'https://posthog.com/docs/integrations/php-integration?utm_medium=in-product&utm_campaign=feature-flag#feature-flags'
+            'https://analytickit.com/docs/integrations/php-integration?utm_medium=in-product&utm_campaign=feature-flag#feature-flags'
         )
 
         // select "add filter" and "property"

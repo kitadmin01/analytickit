@@ -1,11 +1,11 @@
 import pytest
 
 from ee.clickhouse.materialized_columns.columns import materialize
-from posthog.client import sync_execute
-from posthog.models.filters import Filter
-from posthog.models.team import Team
-from posthog.queries.person_query import PersonQuery
-from posthog.test.base import _create_person
+from analytickit.client import sync_execute
+from analytickit.models.filters import Filter
+from analytickit.models.team import Team
+from analytickit.queries.person_query import PersonQuery
+from analytickit.test.base import _create_person
 
 
 def person_query(team: Team, filter: Filter, **kwargs):
@@ -28,12 +28,12 @@ def testdata(db, team):
     _create_person(
         distinct_ids=["1"],
         team_id=team.pk,
-        properties={"email": "tim@posthog.com", "$os": "windows", "$browser": "chrome"},
+        properties={"email": "tim@analytickit.com", "$os": "windows", "$browser": "chrome"},
     )
     _create_person(
         distinct_ids=["2"],
         team_id=team.pk,
-        properties={"email": "marius@posthog.com", "$os": "Mac", "$browser": "firefox"},
+        properties={"email": "marius@analytickit.com", "$os": "Mac", "$browser": "firefox"},
     )
     _create_person(
         distinct_ids=["3"],
@@ -52,7 +52,7 @@ def test_person_query(testdata, team, snapshot):
         data={
             "properties": [
                 {"key": "event_prop", "value": "value"},
-                {"key": "email", "type": "person", "value": "posthog", "operator": "icontains"},
+                {"key": "email", "type": "person", "value": "analytickit", "operator": "icontains"},
             ],
         }
     )
@@ -68,7 +68,7 @@ def test_person_query_with_anded_property_groups(testdata, team, snapshot):
                 "type": "AND",
                 "values": [
                     {"key": "event_prop", "value": "value"},
-                    {"key": "email", "type": "person", "value": "posthog", "operator": "icontains"},
+                    {"key": "email", "type": "person", "value": "analytickit", "operator": "icontains"},
                     {"key": "$os", "type": "person", "value": "windows", "operator": "exact"},
                     {"key": "$browser", "type": "person", "value": "chrome", "operator": "exact"},
                 ],
@@ -89,7 +89,7 @@ def test_person_query_with_and_and_or_property_groups(testdata, team, snapshot):
                     {
                         "type": "OR",
                         "values": [
-                            {"key": "email", "type": "person", "value": "posthog", "operator": "icontains"},
+                            {"key": "email", "type": "person", "value": "analytickit", "operator": "icontains"},
                             {"key": "$browser", "type": "person", "value": "karl", "operator": "icontains"},
                         ],
                     },
@@ -118,7 +118,7 @@ def test_person_query_with_and_and_or_property_groups(testdata, team, snapshot):
 def test_person_query_with_extra_requested_fields(testdata, team, snapshot):
     filter = Filter(
         data={
-            "properties": [{"key": "email", "type": "person", "value": "posthog", "operator": "icontains"},],
+            "properties": [{"key": "email", "type": "person", "value": "analytickit", "operator": "icontains"}, ],
             "breakdown": "person_prop_4326",
             "breakdown_type": "person",
         },
@@ -153,7 +153,7 @@ def test_person_query_with_entity_filters(testdata, team, snapshot):
 
 def test_person_query_with_extra_fields(testdata, team, snapshot):
     filter = Filter(
-        data={"properties": [{"key": "email", "type": "person", "value": "posthog", "operator": "icontains"},]},
+        data={"properties": [{"key": "email", "type": "person", "value": "analytickit", "operator": "icontains"}, ]},
     )
 
     assert person_query(team, filter, extra_fields=["person_props", "pmat_email"]) == snapshot
@@ -181,7 +181,7 @@ def test_person_query_with_entity_filters_and_property_group_filters(testdata, t
                     {
                         "type": "OR",
                         "values": [
-                            {"key": "email", "type": "person", "value": "posthog", "operator": "icontains"},
+                            {"key": "email", "type": "person", "value": "analytickit", "operator": "icontains"},
                             {"key": "$browser", "type": "person", "value": "karl", "operator": "icontains"},
                         ],
                     },

@@ -12,11 +12,11 @@ from ee.clickhouse.queries.experiments import (
     FF_DISTRIBUTION_THRESHOLD,
     MIN_PROBABILITY_FOR_SIGNIFICANCE,
 )
-from posthog.constants import ACTIONS, EVENTS, TRENDS_CUMULATIVE, ExperimentSignificanceCode
-from posthog.models.feature_flag import FeatureFlag
-from posthog.models.filters.filter import Filter
-from posthog.models.team import Team
-from posthog.queries.trends.trends import Trends
+from analytickit.constants import ACTIONS, EVENTS, TRENDS_CUMULATIVE, ExperimentSignificanceCode
+from analytickit.models.feature_flag import FeatureFlag
+from analytickit.models.filters.filter import Filter
+from analytickit.models.team import Team
+from analytickit.queries.trends.trends import Trends
 
 Probability = float
 
@@ -47,13 +47,13 @@ class ClickhouseTrendExperimentResult:
     """
 
     def __init__(
-        self,
-        filter: Filter,
-        team: Team,
-        feature_flag: FeatureFlag,
-        experiment_start_date: datetime,
-        experiment_end_date: Optional[datetime] = None,
-        trend_class: Type[Trends] = Trends,
+            self,
+            filter: Filter,
+            team: Team,
+            feature_flag: FeatureFlag,
+            experiment_start_date: datetime,
+            experiment_end_date: Optional[datetime] = None,
+            trend_class: Type[Trends] = Trends,
     ):
 
         breakdown_key = f"$feature/{feature_flag.key}"
@@ -102,7 +102,7 @@ class ClickhouseTrendExperimentResult:
 
     def get_results(self):
         insight_results = self.insight.run(self.query_filter, self.team)
-        exposure_results = self.insight.run(self.exposure_filter, self.team,)
+        exposure_results = self.insight.run(self.exposure_filter, self.team, )
         control_variant, test_variants = self.get_variants(insight_results, exposure_results)
 
         probabilities = self.calculate_results(control_variant, test_variants)
@@ -188,7 +188,7 @@ class ClickhouseTrendExperimentResult:
 
     @staticmethod
     def are_results_significant(
-        control_variant: Variant, test_variants: List[Variant], probabilities: List[Probability]
+            control_variant: Variant, test_variants: List[Variant], probabilities: List[Probability]
     ) -> Tuple[ExperimentSignificanceCode, Probability]:
         # TODO: Experiment with Expected Loss calculations for trend experiments
 
@@ -202,8 +202,8 @@ class ClickhouseTrendExperimentResult:
             return ExperimentSignificanceCode.NOT_ENOUGH_EXPOSURE, 1
 
         if (
-            probabilities[0] < MIN_PROBABILITY_FOR_SIGNIFICANCE
-            and sum(probabilities[1:]) < MIN_PROBABILITY_FOR_SIGNIFICANCE
+                probabilities[0] < MIN_PROBABILITY_FOR_SIGNIFICANCE
+                and sum(probabilities[1:]) < MIN_PROBABILITY_FOR_SIGNIFICANCE
         ):
             # Sum of probability of winning for all variants except control is less than 90%
             return ExperimentSignificanceCode.LOW_WIN_PROBABILITY, 1

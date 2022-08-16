@@ -137,7 +137,7 @@ export function Experiments(): JSX.Element {
                         Check out our
                         <a
                             data-attr="experiment-help"
-                            href="https://posthog.com/docs/user-guides/experimentation?utm_medium=in-product&utm_campaign=new-experiment"
+                            href="https://analytickit.com/docs/user-guides/experimentation?utm_medium=in-product&utm_campaign=new-experiment"
                             target="_blank"
                             rel="noopener"
                         >
@@ -176,7 +176,7 @@ export function Experiments(): JSX.Element {
                         </>
                     }
                     caption="Improve your product by A/B testing new features to discover what works best for your users."
-                    docsLink="https://posthog.com/docs/user-guides/experimentation"
+                    docsLink="https://analytickit.com/docs/user-guides/experimentation"
                 />
             )}
         </div>

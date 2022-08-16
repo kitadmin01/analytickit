@@ -1,338 +1,340 @@
 import {
     OrganizationMembershipLevel,
-    PluginsAccessLevel,
-    ShownAsValue,
-    RETENTION_RECURRING,
-    RETENTION_FIRST_TIME,
-    ENTITY_MATCH_TYPE,
-    FunnelLayout,
-    BIN_COUNT_AUTO,
-    TeamMembershipLevel,
-} from 'lib/constants'
-import { PluginConfigSchema } from '@posthog/plugin-scaffold'
-import { PluginInstallationType } from 'scenes/plugins/types'
-import { PROPERTY_MATCH_TYPE, DashboardRestrictionLevel, DashboardPrivilegeLevel } from 'lib/constants'
-import { UploadFile } from 'antd/lib/upload/interface'
-import { eventWithTime } from 'rrweb/typings/types'
-import { PostHog } from 'posthog-js'
+PluginsAccessLevel,
+ShownAsValue,
+RETENTION_RECURRING,
+RETENTION_FIRST_TIME,
+ENTITY_MATCH_TYPE,
+FunnelLayout,
+BIN_COUNT_AUTO,
+TeamMembershipLevel,
+}from 'lib/constants'
+import {PluginConfigSchema }from '@analytickit/plugin-scaffold'
+import {PluginInstallationType}from 'scenes/plugins/types'
+import {PROPERTY_MATCH_TYPE, DashboardRestrictionLevel, DashboardPrivilegeLevel} from 'lib/constants'
+import {UploadFile }from 'antd/lib/upload/interface'
+import {eventWithTime}from 'rrweb/typings/types'
+import {analytickit}from 'analytickit-js'
 import React from 'react'
-import { PopupProps } from 'lib/components/Popup/Popup'
-import { dayjs } from 'lib/dayjs'
-import { ChartDataset, ChartType, InteractionItem } from 'chart.js'
-import { LogLevel } from 'rrweb'
-import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
-import { BehavioralFilterKey, BehavioralFilterType } from 'scenes/cohorts/CohortFilters/types'
-import { LogicWrapper } from 'kea'
-import { AggregationAxisFormat } from 'scenes/insights/aggregationAxisFormat'
+import {PopupProps}from 'lib/components/Popup/Popup'
+import {dayjs} from 'lib/dayjs'
+import {ChartDataset, ChartType, InteractionItem}from 'chart.js'
+import {LogLevel}from 'rrweb'
+import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import {BehavioralFilterKey, BehavioralFilterType}from 'scenes/cohorts/CohortFilters/types'
+import {LogicWrapper}from 'kea'
+import {AggregationAxisFormat}from 'scenes/insights/aggregationAxisFormat'
 
-export type Optional<T, K extends string | number | symbol> = Omit<T, K> & { [K in keyof T]?: T[K] }
+export type Optional <T, K extends string | number | symbol> = Omit<T, K> & {
+[K in keyof T]?: T[K]
+}
 
 // Keep this in sync with backend constants (constants.py)
 export enum AvailableFeature {
-    ZAPIER = 'zapier',
-    ORGANIZATIONS_PROJECTS = 'organizations_projects',
-    PROJECT_BASED_PERMISSIONING = 'project_based_permissioning',
-    GOOGLE_LOGIN = 'google_login',
-    SAML = 'saml',
-    SSO_ENFORCEMENT = 'sso_enforcement',
-    DASHBOARD_COLLABORATION = 'dashboard_collaboration',
-    DASHBOARD_PERMISSIONING = 'dashboard_permissioning',
-    INGESTION_TAXONOMY = 'ingestion_taxonomy',
-    PATHS_ADVANCED = 'paths_advanced',
-    CORRELATION_ANALYSIS = 'correlation_analysis',
-    GROUP_ANALYTICS = 'group_analytics',
-    MULTIVARIATE_FLAGS = 'multivariate_flags',
-    EXPERIMENTATION = 'experimentation',
-    TAGGING = 'tagging',
-    BEHAVIORAL_COHORT_FILTERING = 'behavioral_cohort_filtering',
-    WHITE_LABELLING = 'white_labelling',
-    SUBSCRIPTIONS = 'subscriptions',
+ZAPIER = 'zapier',
+ORGANIZATIONS_PROJECTS = 'organizations_projects',
+PROJECT_BASED_PERMISSIONING = 'project_based_permissioning',
+GOOGLE_LOGIN = 'google_login',
+SAML = 'saml',
+SSO_ENFORCEMENT = 'sso_enforcement',
+DASHBOARD_COLLABORATION = 'dashboard_collaboration',
+DASHBOARD_PERMISSIONING = 'dashboard_permissioning',
+INGESTION_TAXONOMY = 'ingestion_taxonomy',
+PATHS_ADVANCED = 'paths_advanced',
+CORRELATION_ANALYSIS = 'correlation_analysis',
+GROUP_ANALYTICS = 'group_analytics',
+MULTIVARIATE_FLAGS = 'multivariate_flags',
+EXPERIMENTATION = 'experimentation',
+TAGGING = 'tagging',
+BEHAVIORAL_COHORT_FILTERING = 'behavioral_cohort_filtering',
+WHITE_LABELLING = 'white_labelling',
+SUBSCRIPTIONS = 'subscriptions',
 }
 
 export enum LicensePlan {
-    Scale = 'scale',
-    Enterprise = 'enterprise',
+Scale = 'scale',
+Enterprise = 'enterprise',
 }
 
 export enum Realm {
-    Cloud = 'cloud',
-    Demo = 'demo',
-    SelfHostedPostgres = 'hosted',
-    SelfHostedClickHouse = 'hosted-clickhouse',
+Cloud = 'cloud',
+Demo = 'demo',
+SelfHostedPostgres = 'hosted',
+SelfHostedClickHouse = 'hosted-clickhouse',
 }
 
 export type SSOProviders = 'google-oauth2' | 'github' | 'gitlab' | 'saml'
 export interface AuthBackends {
-    'google-oauth2'?: boolean
-    gitlab?: boolean
-    github?: boolean
+'google-oauth2'?: boolean
+gitlab?: boolean
+github?: boolean
 }
 
 export type ColumnChoice = string[] | 'DEFAULT'
 
 export interface ColumnConfig {
-    active: ColumnChoice
+active: ColumnChoice
 }
 
 interface UserBaseType {
-    uuid: string
-    distinct_id: string
-    first_name: string
-    email: string
+uuid: string
+distinct_id: string
+first_name: string
+email: string
 }
 
 /* Type for User objects in nested serializers (e.g. created_by) */
 export interface UserBasicType extends UserBaseType {
-    id: number
+id: number
 }
 
 /** Full User model. */
 export interface UserType extends UserBaseType {
-    date_joined: string
-    email_opt_in: boolean
-    events_column_config: ColumnConfig
-    anonymize_data: boolean
-    toolbar_mode: 'disabled' | 'toolbar'
-    has_password: boolean
-    is_staff: boolean
-    is_impersonated: boolean
-    organization: OrganizationType | null
-    team: TeamBasicType | null
-    organizations: OrganizationBasicType[]
-    realm?: Realm
-    posthog_version?: string
+date_joined: string
+email_opt_in: boolean
+events_column_config: ColumnConfig
+anonymize_data: boolean
+toolbar_mode: 'disabled' | 'toolbar'
+has_password: boolean
+is_staff: boolean
+is_impersonated: boolean
+organization: OrganizationType | null
+team: TeamBasicType | null
+organizations: OrganizationBasicType[]
+realm?: Realm
+analytickit_version?: string
 }
 
 export interface PluginAccess {
-    view: boolean
-    install: boolean
-    configure: boolean
+view: boolean
+install: boolean
+configure: boolean
 }
 
 export interface PersonalAPIKeyType {
-    id: string
-    label: string
-    value?: string
-    created_at: string
-    last_used_at: string
-    team_id: number
-    user_id: string
+id: string
+label: string
+value?: string
+created_at: string
+last_used_at: string
+team_id: number
+user_id: string
 }
 
 export interface OrganizationBasicType {
-    id: string
-    name: string
-    slug: string
-    membership_level: OrganizationMembershipLevel | null
+id: string
+name: string
+slug: string
+membership_level: OrganizationMembershipLevel | null
 }
 
 interface OrganizationMetadata {
-    taxonomy_set_events_count: number
-    taxonomy_set_properties_count: number
+taxonomy_set_events_count: number
+taxonomy_set_properties_count: number
 }
 export interface OrganizationType extends OrganizationBasicType {
-    created_at: string
-    updated_at: string
-    plugins_access_level: PluginsAccessLevel
-    teams: TeamBasicType[] | null
-    available_features: AvailableFeature[]
-    is_member_join_email_enabled: boolean
-    metadata?: OrganizationMetadata
+created_at: string
+updated_at: string
+plugins_access_level: PluginsAccessLevel
+teams: TeamBasicType[] | null
+available_features: AvailableFeature[]
+is_member_join_email_enabled: boolean
+metadata?: OrganizationMetadata
 }
 
 export interface OrganizationDomainType {
-    id: string
-    domain: string
-    is_verified: boolean
-    verified_at: string // Datetime
-    verification_challenge: string
-    jit_provisioning_enabled: boolean
-    sso_enforcement: SSOProviders | ''
-    has_saml: boolean
-    saml_entity_id: string
-    saml_acs_url: string
-    saml_x509_cert: string
+id: string
+domain: string
+is_verified: boolean
+verified_at: string // Datetime
+verification_challenge: string
+jit_provisioning_enabled: boolean
+sso_enforcement: SSOProviders | ''
+has_saml: boolean
+saml_entity_id: string
+saml_acs_url: string
+saml_x509_cert: string
 }
 
 /** Member properties relevant at both organization and project level. */
 export interface BaseMemberType {
-    id: string
-    user: UserBasicType
-    joined_at: string
-    updated_at: string
+id: string
+user: UserBasicType
+joined_at: string
+updated_at: string
 }
 
 export interface OrganizationMemberType extends BaseMemberType {
-    /** Level at which the user is in the organization. */
-    level: OrganizationMembershipLevel
+/** Level at which the user is in the organization. */
+level: OrganizationMembershipLevel
 }
 
 export interface ExplicitTeamMemberType extends BaseMemberType {
-    /** Level at which the user explicitly is in the project. */
-    level: TeamMembershipLevel
-    /** Level at which the user is in the organization. */
-    parent_level: OrganizationMembershipLevel
-    /** Effective level of the user within the project, which may be higher than parent level, but not lower. */
-    effective_level: OrganizationMembershipLevel
+/** Level at which the user explicitly is in the project. */
+level: TeamMembershipLevel
+/** Level at which the user is in the organization. */
+parent_level: OrganizationMembershipLevel
+/** Effective level of the user within the project, which may be higher than parent level, but not lower. */
+effective_level: OrganizationMembershipLevel
 }
 
 /**
- * While OrganizationMemberType and ExplicitTeamMemberType refer to actual Django models,
- * this interface is only used in the frontend for fusing the data from these models together.
- */
+* While OrganizationMemberType and ExplicitTeamMemberType refer to actual Django models,
+* this interface is only used in the frontend for fusing the data from these models together.
+*/
 export interface FusedTeamMemberType extends BaseMemberType {
-    /**
-     * Level at which the user explicitly is in the project.
-     * Null means that membership is implicit (when showing permitted members)
-     * or that there's no membership at all (when showing addable members).
-     */
-    explicit_team_level: TeamMembershipLevel | null
-    /** Level at which the user is in the organization. */
-    organization_level: OrganizationMembershipLevel
-    /** Effective level of the user within the project. */
-    level: OrganizationMembershipLevel
+/**
+* Level at which the user explicitly is in the project.
+* Null means that membership is implicit (when showing permitted members)
+* or that there's no membership at all (when showing addable members).
+*/
+explicit_team_level: TeamMembershipLevel | null
+/** Level at which the user is in the organization. */
+organization_level: OrganizationMembershipLevel
+/** Effective level of the user within the project. */
+level: OrganizationMembershipLevel
 }
 
 export interface APIErrorType {
-    type: 'authentication_error' | 'invalid_request' | 'server_error' | 'throttled_error' | 'validation_error'
-    code: string
-    detail: string
-    attr: string | null
+type: 'authentication_error' | 'invalid_request' | 'server_error' | 'throttled_error' | 'validation_error'
+code: string
+detail: string
+attr: string | null
 }
 
 export interface EventUsageType {
-    event: string
-    usage_count: number
-    volume: number
+event: string
+usage_count: number
+volume: number
 }
 
 export interface PropertyUsageType {
-    key: string
-    usage_count: number
-    volume: number
+key: string
+usage_count: number
+volume: number
 }
 
 export interface TeamBasicType {
-    id: number
-    uuid: string
-    organization: string // Organization ID
-    api_token: string
-    name: string
-    completed_snippet_onboarding: boolean
-    ingested_event: boolean
-    is_demo: boolean
-    timezone: string
-    /** Whether the project is private. */
-    access_control: boolean
-    /** Effective access level of the user in this specific team. Null if user has no access. */
-    effective_membership_level: OrganizationMembershipLevel | null
+id: number
+uuid: string
+organization: string // Organization ID
+api_token: string
+name: string
+completed_snippet_onboarding: boolean
+ingested_event: boolean
+is_demo: boolean
+timezone: string
+/** Whether the project is private. */
+access_control: boolean
+/** Effective access level of the user in this specific team. Null if user has no access. */
+effective_membership_level: OrganizationMembershipLevel | null
 }
 
 export interface TeamType extends TeamBasicType {
-    created_at: string
-    updated_at: string
-    anonymize_ips: boolean
-    app_urls: string[]
-    slack_incoming_webhook: string
-    session_recording_opt_in: boolean
-    test_account_filters: AnyPropertyFilter[]
-    path_cleaning_filters: Record<string, any>[]
-    data_attributes: string[]
-    person_display_name_properties: string[]
-    has_group_types: boolean
-    primary_dashboard: number // Dashboard shown on the project homepage
-    live_events_columns: string[] | null // Custom columns shown on the Live Events page
+created_at: string
+updated_at: string
+anonymize_ips: boolean
+app_urls: string[]
+slack_incoming_webhook: string
+session_recording_opt_in: boolean
+test_account_filters: AnyPropertyFilter[]
+path_cleaning_filters: Record < string, any>[]
+data_attributes: string[]
+person_display_name_properties: string[]
+has_group_types: boolean
+primary_dashboard: number // Dashboard shown on the project homepage
+live_events_columns: string[] | null // Custom columns shown on the Live Events page
 
-    // Uses to exclude person properties from correlation analysis results, for
-    // example can be used to exclude properties that have trivial causation
-    correlation_config: {
-        excluded_person_property_names?: string[]
-        excluded_event_property_names?: string[]
-        excluded_event_names?: string[]
-    }
+// Uses to exclude person properties from correlation analysis results, for
+// example can be used to exclude properties that have trivial causation
+correlation_config: {
+excluded_person_property_names?: string[]
+excluded_event_property_names?: string[]
+excluded_event_names?: string[]
+}
 }
 
 export interface ActionType {
-    count?: number
-    created_at: string
-    deleted?: boolean
-    id: number
-    is_calculating?: boolean
-    last_calculated_at?: string
-    last_updated_at?: string // alias for last_calculated_at to achieve event and action parity
-    name: string | null
-    description?: string
-    post_to_slack?: boolean
-    slack_message_format?: string
-    steps?: ActionStepType[]
-    created_by: UserBasicType | null
-    tags?: string[]
-    verified?: boolean
-    is_action?: true
-    action_id?: number // alias of id to make it compatible with event definitions uuid
+count?: number
+created_at: string
+deleted?: boolean
+id: number
+is_calculating?: boolean
+last_calculated_at?: string
+last_updated_at?: string // alias for last_calculated_at to achieve event and action parity
+name: string | null
+description?: string
+post_to_slack?: boolean
+slack_message_format?: string
+steps?: ActionStepType[]
+created_by: UserBasicType | null
+tags?: string[]
+verified?: boolean
+is_action?: true
+action_id?: number // alias of id to make it compatible with event definitions uuid
 }
 
 /** Sync with plugin-server/src/types.ts */
 export enum ActionStepUrlMatching {
-    Contains = 'contains',
-    Regex = 'regex',
-    Exact = 'exact',
+Contains = 'contains',
+Regex = 'regex',
+Exact = 'exact',
 }
 
 export interface ActionStepType {
-    event?: string
-    href?: string | null
-    id?: number
-    name?: string
-    properties?: AnyPropertyFilter[]
-    selector?: string | null
-    tag_name?: string
-    text?: string | null
-    url?: string | null
-    url_matching?: ActionStepUrlMatching
-    isNew?: string
+event?: string
+href?: string | null
+id?: number
+name?: string
+properties?: AnyPropertyFilter[]
+selector?: string | null
+tag_name?: string
+text?: string | null
+url?: string | null
+url_matching?: ActionStepUrlMatching
+isNew?: string
 }
 
 export interface ElementType {
-    attr_class?: string[]
-    attr_id?: string
-    attributes: Record<string, string>
-    href: string
-    nth_child: number
-    nth_of_type: number
-    order: number
-    tag_name: string
-    text?: string
+attr_class?: string[]
+attr_id?: string
+attributes: Record < string, string>
+href: string
+nth_child: number
+nth_of_type: number
+order: number
+tag_name: string
+text?: string
 }
 
 export type ToolbarUserIntent = 'add-action' | 'edit-action'
 
 export interface EditorProps {
-    apiURL?: string
-    jsURL?: string
-    temporaryToken?: string
-    actionId?: number
-    userIntent?: ToolbarUserIntent
-    instrument?: boolean
-    distinctId?: string
-    userEmail?: string
-    dataAttributes?: string[]
-    featureFlags?: Record<string, string | boolean>
+apiURL?: string
+jsURL?: string
+temporaryToken?: string
+actionId?: number
+userIntent?: ToolbarUserIntent
+instrument?: boolean
+distinctId?: string
+userEmail?: string
+dataAttributes?: string[]
+featureFlags?: Record < string, string | boolean>
 }
 
 export interface ToolbarProps extends EditorProps {
-    posthog?: PostHog
-    disableExternalStyles?: boolean
+analytickit?: analytickit
+disableExternalStyles?: boolean
 }
 
 export type PropertyFilterValue = string | number | (string | number)[] | null
 
 export interface PropertyFilter {
-    key: string
-    operator: PropertyOperator | null
-    type: string
-    value: PropertyFilterValue
-    group_type_index?: number | null
+key: string
+operator: PropertyOperator | null
+type: string
+value: PropertyFilterValue
+group_type_index?: number | null
 }
 
 export type EmptyPropertyFilter = Partial<PropertyFilter>
@@ -341,89 +343,89 @@ export type AnyPropertyFilter = PropertyFilter | EmptyPropertyFilter
 
 /** Sync with plugin-server/src/types.ts */
 export enum PropertyOperator {
-    Exact = 'exact',
-    IsNot = 'is_not',
-    IContains = 'icontains',
-    NotIContains = 'not_icontains',
-    Regex = 'regex',
-    NotRegex = 'not_regex',
-    GreaterThan = 'gt',
-    GreaterThanOrEqual = 'gte',
-    LessThan = 'lt',
-    LessThanOrEqual = 'lte',
-    IsSet = 'is_set',
-    IsNotSet = 'is_not_set',
-    IsDateExact = 'is_date_exact',
-    IsDateBefore = 'is_date_before',
-    IsDateAfter = 'is_date_after',
-    Between = 'between',
-    NotBetween = 'not_between',
-    Minimum = 'min',
-    Maximum = 'max',
+Exact = 'exact',
+IsNot = 'is_not',
+IContains = 'icontains',
+NotIContains = 'not_icontains',
+Regex = 'regex',
+NotRegex = 'not_regex',
+GreaterThan = 'gt',
+GreaterThanOrEqual = 'gte',
+LessThan = 'lt',
+LessThanOrEqual = 'lte',
+IsSet = 'is_set',
+IsNotSet = 'is_not_set',
+IsDateExact = 'is_date_exact',
+IsDateBefore = 'is_date_before',
+IsDateAfter = 'is_date_after',
+Between = 'between',
+NotBetween = 'not_between',
+Minimum = 'min',
+Maximum = 'max',
 }
 
 export enum SavedInsightsTabs {
-    All = 'all',
-    Yours = 'yours',
-    Favorites = 'favorites',
-    History = 'history',
+All = 'all',
+Yours = 'yours',
+Favorites = 'favorites',
+History = 'history',
 }
 
 export enum ExperimentsTabs {
-    All = 'all',
-    Yours = 'yours',
-    Archived = 'archived',
+All = 'all',
+Yours = 'yours',
+Archived = 'archived',
 }
 
 /** Sync with plugin-server/src/types.ts */
 interface BasePropertyFilter {
-    key: string
-    value: PropertyFilterValue
-    label?: string
+key: string
+value: PropertyFilterValue
+label?: string
 }
 
 /** Sync with plugin-server/src/types.ts */
 export interface EventPropertyFilter extends BasePropertyFilter {
-    type: 'event'
-    operator: PropertyOperator
+type: 'event'
+operator: PropertyOperator
 }
 
 /** Sync with plugin-server/src/types.ts */
 export interface PersonPropertyFilter extends BasePropertyFilter {
-    type: 'person'
-    operator: PropertyOperator
+type: 'person'
+operator: PropertyOperator
 }
 
 /** Sync with plugin-server/src/types.ts */
 export interface ElementPropertyFilter extends BasePropertyFilter {
-    type: 'element'
-    key: 'tag_name' | 'text' | 'href' | 'selector'
-    operator: PropertyOperator
+type: 'element'
+key: 'tag_name' | 'text' | 'href' | 'selector'
+operator: PropertyOperator
 }
 
 export interface SessionPropertyFilter extends BasePropertyFilter {
-    type: 'session'
-    key: '$session_duration'
-    operator: PropertyOperator
+type: 'session'
+key: '$session_duration'
+operator: PropertyOperator
 }
 
 /** Sync with plugin-server/src/types.ts */
 export interface CohortPropertyFilter extends BasePropertyFilter {
-    type: 'cohort'
-    key: 'id'
-    value: number
+type: 'cohort'
+key: 'id'
+value: number
 }
 
 export type SessionRecordingId = string
 
 export interface PlayerPosition {
-    time: number
-    windowId: string
+time: number
+windowId: string
 }
 
 export interface RRWebRecordingConsoleLogPayload {
-    level: LogLevel
-    payload: (string | null)[]
+level: LogLevel
+payload:(string | null)[]
     trace: string[]
 }
 
@@ -599,7 +601,7 @@ export interface CohortGroupType {
 }
 
 // Note this will eventually replace CohortGroupType once `cohort-filters` FF is released
-// Synced with `posthog/models/property.py`
+// Synced with `analytickit/models/property.py`
 export interface CohortCriteriaType {
     id: string // Criteria filter id
     key: string
@@ -665,7 +667,7 @@ export interface SavedFunnel extends InsightHistory {
 
 export type BinCountValue = number | typeof BIN_COUNT_AUTO
 
-// https://github.com/PostHog/posthog/blob/master/posthog/constants.py#L106
+// https://github.com/analytickit/analytickit/blob/master/analytickit/constants.py#L106
 export enum StepOrderValue {
     STRICT = 'strict',
     UNORDERED = 'unordered',
@@ -1266,7 +1268,7 @@ export interface FunnelConversionWindow {
     funnel_window_interval: number
 }
 
-// https://github.com/PostHog/posthog/blob/master/posthog/models/filters/mixins/funnel.py#L100
+// https://github.com/analytickit/analytickit/blob/master/analytickit/models/filters/mixins/funnel.py#L100
 export enum FunnelConversionWindowTimeUnit {
     Minute = 'minute',
     Hour = 'hour',
@@ -1426,7 +1428,7 @@ export interface PreflightStatus {
     initiated: boolean
     /** Org creation is allowed on Cloud OR initiated self-hosted organizations with a license and MULTI_ORG_ENABLED. */
     can_create_org: boolean
-    /** Whether this is PostHog Cloud. */
+    /** Whether this is analytickit Cloud. */
     cloud: boolean
     /** Whether this is a managed demo environment. */
     demo: boolean
@@ -1435,13 +1437,13 @@ export interface PreflightStatus {
     available_social_auth_providers: AuthBackends
     available_timezones?: Record<string, number>
     opt_out_capture?: boolean
-    posthog_version?: string
+    analytickit_version?: string
     email_service_available: boolean
     slack_service: {
         available: boolean
         client_id?: string
     }
-    /** Whether PostHog is running in DEBUG mode. */
+    /** Whether analytickit is running in DEBUG mode. */
     is_debug?: boolean
     is_event_property_usage_enabled?: boolean
     licensed_users_available?: number | null

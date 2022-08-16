@@ -1,9 +1,9 @@
-import { router } from 'kea-router'
-import { expectLogic } from 'kea-test-utils'
-import { urls } from 'scenes/urls'
-import { initKeaTests } from '~/test/init'
-import { groupsListLogic } from './groupsListLogic'
-import { useMocks } from '~/mocks/jest'
+import{router}from'kea-router'
+import {expectLogic}from 'kea-test-utils'
+import {urls}from 'scenes/urls'
+import {initKeaTests}from '~/test/init'
+import {groupsListLogic} from './groupsListLogic'
+import {useMocks }from '~/mocks/jest'
 
 describe('groupsListLogic', () => {
     let logic: ReturnType<typeof groupsListLogic.build>

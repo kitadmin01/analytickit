@@ -23,7 +23,7 @@ import { groupsAccessLogic } from 'lib/introductions/groupsAccessLogic'
 import { ActivityLog } from 'lib/components/ActivityLog/ActivityLog'
 import { personActivityDescriber } from 'scenes/persons/activityDescriptions'
 import { ActivityScope } from 'lib/components/ActivityLog/humanizeActivity'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 
 const { TabPane } = Tabs
 
@@ -211,7 +211,7 @@ export function Person(): JSX.Element | null {
                             <div>
                                 <InfoCircleOutlined style={{ marginRight: '.25rem' }} />
                                 <span>
-                                    This page only shows changes made by users in the PostHog site. Automatic changes
+                                    This page only shows changes made by users in the analytickit site. Automatic changes
                                     from the API aren't shown here.
                                 </span>
                             </div>

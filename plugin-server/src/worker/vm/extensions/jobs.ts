@@ -1,9 +1,9 @@
-import { runInSpan } from '../../../sentry'
-import { Hub, PluginConfig, PluginLogEntryType } from '../../../types'
-import { JobName } from './../../../types'
+import{runInSpan}from'../../../sentry'
+import {Hub, PluginConfig, PluginLogEntryType} from '../../../types'
+import {JobName}from './../../../types'
 
 type JobRunner = {
-    runAt: (date: Date) => Promise<void>
+runAt: (date: Date) => Promise<void>
     runIn: (duration: number, unit: string) => Promise<void>
     runNow: () => Promise<void>
 }
@@ -60,16 +60,16 @@ export function createJobs(server: Hub, pluginConfig: PluginConfig): Jobs {
                         pluginConfigId: pluginConfig.id,
                         pluginConfigTeam: pluginConfig.team_id,
                     })
-            )
-        } catch (e) {
-            await pluginConfig.vm?.createLogEntry(
+)
+}catch (e) {
+await pluginConfig.vm?.createLogEntry(
                 `Failed to enqueue job ${type} with error: ${e.message}`,
                 PluginLogEntryType.Error
-            )
-        }
-    }
+)
+}
+}
 
-    return new Proxy(
+return new Proxy(
         {},
         {
             get(target, key) {
@@ -89,5 +89,5 @@ export function createJobs(server: Hub, pluginConfig: PluginConfig): Jobs {
                 }
             },
         }
-    )
+)
 }

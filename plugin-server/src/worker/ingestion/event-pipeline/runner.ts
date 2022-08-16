@@ -1,68 +1,68 @@
-import { PluginEvent, ProcessedPluginEvent } from '@posthog/plugin-scaffold'
+import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
 
-import { runInSpan } from '../../../sentry'
-import { Hub, IngestionEvent } from '../../../types'
-import { timeoutGuard } from '../../../utils/db/utils'
-import { status } from '../../../utils/status'
-import { LazyPersonContainer } from '../lazy-person-container'
-import { generateEventDeadLetterQueueMessage } from '../utils'
-import { emitToBufferStep } from './1-emitToBufferStep'
-import { pluginsProcessEventStep } from './2-pluginsProcessEventStep'
-import { processPersonsStep } from './3-processPersonsStep'
-import { prepareEventStep } from './4-prepareEventStep'
-import { createEventStep } from './5-createEventStep'
-import { runAsyncHandlersStep } from './6-runAsyncHandlersStep'
+import {runInSpan}from '../../../sentry'
+import {Hub, IngestionEvent}from '../../../types'
+import {timeoutGuard}from '../../../utils/db/utils'
+import {status}from '../../../utils/status'
+import {LazyPersonContainer}from '../lazy-person-container'
+import {generateEventDeadLetterQueueMessage}from '../utils'
+import {emitToBufferStep }from './1-emitToBufferStep'
+import { pluginsProcessEventStep}from './2-pluginsProcessEventStep'
+import {processPersonsStep}from './3-processPersonsStep'
+import {prepareEventStep}from './4-prepareEventStep'
+import {createEventStep}from './5-createEventStep'
+import {runAsyncHandlersStep}from './6-runAsyncHandlersStep'
 
-export type StepParameters<T extends (...args: any[]) => any> = T extends (
-    runner: EventPipelineRunner,
-    ...args: infer P
+export type StepParameters < T extends (...args: any[]) => any> = T extends (
+runner: EventPipelineRunner,
+...args: infer P
 ) => any
-    ? P
-    : never
+? P
+: never
 
 const EVENT_PIPELINE_STEPS = {
-    emitToBufferStep,
-    pluginsProcessEventStep,
-    processPersonsStep,
-    prepareEventStep,
-    createEventStep,
-    runAsyncHandlersStep,
+emitToBufferStep,
+pluginsProcessEventStep,
+processPersonsStep,
+prepareEventStep,
+createEventStep,
+runAsyncHandlersStep,
 }
 
 export type EventPipelineStepsType = typeof EVENT_PIPELINE_STEPS
 export type StepType = keyof EventPipelineStepsType
-export type NextStep<Step extends StepType> = [StepType, StepParameters<EventPipelineStepsType[Step]>]
+export type NextStep < Step extends StepType> = [StepType, StepParameters<EventPipelineStepsType[Step]>]
 
 export type StepResult =
-    | null
-    | NextStep<'emitToBufferStep'>
-    | NextStep<'pluginsProcessEventStep'>
-    | NextStep<'processPersonsStep'>
-    | NextStep<'prepareEventStep'>
-    | NextStep<'createEventStep'>
-    | NextStep<'runAsyncHandlersStep'>
+| null
+| NextStep <'emitToBufferStep'>
+| NextStep <'pluginsProcessEventStep'>
+| NextStep <'processPersonsStep'>
+| NextStep <'prepareEventStep'>
+| NextStep <'createEventStep'>
+| NextStep <'runAsyncHandlersStep'>
 
 // Only used in tests
 export type EventPipelineResult = {
-    lastStep: StepType
-    args: any[]
-    error?: string
+lastStep: StepType
+args: any[]
+error?: string
 }
 
-const STEPS_TO_EMIT_TO_DLQ_ON_FAILURE: Array<StepType> = [
-    'emitToBufferStep',
-    'pluginsProcessEventStep',
-    'processPersonsStep',
-    'prepareEventStep',
-    'createEventStep',
+const STEPS_TO_EMIT_TO_DLQ_ON_FAILURE: Array < StepType> = [
+'emitToBufferStep',
+'pluginsProcessEventStep',
+'processPersonsStep',
+'prepareEventStep',
+'createEventStep',
 ]
 
 export class EventPipelineRunner {
-    hub: Hub
-    originalEvent: PluginEvent | ProcessedPluginEvent
+hub: Hub
+originalEvent: PluginEvent | ProcessedPluginEvent
 
-    constructor(hub: Hub, originalEvent: PluginEvent | ProcessedPluginEvent) {
+constructor(hub: Hub, originalEvent: PluginEvent | ProcessedPluginEvent) {
         this.hub = hub
         this.originalEvent = originalEvent
     }
@@ -156,17 +156,17 @@ export class EventPipelineRunner {
                     clearTimeout(timeout)
                 }
             }
-        )
-    }
+)
+}
 
-    nextStep<Step extends StepType, ArgsType extends StepParameters<EventPipelineStepsType[Step]>>(
-        name: Step,
-        ...args: ArgsType
-    ): NextStep<Step> {
-        return [name, args]
-    }
+nextStep < Step extends StepType, ArgsType extends StepParameters<EventPipelineStepsType[Step]>>(
+name: Step,
+...args: ArgsType
+): NextStep < Step> {
+return [name, args]
+}
 
-    private async handleError(err: any, currentStepName: StepType, currentArgs: any) {
+private async handleError(err: any, currentStepName: StepType, currentArgs: any) {
         const serializedArgs = currentArgs.map((arg: any) => this.serialize(arg))
         status.info('🔔', err)
         Sentry.captureException(err, { extra: { currentStepName, serializedArgs, originalEvent: this.originalEvent } })

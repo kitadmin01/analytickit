@@ -11,7 +11,7 @@ import { defaultConfigForPlugin, doFieldRequirementsMatch, getConfigSchemaArray 
 import ReactMarkdown from 'react-markdown'
 import { SourcePluginTag } from 'scenes/plugins/plugin/SourcePluginTag'
 import { PluginSource } from '../source/PluginSource'
-import { PluginConfigChoice, PluginConfigSchema } from '@posthog/plugin-scaffold'
+import { PluginConfigChoice, PluginConfigSchema } from '@analytickit/plugin-scaffold'
 import { PluginField } from 'scenes/plugins/edit/PluginField'
 import { endWithPunctation } from 'lib/utils'
 import { canGloballyManagePlugins, canInstallPlugins } from '../access'
@@ -169,7 +169,7 @@ export function PluginDrawer(): JSX.Element {
                                         title={
                                             <>
                                                 This app can currently be used by other organizations in this instance
-                                                of PostHog. This action will <b>disable and hide it</b> for all
+                                                of analytickit. This action will <b>disable and hide it</b> for all
                                                 organizations other than yours.
                                             </>
                                         }
@@ -188,7 +188,7 @@ export function PluginDrawer(): JSX.Element {
                                         title={
                                             <>
                                                 This action will mark this app as installed for <b>all organizations</b>{' '}
-                                                in this instance of PostHog.
+                                                in this instance of analytickit.
                                             </>
                                         }
                                     >

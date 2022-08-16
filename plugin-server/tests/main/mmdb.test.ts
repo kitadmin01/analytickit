@@ -1,13 +1,13 @@
-import { ReaderModel } from '@maxmind/geoip2-node'
-import { readFileSync } from 'fs'
-import { DateTime } from 'luxon'
+import{ReaderModel}from'@maxmind/geoip2-node'
+import {readFileSync} from 'fs'
+import {DateTime}from 'luxon'
 import * as fetch from 'node-fetch'
-import { join } from 'path'
+import {join}from 'path'
 
-import { ServerInstance, startPluginsServer } from '../../src/main/pluginsServer'
-import { fetchIpLocationInternally } from '../../src/worker/mmdb'
-import { makePiscina } from '../../src/worker/piscina'
-import { resetTestDatabase } from '../helpers/sql'
+import {ServerInstance, startPluginsServer}from '../../src/main/pluginsServer'
+import {fetchIpLocationInternally}from '../../src/worker/mmdb'
+import {makePiscina}from '../../src/worker/piscina'
+import {resetTestDatabase}from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 
@@ -17,7 +17,7 @@ async function resetTestDatabaseWithMmdb(): Promise<void> {
     await resetTestDatabase(undefined, undefined, {
         pluginAttachments: [
             {
-                key: '@posthog/mmdb',
+                key: '@analytickit/mmdb',
                 content_type: 'vnd.maxmind.maxmind-db',
                 file_name: `GeoLite2-City-${DateTime.local().toISODate()}.mmdb.br`,
                 file_size: mmdbBrotliContents.byteLength,
@@ -51,7 +51,7 @@ describe('mmdb', () => {
 
         await expect(
             async () => await fetchIpLocationInternally('89.160.20.129', serverInstance.hub)
-        ).rejects.toThrowError('IP location capabilities are not available in this PostHog instance!')
+        ).rejects.toThrowError('IP location capabilities are not available in this analytickit instance!')
     })
 
     test('fresh MMDB is downloaded if not cached and works', async () => {
@@ -61,7 +61,7 @@ describe('mmdb', () => {
 
         expect(serverInstance.hub.DISABLE_MMDB).toBeFalsy()
 
-        expect(fetch).toHaveBeenCalledWith('https://mmdbcdn.posthog.net/', { compress: false })
+        expect(fetch).toHaveBeenCalledWith('https://mmdbcdn.analytickit.net/', { compress: false })
         expect(serverInstance.mmdb).toBeInstanceOf(ReaderModel)
 
         const cityResultDirect = serverInstance.mmdb!.city('89.160.20.129')

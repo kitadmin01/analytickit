@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 
 from ee.api.test.base import APILicensedTest
-from posthog.models.instance_setting import set_instance_setting
+from analytickit.models.instance_setting import set_instance_setting
 
 
 @pytest.mark.skip_on_multitenancy
@@ -23,10 +23,10 @@ class TestIntegration(APILicensedTest):
         sig_basestring = f"v0:{slack_time}:{json.dumps(payload, separators=(',', ':'))}"
 
         signature = (
-            "v0="
-            + hmac.new(
-                "not-so-secret".encode("utf-8"), sig_basestring.encode("utf-8"), digestmod=hashlib.sha256
-            ).hexdigest()
+                "v0="
+                + hmac.new(
+            "not-so-secret".encode("utf-8"), sig_basestring.encode("utf-8"), digestmod=hashlib.sha256
+        ).hexdigest()
         )
 
         return {

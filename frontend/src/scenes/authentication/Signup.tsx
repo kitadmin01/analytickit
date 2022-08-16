@@ -67,7 +67,7 @@ export function Signup(): JSX.Element | null {
     }
 
     const footerHighlights = {
-        cloud: ['Hosted & managed by PostHog', 'Pay per event, cancel anytime', 'Community, Slack & email support'],
+        cloud: ['Hosted & managed by analytickit', 'Pay per event, cancel anytime', 'Community, Slack & email support'],
         selfHosted: [
             'Fully featured product, unlimited events',
             'Data in your own infrastructure',
@@ -83,7 +83,7 @@ export function Signup(): JSX.Element | null {
                         <WelcomeLogo view="signup" />
                         <div className="inner">
                             <h2 className="subtitle" style={{ justifyContent: 'center' }}>
-                                {!preflight?.demo ? 'Get started' : 'Explore PostHog yourself'}
+                                {!preflight?.demo ? 'Get started' : 'Explore analytickit yourself'}
                             </h2>
                             {!preflight?.demo && (preflight?.cloud || preflight?.initiated) && (
                                 // If we're in the demo environment, login is unified with signup and it's passwordless
@@ -215,7 +215,7 @@ export function Signup(): JSX.Element | null {
                                         disabled={signupResponse?.success}
                                     >
                                         {signupResponse?.success
-                                            ? 'Opening PostHog…'
+                                            ? 'Opening analytickit…'
                                             : !preflight?.demo
                                             ? 'Create account'
                                             : !signupResponseLoading
@@ -227,11 +227,11 @@ export function Signup(): JSX.Element | null {
                                 <Form.Item className="text-center terms-and-conditions-text">
                                     By {!preflight?.demo ? 'creating an account' : 'entering the demo environment'}, you
                                     agree to our{' '}
-                                    <a href={`https://posthog.com/terms?${UTM_TAGS}`} target="_blank" rel="noopener">
+                                    <a href={`https://analytickit.com/terms?${UTM_TAGS}`} target="_blank" rel="noopener">
                                         Terms of Service
                                     </a>{' '}
                                     and{' '}
-                                    <a href={`https://posthog.com/privacy?${UTM_TAGS}`} target="_blank" rel="noopener">
+                                    <a href={`https://analytickit.com/privacy?${UTM_TAGS}`} target="_blank" rel="noopener">
                                         Privacy Policy
                                     </a>
                                     .

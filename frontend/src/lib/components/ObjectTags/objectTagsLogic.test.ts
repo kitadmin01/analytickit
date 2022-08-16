@@ -1,6 +1,6 @@
-import { initKeaTests } from '~/test/init'
-import { expectLogic } from 'kea-test-utils'
-import { objectTagsLogic, ObjectTagsLogicProps } from 'lib/components/ObjectTags/objectTagsLogic'
+import{initKeaTests}from'~/test/init'
+import {expectLogic }from 'kea-test-utils'
+import {objectTagsLogic, ObjectTagsLogicProps}from 'lib/components/ObjectTags/objectTagsLogic'
 
 describe('objectTagsLogic', () => {
     let logic: ReturnType<typeof objectTagsLogic.build>

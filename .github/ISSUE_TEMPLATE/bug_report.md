@@ -7,7 +7,7 @@ labels: bug
 ## Bug description
 
 *Please describe.*  
-*If this affects the front-end, screenshots would be of great help.*  
+*If this affects the front-end, screenshots would be of great help.*
 
 ## How to reproduce
 
@@ -17,11 +17,9 @@ labels: bug
 
 ## Environment
 
-- [ ] PostHog Cloud
-- [ ] self-hosted PostHog, version/commit: please provide
+- [ ] analytickit Cloud
+- [ ] self-hosted analytickit, version/commit: please provide
 
 ## Additional context
-
-
 
 #### *Thank you* for your bug report – we love squashing them!

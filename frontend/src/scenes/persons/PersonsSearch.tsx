@@ -3,7 +3,7 @@ import { useValues, useActions } from 'kea'
 import { personsLogic } from './personsLogic'
 import { IconInfo } from 'lib/components/icons'
 import { Tooltip } from 'lib/components/Tooltip'
-import { LemonInput } from '@posthog/lemon-ui'
+import { LemonInput } from '@analytickit/lemon-ui'
 import { useDebouncedCallback } from 'use-debounce'
 
 export const PersonsSearch = ({ autoFocus = true }: { autoFocus?: boolean }): JSX.Element => {

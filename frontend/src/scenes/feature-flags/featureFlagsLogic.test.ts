@@ -1,8 +1,8 @@
-import { initKeaTests } from '~/test/init'
-import { featureFlagsLogic, FeatureFlagsTabs } from 'scenes/feature-flags/featureFlagsLogic'
-import { expectLogic } from 'kea-test-utils'
-import { router } from 'kea-router'
-import { urls } from 'scenes/urls'
+import{initKeaTests}from'~/test/init'
+import {featureFlagsLogic, FeatureFlagsTabs}from 'scenes/feature-flags/featureFlagsLogic'
+import {expectLogic}from 'kea-test-utils'
+import {router}from 'kea-router'
+import {urls}from 'scenes/urls'
 
 describe('the feature flags logic', () => {
     let logic: ReturnType<typeof featureFlagsLogic.build>

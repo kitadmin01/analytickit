@@ -1,17 +1,17 @@
-import { PluginEvent, ProcessedPluginEvent } from '@posthog/plugin-scaffold'
+import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
 import * as fetch from 'node-fetch'
 
-import { KAFKA_EVENTS_PLUGIN_INGESTION, KAFKA_PLUGIN_LOG_ENTRIES } from '../../src/config/kafka-topics'
-import { JobQueueManager } from '../../src/main/job-queues/job-queue-manager'
-import { Hub, PluginLogEntrySource, PluginLogEntryType } from '../../src/types'
-import { PluginConfig, PluginConfigVMResponse } from '../../src/types'
-import { createHub } from '../../src/utils/db/hub'
-import { delay } from '../../src/utils/utils'
-import { MAXIMUM_RETRIES } from '../../src/worker/vm/upgrades/export-events'
-import { createPluginConfigVM } from '../../src/worker/vm/vm'
-import { pluginConfig39 } from '../helpers/plugins'
-import { plugin60 } from '../helpers/plugins'
-import { resetTestDatabase } from '../helpers/sql'
+import {KAFKA_EVENTS_PLUGIN_INGESTION, KAFKA_PLUGIN_LOG_ENTRIES}from '../../src/config/kafka-topics'
+import {JobQueueManager}from '../../src/main/job-queues/job-queue-manager'
+import {Hub, PluginLogEntrySource, PluginLogEntryType} from '../../src/types'
+import {PluginConfig, PluginConfigVMResponse}from '../../src/types'
+import {createHub}from '../../src/utils/db/hub'
+import {delay}from '../../src/utils/utils'
+import {MAXIMUM_RETRIES}from '../../src/worker/vm/upgrades/export-events'
+import {createPluginConfigVM}from '../../src/worker/vm/vm'
+import {pluginConfig39} from '../helpers/plugins'
+import {plugin60}from '../helpers/plugins'
+import {resetTestDatabase}from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 jest.mock('../../src/utils/db/kafka-producer-wrapper')
@@ -766,22 +766,22 @@ describe('vm tests', () => {
         expect(event.properties).toEqual({ count: 2, query: 'bla', results: [true, true] })
     })
 
-    test('posthog.api', async () => {
+    test('analytickit.api', async () => {
         const indexJs = `
             async function processEvent (event, meta) {
                 event.properties = {}
-                const getResponse = await posthog.api.get('/api/event')
+                const getResponse = await analytickit.api.get('/api/event')
                 event.properties.get = await getResponse.json()
-                await posthog.api.get('/api/event', { data: { url: 'param' } })
-                await posthog.api.post('/api/event', { data: { a: 1 }})
-                await posthog.api.put('/api/event', { data: { b: 2 } })
-                await posthog.api.delete('/api/event')
+                await analytickit.api.get('/api/event', { data: { url: 'param' } })
+                await analytickit.api.post('/api/event', { data: { a: 1 }})
+                await analytickit.api.put('/api/event', { data: { b: 2 } })
+                await analytickit.api.delete('/api/event')
 
                 // test auth defaults override
-                await posthog.api.get('/api/event', { projectApiKey: 'token', personalApiKey: 'secret' })
+                await analytickit.api.get('/api/event', { projectApiKey: 'token', personalApiKey: 'secret' })
 
                 // test replace @current with team id
-                await posthog.api.get('/api/projects/@current/event')
+                await analytickit.api.get('/api/projects/@current/event')
 
                 return event
             }
@@ -799,21 +799,21 @@ describe('vm tests', () => {
         expect((fetch as any).mock.calls.length).toEqual(7)
         expect((fetch as any).mock.calls).toEqual([
             [
-                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'GET',
                 },
             ],
             [
-                'https://app.posthog.com/api/event?url=param&token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.analytickit.com/api/event?url=param&token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'GET',
                 },
             ],
             [
-                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: {
                         Authorization: expect.stringContaining('Bearer phx_'),
@@ -824,7 +824,7 @@ describe('vm tests', () => {
                 },
             ],
             [
-                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'PUT',
@@ -832,21 +832,21 @@ describe('vm tests', () => {
                 },
             ],
             [
-                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'DELETE',
                 },
             ],
             [
-                'https://app.posthog.com/api/event?token=token',
+                'https://app.analytickit.com/api/event?token=token',
                 {
                     headers: { Authorization: 'Bearer secret' },
                     method: 'GET',
                 },
             ],
             [
-                'https://app.posthog.com/api/projects/' +
+                'https://app.analytickit.com/api/projects/' +
                     pluginConfig39.team_id +
                     '/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
@@ -878,13 +878,13 @@ describe('vm tests', () => {
                 attachments,
             },
             indexJs
-        )
-        const event: PluginEvent = {
-            ...defaultEvent,
-            event: 'attachments',
-        }
+)
+const event: PluginEvent = {
+...defaultEvent,
+event: 'attachments',
+}
 
-        await vm.methods.processEvent!(event)
+await vm.methods.processEvent!(event)
 
         expect(event.properties).toEqual(attachments)
     })
@@ -936,10 +936,10 @@ describe('vm tests', () => {
         expect(Object.values(vm.tasks.schedule).map((v) => typeof v?.exec)).toEqual(['function'])
     })
 
-    test('posthog in runEvery', async () => {
+    test('analytickit in runEvery', async () => {
         const indexJs = `
             async function runEveryMinute(meta) {
-                await posthog.capture('my-new-event', { random: 'properties' })
+                await analytickit.capture('my-new-event', { random: 'properties' })
                 return 'haha'
             }
         `
@@ -958,17 +958,17 @@ describe('vm tests', () => {
             distinct_id: 'plugin-id-60',
             event: 'my-new-event',
             properties: expect.objectContaining({
-                $lib: 'posthog-plugin-server',
+                $lib: 'analytickit-plugin-server',
                 random: 'properties',
                 distinct_id: 'plugin-id-60',
             }),
         })
     })
 
-    test('posthog in runEvery with timestamp', async () => {
+    test('analytickit in runEvery with timestamp', async () => {
         const indexJs = `
             async function runEveryMinute(meta) {
-                await posthog.capture('my-new-event', { random: 'properties', timestamp: '2020-02-23T02:15:00Z' })
+                await analytickit.capture('my-new-event', { random: 'properties', timestamp: '2020-02-23T02:15:00Z' })
                 return 'haha'
             }
         `
@@ -987,14 +987,14 @@ describe('vm tests', () => {
             timestamp: '2020-02-23T02:15:00Z', // taken out of the properties
             distinct_id: 'plugin-id-60',
             event: 'my-new-event',
-            properties: expect.objectContaining({ $lib: 'posthog-plugin-server', random: 'properties' }),
+            properties: expect.objectContaining({ $lib: 'analytickit-plugin-server', random: 'properties' }),
         })
     })
 
-    test('posthog.capture accepts user-defined distinct id', async () => {
+    test('analytickit.capture accepts user-defined distinct id', async () => {
         const indexJs = `
             function runEveryMinute(meta) {
-                posthog.capture('my-new-event', { random: 'properties', distinct_id: 'custom id' })
+                analytickit.capture('my-new-event', { random: 'properties', distinct_id: 'custom id' })
                 return 'haha'
             }
         `
@@ -1014,7 +1014,7 @@ describe('vm tests', () => {
             distinct_id: 'custom id',
             event: 'my-new-event',
             properties: expect.objectContaining({
-                $lib: 'posthog-plugin-server',
+                $lib: 'analytickit-plugin-server',
                 random: 'properties',
                 distinct_id: 'custom id',
             }),
@@ -1073,8 +1073,8 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
-            await vm.methods.onEvent!(defaultEvent)
+)
+await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!({ ...defaultEvent, event: 'otherEvent' })
             await vm.methods.onEvent!({ ...defaultEvent, event: 'otherEvent2' })
             await vm.methods.onEvent!({ ...defaultEvent, event: 'otherEvent3' })
@@ -1115,14 +1115,14 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
-            const event: ProcessedPluginEvent = {
-                ...defaultEvent,
-                event: 'exported',
-            }
+)
+const event: ProcessedPluginEvent = {
+...defaultEvent,
+event: 'exported',
+}
 
-            // first ones will fail and be retried
-            await vm.methods.onEvent!(event)
+// first ones will fail and be retried
+await vm.methods.onEvent!(event)
             await vm.methods.onEvent!(event)
             await vm.methods.onEvent!(event)
             await delay(1010)
@@ -1183,9 +1183,9 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
+)
 
-            await vm.methods.onEvent!(defaultEvent)
+await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!(defaultEvent)
             await delay(1010)
@@ -1224,12 +1224,12 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
-            const event: ProcessedPluginEvent = {
-                ...defaultEvent,
-                event: 'exported',
-            }
-            await vm.methods.onEvent!(event)
+)
+const event: ProcessedPluginEvent = {
+...defaultEvent,
+event: 'exported',
+}
+await vm.methods.onEvent!(event)
             await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!(event)
             await delay(1010)
@@ -1258,12 +1258,12 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
-            const event: ProcessedPluginEvent = {
-                distinct_id: 'my_id',
-                ip: '127.0.0.1',
-                team_id: 3,
-                timestamp: new Date().toISOString(),
+)
+const event: ProcessedPluginEvent = {
+distinct_id: 'my_id',
+ip: '127.0.0.1',
+team_id: 3,
+timestamp: new Date().toISOString(),
                 event: 'exported',
                 properties: {},
             }
@@ -1312,12 +1312,12 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
-            const event: ProcessedPluginEvent = {
-                distinct_id: 'my_id',
-                ip: '127.0.0.1',
-                team_id: 3,
-                timestamp: new Date().toISOString(),
+)
+const event: ProcessedPluginEvent = {
+distinct_id: 'my_id',
+ip: '127.0.0.1',
+team_id: 3,
+timestamp: new Date().toISOString(),
                 event: 'exported',
                 properties: {},
             }
@@ -1329,10 +1329,10 @@ describe('vm tests', () => {
             expect(fetch).toHaveBeenCalledTimes(100)
             expect((fetch as any).mock.calls).toEqual(
                 Array.from(Array(100)).map(() => ['https://export.com/?length=128&count=1'])
-            )
-        })
+)
+})
 
-        test('flushes on teardown', async () => {
+test('flushes on teardown', async () => {
             const indexJs = `
                 async function exportEvents (events, meta) {
                     await fetch('https://export.com/results.json?query=' + events[0].event + '&events=' + events.length)
@@ -1351,8 +1351,8 @@ describe('vm tests', () => {
                     },
                 },
                 indexJs
-            )
-            await vm.methods.onEvent!(defaultEvent)
+)
+await vm.methods.onEvent!(defaultEvent)
             expect(fetch).not.toHaveBeenCalledWith('https://export.com/results.json?query=default event&events=1')
 
             await vm.methods.teardownPlugin!()

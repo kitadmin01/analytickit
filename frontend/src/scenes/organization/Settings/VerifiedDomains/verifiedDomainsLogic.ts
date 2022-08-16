@@ -1,25 +1,25 @@
-import { actions, afterMount, connect, kea, listeners, path, reducers, selectors } from 'kea'
+import{actions, afterMount, connect, kea, listeners, path, reducers, selectors}from 'kea'
 import api from 'lib/api'
-import { lemonToast } from 'lib/components/lemonToast'
-import { SECURE_URL_REGEX } from 'lib/constants'
-import { organizationLogic } from 'scenes/organizationLogic'
-import { OrganizationDomainType, AvailableFeature } from '~/types'
-import type { verifiedDomainsLogicType } from './verifiedDomainsLogicType'
-import { forms } from 'kea-forms'
-import { loaders } from 'kea-loaders'
+import { lemonToast}from 'lib/components/lemonToast'
+import {SECURE_URL_REGEX}from 'lib/constants'
+import {organizationLogic}from 'scenes/organizationLogic'
+import {OrganizationDomainType, AvailableFeature}from '~/types'
+import type {verifiedDomainsLogicType }from './verifiedDomainsLogicType'
+import { forms}from 'kea-forms'
+import {loaders }from 'kea-loaders'
 
 export type OrganizationDomainUpdatePayload = Partial<
-    Pick<OrganizationDomainType, 'jit_provisioning_enabled' | 'sso_enforcement'>
+Pick < OrganizationDomainType, 'jit_provisioning_enabled' | 'sso_enforcement'>
 > &
-    Pick<OrganizationDomainType, 'id'>
+Pick< OrganizationDomainType, 'id'>
 
 export type SAMLConfigType = Partial<
-    Pick<OrganizationDomainType, 'saml_acs_url' | 'saml_entity_id' | 'saml_x509_cert'> &
-        Pick<OrganizationDomainType, 'id'>
+Pick < OrganizationDomainType, 'saml_acs_url' | 'saml_entity_id' | 'saml_x509_cert'> &
+Pick < OrganizationDomainType, 'id'>
 >
 
 export const verifiedDomainsLogic = kea<verifiedDomainsLogicType>([
-    path(['scenes', 'organization', 'verifiedDomainsLogic']),
+path(['scenes', 'organization', 'verifiedDomainsLogic']),
     connect({ values: [organizationLogic, ['currentOrganization']] }),
     actions({
         replaceDomain: (domain: OrganizationDomainType) => ({ domain }),
@@ -84,8 +84,8 @@ export const verifiedDomainsLogic = kea<verifiedDomainsLogicType>([
                     const response = await api.update(
                         `api/organizations/${values.currentOrganization?.id}/domains/${payload.id}`,
                         { ...payload, id: undefined }
-                    )
-                    lemonToast.success('Domain updated successfully! Changes will take immediately.')
+)
+lemonToast.success('Domain updated successfully! Changes will take immediately.')
                     actions.replaceDomain(response as OrganizationDomainType)
                     return false
                 },
@@ -98,9 +98,9 @@ export const verifiedDomainsLogic = kea<verifiedDomainsLogicType>([
                     } else {
                         lemonToast.warning(
                             'We could not verify your domain yet. DNS propagation may take up to 72 hours. Please try again later.'
-                        )
-                    }
-                    actions.replaceDomain(response as OrganizationDomainType)
+)
+}
+actions.replaceDomain(response as OrganizationDomainType)
                     actions.setVerifyModal(null)
                     return false
                 },

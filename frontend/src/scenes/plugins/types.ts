@@ -1,42 +1,42 @@
-import { PluginConfigType, PluginType } from '~/types'
+import{PluginConfigType, PluginType}from '~/types'
 
 export interface PluginRepositoryEntry {
-    name: string
-    url: string
-    description: string
-    tag: string
-    config?: Record<string, PluginConfigType>
-    maintainer?: string
-    type?: PluginRepositoryEntryType
+name: string
+url: string
+description: string
+tag: string
+config?: Record < string, PluginConfigType>
+maintainer?: string
+type?: PluginRepositoryEntryType
 }
 
 export enum PluginRepositoryEntryType {
-    DataIn = 'data_in',
-    DataOut = 'data_out',
+DataIn = 'data_in',
+DataOut = 'data_out',
 }
 
 export interface PluginTypeWithConfig extends PluginType {
-    pluginConfig: PluginConfigType
-    updateStatus: PluginUpdateStatusType
-    hasMoved?: boolean
+pluginConfig: PluginConfigType
+updateStatus: PluginUpdateStatusType
+hasMoved?: boolean
 }
 
 export interface PluginUpdateStatusType {
-    upToDate?: boolean
-    error?: boolean
-    updated?: boolean
+upToDate?: boolean
+error?: boolean
+updated?: boolean
 }
 
 export enum PluginInstallationType {
-    Local = 'local',
-    Custom = 'custom',
-    Repository = 'repository',
-    Source = 'source',
+Local = 'local',
+Custom = 'custom',
+Repository = 'repository',
+Source = 'source',
 }
 
 export enum PluginTab {
-    Installed = 'installed',
-    Repository = 'repository',
-    Advanced = 'advanced',
-    History = 'history',
+Installed = 'installed',
+Repository = 'repository',
+Advanced = 'advanced',
+History = 'history',
 }

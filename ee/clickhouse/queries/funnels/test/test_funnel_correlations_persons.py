@@ -7,19 +7,19 @@ from django.utils import timezone
 from freezegun import freeze_time
 
 from ee.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
-from posthog.constants import INSIGHT_FUNNELS
-from posthog.models import Cohort, Filter
-from posthog.models.person import Person
-from posthog.models.session_recording_event.util import create_session_recording_event
-from posthog.tasks.calculate_cohort import insert_cohort_from_insight_filter
-from posthog.test.base import (
+from analytickit.constants import INSIGHT_FUNNELS
+from analytickit.models import Cohort, Filter
+from analytickit.models.person import Person
+from analytickit.models.session_recording_event.util import create_session_recording_event
+from analytickit.tasks.calculate_cohort import insert_cohort_from_insight_filter
+from analytickit.test.base import (
     APIBaseTest,
     ClickhouseTestMixin,
     _create_event,
     _create_person,
     snapshot_clickhouse_queries,
 )
-from posthog.test.test_journeys import journeys_for
+from analytickit.test.test_journeys import journeys_for
 
 FORMAT_TIME = "%Y-%m-%d 00:00:00"
 MAX_STEP_COLUMN = 0
@@ -35,12 +35,11 @@ def _create_session_recording_event(team_id, distinct_id, session_id, timestamp,
         timestamp=timestamp,
         session_id=session_id,
         window_id=window_id,
-        snapshot_data={"timestamp": timestamp.timestamp(), "has_full_snapshot": has_full_snapshot,},
+        snapshot_data={"timestamp": timestamp.timestamp(), "has_full_snapshot": has_full_snapshot, },
     )
 
 
 class TestClickhouseFunnelCorrelationsActors(ClickhouseTestMixin, APIBaseTest):
-
     maxDiff = None
 
     def _setup_basic_test(self):
@@ -178,7 +177,7 @@ class TestClickhouseFunnelCorrelationsActors(ClickhouseTestMixin, APIBaseTest):
             [str(val["id"]) for val in serialized_actors], [*failure_target_persons, str(person_succ.uuid)]
         )
 
-    @patch("posthog.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
+    @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_funnel_correlation_cohort(self, _insert_cohort_from_insight_filter):
         filter, success_target_persons, failure_target_persons, person_fail, person_succ = self._setup_basic_test()
 

@@ -6,7 +6,7 @@ import { CloseOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import React from 'react'
 import './NPSPrompt.scss'
 import type { npsLogicType } from './NPSPromptType'
-import posthog from 'posthog-js'
+import analytickit from 'analytickit-js'
 import nps from './nps.svg'
 import { userLogic } from 'scenes/userLogic'
 import { dayjs } from 'lib/dayjs'
@@ -47,7 +47,7 @@ const npsLogic = kea<npsLogicType>({
         setPayload: (payload: NPSPayload | null) => ({ payload }),
         submit: (completed?: boolean) => ({ completed }),
         dismiss: true,
-        send: (result: 'completed' | 'partial' | 'dismissed') => ({ result }), // Sends response data to PostHog
+        send: (result: 'completed' | 'partial' | 'dismissed') => ({ result }), // Sends response data to analytickit
     },
     reducers: {
         step: [
@@ -85,15 +85,15 @@ const npsLogic = kea<npsLogicType>({
             cache.timeout = window.setTimeout(() => actions.hide(), NPS_HIDE_TIMEOUT)
         },
         send: ({ result }) => {
-            posthog.capture('nps feedback', { ...values.payload, result })
+            analytickit.capture('nps feedback', { ...values.payload, result })
 
             // `nps_2106` is used to identify users who have replied to the NPS survey (via cohorts)
-            posthog.people.set({ nps_2106: true })
+            analytickit.people.set({ nps_2106: true })
 
             localStorage.setItem(NPS_LOCALSTORAGE_KEY, 'true')
         },
         show: () => {
-            posthog.capture('nps modal shown')
+            analytickit.capture('nps modal shown')
         },
     }),
     events: ({ actions, values, cache }) => ({
@@ -145,8 +145,8 @@ export function NPSPrompt(): JSX.Element | null {
                 <div className="prompt-inner">
                     {step === 0 && (
                         <div data-attr="nps-step-0">
-                            <div className="prompt-title">Help us improve PostHog in less than 60 seconds 🙏</div>
-                            <div className="question">How would you feel if you could no longer use PostHog?</div>
+                            <div className="prompt-title">Help us improve analytickit in less than 60 seconds 🙏</div>
+                            <div className="question">How would you feel if you could no longer use analytickit?</div>
 
                             <div className="action-buttons">
                                 <Button className="prompt-button" onClick={() => setPayload({ score: 1 })}>
@@ -167,7 +167,7 @@ export function NPSPrompt(): JSX.Element | null {
                             <div className="question">What's the main reason behind this score?</div>
                             <Input.TextArea
                                 autoFocus
-                                placeholder="You can describe the key benefits you get from PostHog, shortcomings or anything else..."
+                                placeholder="You can describe the key benefits you get from analytickit, shortcomings or anything else..."
                                 value={payload?.feedback_score || ''}
                                 onChange={(e) => setPayload({ feedback_score: e.target.value })}
                                 onKeyDown={(e) => e.key === 'Enter' && e.metaKey && setStep(2)}
@@ -186,7 +186,7 @@ export function NPSPrompt(): JSX.Element | null {
                         <div data-attr="nps-step-2">
                             {Header}
                             <div className="question">
-                                Last one. What type of person or company do you think could benefit most from PostHog?
+                                Last one. What type of person or company do you think could benefit most from analytickit?
                             </div>
                             <Input.TextArea
                                 autoFocus
@@ -206,7 +206,7 @@ export function NPSPrompt(): JSX.Element | null {
                         <div data-attr="nps-step-2" style={{ display: 'flex', alignItems: 'center' }}>
                             <img src={nps} alt="" height={40} />
                             <div className="prompt-title" style={{ margin: 0 }}>
-                                Thanks for helping us improve PostHog!
+                                Thanks for helping us improve analytickit!
                             </div>
                         </div>
                     )}

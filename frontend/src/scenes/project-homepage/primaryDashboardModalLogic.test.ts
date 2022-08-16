@@ -1,12 +1,12 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { primaryDashboardModalLogic } from './primaryDashboardModalLogic'
-import { router } from 'kea-router'
-import { MOCK_DEFAULT_TEAM } from 'lib/api.mock'
-import { urls } from 'scenes/urls'
-import { teamLogic } from 'scenes/teamLogic'
-import { userLogic } from 'scenes/userLogic'
-import { useMocks } from '~/mocks/jest'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {primaryDashboardModalLogic} from './primaryDashboardModalLogic'
+import {router }from 'kea-router'
+import {MOCK_DEFAULT_TEAM} from 'lib/api.mock'
+import {urls}from 'scenes/urls'
+import {teamLogic}from 'scenes/teamLogic'
+import {userLogic}from 'scenes/userLogic'
+import {useMocks}from '~/mocks/jest'
 
 describe('primaryDashboardModalLogic', () => {
     let logic: ReturnType<typeof primaryDashboardModalLogic.build>

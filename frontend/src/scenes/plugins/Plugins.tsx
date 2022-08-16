@@ -15,7 +15,7 @@ import { SceneExport } from 'scenes/sceneTypes'
 import { ActivityLog } from 'lib/components/ActivityLog/ActivityLog'
 import { ActivityScope } from 'lib/components/ActivityLog/humanizeActivity'
 import { pluginActivityDescriber } from './pluginActivityDescriptions'
-import { LemonTag } from '@posthog/lemon-ui'
+import { LemonTag } from '@analytickit/lemon-ui'
 
 export const scene: SceneExport = {
     component: Plugins,
@@ -51,14 +51,14 @@ export function Plugins(): JSX.Element | null {
                 title="Apps"
                 caption={
                     <>
-                        Apps enable you to extend PostHog's core data processing functionality.
+                        Apps enable you to extend analytickit's core data processing functionality.
                         <br />
                         Make use of verified apps from the{' '}
-                        <a href="https://posthog.com/apps" target="_blank">
+                        <a href="https://analytickit.com/apps" target="_blank">
                             App Library
                         </a>{' '}
                         – or{' '}
-                        <a href="https://posthog.com/docs/apps/build" target="_blank">
+                        <a href="https://analytickit.com/docs/apps/build" target="_blank">
                             build your own
                         </a>
                         .

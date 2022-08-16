@@ -1,14 +1,14 @@
-import * as Sentry from '@sentry/node'
+import* as Sentry from '@sentry/node'
 import * as nodeSchedule from 'node-schedule'
 
-import { startJobQueueConsumer } from '../src/main/job-queues/job-queue-consumer'
-import { ServerInstance, startPluginsServer } from '../src/main/pluginsServer'
-import { startPluginSchedules } from '../src/main/services/schedule'
-import { LogLevel, PluginServerCapabilities, PluginsServerConfig } from '../src/types'
-import { killProcess } from '../src/utils/kill'
-import { delay } from '../src/utils/utils'
-import { makePiscina } from '../src/worker/piscina'
-import { resetTestDatabase } from './helpers/sql'
+import {startJobQueueConsumer}from '../src/main/job-queues/job-queue-consumer'
+import { ServerInstance, startPluginsServer}from '../src/main/pluginsServer'
+import {startPluginSchedules} from '../src/main/services/schedule'
+import {LogLevel, PluginServerCapabilities, PluginsServerConfig}from '../src/types'
+import {killProcess}from '../src/utils/kill'
+import { delay}from '../src/utils/utils'
+import {makePiscina}from '../src/worker/piscina'
+import {resetTestDatabase}from './helpers/sql'
 
 jest.mock('@sentry/node')
 jest.mock('../src/utils/db/sql')
@@ -36,10 +36,10 @@ describe('server', () => {
             },
             makePiscina,
             capabilities
-        )
-    }
+)
+}
 
-    afterEach(async () => {
+afterEach(async () => {
         await pluginsServer?.stop()
         pluginsServer = null
     })
@@ -83,11 +83,11 @@ describe('server', () => {
                         timeSinceLastActivity: expect.any(Number),
                     },
                 }
-            )
-        })
-    })
+)
+})
+})
 
-    test('starting and stopping node-schedule scheduled jobs', async () => {
+test('starting and stopping node-schedule scheduled jobs', async () => {
         expect(numberOfScheduledJobs()).toEqual(0)
 
         pluginsServer = await createPluginServer()
@@ -112,9 +112,9 @@ describe('server', () => {
             pluginsServer = await createPluginServer(
                 {},
                 { ingestion: true, pluginScheduledTasks: false, processPluginJobs: true }
-            )
+)
 
-            expect(startPluginSchedules).not.toHaveBeenCalled()
+expect(startPluginSchedules).not.toHaveBeenCalled()
             expect(startJobQueueConsumer).toHaveBeenCalled()
         })
 
@@ -122,9 +122,9 @@ describe('server', () => {
             pluginsServer = await createPluginServer(
                 {},
                 { ingestion: true, pluginScheduledTasks: true, processPluginJobs: false }
-            )
+)
 
-            expect(startPluginSchedules).toHaveBeenCalled()
+expect(startPluginSchedules).toHaveBeenCalled()
             expect(startJobQueueConsumer).toHaveBeenCalled()
         })
 
@@ -132,9 +132,9 @@ describe('server', () => {
             pluginsServer = await createPluginServer(
                 {},
                 { ingestion: false, pluginScheduledTasks: true, processPluginJobs: false }
-            )
+)
 
-            expect(startJobQueueConsumer).not.toHaveBeenCalled()
+expect(startJobQueueConsumer).not.toHaveBeenCalled()
         })
     })
 })

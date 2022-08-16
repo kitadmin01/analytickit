@@ -1,15 +1,15 @@
-import * as Sentry from '@sentry/node'
+import* as Sentry from '@sentry/node'
 
-import { initApp } from '../init'
-import { runInTransaction } from '../sentry'
-import { Hub, PluginConfig, PluginsServerConfig } from '../types'
-import { processError } from '../utils/db/error'
-import { createHub } from '../utils/db/hub'
-import { status } from '../utils/status'
-import { cloneObject, pluginConfigIdFromStack } from '../utils/utils'
-import { setupPlugins } from './plugins/setup'
-import { workerTasks } from './tasks'
-import { TimeoutError } from './vm/vm'
+import {initApp}from '../init'
+import {runInTransaction}from '../sentry'
+import {Hub, PluginConfig, PluginsServerConfig}from '../types'
+import {processError}from '../utils/db/error'
+import {createHub }from '../utils/db/hub'
+import {status}from '../utils/status'
+import {cloneObject, pluginConfigIdFromStack}from '../utils/utils'
+import {setupPlugins}from './plugins/setup'
+import {workerTasks} from './tasks'
+import {TimeoutError }from './vm/vm'
 
 export type PiscinaTaskWorker = ({ task, args }: { task: string; args: any }) => Promise<any>
 
@@ -34,13 +34,13 @@ export async function createWorker(config: PluginsServerConfig, threadId: number
 
             return createTaskRunner(hub)
         }
-    )
+)
 }
 
 export const createTaskRunner =
-    (hub: Hub): PiscinaTaskWorker =>
-    ({ task, args }) =>
-        runInTransaction(
+(hub: Hub): PiscinaTaskWorker = >
+({ task, args}) = >
+runInTransaction(
             {
                 op: 'piscina task',
                 name: task,
@@ -86,7 +86,7 @@ export const createTaskRunner =
                     return 1
                 }
             }
-        )
+)
 
 export function processUnhandledRejections(error: Error, server: Hub): void {
     let pluginConfig: PluginConfig | undefined = undefined

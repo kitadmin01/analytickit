@@ -1,16 +1,16 @@
 // inspired by: https://github.com/treywood/babel-plugin-bluebird-async-functions/
 
-import { PluginGen } from './common'
+import{PluginGen}from'./common'
 
 const REPLACED = Symbol()
 
 export const promiseTimeout: PluginGen =
-    () =>
-    ({ types: t }) => ({
-        visitor: {
-            // Turn `bla.then` into `asyncGuard(bla).then`
-            MemberExpression: {
-                exit(path: any) {
+() =>
+({types: t}) => ({
+visitor: {
+// Turn `bla.then` into `asyncGuard(bla).then`
+MemberExpression: {
+exit(path: any) {
                     const { node } = path
                     if (
                         node?.property &&
@@ -25,9 +25,9 @@ export const promiseTimeout: PluginGen =
                                 t.stringLiteral(`Promise.then on line ${line}:${column}`),
                             ]),
                             t.identifier('then')
-                        )
-                        ;(newCall as any)[REPLACED] = true
-                        path.replaceWith(newCall)
+)
+;(newCall as any)[REPLACED] = true
+path.replaceWith(newCall)
                     }
                 },
             },
@@ -43,9 +43,9 @@ export const promiseTimeout: PluginGen =
                                 node.argument,
                                 t.stringLiteral(`await on line ${line}:${column}`),
                             ])
-                        )
-                        ;(newAwait as any)[REPLACED] = true
-                        path.replaceWith(newAwait)
+)
+;(newAwait as any)[REPLACED] = true
+path.replaceWith(newAwait)
                     }
                 },
             },

@@ -27,7 +27,7 @@ export function Elements(): JSX.Element {
     return (
         <>
             <div
-                id="posthog-infowindow-container"
+                id="analytickit-infowindow-container"
                 style={{
                     width: '100%',
                     height: '100%',
@@ -41,7 +41,7 @@ export function Elements(): JSX.Element {
                 <InfoWindow />
             </div>
             <div
-                id="posthog-toolbar-elements"
+                id="analytickit-toolbar-elements"
                 style={{
                     width: '100%',
                     height: '100%',

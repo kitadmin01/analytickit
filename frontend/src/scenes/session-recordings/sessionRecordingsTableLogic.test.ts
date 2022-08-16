@@ -1,14 +1,14 @@
 import {
     sessionRecordingsTableLogic,
-    DEFAULT_ENTITY_FILTERS,
-    DEFAULT_DURATION_FILTER,
-} from './sessionRecordingsTableLogic'
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { router } from 'kea-router'
-import { PropertyOperator } from '~/types'
-import { RecordingWatchedSource } from 'lib/utils/eventUsageLogic'
-import { useMocks } from '~/mocks/jest'
+DEFAULT_ENTITY_FILTERS,
+DEFAULT_DURATION_FILTER,
+}from './sessionRecordingsTableLogic'
+import {expectLogic }from 'kea-test-utils'
+import {initKeaTests} from '~/test/init'
+import {router}from 'kea-router'
+import { PropertyOperator}from '~/types'
+import {RecordingWatchedSource}from 'lib/utils/eventUsageLogic'
+import {useMocks}from '~/mocks/jest'
 
 describe('sessionRecordingsTableLogic', () => {
     let logic: ReturnType<typeof sessionRecordingsTableLogic.build>

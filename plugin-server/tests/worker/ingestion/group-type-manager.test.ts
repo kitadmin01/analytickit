@@ -1,12 +1,12 @@
-import { Hub } from '../../../src/types'
-import { createHub } from '../../../src/utils/db/hub'
-import { posthog } from '../../../src/utils/posthog'
-import { GroupTypeManager } from '../../../src/worker/ingestion/group-type-manager'
-import { resetTestDatabase } from '../../helpers/sql'
+import{Hub}from'../../../src/types'
+import {createHub}from '../../../src/utils/db/hub'
+import { analytickit}from '../../../src/utils/analytickit'
+import {GroupTypeManager}from '../../../src/worker/ingestion/group-type-manager'
+import {resetTestDatabase}from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
-jest.mock('../../../src/utils/posthog', () => ({
-    posthog: {
+jest.mock('../../../src/utils/analytickit', () => ({
+    analytickit: {
         identify: jest.fn(),
         capture: jest.fn(),
     },
@@ -76,7 +76,7 @@ describe('GroupTypeManager()', () => {
 
             expect(hub.db.postgresQuery).toHaveBeenCalledTimes(1)
             expect(hub.db.insertGroupType).toHaveBeenCalledTimes(0)
-            expect(posthog.capture).not.toHaveBeenCalled()
+            expect(analytickit.capture).not.toHaveBeenCalled()
         })
 
         it('inserts value if it does not exist yet at next index, resets cache', async () => {
@@ -91,7 +91,7 @@ describe('GroupTypeManager()', () => {
             expect(hub.db.postgresQuery).toHaveBeenCalledTimes(3) // FETCH + INSERT + Team lookup
 
             const team = await hub.db.fetchTeam(2)
-            expect(posthog.capture).toHaveBeenCalledWith({
+            expect(analytickit.capture).toHaveBeenCalledWith({
                 distinctId: 'plugin-server',
                 event: 'group type ingested',
                 properties: {

@@ -26,7 +26,7 @@ import { teamLogic } from 'scenes/teamLogic'
 import { newDashboardLogic } from 'scenes/dashboard/newDashboardLogic'
 import { DashboardPrivilegeLevel } from 'lib/constants'
 import { inAppPromptLogic } from 'lib/logic/inAppPrompt/inAppPromptLogic'
-import { LemonInput } from '@posthog/lemon-ui'
+import { LemonInput } from '@analytickit/lemon-ui'
 
 export const scene: SceneExport = {
     component: Dashboards,

@@ -1,32 +1,32 @@
-import { Reader, ReaderModel } from '@maxmind/geoip2-node'
-import { captureException } from '@sentry/minimal'
-import { DateTime } from 'luxon'
+import{Reader, ReaderModel}from '@maxmind/geoip2-node'
+import {captureException}from '@sentry/minimal'
+import {DateTime}from 'luxon'
 import net from 'net'
-import { AddressInfo } from 'net'
+import { AddressInfo}from 'net'
 import prettyBytes from 'pretty-bytes'
-import { serialize } from 'v8'
-import { brotliDecompress } from 'zlib'
+import {serialize}from 'v8'
+import {brotliDecompress}from 'zlib'
 
 import {
-    MMDB_ATTACHMENT_KEY,
-    MMDB_ENDPOINT,
-    MMDB_INTERNAL_SERVER_TIMEOUT_SECONDS,
-    MMDB_STALE_AGE_DAYS,
-    MMDB_STATUS_REDIS_KEY,
-    MMDBRequestStatus,
-} from '../../config/mmdb-constants'
-import { Hub, PluginAttachmentDB } from '../../types'
+MMDB_ATTACHMENT_KEY,
+MMDB_ENDPOINT,
+MMDB_INTERNAL_SERVER_TIMEOUT_SECONDS,
+MMDB_STALE_AGE_DAYS,
+MMDB_STATUS_REDIS_KEY,
+MMDBRequestStatus,
+}from '../../config/mmdb-constants'
+import { Hub, PluginAttachmentDB}from '../../types'
 import fetch from '../../utils/fetch'
-import { status } from '../../utils/status'
-import { delay } from '../../utils/utils'
-import { ServerInstance } from '../pluginsServer'
+import {status}from '../../utils/status'
+import {delay }from '../../utils/utils'
+import {ServerInstance}from '../pluginsServer'
 
 type MMDBPrepServerInstance = Pick<ServerInstance, 'hub' | 'mmdb'>
 
 enum MMDBFileStatus {
-    Idle = 'idle',
-    Fetching = 'fetching',
-    Unavailable = 'unavailable',
+Idle = 'idle',
+Fetching = 'fetching',
+Unavailable = 'unavailable',
 }
 
 /** Check if MMDB is being currently fetched by any other plugin server worker in the cluster. */
@@ -46,9 +46,9 @@ async function decompressAndOpenMmdb(brotliContents: Buffer, filename: string): 
                     `Decompressed ${filename} from ${prettyBytes(brotliContents.byteLength)} into ${prettyBytes(
                         result.byteLength
                     )}`
-                )
-                try {
-                    resolve(Reader.openBuffer(result))
+)
+try {
+resolve(Reader.openBuffer(result))
                 } catch (e) {
                     reject(e)
                 }
@@ -62,7 +62,7 @@ async function fetchAndInsertFreshMmdb(hub: Hub): Promise<ReaderModel> {
     const { db } = hub
 
     // TODO: use local GeoLite2 on container at share/GeoLite2-City.mmdb instead of downloading it each time
-    status.info('⏳', 'Downloading GeoLite2 database from PostHog servers...')
+    status.info('⏳', 'Downloading GeoLite2 database from analytickit servers...')
     const response = await fetch(MMDB_ENDPOINT, { compress: false })
     const contentType = response.headers.get('content-type')
     const filename = response.headers.get('content-disposition')!.match(/filename="(.+)"/)![1]
@@ -72,22 +72,22 @@ async function fetchAndInsertFreshMmdb(hub: Hub): Promise<ReaderModel> {
     // Insert new attachment
     const newAttachmentResults = await db.postgresQuery<PluginAttachmentDB>(
         `
-        INSERT INTO posthog_pluginattachment (
+        INSERT INTO analytickit_pluginattachment (
             key, content_type, file_name, file_size, contents, plugin_config_id, team_id
         ) VALUES ($1, $2, $3, $4, $5, NULL, NULL) RETURNING *
     `,
         [MMDB_ATTACHMENT_KEY, contentType, filename + '.br', brotliContents.byteLength, brotliContents],
         'insertGeoIpAttachment'
-    )
-    // Ensure that there's no old attachments lingering
-    await db.postgresQuery(
+)
+// Ensure that there's no old attachments lingering
+await db.postgresQuery(
         `
-        DELETE FROM posthog_pluginattachment WHERE key = $1 AND id != $2
+        DELETE FROM analytickit_pluginattachment WHERE key = $1 AND id != $2
     `,
         [MMDB_ATTACHMENT_KEY, newAttachmentResults.rows[0].id],
         'deleteGeoIpAttachment'
-    )
-    status.info('💾', `Saved ${filename} into the database`)
+)
+status.info('💾', `Saved ${filename} into the database`)
 
     return await decompressAndOpenMmdb(brotliContents, filename)
 }
@@ -101,11 +101,11 @@ async function distributableFetchAndInsertFreshMmdb(
     if (fetchingStatus === MMDBFileStatus.Unavailable) {
         status.info(
             '☹️',
-            'MMDB fetch and insert for GeoIP capabilities is currently unavailable in this PostHog instance - IP location data may be stale or unavailable'
-        )
-        return null
-    }
-    if (fetchingStatus === MMDBFileStatus.Fetching) {
+            'MMDB fetch and insert for GeoIP capabilities is currently unavailable in this analytickit instance - IP location data may be stale or unavailable'
+)
+return null
+}
+if (fetchingStatus === MMDBFileStatus.Fetching) {
         while (fetchingStatus === MMDBFileStatus.Fetching) {
             // Retrying shortly, when perhaps the MMDB has been fetched somewhere else and the attachment is up to date
             // Only one plugin server thread out of instances*(workers+1) needs to download the file this way
@@ -152,14 +152,14 @@ export async function prepareMmdb(
 
     const readResults = await db.postgresQuery<PluginAttachmentDB>(
         `
-        SELECT * FROM posthog_pluginattachment
+        SELECT * FROM analytickit_pluginattachment
         WHERE key = $1 AND plugin_config_id IS NULL AND team_id IS NULL
         ORDER BY file_name ASC
     `,
         [MMDB_ATTACHMENT_KEY],
         'fetchGeoIpAttachment'
-    )
-    if (!readResults.rowCount) {
+)
+if (!readResults.rowCount) {
         status.info('⬇️', `Fetching ${MMDB_ATTACHMENT_KEY} for the first time`)
         if (onlyBackground) {
             await backgroundInjectFreshMmdb(serverInstance)
@@ -167,7 +167,7 @@ export async function prepareMmdb(
         } else {
             const mmdb = await distributableFetchAndInsertFreshMmdb(serverInstance)
             if (!mmdb) {
-                status.warn('🤒', 'Because of MMDB unavailability, GeoIP plugins will fail in this PostHog instance')
+                status.warn('🤒', 'Because of MMDB unavailability, GeoIP plugins will fail in this analytickit instance')
             }
             return mmdb
         }
@@ -181,17 +181,17 @@ export async function prepareMmdb(
     if (!mmdbDateStringMatch) {
         throw new Error(
             `${MMDB_ATTACHMENT_KEY} attachment ID ${mmdbRow.id} has an invalid filename! ${MMDB_ATTACHMENT_KEY} filename must include an ISO date`
-        )
-    }
-    const mmdbAge = Math.round(-DateTime.fromISO(mmdbDateStringMatch[0]).diffNow().as('days'))
-    if (mmdbAge > MMDB_STALE_AGE_DAYS) {
+)
+}
+const mmdbAge = Math.round(-DateTime.fromISO(mmdbDateStringMatch[0]).diffNow().as('days'))
+if (mmdbAge > MMDB_STALE_AGE_DAYS) {
         status.info(
             '🔁',
             `${MMDB_ATTACHMENT_KEY} is ${mmdbAge} ${
                 mmdbAge === 1 ? 'day' : 'days'
             } old, which is more than the staleness threshold of ${MMDB_STALE_AGE_DAYS} days, refreshing in the background...`
-        )
-        if (onlyBackground) {
+)
+if (onlyBackground) {
             await backgroundInjectFreshMmdb(serverInstance)
             return true
         } else {
@@ -271,8 +271,8 @@ export async function createMmdbServer(serverInstance: MMDBPrepServerInstance): 
         const rejectTimeout = setTimeout(
             () => reject(new Error('Internal MMDB server could not start listening!')),
             3000
-        )
-        mmdbServer.listen(serverInstance.hub.INTERNAL_MMDB_SERVER_PORT, 'localhost', () => {
+)
+mmdbServer.listen(serverInstance.hub.INTERNAL_MMDB_SERVER_PORT, 'localhost', () => {
             const port = (mmdbServer.address() as AddressInfo).port
             status.info('👂', `Internal MMDB server listening on port ${port}`)
             clearTimeout(rejectTimeout)

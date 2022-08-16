@@ -1,7 +1,7 @@
 {
-    "name": "@posthog/plugin-server",
+    "name": "@analytickit/plugin-server",
     "version": "1.10.5",
-    "description": "PostHog Plugin Server",
+    "description": "analytickit Plugin Server",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
     "scripts": {
@@ -27,10 +27,10 @@
         "services": "yarn services:stop && yarn services:clean && yarn services:start"
     },
     "bin": {
-        "posthog-plugin-server": "bin/posthog-plugin-server"
+        "analytickit-plugin-server": "bin/analytickit-plugin-server"
     },
-    "author": "PostHog <hey@posthog.com>",
-    "repository": "https://github.com/PostHog/posthog-plugin-server",
+    "author": "analytickit <hey@analytickit.com>",
+    "repository": "https://github.com/analytickit/analytickit-plugin-server",
     "license": "MIT",
     "dependencies": {
         "@babel/core": "^7.13.1",
@@ -42,10 +42,10 @@
         "@google-cloud/pubsub": "3.0.1",
         "@google-cloud/storage": "^5.8.5",
         "@maxmind/geoip2-node": "^3.0.0",
-        "@posthog/clickhouse": "^1.7.0",
-        "@posthog/piscina": "^3.2.0-posthog",
-        "@posthog/plugin-contrib": "^0.0.5",
-        "@posthog/plugin-scaffold": "1.3.2",
+        "@analytickit/clickhouse": "^1.7.0",
+        "@analytickit/piscina": "^3.2.0-analytickit",
+        "@analytickit/plugin-contrib": "^0.0.5",
+        "@analytickit/plugin-scaffold": "1.3.2",
         "@sentry/node": "^6.7.0",
         "@sentry/tracing": "^6.7.0",
         "@types/lru-cache": "^5.1.0",
@@ -66,7 +66,7 @@
         "node-fetch": "^2.6.1",
         "node-schedule": "^2.0.0",
         "pg": "^8.6.0",
-        "posthog-node": "2.0.0-alpha6",
+        "analytickit-node": "2.0.0-alpha6",
         "pretty-bytes": "^5.6.0",
         "re2": "^1.16.0",
         "redlock": "^4.2.0",

@@ -1,18 +1,19 @@
-import type { columnConfiguratorLogicType } from './columnConfiguratorLogicType'
-import { tableConfigLogic } from 'lib/components/ResizableTable/tableConfigLogic'
-import { kea } from 'kea'
-import { teamLogic } from 'scenes/teamLogic'
+importtype{columnConfiguratorLogicType}from'./columnConfiguratorLogicType'
+import {tableConfigLogic}from 'lib/components/ResizableTable/tableConfigLogic'
+import {kea}from 'kea'
+import {teamLogic}from 'scenes/teamLogic'
 
 export interface ColumnConfiguratorLogicProps {
-    selectedColumns: string[] // the columns the table is currently displaying
+selectedColumns: string[] // the columns the table is currently displaying
 }
 
 export const columnConfiguratorLogic = kea<columnConfiguratorLogicType>({
-    path: ['lib', 'components', 'ResizableTable', 'columnConfiguratorLogic'],
-    props: { selectedColumns: [] } as ColumnConfiguratorLogicProps,
-    connect: [tableConfigLogic],
-    actions: {
-        selectColumn: (column: string) => ({ column }),
+path: ['lib', 'components', 'ResizableTable', 'columnConfiguratorLogic'],
+props: {selectedColumns: []
+}as ColumnConfiguratorLogicProps,
+connect: [tableConfigLogic],
+actions: {
+selectColumn:(column: string) => ({ column }),
         unselectColumn: (column: string) => ({ column }),
         resetColumns: (columns: string[]) => ({ columns }),
         setColumns: (columns: string[]) => ({ columns }),

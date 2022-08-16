@@ -1,13 +1,13 @@
-import { kea } from 'kea'
-import { actionsModel } from '~/models/actionsModel'
-import { EntityTypes, FilterType, Entity, EntityType, ActionFilter, EntityFilter, AnyPropertyFilter } from '~/types'
-import type { entityFilterLogicType } from './entityFilterLogicType'
-import { eventDefinitionsModel } from '~/models/eventDefinitionsModel'
-import { eventUsageLogic, GraphSeriesAddedSource } from 'lib/utils/eventUsageLogic'
-import { convertPropertyGroupToProperties } from 'lib/utils'
+import{kea}from'kea'
+import {actionsModel}from '~/models/actionsModel'
+import {EntityTypes, FilterType, Entity, EntityType, ActionFilter, EntityFilter, AnyPropertyFilter}from '~/types'
+import type {entityFilterLogicType}from './entityFilterLogicType'
+import {eventDefinitionsModel}from '~/models/eventDefinitionsModel'
+import {eventUsageLogic, GraphSeriesAddedSource} from 'lib/utils/eventUsageLogic'
+import {convertPropertyGroupToProperties}from 'lib/utils'
 
 export type LocalFilter = ActionFilter & {
-    order: number
+order: number
 }
 export type BareEntity = Pick<Entity, 'id' | 'name'>
 
@@ -26,7 +26,7 @@ export function toLocalFilters(filters: Partial<FilterType>): LocalFilter[] {
                   properties: convertPropertyGroupToProperties(filter.properties),
               }
             : filter
-    )
+)
 }
 
 export function toFilters(localFilters: LocalFilter[]): FilterType {
@@ -187,23 +187,23 @@ export const entityFilterLogic = kea<entityFilterLogicType>({
                               custom_name: custom_name ?? filter.custom_name,
                           }
                         : filter
-                )
-            )
-            !props.singleMode && actions.selectFilter(null)
+)
+)
+!props.singleMode && actions.selectFilter(null)
         },
         updateFilterProperty: async ({ properties, index }) => {
             actions.setFilters(
                 values.localFilters.map(
                     (filter, i) => (i === index ? { ...filter, properties } : filter) as LocalFilter
-                )
-            )
-        },
-        updateFilterMath: async ({ index, ...mathProperties }) => {
+)
+)
+},
+updateFilterMath: async ({ index, ...mathProperties }) => {
             actions.setFilters(
                 values.localFilters.map((filter, i) => (i === index ? { ...filter, ...mathProperties } : filter))
-            )
-        },
-        removeLocalFilter: async ({ index }) => {
+)
+},
+removeLocalFilter: async({ index }) => {
             const newFilters = values.localFilters.filter((_, i) => i !== index)
             actions.setFilters(newFilters)
             actions.setLocalFilters(toFilters(newFilters))

@@ -7,10 +7,10 @@ import { getContext } from 'kea'
 import { App } from 'scenes/App'
 import { initKea } from './initKea'
 
-import { loadPostHogJS } from './loadPostHogJS'
+import { loadanalytickitJS } from './loadanalytickitJS'
 import { ErrorBoundary } from './layout/ErrorBoundary'
 
-loadPostHogJS()
+loadanalytickitJS()
 initKea()
 
 // Expose `window.getReduxState()` to make snapshots to storybook easy
@@ -33,7 +33,7 @@ function renderApp(): void {
             root
         )
     } else {
-        console.error('Attempted, but could not render PostHog app because <div id="root" /> is not found.')
+        console.error('Attempted, but could not render analytickit app because <div id="root" /> is not found.')
     }
 }
 

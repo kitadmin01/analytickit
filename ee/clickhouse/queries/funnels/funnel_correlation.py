@@ -15,17 +15,17 @@ from rest_framework.exceptions import ValidationError
 
 from ee.clickhouse.queries.column_optimizer import EnterpriseColumnOptimizer
 from ee.clickhouse.queries.groups_join_query import GroupsJoinQuery
-from posthog.clickhouse.kafka_engine import trim_quotes_expr
-from posthog.client import sync_execute
-from posthog.constants import AUTOCAPTURE_EVENT, TREND_FILTER_TYPE_ACTIONS, FunnelCorrelationType
-from posthog.models import Team
-from posthog.models.element.element import chain_to_elements
-from posthog.models.event.util import ElementSerializer
-from posthog.models.filters import Filter
-from posthog.models.property.util import get_property_string_expr
-from posthog.queries.funnels.utils import get_funnel_order_actor_class
-from posthog.queries.person_distinct_id_query import get_team_distinct_ids_query
-from posthog.queries.person_query import PersonQuery
+from analytickit.clickhouse.kafka_engine import trim_quotes_expr
+from analytickit.client import sync_execute
+from analytickit.constants import AUTOCAPTURE_EVENT, TREND_FILTER_TYPE_ACTIONS, FunnelCorrelationType
+from analytickit.models import Team
+from analytickit.models.element.element import chain_to_elements
+from analytickit.models.event.util import ElementSerializer
+from analytickit.models.filters import Filter
+from analytickit.models.property.util import get_property_string_expr
+from analytickit.queries.funnels.utils import get_funnel_order_actor_class
+from analytickit.queries.person_distinct_id_query import get_team_distinct_ids_query
+from analytickit.queries.person_query import PersonQuery
 
 
 class EventDefinition(TypedDict):
@@ -91,7 +91,6 @@ class EventContingencyTable:
 
 
 class FunnelCorrelation:
-
     TOTAL_IDENTIFIER = "Total_Values_In_Query"
     ELEMENTS_DIVIDER = "__~~__"
     AUTOCAPTURE_EVENT_TYPE = "$event_type"
@@ -100,10 +99,10 @@ class FunnelCorrelation:
     PRIOR_COUNT = 1
 
     def __init__(
-        self,
-        filter: Filter,  #  Used to filter people
-        team: Team,  # Used to partition by team
-        base_uri: str = "/",  # Used to generate absolute urls
+            self,
+            filter: Filter,  #  Used to filter people
+            team: Team,  # Used to partition by team
+            base_uri: str = "/",  # Used to generate absolute urls
     ) -> None:
         self._filter = filter
         self._team = team
@@ -126,15 +125,15 @@ class FunnelCorrelation:
         # NOTE: we always use the final matching event for the recording because this
         # is the the right event for both drop off and successful funnels
         filter_data.update(
-            {"include_final_matching_events": self._filter.include_recordings,}
+            {"include_final_matching_events": self._filter.include_recordings, }
         )
         filter = Filter(data=filter_data)
 
         self.query_person_properties = False
         self.query_group_properties = False
         if (
-            self._team.actor_on_events_querying_enabled
-            and self._filter.correlation_type == FunnelCorrelationType.PROPERTIES
+                self._team.actor_on_events_querying_enabled
+                and self._filter.correlation_type == FunnelCorrelationType.PROPERTIES
         ):
             # When dealing with properties, make sure funnel response comes with properties
             # so we don't have to join on persons/groups to get these properties again
@@ -165,8 +164,8 @@ class FunnelCorrelation:
 
     def support_autocapture_elements(self) -> bool:
         if (
-            self._filter.correlation_type == FunnelCorrelationType.EVENT_WITH_PROPERTIES
-            and AUTOCAPTURE_EVENT in self._filter.correlation_event_names
+                self._filter.correlation_type == FunnelCorrelationType.EVENT_WITH_PROPERTIES
+                and AUTOCAPTURE_EVENT in self._filter.correlation_event_names
         ):
             return True
         return False
@@ -707,7 +706,7 @@ class FunnelCorrelation:
                         "id": event_name,
                         "type": "events",
                         "properties": [
-                            {"key": property_key, "value": [property_value], "type": "element", "operator": "exact",}
+                            {"key": property_key, "value": [property_value], "type": "element", "operator": "exact", }
                             for property_key, property_value in elements_as_action.items()
                             if property_value is not None
                         ],
@@ -821,7 +820,7 @@ class FunnelCorrelation:
         total_count = event_contingency_table.success_total + event_contingency_table.failure_total
 
         if event_contingency_table.visited.success_count + event_contingency_table.visited.failure_count < min(
-            FunnelCorrelation.MIN_PERSON_COUNT, FunnelCorrelation.MIN_PERSON_PERCENTAGE * total_count
+                FunnelCorrelation.MIN_PERSON_COUNT, FunnelCorrelation.MIN_PERSON_PERCENTAGE * total_count
         ):
             return True
 
@@ -848,7 +847,6 @@ class FunnelCorrelation:
 
         event_name, property_name, property_value = event.split("::")
         if event_name == AUTOCAPTURE_EVENT and property_name == "elements_chain":
-
             event_type, elements_chain = property_value.split(self.ELEMENTS_DIVIDER)
             return EventDefinition(
                 event=event,
@@ -860,15 +858,16 @@ class FunnelCorrelation:
 
 
 def get_entity_odds_ratio(event_contingency_table: EventContingencyTable, prior_counts: int) -> EventOddsRatio:
-
     # Add 1 to all values to prevent divide by zero errors, and introduce a [prior](https://en.wikipedia.org/wiki/Prior_probability)
     odds_ratio = (
-        (event_contingency_table.visited.success_count + prior_counts)
-        * (event_contingency_table.failure_total - event_contingency_table.visited.failure_count + prior_counts)
-    ) / (
-        (event_contingency_table.success_total - event_contingency_table.visited.success_count + prior_counts)
-        * (event_contingency_table.visited.failure_count + prior_counts)
-    )
+                         (event_contingency_table.visited.success_count + prior_counts)
+                         * (
+                                 event_contingency_table.failure_total - event_contingency_table.visited.failure_count + prior_counts)
+                 ) / (
+                         (
+                                 event_contingency_table.success_total - event_contingency_table.visited.success_count + prior_counts)
+                         * (event_contingency_table.visited.failure_count + prior_counts)
+                 )
 
     return EventOddsRatio(
         event=event_contingency_table.event,
@@ -882,7 +881,7 @@ def get_entity_odds_ratio(event_contingency_table: EventContingencyTable, prior_
 def build_selector(elements: List[Dict[str, Any]]) -> str:
     # build a CSS select given an "elements_chain"
     # NOTE: my source of what this should be doing is
-    # https://github.com/PostHog/posthog/blob/cc054930a47fb59940531e99a856add49a348ee5/frontend/src/scenes/events/createActionFromEvent.tsx#L36:L36
+    # https://github.com/analytickit/analytickit/blob/cc054930a47fb59940531e99a856add49a348ee5/frontend/src/scenes/events/createActionFromEvent.tsx#L36:L36
     #
     def element_to_selector(element: Dict[str, Any]) -> str:
         if attr_id := element.get("attr_id"):

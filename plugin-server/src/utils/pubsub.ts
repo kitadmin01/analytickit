@@ -1,22 +1,22 @@
-import { captureException } from '@sentry/node'
-import { Redis } from 'ioredis'
+import{captureException}from'@sentry/node'
+import {Redis} from 'ioredis'
 
-import { PluginsServerConfig } from '../types'
-import { status } from './status'
-import { createRedis } from './utils'
+import {PluginsServerConfig} from '../types'
+import { status}from './status'
+import {createRedis}from './utils'
 
 export type PubSubTask = ((message: string) => void) | ((message: string) => Promise<void>)
 
 export interface PubSubTaskMap {
-    [channel: string]: PubSubTask
+[channel: string]: PubSubTask
 }
 
 export class PubSub {
-    private serverConfig: PluginsServerConfig
-    private redis: Redis | null
-    public taskMap: PubSubTaskMap
+private serverConfig: PluginsServerConfig
+private redis: Redis | null
+public taskMap: PubSubTaskMap
 
-    constructor(serverConfig: PluginsServerConfig, taskMap: PubSubTaskMap = {}) {
+constructor(serverConfig: PluginsServerConfig, taskMap: PubSubTaskMap = {}) {
         this.serverConfig = serverConfig
         this.redis = null
         this.taskMap = taskMap
@@ -37,10 +37,10 @@ export class PubSub {
                         `Received a pubsub message for unassociated channel ${channel}! Associated channels are: ${Object.keys(
                             this.taskMap
                         ).join(', ')}`
-                    )
-                )
-            }
-            void task(message)
+)
+)
+}
+void task(message)
         })
         status.info('👀', `Pub-sub started for channels: ${channels.join(', ')}`)
     }

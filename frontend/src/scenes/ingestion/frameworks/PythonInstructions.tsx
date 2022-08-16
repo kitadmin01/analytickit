@@ -4,7 +4,7 @@ import { useValues } from 'kea'
 import { teamLogic } from 'scenes/teamLogic'
 
 function PythonInstallSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.Bash}>{'pip install posthog'}</CodeSnippet>
+    return <CodeSnippet language={Language.Bash}>{'pip install analytickit'}</CodeSnippet>
 }
 
 function PythonSetupSnippet(): JSX.Element {
@@ -12,16 +12,16 @@ function PythonSetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.Python}>
-            {`import posthog
+            {`import analytickit
 
-posthog.project_api_key = '${currentTeam?.api_token}'
-posthog.host = '${window.location.origin}'`}
+analytickit.project_api_key = '${currentTeam?.api_token}'
+analytickit.host = '${window.location.origin}'`}
         </CodeSnippet>
     )
 }
 
 function PythonCaptureSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.Python}>{"posthog.capture('test-id', 'test-event')"}</CodeSnippet>
+    return <CodeSnippet language={Language.Python}>{"analytickit.capture('test-id', 'test-event')"}</CodeSnippet>
 }
 
 export function PythonInstructions(): JSX.Element {

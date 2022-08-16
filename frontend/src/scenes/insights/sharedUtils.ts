@@ -1,18 +1,18 @@
 // This is separate from utils.ts because here we don't include `funnelLogic`, `retentionTableLogic`, etc
 
-import { FilterType, InsightLogicProps, InsightType } from '~/types'
+import{FilterType, InsightLogicProps, InsightType}from '~/types'
 
 /**
- * Get a key function for InsightLogicProps.
- * The key will equals either 'scene', 'new' or an ID.
- *
- * @param defaultKey
- * @param sceneKey
- */
+* Get a key function for InsightLogicProps.
+* The key will equals either 'scene', 'new' or an ID.
+*
+* @param defaultKey
+* @param sceneKey
+*/
 export const keyForInsightLogicProps =
-    (defaultKey = 'new') =>
-    (props: InsightLogicProps): string | number => {
-        if (!('dashboardItemId' in props)) {
+(defaultKey = 'new') =>
+(props: InsightLogicProps): string | number = > {
+if(!('dashboardItemId' in props)) {
             throw new Error('Must init with dashboardItemId, even if undefined')
         }
         return props.dashboardItemId

@@ -3,12 +3,12 @@ from typing import Dict, Optional
 
 from rest_framework.exceptions import ValidationError
 
-from posthog.constants import INSIGHT_FUNNELS, INSIGHT_TRENDS, TRENDS_CUMULATIVE
-from posthog.models.feature_flag import FeatureFlag
-from posthog.models.filters.filter import Filter
-from posthog.models.team import Team
-from posthog.queries.funnels import ClickhouseFunnel
-from posthog.queries.trends.trends import Trends
+from analytickit.constants import INSIGHT_FUNNELS, INSIGHT_TRENDS, TRENDS_CUMULATIVE
+from analytickit.models.feature_flag import FeatureFlag
+from analytickit.models.filters.filter import Filter
+from analytickit.models.team import Team
+from analytickit.queries.funnels import ClickhouseFunnel
+from analytickit.queries.trends.trends import Trends
 
 
 class ClickhouseSecondaryExperimentResult:
@@ -20,12 +20,12 @@ class ClickhouseSecondaryExperimentResult:
     """
 
     def __init__(
-        self,
-        filter: Filter,
-        team: Team,
-        feature_flag: FeatureFlag,
-        experiment_start_date: datetime,
-        experiment_end_date: Optional[datetime] = None,
+            self,
+            filter: Filter,
+            team: Team,
+            feature_flag: FeatureFlag,
+            experiment_start_date: datetime,
+            experiment_end_date: Optional[datetime] = None,
     ):
 
         breakdown_key = f"$feature/{feature_flag.key}"

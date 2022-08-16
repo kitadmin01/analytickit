@@ -1,39 +1,39 @@
 import {
     actions,
-    afterMount,
-    connect,
-    kea,
-    key,
-    listeners,
-    path,
-    props,
-    reducers,
-    selectors,
-    sharedListeners,
-} from 'kea'
+afterMount,
+connect,
+kea,
+key,
+listeners,
+path,
+props,
+reducers,
+selectors,
+sharedListeners,
+}from 'kea'
 import api from 'lib/api'
-import { isURL, toParams } from 'lib/utils'
-import { EditorProps, TrendResult } from '~/types'
-import { teamLogic } from 'scenes/teamLogic'
-import { dayjs } from 'lib/dayjs'
+import {isURL, toParams}from 'lib/utils'
+import {EditorProps, TrendResult} from '~/types'
+import {teamLogic }from 'scenes/teamLogic'
+import { dayjs}from 'lib/dayjs'
 import Fuse from 'fuse.js'
-import type { authorizedUrlsLogicType } from './authorizedUrlsLogicType'
-import { encodeParams, urlToAction } from 'kea-router'
-import { urls } from 'scenes/urls'
-import { loaders } from 'kea-loaders'
-import { forms } from 'kea-forms'
+import type {authorizedUrlsLogicType}from './authorizedUrlsLogicType'
+import {encodeParams, urlToAction}from 'kea-router'
+import {urls}from 'scenes/urls'
+import {loaders}from 'kea-loaders'
+import {forms}from 'kea-forms'
 
 export interface ProposeNewUrlFormType {
-    url: string
+url: string
 }
 
 export const validateProposedURL = (proposedUrl: string, currentUrls: string[]): string | undefined => {
-    if (proposedUrl === '') {
+if(proposedUrl === '') {
         return 'Please type a valid URL or domain.'
     }
 
     if (proposedUrl.indexOf('*') > -1 && !proposedUrl.match(/^(.*)\*[^*]*\.[^*]+\.[^*]+$/)) {
-        return 'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your PostHog data.'
+        return 'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your analytickit data.'
     }
 
     if (!isURL(proposedUrl)) {

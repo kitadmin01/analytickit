@@ -1,4 +1,4 @@
-from posthog.clickhouse.system_status import system_status
+from analytickit.clickhouse.system_status import system_status
 
 
 def test_system_status(db):

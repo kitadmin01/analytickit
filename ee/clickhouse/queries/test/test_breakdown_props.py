@@ -1,14 +1,14 @@
 import pytest
 from freezegun import freeze_time
 
-from posthog.models.cohort import Cohort
-from posthog.models.entity import Entity
-from posthog.models.filters import Filter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.queries.breakdown_props import _to_bucketing_expression, get_breakdown_prop_values
-from posthog.queries.trends.util import process_math
-from posthog.test.base import (
+from analytickit.models.cohort import Cohort
+from analytickit.models.entity import Entity
+from analytickit.models.filters import Filter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.queries.breakdown_props import _to_bucketing_expression, get_breakdown_prop_values
+from analytickit.queries.trends.util import process_math
+from analytickit.test.base import (
     APIBaseTest,
     ClickhouseTestMixin,
     _create_event,
@@ -32,14 +32,14 @@ class TestBreakdownProps(ClickhouseTestMixin, APIBaseTest):
         )
 
         self.team.test_account_filters = [
-            {"key": "email", "type": "person", "value": "posthog.com", "operator": "not_icontains"},
+            {"key": "email", "type": "person", "value": "analytickit.com", "operator": "not_icontains"},
             {
                 "key": "$host",
                 "type": "event",
                 "value": ["127.0.0.1:3000", "127.0.0.1:5000", "localhost:5000", "localhost:8000"],
                 "operator": "is_not",
             },
-            {"key": "distinct_id", "type": "event", "value": "posthog.com", "operator": "not_icontains"},
+            {"key": "distinct_id", "type": "event", "value": "analytickit.com", "operator": "not_icontains"},
         ]
         self.team.save()
         with freeze_time("2020-01-04T13:01:01Z"):
@@ -217,7 +217,7 @@ class TestBreakdownProps(ClickhouseTestMixin, APIBaseTest):
                 "breakdown_type": "group",
                 "breakdown_group_type_index": 0,
                 "breakdown_limit": 5,
-                "events": [{"id": "$pageview", "type": "events", "order": 0,}],
+                "events": [{"id": "$pageview", "type": "events", "order": 0, }],
                 "properties": [
                     {"key": "out", "value": "", "type": "group", "group_type_index": 0, "operator": "is_not_set"}
                 ],
@@ -235,7 +235,7 @@ class TestBreakdownProps(ClickhouseTestMixin, APIBaseTest):
                 "breakdown_type": "group",
                 "breakdown_group_type_index": 0,
                 "breakdown_limit": 5,
-                "events": [{"id": "$pageview", "type": "events", "order": 0,}],
+                "events": [{"id": "$pageview", "type": "events", "order": 0, }],
                 "properties": {
                     "type": "AND",
                     "values": [
@@ -289,7 +289,7 @@ class TestBreakdownProps(ClickhouseTestMixin, APIBaseTest):
                 "date_to": "2020-01-12T00:00:00Z",
                 "breakdown": "$session_duration",
                 "breakdown_type": "session",
-                "events": [{"id": "$pageview", "type": "events", "order": 0,}],
+                "events": [{"id": "$pageview", "type": "events", "order": 0, }],
             },
         )
         result = get_breakdown_prop_values(filter, filter.entities[0], "count(*)", self.team)
@@ -394,7 +394,7 @@ class TestBreakdownProps(ClickhouseTestMixin, APIBaseTest):
                 ],
             },
         )
-        aggregate_operation, _, _ = process_math(filter.entities[0], self.team,)
+        aggregate_operation, _, _ = process_math(filter.entities[0], self.team, )
 
         result = get_breakdown_prop_values(filter, filter.entities[0], aggregate_operation, self.team)
         # test should come first, based on aggregate operation, even if absolute count of events for
@@ -415,13 +415,12 @@ class TestBreakdownProps(ClickhouseTestMixin, APIBaseTest):
         (5, "arrayCompact(arrayMap(x -> floor(x, 2), quantiles(0.00,0.20,0.40,0.60,0.80,1.00)(value)))"),
         (7, "arrayCompact(arrayMap(x -> floor(x, 2), quantiles(0.00,0.14,0.29,0.43,0.57,0.71,0.86,1.00)(value)))"),
         (
-            10,
-            "arrayCompact(arrayMap(x -> floor(x, 2), quantiles(0.00,0.10,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.00)(value)))",
+                10,
+                "arrayCompact(arrayMap(x -> floor(x, 2), quantiles(0.00,0.10,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.00)(value)))",
         ),
     ],
 )
 def test_bucketing_expression(test_input, expected):
-
     result = _to_bucketing_expression(test_input)
 
     assert result == expected

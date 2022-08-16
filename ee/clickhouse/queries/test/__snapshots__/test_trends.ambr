@@ -1008,7 +1008,7 @@
        AND event = 'sign up'
        AND timestamp >= toDateTime('2020-01-01 00:00:00')
        AND timestamp <= toDateTime('2020-07-01 00:00:00')
-       AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@posthog.com%')
+       AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@analytickit.com%')
              OR has(['val'], replaceRegexpAll(JSONExtractRaw(e.properties, 'key'), '^"|"$', ''))))
      GROUP BY value
      ORDER BY count DESC, value DESC
@@ -1039,7 +1039,7 @@
            CROSS JOIN
              (SELECT breakdown_value
               FROM
-                (SELECT ['test2@posthog.com', 'test@gmail.com', 'test5@posthog.com', 'test4@posthog.com', 'test3@posthog.com'] as breakdown_value) ARRAY
+                (SELECT ['test2@analytickit.com', 'test@gmail.com', 'test5@analytickit.com', 'test4@analytickit.com', 'test3@analytickit.com'] as breakdown_value) ARRAY
               JOIN breakdown_value) as sec
            ORDER BY breakdown_value,
                     day_start
@@ -1065,11 +1065,11 @@
                     OR has(['safari'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$browser'), '^"|"$', ''))))) person ON person.id = pdi.person_id
            WHERE e.team_id = 2
              AND event = 'sign up'
-             AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@posthog.com%')
+             AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@analytickit.com%')
                    OR has(['val'], replaceRegexpAll(JSONExtractRaw(e.properties, 'key'), '^"|"$', ''))))
              AND timestamp >= toTimezone(toDateTime(toStartOfDay(toDateTime('2020-01-01 00:00:00')), 'UTC'), 'UTC')
              AND timestamp <= toDateTime('2020-07-01 00:00:00')
-             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@posthog.com', 'test@gmail.com', 'test5@posthog.com', 'test4@posthog.com', 'test3@posthog.com'])
+             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@analytickit.com', 'test@gmail.com', 'test5@analytickit.com', 'test4@analytickit.com', 'test3@analytickit.com'])
            GROUP BY day_start,
                     breakdown_value))
      GROUP BY day_start,
@@ -1104,7 +1104,7 @@
         HAVING max(is_deleted) = 0
         AND (((has(['android'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$os'), '^"|"$', ''))
                AND has(['chrome'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$browser'), '^"|"$', ''))))
-             AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@posthog.com%'))) person ON pdi.person_id = person.id
+             AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@analytickit.com%'))) person ON pdi.person_id = person.id
      WHERE team_id = 2
        AND event = 'sign up'
        AND timestamp >= toDateTime('2020-01-01 00:00:00')
@@ -1139,7 +1139,7 @@
            CROSS JOIN
              (SELECT breakdown_value
               FROM
-                (SELECT ['test2@posthog.com'] as breakdown_value) ARRAY
+                (SELECT ['test2@analytickit.com'] as breakdown_value) ARRAY
               JOIN breakdown_value) as sec
            ORDER BY breakdown_value,
                     day_start
@@ -1163,13 +1163,13 @@
               HAVING max(is_deleted) = 0
               AND (((has(['android'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$os'), '^"|"$', ''))
                      AND has(['chrome'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$browser'), '^"|"$', ''))))
-                   AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@posthog.com%'))) person ON person.id = pdi.person_id
+                   AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@analytickit.com%'))) person ON person.id = pdi.person_id
            WHERE e.team_id = 2
              AND event = 'sign up'
              AND ((has(['val'], replaceRegexpAll(JSONExtractRaw(e.properties, 'key'), '^"|"$', ''))))
              AND timestamp >= toTimezone(toDateTime(toStartOfDay(toDateTime('2020-01-01 00:00:00')), 'UTC'), 'UTC')
              AND timestamp <= toDateTime('2020-07-01 00:00:00')
-             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@posthog.com'])
+             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@analytickit.com'])
            GROUP BY day_start,
                     breakdown_value))
      GROUP BY day_start,
@@ -2612,7 +2612,7 @@
        AND event = 'sign up'
        AND timestamp >= toDateTime('2020-01-01 00:00:00')
        AND timestamp <= toDateTime('2020-07-01 00:00:00')
-       AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@posthog.com%')
+       AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@analytickit.com%')
              OR has(['val'], replaceRegexpAll(JSONExtractRaw(e.properties, 'key'), '^"|"$', ''))))
      GROUP BY value
      ORDER BY count DESC, value DESC
@@ -2643,7 +2643,7 @@
            CROSS JOIN
              (SELECT breakdown_value
               FROM
-                (SELECT ['test2@posthog.com', 'test@gmail.com', 'test5@posthog.com', 'test4@posthog.com', 'test3@posthog.com'] as breakdown_value) ARRAY
+                (SELECT ['test2@analytickit.com', 'test@gmail.com', 'test5@analytickit.com', 'test4@analytickit.com', 'test3@analytickit.com'] as breakdown_value) ARRAY
               JOIN breakdown_value) as sec
            ORDER BY breakdown_value,
                     day_start
@@ -2669,11 +2669,11 @@
                     OR has(['safari'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$browser'), '^"|"$', ''))))) person ON person.id = pdi.person_id
            WHERE e.team_id = 2
              AND event = 'sign up'
-             AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@posthog.com%')
+             AND ((NOT (replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') ILIKE '%@analytickit.com%')
                    OR has(['val'], replaceRegexpAll(JSONExtractRaw(e.properties, 'key'), '^"|"$', ''))))
              AND timestamp >= toStartOfDay(toDateTime('2020-01-01 00:00:00'), 'UTC')
              AND timestamp <= toDateTime('2020-07-01 00:00:00')
-             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@posthog.com', 'test@gmail.com', 'test5@posthog.com', 'test4@posthog.com', 'test3@posthog.com'])
+             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@analytickit.com', 'test@gmail.com', 'test5@analytickit.com', 'test4@analytickit.com', 'test3@analytickit.com'])
            GROUP BY day_start,
                     breakdown_value))
      GROUP BY day_start,
@@ -2708,7 +2708,7 @@
         HAVING max(is_deleted) = 0
         AND (((has(['android'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$os'), '^"|"$', ''))
                AND has(['chrome'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$browser'), '^"|"$', ''))))
-             AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@posthog.com%'))) person ON pdi.person_id = person.id
+             AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@analytickit.com%'))) person ON pdi.person_id = person.id
      WHERE team_id = 2
        AND event = 'sign up'
        AND timestamp >= toDateTime('2020-01-01 00:00:00')
@@ -2743,7 +2743,7 @@
            CROSS JOIN
              (SELECT breakdown_value
               FROM
-                (SELECT ['test2@posthog.com'] as breakdown_value) ARRAY
+                (SELECT ['test2@analytickit.com'] as breakdown_value) ARRAY
               JOIN breakdown_value) as sec
            ORDER BY breakdown_value,
                     day_start
@@ -2767,13 +2767,13 @@
               HAVING max(is_deleted) = 0
               AND (((has(['android'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$os'), '^"|"$', ''))
                      AND has(['chrome'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), '$browser'), '^"|"$', ''))))
-                   AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@posthog.com%'))) person ON person.id = pdi.person_id
+                   AND (replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '') ILIKE '%@analytickit.com%'))) person ON person.id = pdi.person_id
            WHERE e.team_id = 2
              AND event = 'sign up'
              AND ((has(['val'], replaceRegexpAll(JSONExtractRaw(e.properties, 'key'), '^"|"$', ''))))
              AND timestamp >= toStartOfDay(toDateTime('2020-01-01 00:00:00'), 'UTC')
              AND timestamp <= toDateTime('2020-07-01 00:00:00')
-             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@posthog.com'])
+             AND replaceRegexpAll(JSONExtractRaw(person_props, 'email'), '^"|"$', '') in (['test2@analytickit.com'])
            GROUP BY day_start,
                     breakdown_value))
      GROUP BY day_start,

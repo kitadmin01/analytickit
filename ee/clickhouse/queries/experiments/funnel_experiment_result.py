@@ -10,11 +10,11 @@ from ee.clickhouse.queries.experiments import (
     FF_DISTRIBUTION_THRESHOLD,
     MIN_PROBABILITY_FOR_SIGNIFICANCE,
 )
-from posthog.constants import ExperimentSignificanceCode
-from posthog.models.feature_flag import FeatureFlag
-from posthog.models.filters.filter import Filter
-from posthog.models.team import Team
-from posthog.queries.funnels import ClickhouseFunnel
+from analytickit.constants import ExperimentSignificanceCode
+from analytickit.models.feature_flag import FeatureFlag
+from analytickit.models.filters.filter import Filter
+from analytickit.models.team import Team
+from analytickit.queries.funnels import ClickhouseFunnel
 
 Probability = float
 
@@ -48,13 +48,13 @@ class ClickhouseFunnelExperimentResult:
     """
 
     def __init__(
-        self,
-        filter: Filter,
-        team: Team,
-        feature_flag: FeatureFlag,
-        experiment_start_date: datetime,
-        experiment_end_date: Optional[datetime] = None,
-        funnel_class: Type[ClickhouseFunnel] = ClickhouseFunnel,
+            self,
+            filter: Filter,
+            team: Team,
+            feature_flag: FeatureFlag,
+            experiment_start_date: datetime,
+            experiment_end_date: Optional[datetime] = None,
+            funnel_class: Type[ClickhouseFunnel] = ClickhouseFunnel,
     ):
 
         breakdown_key = f"$feature/{feature_flag.key}"
@@ -113,7 +113,7 @@ class ClickhouseFunnelExperimentResult:
 
     @staticmethod
     def calculate_results(
-        control_variant: Variant, test_variants: List[Variant], priors: Tuple[int, int] = (1, 1)
+            control_variant: Variant, test_variants: List[Variant], priors: Tuple[int, int] = (1, 1)
     ) -> List[Probability]:
         """
         Calculates probability that A is better than B. First variant is control, rest are test variants.
@@ -143,7 +143,7 @@ class ClickhouseFunnelExperimentResult:
 
     @staticmethod
     def are_results_significant(
-        control_variant: Variant, test_variants: List[Variant], probabilities: List[Probability]
+            control_variant: Variant, test_variants: List[Variant], probabilities: List[Probability]
     ) -> Tuple[ExperimentSignificanceCode, Probability]:
         control_sample_size = control_variant.success_count + control_variant.failure_count
 
@@ -157,8 +157,8 @@ class ClickhouseFunnelExperimentResult:
             return ExperimentSignificanceCode.NOT_ENOUGH_EXPOSURE, 1
 
         if (
-            probabilities[0] < MIN_PROBABILITY_FOR_SIGNIFICANCE
-            and sum(probabilities[1:]) < MIN_PROBABILITY_FOR_SIGNIFICANCE
+                probabilities[0] < MIN_PROBABILITY_FOR_SIGNIFICANCE
+                and sum(probabilities[1:]) < MIN_PROBABILITY_FOR_SIGNIFICANCE
         ):
             # Sum of probability of winning for all variants except control is less than 90%
             return ExperimentSignificanceCode.LOW_WIN_PROBABILITY, 1

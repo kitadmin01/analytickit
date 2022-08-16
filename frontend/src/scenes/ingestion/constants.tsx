@@ -70,7 +70,7 @@ export const thirdPartySources: ThirdPartySource[] = [
         name: 'Segment',
         type: ThirdPartySourceType.Integration,
         icon: <Segment />,
-        docsLink: 'https://segment.com/docs/connections/destinations/catalog/posthog/',
+        docsLink: 'https://segment.com/docs/connections/destinations/catalog/analytickit/',
     },
     {
         name: 'Rudderstack',
@@ -78,10 +78,10 @@ export const thirdPartySources: ThirdPartySource[] = [
         icon: (
             <img
                 style={{ height: 36, width: 36 }}
-                src={'https://raw.githubusercontent.com/rudderlabs/rudderstack-posthog-plugin/main/logo.png'}
+                src={'https://raw.githubusercontent.com/rudderlabs/rudderstack-analytickit-plugin/main/logo.png'}
             />
         ),
-        docsLink: 'https://www.rudderstack.com/docs/destinations/analytics/posthog/',
+        docsLink: 'https://www.rudderstack.com/docs/destinations/analytics/analytickit/',
     },
     {
         name: 'Redshift',
@@ -91,7 +91,7 @@ export const thirdPartySources: ThirdPartySource[] = [
         icon: (
             <img
                 style={{ height: 48, width: 48 }}
-                src={'https://raw.githubusercontent.com/PostHog/posthog-redshift-import-plugin/main/logo.png'}
+                src={'https://raw.githubusercontent.com/analytickit/analytickit-redshift-import-plugin/main/logo.png'}
             />
         ),
     },

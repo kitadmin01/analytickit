@@ -1,12 +1,12 @@
 import {
     EMPTY_BREAKDOWN_VALUES,
-    getBreakdownStepValues,
-    getIncompleteConversionWindowStartDate,
-    getMeanAndStandardDeviation,
-    getClampedStepRangeFilter,
-} from './funnelUtils'
-import { FilterType, FunnelConversionWindowTimeUnit, FunnelStepRangeEntityFilter } from '~/types'
-import { dayjs } from 'lib/dayjs'
+getBreakdownStepValues,
+getIncompleteConversionWindowStartDate,
+getMeanAndStandardDeviation,
+getClampedStepRangeFilter,
+}from './funnelUtils'
+import {FilterType, FunnelConversionWindowTimeUnit, FunnelStepRangeEntityFilter }from '~/types'
+import { dayjs}from 'lib/dayjs'
 
 describe('getMeanAndStandardDeviation', () => {
     const arrayToExpectedValues: [number[], number[]][] = [
@@ -62,9 +62,9 @@ describe('getBreakdownStepValues()', () => {
     it('breakdowns are arrays with empty string', () => {
         expect(getBreakdownStepValues({ breakdown: [''], breakdown_value: [''] }, 21)).toStrictEqual(
             EMPTY_BREAKDOWN_VALUES
-        )
-    })
-    it('breakdowns are arrays with null', () => {
+)
+})
+it('breakdowns are arrays with null', () => {
         expect(
             getBreakdownStepValues(
                 {
@@ -72,8 +72,8 @@ describe('getBreakdownStepValues()', () => {
                     breakdown_value: [null as unknown as string | number],
                 },
                 21
-            )
-        ).toStrictEqual(EMPTY_BREAKDOWN_VALUES)
+)
+).toStrictEqual(EMPTY_BREAKDOWN_VALUES)
     })
     it('breakdowns are arrays with undefined', () => {
         expect(
@@ -83,8 +83,8 @@ describe('getBreakdownStepValues()', () => {
                     breakdown_value: [undefined as unknown as string | number],
                 },
                 21
-            )
-        ).toStrictEqual(EMPTY_BREAKDOWN_VALUES)
+)
+).toStrictEqual(EMPTY_BREAKDOWN_VALUES)
     })
     it('breakdown is string', () => {
         expect(getBreakdownStepValues({ breakdown: 'blah', breakdown_value: 'Blah' }, 21)).toStrictEqual({
@@ -99,13 +99,13 @@ describe('getBreakdownStepValues()', () => {
     it('breakdown is undefined string', () => {
         expect(getBreakdownStepValues({ breakdown: undefined, breakdown_value: undefined }, 21)).toStrictEqual(
             EMPTY_BREAKDOWN_VALUES
-        )
-    })
-    it('breakdown is null string', () => {
+)
+})
+it('breakdown is null string', () => {
         expect(getBreakdownStepValues({ breakdown: null, breakdown_value: null }, 21)).toStrictEqual(
             EMPTY_BREAKDOWN_VALUES
-        )
-    })
+)
+})
 })
 
 describe('getIncompleteConversionWindowStartDate()', () => {

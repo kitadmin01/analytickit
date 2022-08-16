@@ -27,7 +27,7 @@ import { isActionEvent } from 'scenes/data-management/events/eventDefinitionsTab
 export function getPropertyDefinitionIcon(definition: PropertyDefinition): JSX.Element {
     if (!!keyMapping.event[definition.name]) {
         return (
-            <Tooltip title="PostHog event property">
+            <Tooltip title="analytickit event property">
                 <VerifiedPropertyIcon className="taxonomy-icon taxonomy-icon-verified" />
             </Tooltip>
         )
@@ -50,28 +50,28 @@ export function getEventDefinitionIcon(definition: CombinedEvent): JSX.Element {
     // Rest are events
     if (definition.name === '$pageview') {
         return (
-            <Tooltip title="PostHog event">
+            <Tooltip title="analytickit event">
                 <IconPageview className="taxonomy-icon taxonomy-icon-ph taxonomy-icon-verified" />
             </Tooltip>
         )
     }
     if (definition.name === '$pageleave') {
         return (
-            <Tooltip title="PostHog event">
+            <Tooltip title="analytickit event">
                 <IconPageleave className="taxonomy-icon taxonomy-icon-ph taxonomy-icon-verified" />
             </Tooltip>
         )
     }
     if (definition.name === '$autocapture') {
         return (
-            <Tooltip title="PostHog event">
+            <Tooltip title="analytickit event">
                 <IconAutocapture className="taxonomy-icon taxonomy-icon-ph taxonomy-icon-verified" />
             </Tooltip>
         )
     }
     if (definition.name && (definition.verified || !!keyMapping.event[definition.name])) {
         return (
-            <Tooltip title={`${!!keyMapping.event[definition.name] ? 'PostHog' : 'Verified'} event`}>
+            <Tooltip title={`${!!keyMapping.event[definition.name] ? 'analytickit' : 'Verified'} event`}>
                 <VerifiedEvent className="taxonomy-icon taxonomy-icon-verified" />
             </Tooltip>
         )

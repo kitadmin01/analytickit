@@ -4,9 +4,10 @@ import pytest
 from django.utils import timezone
 from rest_framework import status
 
-from posthog.models import Dashboard, Tag
-from posthog.models.tagged_item import TaggedItem
-from posthog.test.base import APIBaseTest
+from analytickit.models import Dashboard, Tag
+from analytickit.models.tagged_item import TaggedItem
+from analytickit.test.base import APIBaseTest
+
 
 # This serializer only tests the business logic of getting and setting of ee descriptions. It uses the dashboard model
 # as an example, since model specific functionality is already tested in their models' respective serializer tests.

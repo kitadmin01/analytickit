@@ -1,14 +1,14 @@
-import { Hub, PluginError } from '../src/types'
-import { createHub } from '../src/utils/db/hub'
+import{Hub, PluginError}from '../src/types'
+import {createHub}from '../src/utils/db/hub'
 import {
-    disablePlugin,
-    getPluginAttachmentRows,
-    getPluginConfigRows,
-    getPluginRows,
-    setError,
-} from '../src/utils/db/sql'
-import { commonOrganizationId, pluginConfig39 } from './helpers/plugins'
-import { resetTestDatabase } from './helpers/sql'
+disablePlugin,
+getPluginAttachmentRows,
+getPluginConfigRows,
+getPluginRows,
+setError,
+}from '../src/utils/db/sql'
+import {commonOrganizationId, pluginConfig39}from './helpers/plugins'
+import {resetTestDatabase }from './helpers/sql'
 
 jest.setTimeout(20_000)
 jest.mock('../src/utils/status')
@@ -42,7 +42,7 @@ describe('sql', () => {
 
         const rows1 = await getPluginAttachmentRows(hub)
         expect(rows1).toEqual(rowsExpected)
-        await hub.db.postgresQuery("update posthog_team set plugins_opt_in='f'", undefined, 'testTag')
+        await hub.db.postgresQuery("update analytickit_team set plugins_opt_in='f'", undefined, 'testTag')
         const rows2 = await getPluginAttachmentRows(hub)
         expect(rows2).toEqual(rowsExpected)
     })
@@ -65,7 +65,7 @@ describe('sql', () => {
         const rows1 = await getPluginConfigRows(hub)
         expect(rows1).toEqual([expectedRow])
 
-        await hub.db.postgresQuery("update posthog_team set plugins_opt_in='f'", undefined, 'testTag')
+        await hub.db.postgresQuery("update analytickit_team set plugins_opt_in='f'", undefined, 'testTag')
         const pluginError: PluginError = { message: 'error happened', time: 'now' }
         await setError(hub, pluginError, pluginConfig39)
 
@@ -93,18 +93,18 @@ describe('sql', () => {
                 plugin_type: 'custom',
                 public_jobs: null,
                 source__plugin_json:
-                    '{"name":"posthog-maxmind-plugin","description":"just for testing","url":"http://example.com/plugin","config":{},"main":"index.js"}',
+                    '{"name":"analytickit-maxmind-plugin","description":"just for testing","url":"http://example.com/plugin","config":{},"main":"index.js"}',
                 source__index_ts: 'const processEvent = event => event',
                 source__frontend_tsx: null,
                 tag: '0.0.2',
-                url: 'https://www.npmjs.com/package/posthog-maxmind-plugin',
+                url: 'https://www.npmjs.com/package/analytickit-maxmind-plugin',
                 capabilities: {},
             },
         ]
 
         const rows1 = await getPluginRows(hub)
         expect(rows1).toEqual(rowsExpected)
-        await hub.db.postgresQuery("update posthog_team set plugins_opt_in='f'", undefined, 'testTag')
+        await hub.db.postgresQuery("update analytickit_team set plugins_opt_in='f'", undefined, 'testTag')
         const rows2 = await getPluginRows(hub)
         expect(rows2).toEqual(rowsExpected)
     })
@@ -114,33 +114,33 @@ describe('sql', () => {
 
         await setError(hub, null, pluginConfig39)
         expect(hub.db.postgresQuery).toHaveBeenCalledWith(
-            'UPDATE posthog_pluginconfig SET error = $1 WHERE id = $2',
+            'UPDATE analytickit_pluginconfig SET error = $1 WHERE id = $2',
             [null, pluginConfig39.id],
             'updatePluginConfigError'
-        )
+)
 
-        const pluginError: PluginError = { message: 'error happened', time: 'now' }
-        await setError(hub, pluginError, pluginConfig39)
+const pluginError: PluginError = { message: 'error happened', time: 'now' }
+await setError(hub, pluginError, pluginConfig39)
         expect(hub.db.postgresQuery).toHaveBeenCalledWith(
-            'UPDATE posthog_pluginconfig SET error = $1 WHERE id = $2',
+            'UPDATE analytickit_pluginconfig SET error = $1 WHERE id = $2',
             [pluginError, pluginConfig39.id],
             'updatePluginConfigError'
-        )
-    })
+)
+})
 
-    describe('disablePlugin', () => {
+describe('disablePlugin', () => {
         test('disablePlugin query builds correctly', async () => {
             hub.db.postgresQuery = jest.fn() as any
 
             await disablePlugin(hub, 39)
             expect(hub.db.postgresQuery).toHaveBeenCalledWith(
-                `UPDATE posthog_pluginconfig SET enabled='f' WHERE id=$1 AND enabled='t'`,
+                `UPDATE analytickit_pluginconfig SET enabled='f' WHERE id=$1 AND enabled='t'`,
                 [39],
                 'disablePlugin'
-            )
-        })
+)
+})
 
-        test('disablePlugin disables a plugin', async () => {
+test('disablePlugin disables a plugin', async () => {
             const redis = await hub.db.redisPool.acquire()
             const rowsBefore = await getPluginConfigRows(hub)
             expect(rowsBefore[0].plugin_id).toEqual(60)

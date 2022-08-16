@@ -1,8 +1,8 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
 
-import { Hub, IngestionPersonData, JobName, TeamId } from '../../../types'
-import { LazyPersonContainer } from '../lazy-person-container'
-import { EventPipelineRunner, StepResult } from './runner'
+import {Hub, IngestionPersonData, JobName, TeamId}from '../../../types'
+import {LazyPersonContainer}from '../lazy-person-container'
+import {EventPipelineRunner, StepResult}from './runner'
 
 export async function emitToBufferStep(
     runner: EventPipelineRunner,
@@ -57,7 +57,7 @@ export async function emitToBufferStep(
  * Without a buffer, the event from step 3 gets a new person ID, which messes up analysis by unique users.
  * By delaying the event from step 3, all events get the desired person ID A.
  *
- * More context: https://github.com/PostHog/posthog/issues/9182
+ * More context: https://github.com/analytickit/analytickit/issues/9182
  */
 export function shouldSendEventToBuffer(
     hub: Hub,
@@ -74,7 +74,7 @@ export function shouldSendEventToBuffer(
     //  as being from an identified user when in fact they are not, leading to unnecessary buffering
     const isMobileLibrary =
         !!event.properties &&
-        ['posthog-ios', 'posthog-android', 'posthog-react-native', 'posthog-flutter'].includes(event.properties['$lib'])
+        ['analytickit-ios', 'analytickit-android', 'analytickit-react-native', 'analytickit-flutter'].includes(event.properties['$lib'])
     const sendToBuffer = !isMobileLibrary && !person && !isAnonymousEvent && event.event !== '$identify'
 
     if (sendToBuffer) {

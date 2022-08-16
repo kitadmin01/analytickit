@@ -3,7 +3,7 @@ from typing import Type, cast
 from ee.api.hooks import valid_domain
 from ee.api.test.base import APILicensedTest
 from ee.models.hook import Hook
-from posthog.test.base import ClickhouseTestMixin
+from analytickit.test.base import ClickhouseTestMixin
 
 
 class TestHooksAPI(ClickhouseTestMixin, APILicensedTest):
@@ -60,7 +60,6 @@ class TestHooksAPI(ClickhouseTestMixin, APILicensedTest):
 
 
 def test_valid_domain() -> None:
-
     test_cases = {
         "http://hooks.zapier.com": True,
         "https://hooks.zapier.com": True,

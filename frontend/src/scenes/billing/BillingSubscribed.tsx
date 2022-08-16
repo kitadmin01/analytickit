@@ -10,7 +10,7 @@ import { router } from 'kea-router'
 import { SceneExport } from 'scenes/sceneTypes'
 import { dayjs } from 'lib/dayjs'
 import { billingLogic } from './billingLogic'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 
 export const scene: SceneExport = {
     component: BillingSubscribed,
@@ -69,7 +69,7 @@ export function BillingSubscribed(): JSX.Element {
                 </p>
             )}
             <p>
-                Please reach out to <a href="mailto:hey@posthog.com">hey@posthog.com</a> if you have any billing
+                Please reach out to <a href="mailto:hey@analytickit.com">hey@analytickit.com</a> if you have any billing
                 questions.
             </p>
             <LemonButton className="cta-button" type="primary" size="large" center={true} onClick={() => push('/')}>

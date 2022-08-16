@@ -6,8 +6,8 @@ from os.path import dirname
 
 from django.utils.timezone import now
 
-os.environ["POSTHOG_DB_NAME"] = "posthog_test"
-os.environ["DJANGO_SETTINGS_MODULE"] = "posthog.settings"
+os.environ["analytickit_DB_NAME"] = "analytickit_test"
+os.environ["DJANGO_SETTINGS_MODULE"] = "analytickit.settings"
 sys.path.append(dirname(dirname(dirname(__file__))))
 
 import django
@@ -15,8 +15,8 @@ import django
 django.setup()
 
 from ee.clickhouse.materialized_columns.columns import get_materialized_columns
-from posthog import client
-from posthog.models.utils import UUIDT
+from analytickit import client
+from analytickit.models.utils import UUIDT
 
 get_column = lambda rows, index: [row[index] for row in rows]
 

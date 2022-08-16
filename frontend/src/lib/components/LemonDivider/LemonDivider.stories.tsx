@@ -31,10 +31,10 @@ const VerticalTemplate: ComponentStory<typeof LemonDivider> = (props: LemonDivid
             <ProfileBubbles
                 people={[
                     {
-                        email: 'tim@posthog.com',
+                        email: 'tim@analytickit.com',
                     },
                     {
-                        email: 'michael@posthog.com',
+                        email: 'michael@analytickit.com',
                     },
                 ]}
             />

@@ -1,9 +1,9 @@
-import { StatsD } from 'hot-shots'
+import{StatsD}from'hot-shots'
 import LRU from 'lru-cache'
 import LRUCache from 'lru-cache'
 
-import { ONE_HOUR } from '../../config/constants'
-import { PluginsServerConfig, PropertyType, TeamId } from '../../types'
+import { ONE_HOUR}from '../../config/constants'
+import {PluginsServerConfig, PropertyType, TeamId}from '../../types'
 
 export const NULL_IN_DATABASE = Symbol('NULL_IN_DATABASE')
 export const NULL_AFTER_PROPERTY_TYPE_DETECTION = Symbol('NULL_AFTER_PROPERTY_TYPE_DETECTION')
@@ -11,24 +11,24 @@ export const NULL_AFTER_PROPERTY_TYPE_DETECTION = Symbol('NULL_AFTER_PROPERTY_TY
 type PropertyDefinitionsCacheValue = PropertyType | typeof NULL_IN_DATABASE | typeof NULL_AFTER_PROPERTY_TYPE_DETECTION
 
 /**
- * During event ingestion the team manager attempts to auto-detect the property type and format for properties
- *
- * The PropertyDefinitionsCache is used to reduce the load on Postgres
- * when inserting property definitions during event ingestion
- *
- * A property definition can be in one of several states
- *
- * - never seen before -> it is not in the cache and should be inserted into the database
- * - in the cache and has a property type -> it never needs to be updated
- * - in the cache and has null as a property type -> it might need property types inserted in postgres ('NULL_IN_DATABASE')
- * - it is in the cache and has been confirmed as having no property type -> it never needs to be updated ('NULL_AFTER_PROPERTY_TYPE_DETECTION')
- */
+* During event ingestion the team manager attempts to auto-detect the property type and format for properties
+*
+* The PropertyDefinitionsCache is used to reduce the load on Postgres
+* when inserting property definitions during event ingestion
+*
+* A property definition can be in one of several states
+*
+* - never seen before -> it is not in the cache and should be inserted into the database
+* - in the cache and has a property type -> it never needs to be updated
+* - in the cache and has null as a property type -> it might need property types inserted in postgres ('NULL_IN_DATABASE')
+* - it is in the cache and has been confirmed as having no property type -> it never needs to be updated ('NULL_AFTER_PROPERTY_TYPE_DETECTION')
+*/
 export class PropertyDefinitionsCache {
-    private readonly propertyDefinitionsCache: Map<TeamId, LRU<string, PropertyDefinitionsCacheValue>>
-    private readonly statsd?: StatsD
-    private readonly lruCacheSize: number
+private readonly propertyDefinitionsCache: Map <TeamId, LRU<string, PropertyDefinitionsCacheValue>>
+private readonly statsd?: StatsD
+private readonly lruCacheSize: number
 
-    constructor(serverConfig: PluginsServerConfig, statsd?: StatsD) {
+constructor(serverConfig: PluginsServerConfig, statsd?: StatsD) {
         this.lruCacheSize = serverConfig.EVENT_PROPERTY_LRU_SIZE
         this.statsd = statsd
         this.propertyDefinitionsCache = new Map()

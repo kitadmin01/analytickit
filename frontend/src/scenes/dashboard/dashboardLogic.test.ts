@@ -1,15 +1,15 @@
-import { expectLogic, truth } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { dashboardLogic } from 'scenes/dashboard/dashboardLogic'
+import{expectLogic, truth}from 'kea-test-utils'
+import {initKeaTests }from '~/test/init'
+import {dashboardLogic}from 'scenes/dashboard/dashboardLogic'
 import _dashboardJson from './__mocks__/dashboard.json'
-import { dashboardsModel } from '~/models/dashboardsModel'
-import { insightsModel } from '~/models/insightsModel'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { InsightModel, DashboardType, InsightShortId } from '~/types'
-import { resumeKeaLoadersErrors, silenceKeaLoadersErrors } from '~/initKea'
-import { useMocks } from '~/mocks/jest'
-import { dayjs, now } from 'lib/dayjs'
-import { teamLogic } from 'scenes/teamLogic'
+import {dashboardsModel} from '~/models/dashboardsModel'
+import {insightsModel}from '~/models/insightsModel'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import {InsightModel, DashboardType, InsightShortId}from '~/types'
+import {resumeKeaLoadersErrors, silenceKeaLoadersErrors}from '~/initKea'
+import {useMocks}from '~/mocks/jest'
+import {dayjs, now}from 'lib/dayjs'
+import {teamLogic}from 'scenes/teamLogic'
 import anything = jasmine.anything
 
 const dashboardJson = _dashboardJson as any as DashboardType
@@ -149,10 +149,10 @@ describe('dashboardLogic', () => {
                             // remove this insight from any dashboard it is already on
                             dashboards[dashboardId].items = dashboards[dashboardId].items.filter(
                                 (i: InsightModel) => i.id !== starting.id
-                            )
-                        })
+)
+})
 
-                        insights[insightId].dashboards?.forEach((dashboardId) => {
+insights[insightId].dashboards?.forEach((dashboardId) => {
                             // then add it to any it now references
                             dashboards[dashboardId].items.push(insights[insightId])
                         })

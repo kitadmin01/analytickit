@@ -22,8 +22,8 @@ export function EventBufferNotice({ additionalInfo = '', style }: EventBufferNot
             Note that some events with a never-before-seen distinct ID are deliberately delayed by{' '}
             {pluralize(preflight?.buffer_conversion_seconds, 'second')}
             {additionalInfo}.{' '}
-            <a href="https://posthog.com/docs/integrate/ingest-live-data/#event-ingestion-nuances">
-                Learn more about event buffering in PostHog Docs.
+            <a href="https://analytickit.com/docs/integrate/ingest-live-data/#event-ingestion-nuances">
+                Learn more about event buffering in analytickit Docs.
             </a>
         </AlertMessage>
     )

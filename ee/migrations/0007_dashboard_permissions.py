@@ -4,13 +4,12 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import posthog.models.utils
+import analytickit.models.utils
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("posthog", "0203_dashboard_permissions"),
+        ("analytickit", "0203_dashboard_permissions"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("ee", "0006_event_definition_verification"),
     ]
@@ -22,7 +21,7 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.UUIDField(
-                        default=posthog.models.utils.UUIDT, editable=False, primary_key=True, serialize=False
+                        default=analytickit.models.utils.UUIDT, editable=False, primary_key=True, serialize=False
                     ),
                 ),
                 (
@@ -42,7 +41,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="privileges",
                         related_query_name="privilege",
-                        to="posthog.dashboard",
+                        to="analytickit.dashboard",
                     ),
                 ),
                 (

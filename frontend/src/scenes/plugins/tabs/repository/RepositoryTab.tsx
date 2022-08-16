@@ -60,7 +60,7 @@ export function RepositoryTab(): JSX.Element {
                                 <>
                                     <Col span={24}>
                                         {officialPlugins.length > 0
-                                            ? 'Official apps are built and maintained by the PostHog team.'
+                                            ? 'Official apps are built and maintained by the analytickit team.'
                                             : 'You have already installed all official apps!'}
                                     </Col>
                                     <br />
@@ -103,9 +103,9 @@ export function RepositoryTab(): JSX.Element {
                                     <Col span={24}>
                                         {communityPlugins.length > 0 ? (
                                             <span>
-                                                Community apps are not built nor maintained by the PostHog team.{' '}
+                                                Community apps are not built nor maintained by the analytickit team.{' '}
                                                 <a
-                                                    href="https://posthog.com/docs/apps/build"
+                                                    href="https://analytickit.com/docs/apps/build"
                                                     target="_blank"
                                                     rel="noopener"
                                                 >

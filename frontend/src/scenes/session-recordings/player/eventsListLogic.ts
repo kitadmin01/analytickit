@@ -1,30 +1,30 @@
-import { kea } from 'kea'
-import { PlayerPosition, RecordingEventsFilters, RecordingEventType } from '~/types'
-import { sessionRecordingLogic } from 'scenes/session-recordings/sessionRecordingLogic'
-import type { eventsListLogicType } from './eventsListLogicType'
-import { clamp, colonDelimitedDuration, findLastIndex, floorMsToClosestSecond, ceilMsToClosestSecond } from 'lib/utils'
-import { sessionRecordingPlayerLogic } from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
-import List, { RenderedRows } from 'react-virtualized/dist/es/List'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import{kea}from'kea'
+import {PlayerPosition, RecordingEventsFilters, RecordingEventType }from '~/types'
+import { sessionRecordingLogic}from 'scenes/session-recordings/sessionRecordingLogic'
+import type {eventsListLogicType}from './eventsListLogicType'
+import {clamp, colonDelimitedDuration, findLastIndex, floorMsToClosestSecond, ceilMsToClosestSecond}from 'lib/utils'
+import {sessionRecordingPlayerLogic}from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
+import List, {RenderedRows}from 'react-virtualized/dist/es/List'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
 
 export const DEFAULT_ROW_HEIGHT = 65 // Two lines
 export const OVERSCANNED_ROW_COUNT = 50
 export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150 * 5 // https://github.com/bvaughn/react-virtualized/blob/abe0530a512639c042e74009fbf647abdb52d661/source/Grid/Grid.js#L42
 
 export const eventsListLogic = kea<eventsListLogicType>({
-    path: ['scenes', 'session-recordings', 'player', 'eventsListLogic'],
-    connect: {
-        logic: [eventUsageLogic],
-        actions: [sessionRecordingLogic, ['setFilters', 'loadEventsSuccess'], sessionRecordingPlayerLogic, ['seek']],
-        values: [
-            sessionRecordingLogic,
-            ['eventsToShow', 'sessionEventsDataLoading'],
-            sessionRecordingPlayerLogic,
-            ['currentPlayerTime'],
-        ],
-    },
-    actions: {
-        setLocalFilters: (filters: Partial<RecordingEventsFilters>) => ({ filters }),
+path: ['scenes', 'session-recordings', 'player', 'eventsListLogic'],
+connect: {
+logic: [eventUsageLogic],
+actions: [sessionRecordingLogic, ['setFilters', 'loadEventsSuccess'], sessionRecordingPlayerLogic, ['seek']],
+values: [
+sessionRecordingLogic,
+['eventsToShow', 'sessionEventsDataLoading'],
+sessionRecordingPlayerLogic,
+['currentPlayerTime'],
+],
+},
+actions: {
+setLocalFilters: (filters: Partial<RecordingEventsFilters>) => ({ filters }),
         setRenderedRows: (renderMeta: RenderedRows) => ({ renderMeta }),
         setList: (list: List) => ({ list }),
         enablePositionFinder: true,
@@ -113,20 +113,20 @@ export const eventsListLogic = kea<eventsListLogicType>({
                 const start = floorMsToClosestSecond(
                     events[clamp(startIndex === -1 ? events.length - 1 : startIndex - 1, 0, events.length - 1)]
                         .playerTime ?? 0
-                )
+)
 
-                return { start, end }
-            },
-        ],
-        isEventCurrent: [
-            (selectors) => [selectors.currentEventsTimeRange, selectors.listEvents],
-            (indices, events) => (index: number) =>
-                (events?.[index]?.playerTime ?? 0) >= indices.start && (events?.[index]?.playerTime ?? 0) < indices.end,
-        ],
-        currentEventsIndices: [
-            (selectors) => [selectors.listEvents, selectors.isEventCurrent],
-            (events, isEventCurrent) => ({
-                startIndex: clamp(
+return {start, end}
+},
+],
+isEventCurrent: [
+(selectors) = > [selectors.currentEventsTimeRange, selectors.listEvents],
+(indices, events) => (index: number) =>
+(events?.[index]?.playerTime ?? 0) >= indices.start && (events?.[index]?.playerTime ?? 0) < indices.end,
+],
+currentEventsIndices: [
+(selectors) = > [selectors.listEvents, selectors.isEventCurrent],
+(events, isEventCurrent) = > ({
+startIndex: clamp(
                     events.findIndex((_, i) => isEventCurrent(i)),
                     0,
                     events.length - 1
@@ -161,35 +161,35 @@ export const eventsListLogic = kea<eventsListLogicType>({
                 ).offset
                 const lastEventSize = gridState.instanceProps.rowSizeAndPositionManager.getSizeAndPositionOfCell(
                     indices.stopIndex
-                )
-                return {
-                    top,
-                    height: lastEventSize.offset + lastEventSize.size - top,
-                }
-            },
-        ],
-        isRowIndexRendered: [
-            (selectors) => [selectors.renderedRows],
-            (renderedRows) => (index: number) =>
-                index >= renderedRows.overscanStartIndex && index <= renderedRows.overscanStopIndex,
-        ],
-        showPositionFinder: [
-            (selectors) => [selectors.renderedRows, selectors.currentEventsIndices, selectors.shouldHidePositionFinder],
-            (visibleRange, currentEventsRange, shouldHidePositionFinder) => {
-                // Only show finder if there's no overlap of view range and current events range
-                return (
+)
+return {
+top,
+height: lastEventSize.offset + lastEventSize.size - top,
+}
+},
+],
+isRowIndexRendered: [
+(selectors) = > [selectors.renderedRows],
+(renderedRows) => (index: number) =>
+index >= renderedRows.overscanStartIndex && index <= renderedRows.overscanStopIndex,
+],
+showPositionFinder: [
+(selectors) = > [selectors.renderedRows, selectors.currentEventsIndices, selectors.shouldHidePositionFinder],
+(visibleRange, currentEventsRange, shouldHidePositionFinder) = > {
+// Only show finder if there's no overlap of view range and current events range
+return (
                     !shouldHidePositionFinder &&
                     (visibleRange.stopIndex < currentEventsRange.startIndex ||
                         visibleRange.startIndex > currentEventsRange.stopIndex)
-                )
-            },
-        ],
-        isDirectionUp: [
-            (selectors) => [selectors.renderedRows, selectors.currentEventsIndices],
-            (visibleRange, currentEventsRange) => {
-                // Where are we relative to the current event
-                return visibleRange.startIndex > currentEventsRange.stopIndex
-            },
-        ],
-    }),
+)
+},
+],
+isDirectionUp: [
+(selectors) = > [selectors.renderedRows, selectors.currentEventsIndices],
+(visibleRange, currentEventsRange) = > {
+// Where are we relative to the current event
+return visibleRange.startIndex > currentEventsRange.stopIndex
+},
+],
+}),
 })

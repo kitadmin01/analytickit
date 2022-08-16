@@ -11,7 +11,7 @@ fi
 if [ $# -eq 0 ]; then
     echo "Are you sure you want to run all backend tests? You can run specific tests by doing:"
     echo " "
-    echo "bin/tests posthog/api/test/test_user.py::TestUserAPI::test_retrieve_current_user"
+    echo "bin/tests analytickit/api/test/test_user.py::TestUserAPI::test_retrieve_current_user"
     echo " "
     read -r -p "Run all tests? [y/N] " response
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
@@ -25,10 +25,10 @@ fi
 export REDIS_URL='redis:///'
 
 PG_HOST="${PGHOST:=localhost}"
-PG_USER="${PGUSER:=posthog}"
-PG_PASSWORD="${PGPASSWORD:=posthog}"
+PG_USER="${PGUSER:=analytickit}"
+PG_PASSWORD="${PGPASSWORD:=analytickit}"
 PG_PORT="${PGPORT:=5432}"
-PGOPTIONS='--client-min-messages=warning' psql posthog -d "postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}" -c "drop database if exists test_posthog" 1> /dev/null
+PGOPTIONS='--client-min-messages=warning' psql analytickit -d "postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}" -c "drop database if exists test_analytickit" 1> /dev/null
 
 if [[ "$*" == *"migration"* ]]
 then
@@ -39,4 +39,4 @@ else
     export SKIP_TRIGRAM_INDEX_FOR_TESTS=1
 fi
 
-nodemon -w ./posthog -w ./ee --ext py --exec "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES pytest --reuse-db --durations-min=2.0 ${MIGRATIONS} -s $* --snapshot-update; mypy posthog ee"
+nodemon -w ./analytickit -w ./ee --ext py --exec "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES pytest --reuse-db --durations-min=2.0 ${MIGRATIONS} -s $* --snapshot-update; mypy analytickit ee"

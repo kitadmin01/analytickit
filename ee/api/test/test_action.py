@@ -4,8 +4,9 @@ import pytest
 from django.utils import timezone
 from rest_framework import status
 
-from posthog.models import Action, Tag
-from posthog.test.base import APIBaseTest
+from analytickit.models import Action, Tag
+from analytickit.test.base import APIBaseTest
+
 
 # Testing enterprise properties of actions here (i.e., tagging).
 
@@ -19,7 +20,7 @@ class TestActionApi(APIBaseTest):
             key="key_123", plan="enterprise", valid_until=timezone.datetime(2038, 1, 19, 3, 14, 7), max_users=3,
         )
 
-        response = self.client.post(f"/api/projects/{self.team.id}/actions/", data={"name": "user signed up",},)
+        response = self.client.post(f"/api/projects/{self.team.id}/actions/", data={"name": "user signed up", }, )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json()["tags"], [])
 

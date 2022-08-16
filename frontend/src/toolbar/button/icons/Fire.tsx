@@ -15,7 +15,7 @@ export function Fire({ engaged = false, animated = false, ...props }: FireProps)
     const colors = fireColors[engaged ? 'engaged' : 'disengaged']
     return (
         <svg
-            className={`posthog-toolbar-icon-fire${animated ? ' animated' : ''}`}
+            className={`analytickit-toolbar-icon-fire${animated ? ' animated' : ''}`}
             width="24"
             height="33"
             viewBox="0 0 24 33"

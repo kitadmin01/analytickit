@@ -1,6 +1,6 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { rollingDateRangeFilterLogic } from './rollingDateRangeFilterLogic'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {rollingDateRangeFilterLogic} from './rollingDateRangeFilterLogic'
 
 describe('rollingDateRangeFilterLogic', () => {
     let logic: ReturnType<typeof rollingDateRangeFilterLogic.build>

@@ -9,7 +9,7 @@ import { Field } from 'lib/forms/Field'
 import { LemonInput } from 'lib/components/LemonInput/LemonInput'
 import { LemonTextArea } from 'lib/components/LemonTextArea/LemonTextArea'
 import { ObjectTags } from 'lib/components/ObjectTags/ObjectTags'
-import { isPostHogProp } from 'lib/components/PropertyKeyInfo'
+import { isanalytickitProp } from 'lib/components/PropertyKeyInfo'
 import { VerifiedEventCheckbox } from 'lib/components/DefinitionPopup/DefinitionPopupContents'
 import { LemonSelect } from 'lib/components/LemonSelect'
 import { Form } from 'kea-forms'
@@ -68,7 +68,7 @@ export function DefinitionEdit(props: DefinitionEditLogicProps): JSX.Element {
                     </Col>
                 </Row>
             )}
-            {hasTaxonomyFeatures && isEvent && !isPostHogProp(definition.name) && 'verified' in definition && (
+            {hasTaxonomyFeatures && isEvent && !isanalytickitProp(definition.name) && 'verified' in definition && (
                 <Row gutter={[16, 24]} className="mt-4 ph-ignore-input" style={{ maxWidth: 640 }}>
                     <Col span={24}>
                         <Field name="verified" data-attr="definition-verified">

@@ -25,7 +25,7 @@ const common = {
 await buildInParallel(
     [
         {
-            name: 'PostHog App',
+            name: 'analytickit App',
             entryPoints: ['src/index.tsx'],
             splitting: true,
             format: 'esm',
@@ -51,12 +51,12 @@ await buildInParallel(
         async onBuildComplete(config, buildResponse) {
             const { chunks, entrypoints } = buildResponse
 
-            if (config.name === 'PostHog App') {
+            if (config.name === 'analytickit App') {
                 if (Object.keys(chunks).length === 0) {
-                    throw new Error('Could not get chunk metadata for bundle "PostHog App."')
+                    throw new Error('Could not get chunk metadata for bundle "analytickit App."')
                 }
                 if (!isDev && Object.keys(entrypoints).length === 0) {
-                    throw new Error('Could not get entrypoint for bundle "PostHog App."')
+                    throw new Error('Could not get entrypoint for bundle "analytickit App."')
                 }
                 writeIndexHtml(chunks, entrypoints)
             }

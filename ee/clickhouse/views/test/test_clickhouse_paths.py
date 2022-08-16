@@ -2,8 +2,8 @@ import json
 
 from rest_framework import status
 
-from posthog.constants import FUNNEL_PATH_AFTER_STEP, INSIGHT_FUNNELS, INSIGHT_PATHS
-from posthog.test.base import APIBaseTest, ClickhouseTestMixin, _create_event, _create_person
+from analytickit.constants import FUNNEL_PATH_AFTER_STEP, INSIGHT_FUNNELS, INSIGHT_PATHS
+from analytickit.test.base import APIBaseTest, ClickhouseTestMixin, _create_event, _create_person
 
 
 class TestClickhousePaths(ClickhouseTestMixin, APIBaseTest):
@@ -44,7 +44,7 @@ class TestClickhousePaths(ClickhouseTestMixin, APIBaseTest):
             properties={"$current_url": "/about"}, distinct_id="person_1", event="$pageview", team=self.team,
         )
 
-        response = self.client.get(f"/api/projects/{self.team.id}/insights/path",).json()
+        response = self.client.get(f"/api/projects/{self.team.id}/insights/path", ).json()
         self.assertEqual(len(response["result"]), 1)
 
     def test_insight_paths_basic_exclusions(self):
@@ -86,7 +86,7 @@ class TestClickhousePaths(ClickhouseTestMixin, APIBaseTest):
             distinct_id="person_1", event="custom2", team=self.team,
         )
         response = self.client.get(
-            f"/api/projects/{self.team.id}/insights/path", data={"path_type": "$pageview", "insight": "PATHS",}
+            f"/api/projects/{self.team.id}/insights/path", data={"path_type": "$pageview", "insight": "PATHS", }
         ).json()
         self.assertEqual(len(response["result"]), 2)
 
@@ -125,18 +125,18 @@ class TestClickhousePaths(ClickhouseTestMixin, APIBaseTest):
         )
         response = self.client.get(
             f"/api/projects/{self.team.id}/insights/path",
-            data={"path_type": "$pageview", "insight": "PATHS", "start_point": "/about",},
+            data={"path_type": "$pageview", "insight": "PATHS", "start_point": "/about", },
         ).json()
         self.assertEqual(len(response["result"]), 1)
 
         response = self.client.get(
             f"/api/projects/{self.team.id}/insights/path",
-            data={"path_type": "custom_event", "insight": "PATHS", "start_point": "custom2",},
+            data={"path_type": "custom_event", "insight": "PATHS", "start_point": "custom2", },
         ).json()
         self.assertEqual(len(response["result"]), 0)
         response = self.client.get(
             f"/api/projects/{self.team.id}/insights/path",
-            data={"path_type": "$screen", "insight": "PATHS", "start_point": "/screen1",},
+            data={"path_type": "$screen", "insight": "PATHS", "start_point": "/screen1", },
         ).json()
         self.assertEqual(len(response["result"]), 1)
 

@@ -1,22 +1,22 @@
-import { randomBytes } from 'crypto'
+import{randomBytes}from'crypto'
 
-import { LogLevel } from '../src/types'
-import { safeClickhouseString } from '../src/utils/db/utils'
+import {LogLevel}from '../src/types'
+import { safeClickhouseString}from '../src/utils/db/utils'
 import {
-    bufferToStream,
-    cloneObject,
-    escapeClickHouseString,
-    groupBy,
-    sanitizeSqlIdentifier,
-    setLogLevel,
-    stringify,
-    UUID,
-    UUIDT,
-} from '../src/utils/utils'
+bufferToStream,
+cloneObject,
+escapeClickHouseString,
+groupBy,
+sanitizeSqlIdentifier,
+setLogLevel,
+stringify,
+UUID,
+UUIDT,
+}from '../src/utils/utils'
 
-// .zip in Base64: github repo posthog/helloworldplugin
+// .zip in Base64: github repo analytickit/helloworldplugin
 const zip =
-    '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X1BLAQIAAAoAAAAIAA8LbVG7wLyhzQAAAFMBAAAuAAkAAAAAAAEAAAAAAAAEAABoZWxsb3dvcmxkcGx1Z2luLWltYWdlbGVzcy12ZXJzaW9uL3BsdWdpbi5qc29uVVQFAAHPUK5fUEsFBgAAAAAGAAYATAIAACIFAAAoAGQ1YWExZDJiOGE1MzRmMzdjZDkzYmU0OGIyMTRmNDkwZWY5ZWU5MDQ='
+'UEsDBAoAAAAAAA8LbVEAAAAAAAAAAAAAAAAjAAkAaGVsbG93b3JsZHBsdWdpbi1pbWFnZWxlc3MtdmVyc2lvbi9VVAUAAc9Qrl9QSwMECgAAAAgADwttUQT7a+JUAAAAdQAAAC4ACQBoZWxsb3dvcmxkcGx1Z2luLWltYWdlbGVzcy12ZXJzaW9uLy5wcmV0dGllcnJjVVQFAAHPUK5fq+ZSAAKlkqLEzJzMvHTn/NzcRCUrBaXUYlMlHahcYlJ4ZkpJBlDYBCpUnJqbCeSmJeYUp8KEgLpzUgNL80tSgTIlRaUwiYKizLwSmAGGRgZctVwAUEsDBAoAAAAIAA8LbVG/Zg9y6wAAAPMBAAArAAkAaGVsbG93b3JsZHBsdWdpbi1pbWFnZWxlc3MtdmVyc2lvbi9pbmRleC5qc1VUBQABz1CuX31RTUvEMBC951eMi5AUS1E8e9Sz4FFE0jjNBrKTkkxcZOl/N9u0hyo0hyHDe/PefOj0QwaGTIZdIEjIeXz12TpSFzCBBmdhauAioLySp+Cx88GqwxsyO7KQR+AjAqM+3Ryaf7yq0YhJCL31GmMwmNLzNxIrvMYWVs8WjDZFdWPNJWZijPAE+qwdV1JnkZVcINnC/dLEjKUttgrcwUMjZpoboJp3pZ8RIztMq+n1/cXe5RG9D/KjNCHPIfovucPtdZyZdaqupDvk27XPWjH/d+je9Z+UT/1SUNKXZbXqsa5gqiPGctRIVaHc4RdQSwMECgAAAAgADwttUVpiCFkvAAAAOQAAACkACQBoZWxsb3dvcmxkcGx1Z2luLWltYWdlbGVzcy12ZXJzaW9uL2xpYi5qc1VUBQABz1CuX0srzUsuyczPU8jJTHKDsTXySnOTUos0Faq5FICgKLWktChPASKooKVgZM1VywUAUEsDBAoAAAAIAA8LbVE7Twti+wAAAO0BAAAvAAkAaGVsbG93b3JsZHBsdWdpbi1pbWFnZWxlc3MtdmVyc2lvbi9wYWNrYWdlLmpzb25VVAUAAc9Qrl+VUbtOAzEQ7O8rjJHSQO6S9noEFEgUlGkud4vtyOe1dm1IFOXf8eNE0qazZ2ZnvONzI4R0wwyyF9IjB41qrcFa/EWy09rbqIyTz1n2A8QGXVZu2k27regEPJLxYWFeCSCIoEEUg4cqmgdTWOMmOLYHrmgd5ESc0zUBAThkGYwaxU6+ECH1wqHIhGAPo/k2MO2kWK0EHE0QW5kmL8WNIL3fBKTTjeHJl82UCSUyQZHsgjzpEDz3XZfOOu7bEefuM1Xwhqq7VlAbaLPDf9QQU0+Ubeoi1ozguCR9vH9VbB/VzWZL6h2JnWGOwNdQjTP4QcGdPo8Ew5T+t7k0f1BLAwQKAAAACAAPC21Ru8C8oc0AAABTAQAALgAJAGhlbGxvd29ybGRwbHVnaW4taW1hZ2VsZXNzLXZlcnNpb24vcGx1Z2luLmpzb25VVAUAAc9Qrl9tjz1rwzAQhnf/iquXLCHesxQytKVToEPms3WWr8g6VzqRL/LfKymQdOggxPu8zwvStQFoPc7UbqGdyDk5SnBmccmyb9elTcHVUnWJ266zrFPqN4PM3V6ifojt/t8ZikPgRVl82b8HIgWdCA7FBPQG3kQAYYdhDZ9fQIaL/HKfz8h1x97QafMd79RxX2C+HmgQP7LN9JpTzj2GR/jzucOEuorAvr4hS691Xh09L9WJGtjbJzc0YnJaqh4vTx7oJ3Egk4sRXaTKb005t+YXUEsBAgAACgAAAAAADwttUQAAAAAAAAAAAAAAACMACQAAAAAAAAAQAAAAAAAAAGhlbGxvd29ybGRwbHVnaW4taW1hZ2VsZXNzLXZlcnNpb24vVVQFAAHPUK5fUEsBAgAACgAAAAgADwttUQT7a+JUAAAAdQAAAC4ACQAAAAAAAQAAAAAASgAAAGhlbGxvd29ybGRwbHVnaW4taW1hZ2VsZXNzLXZlcnNpb24vLnByZXR0aWVycmNVVAUAAc9Qrl9QSwECAAAKAAAACAAPC21Rv2YPcusAAADzAQAAKwAJAAAAAAABAAAAAADzAAAAaGVsbG93b3JsZHBsdWdpbi1pbWFnZWxlc3MtdmVyc2lvbi9pbmRleC5qc1VUBQABz1CuX1BLAQIAAAoAAAAIAA8LbVFaYghZLwAAADkAAAApAAkAAAAAAAEAAAAAADACAABoZWxsb3dvcmxkcGx1Z2luLWltYWdlbGVzcy12ZXJzaW9uL2xpYi5qc1VUBQABz1CuX1BLAQIAAAoAAAAIAA8LbVE7Twti+wAAAO0BAAAvAAkAAAAAAAEAAAAAAK8CAABoZWxsb3dvcmxkcGx1Z2luLWltYWdlbGVzcy12ZXJzaW9uL3BhY2thZ2UuanNvblVUBQABz1CuX1BLAQIAAAoAAAAIAA8LbVG7wLyhzQAAAFMBAAAuAAkAAAAAAAEAAAAAAAAEAABoZWxsb3dvcmxkcGx1Z2luLWltYWdlbGVzcy12ZXJzaW9uL3BsdWdpbi5qc29uVVQFAAHPUK5fUEsFBgAAAAAGAAYATAIAACIFAAAoAGQ1YWExZDJiOGE1MzRmMzdjZDkzYmU0OGIyMTRmNDkwZWY5ZWU5MDQ = '
 
 describe('utils', () => {
     test('bufferToStream', () => {
@@ -145,10 +145,10 @@ describe('utils', () => {
                     new Uint8Array([
                         0x99, 0xab, 0xcd, 0xef, 0x12, 0x34, 0x43, 0x21, 0, 0, 0xdc, 0xba, 0x87, 0x65, 0x43, 0x21,
                     ])
-                )
-            })
+)
+})
 
-            it('throws on an invalid string', () => {
+it('throws on an invalid string', () => {
                 expect(() => new UUID('99aBcDeF-1234-4321-WXyz-dcba87654321')).toThrow() // "WXyz" are not hexadecimal
                 expect(() => new UUID('99aBcDeF123443210000dcba87654321')).toThrow() // lack of hyphens
                 expect(() => new UUID('99aBcDeF-1234-4321-0000-dcba87654321A')).toThrow() // one character too many
@@ -162,16 +162,16 @@ describe('utils', () => {
                         new Uint8Array([
                             0x99, 0xab, 0xcd, 0xef, 0x12, 0x34, 0x43, 0x21, 0, 0, 0xdc, 0xba, 0x87, 0x65, 0x43, 0x21,
                         ])
-                    )
-                    expect(uuid.array).toStrictEqual(
+)
+expect(uuid.array).toStrictEqual(
                         new Uint8Array([
                             0x99, 0xab, 0xcd, 0xef, 0x12, 0x34, 0x43, 0x21, 0, 0, 0xdc, 0xba, 0x87, 0x65, 0x43, 0x21,
                         ])
-                    )
-                }
-            })
+)
+}
+})
 
-            it('works with a random buffer', () => {
+it('works with a random buffer', () => {
                 for (let i = 0; i < 10; i++) {
                     const uuid = new UUID(randomBytes(16))
                     expect(uuid.array).toHaveLength(16)
@@ -299,11 +299,11 @@ describe('utils', () => {
 
             expect(() => groupBy(objects, 'i', true)).toThrowError(
                 'Key "i" has more than one matching value, which is not allowed in flat groupBy!'
-            )
-        })
-    })
+)
+})
+})
 
-    describe('stringify', () => {
+describe('stringify', () => {
         it('leaves strings unaffected', () => {
             expect(stringify('test!')).toStrictEqual('test!')
         })

@@ -1,17 +1,17 @@
-import { GroupTypeIndex, GroupTypeToColumnIndex, Team, TeamId } from '../../types'
-import { DB } from '../../utils/db/db'
-import { timeoutGuard } from '../../utils/db/utils'
-import { posthog } from '../../utils/posthog'
-import { getByAge } from '../../utils/utils'
-import { TeamManager } from './team-manager'
+import{GroupTypeIndex, GroupTypeToColumnIndex, Team, TeamId}from '../../types'
+import {DB }from '../../utils/db/db'
+import {timeoutGuard} from '../../utils/db/utils'
+import {analytickit}from '../../utils/analytickit'
+import {getByAge}from '../../utils/utils'
+import {TeamManager}from './team-manager'
 
 export class GroupTypeManager {
-    db: DB
-    teamManager: TeamManager
-    groupTypesCache: Map<number, [GroupTypeToColumnIndex, number]>
-    instanceSiteUrl: string
+db: DB
+teamManager: TeamManager
+groupTypesCache: Map < number, [GroupTypeToColumnIndex, number]>
+instanceSiteUrl: string
 
-    constructor(db: DB, teamManager: TeamManager, instanceSiteUrl?: string | null) {
+constructor(db: DB, teamManager: TeamManager, instanceSiteUrl?: string | null) {
         this.db = db
         this.teamManager = teamManager
         this.groupTypesCache = new Map()
@@ -44,8 +44,8 @@ export class GroupTypeManager {
                 teamId,
                 groupType,
                 Object.keys(groupTypes).length
-            )
-            if (groupTypeIndex !== null) {
+)
+if(groupTypeIndex !== null) {
                 this.groupTypesCache.delete(teamId)
             }
 
@@ -63,7 +63,7 @@ export class GroupTypeManager {
             return
         }
 
-        posthog.capture({
+        analytickit.capture({
             distinctId: 'plugin-server',
             event: 'group type ingested',
             properties: {

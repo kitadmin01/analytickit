@@ -23,7 +23,7 @@ export function ErrorBoundary({ children }: { children: React.ReactElement }): J
                         <HelpButton
                             customComponent={
                                 <LemonButton type="primary" sideIcon={<IconArrowDropDown />}>
-                                    Contact PostHog
+                                    Contact analytickit
                                 </LemonButton>
                             }
                             customKey="error-boundary"

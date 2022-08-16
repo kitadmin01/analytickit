@@ -1,9 +1,9 @@
-import { Hub } from 'types'
+import{Hub}from'types'
 
 export type BufferOptions = {
-    limit: number
-    timeoutSeconds: number
-    onFlush?: (objects: any[], points: number) => void | Promise<void>
+limit: number
+timeoutSeconds: number
+onFlush?:(objects: any[], points: number) => void | Promise<void>
 }
 
 export class ExportEventsBuffer {

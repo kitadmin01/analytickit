@@ -1,1 +1,1 @@
-export * from './EmptyStates'
+export* from './EmptyStates'

@@ -35,7 +35,7 @@ import { IconInfo, IconRefresh } from 'lib/components/icons'
 import { PersonDisplayNameProperties } from './PersonDisplayNameProperties'
 import { Tooltip } from 'lib/components/Tooltip'
 import { SlackIntegration } from './SlackIntegration'
-import { LemonButton, LemonDivider, LemonInput } from '@posthog/lemon-ui'
+import { LemonButton, LemonDivider, LemonInput } from '@analytickit/lemon-ui'
 
 export const scene: SceneExport = {
     component: ProjectSettings,
@@ -98,17 +98,17 @@ export function ProjectSettings(): JSX.Element {
                 <h2 id="snippet" className="subtitle">
                     Website event autocapture
                 </h2>
-                To integrate PostHog into your website and get event autocapture with no additional work, include the
+                To integrate analytickit into your website and get event autocapture with no additional work, include the
                 following snippet in your&nbsp;website's&nbsp;HTML. Ideally, put it just above the&nbsp;
                 <code>{'</head>'}</code>&nbsp;tag.
                 <br />
                 For more guidance, including on identifying users,{' '}
-                <a href="https://posthog.com/docs/integrations/js-integration">see PostHog Docs</a>.
+                <a href="https://analytickit.com/docs/integrations/js-integration">see analytickit Docs</a>.
                 {currentTeamLoading && !currentTeam ? loadingComponent : <JSSnippet />}
                 <p>
-                    You can even test PostHog out on a live site without changing any code.
+                    You can even test analytickit out on a live site without changing any code.
                     <br />
-                    Just drag the bookmarklet below to your bookmarks bar, open the website you want to test PostHog on
+                    Just drag the bookmarklet below to your bookmarks bar, open the website you want to test analytickit on
                     and click it.
                     <br />
                     This will enable our tracking, on the currently loaded page only. The data will show up in this
@@ -120,7 +120,7 @@ export function ProjectSettings(): JSX.Element {
                 <h2 id="custom-events" className="subtitle">
                     Send custom events
                 </h2>
-                To send custom events <a href="https://posthog.com/docs/integrations">visit PostHog Docs</a> and
+                To send custom events <a href="https://analytickit.com/docs/integrations">visit analytickit Docs</a> and
                 integrate the library for the specific language or platform you're using. We support Python, Ruby, Node,
                 Go, PHP, iOS, Android, and more.
                 <LemonDivider className="my-6" />
@@ -132,7 +132,7 @@ export function ProjectSettings(): JSX.Element {
                 </h3>
                 <p>
                     You can use this write-only key in any one of{' '}
-                    <a href="https://posthog.com/docs/integrations">our libraries</a>.
+                    <a href="https://analytickit.com/docs/integrations">our libraries</a>.
                 </p>
                 <CodeSnippet
                     actions={[
@@ -159,13 +159,13 @@ export function ProjectSettings(): JSX.Element {
                 </CodeSnippet>
                 <p>
                     Write-only means it can only create new events. It can't read events or any of your other data
-                    stored with PostHog, so it's safe to use in public apps.
+                    stored with analytickit, so it's safe to use in public apps.
                 </p>
                 <h3 id="project-id" className="l3 mt-4">
                     Project ID
                 </h3>
                 <p>
-                    You can use this ID to reference your project in our <a href="https://posthog.com/docs/api">API</a>.
+                    You can use this ID to reference your project in our <a href="https://analytickit.com/docs/api">API</a>.
                 </p>
                 <CodeSnippet copyDescription="project ID">{String(currentTeam?.id || '')}</CodeSnippet>
                 <LemonDivider className="my-6" />
@@ -173,7 +173,7 @@ export function ProjectSettings(): JSX.Element {
                     Timezone
                 </h2>
                 <p>
-                    Set the timezone for your project. All charts will be based on this timezone, including how PostHog
+                    Set the timezone for your project. All charts will be based on this timezone, including how analytickit
                     buckets data in day/week/month intervals.
                 </p>
                 <TimezoneConfig />
@@ -284,7 +284,7 @@ export function ProjectSettings(): JSX.Element {
                 </h2>
                 <IPCapture />
                 <LemonDivider className="my-6" />
-                <h2 className="subtitle">PostHog Toolbar</h2>
+                <h2 className="subtitle">analytickit Toolbar</h2>
                 <ToolbarSettings />
                 <LemonDivider className="my-6" />
                 <h2 id="recordings" className="subtitle" style={{ display: 'flex', alignItems: 'center' }}>
@@ -295,18 +295,18 @@ export function ProjectSettings(): JSX.Element {
                     found in the <Link to={urls.sessionRecordings()}>recordings page</Link>.
                 </p>
                 <p>
-                    Please note <b>your website needs to have</b> the <a href="#snippet">PostHog snippet</a> or the
+                    Please note <b>your website needs to have</b> the <a href="#snippet">analytickit snippet</a> or the
                     latest version of{' '}
                     <a
-                        href="https://posthog.com/docs/integrations/js-integration?utm_campaign=session-recording&utm_medium=in-product"
+                        href="https://analytickit.com/docs/integrations/js-integration?utm_campaign=session-recording&utm_medium=in-product"
                         target="_blank"
                     >
-                        posthog-js
+                        analytickit-js
                     </a>{' '}
                     <b>directly</b> installed, and the domains you wish to record must be set in{' '}
                     <a href="#authorized-urls">Authorized URLs</a>. For more details, check out our{' '}
                     <a
-                        href="https://posthog.com/docs/user-guides/recordings?utm_campaign=session-recording&utm_medium=in-product"
+                        href="https://analytickit.com/docs/user-guides/recordings?utm_campaign=session-recording&utm_medium=in-product"
                         target="_blank"
                     >
                         docs

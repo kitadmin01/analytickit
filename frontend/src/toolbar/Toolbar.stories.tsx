@@ -16,7 +16,7 @@ const editorParams: EditorProps = {
     dataAttributes: ['data-attr'],
     apiURL: '/',
     jsURL: 'http://localhost:8234/',
-    userEmail: 'foobar@posthog.com',
+    userEmail: 'foobar@analytickit.com',
 }
 
 export default {
@@ -27,7 +27,7 @@ export default {
 function useToolbarStyles(): void {
     useEffect(() => {
         const head = document.getElementsByTagName('head')[0]
-        const shadowRoot = window.document.getElementById('__POSTHOG_TOOLBAR__')?.shadowRoot
+        const shadowRoot = window.document.getElementById('__analytickit_TOOLBAR__')?.shadowRoot
         const styleTags: HTMLStyleElement[] = Array.from(head.getElementsByTagName('style'))
         styleTags.forEach((tag) => {
             const style = document.createElement('style')

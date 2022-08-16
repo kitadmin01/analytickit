@@ -1,6 +1,6 @@
 from time import sleep, time
 
-from posthog.client import sync_execute
+from analytickit.client import sync_execute
 
 
 # this normally is unnecessary as CH is fast to consume from Kafka when testing

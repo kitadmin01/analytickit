@@ -1,24 +1,24 @@
-import { definitionPopupLogic, DefinitionPopupState } from 'lib/components/DefinitionPopup/definitionPopupLogic'
+import{definitionPopupLogic, DefinitionPopupState}from 'lib/components/DefinitionPopup/definitionPopupLogic'
 import api from 'lib/api'
 import {
-    mockActionDefinition,
-    mockCohort,
-    mockElement,
-    mockEventDefinitions,
-    mockEventPropertyDefinition,
-    mockGroup,
-    mockPersonProperty,
-} from '~/test/mocks'
-import { initKeaTests } from '~/test/init'
-import { TaxonomicDefinitionTypes, TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
-import { expectLogic } from 'kea-test-utils'
-import { urls } from 'scenes/urls'
-import { actionsModel } from '~/models/actionsModel'
-import { ActionType, CohortType, PersonProperty, PropertyDefinition } from '~/types'
-import { eventDefinitionsModel } from '~/models/eventDefinitionsModel'
-import { propertyDefinitionsModel } from '~/models/propertyDefinitionsModel'
-import { cohortsModel } from '~/models/cohortsModel'
-import { useMocks } from '~/mocks/jest'
+mockActionDefinition,
+mockCohort,
+mockElement,
+mockEventDefinitions,
+mockEventPropertyDefinition,
+mockGroup,
+mockPersonProperty,
+}from '~/test/mocks'
+import {initKeaTests }from '~/test/init'
+import {TaxonomicDefinitionTypes, TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import {expectLogic }from 'kea-test-utils'
+import {urls} from 'scenes/urls'
+import {actionsModel }from '~/models/actionsModel'
+import {ActionType, CohortType, PersonProperty, PropertyDefinition} from '~/types'
+import {eventDefinitionsModel }from '~/models/eventDefinitionsModel'
+import {propertyDefinitionsModel}from '~/models/propertyDefinitionsModel'
+import {cohortsModel}from '~/models/cohortsModel'
+import {useMocks} from '~/mocks/jest'
 
 describe('definitionPopupLogic', () => {
     let logic: ReturnType<typeof definitionPopupLogic.build>
@@ -196,13 +196,13 @@ describe('definitionPopupLogic', () => {
                         expect(api.update).toBeCalledWith(
                             group.url,
                             expect.objectContaining({ description: 'new and improved description' })
-                        )
-                    }
-                })
-            })
-        })
+)
+}
+})
+})
+})
 
-        it('add tags', async () => {
+it('add tags', async () => {
             await expectLogic(logic, async () => {
                 await logic.actions.setDefinition(mockEventDefinitions[0])
                 await logic.actions.setPopupState(DefinitionPopupState.Edit)

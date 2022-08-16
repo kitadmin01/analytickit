@@ -1,18 +1,18 @@
-import { defineConfig } from 'cypress'
+import{defineConfig}from'cypress'
 import webpackPreprocessor from '@cypress/webpack-preprocessor'
-import { PNG } from 'pngjs'
+import {PNG}from 'pngjs'
 import pixelmatch from 'pixelmatch'
 import fs from 'fs'
 import path from 'path'
-import { createEntry } from './webpack.config'
+import {createEntry}from './webpack.config'
 
 const downloadDirectory = path.join(__dirname, '..', 'downloads')
 
 const checkFileDownloaded = async (filename: string, timeout: number, delayMs = 10): Promise<string | undefined> => {
-    const start = Date.now()
-    const fullFileName = `${downloadDirectory}/${filename}`
+const start = Date.now()
+const fullFileName = `${downloadDirectory}/${filename}`
 
-    while (Date.now() - start < timeout) {
+while (Date.now() - start < timeout) {
         await new Promise((res) => setTimeout(res, delayMs))
 
         if (fs.existsSync(fullFileName)) {
@@ -82,17 +82,17 @@ export default defineConfig({
                                 `Reference image is off by ${(percentageDiff * 100).toFixed(
                                     2
                                 )}% (${numDiffPixels}) pixels. See ${imgDiffFilename} for more info`
-                            )
-                        }
+)
+}
 
-                        return true
-                    })
-                },
-            })
+return true
+})
+},
+})
 
-            return config
-        },
-        baseUrl: 'http://localhost:8000',
-        specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
-    },
+return config
+},
+baseUrl: 'http://localhost:8000',
+specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+},
 })

@@ -10,7 +10,7 @@ trap 'rm -rf "$PROMETHEUS_MULTIPROC_DIR"' EXIT
 
 export PROMETHEUS_METRICS_EXPORT_PORT=8001
 
-gunicorn posthog.wsgi \
+gunicorn analytickit.wsgi \
     --config gunicorn.config.py \
     --bind 0.0.0.0:8000 \
     --log-file - \

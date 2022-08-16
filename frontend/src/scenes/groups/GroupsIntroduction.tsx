@@ -36,7 +36,7 @@ export function GroupsIntroduction({ access }: Props): JSX.Element {
             header={header}
             featureKey={AvailableFeature.GROUP_ANALYTICS}
             caption={subtext}
-            docsLink="https://posthog.com/docs/user-guides/group-analytics"
+            docsLink="https://analytickit.com/docs/user-guides/group-analytics"
             hideUpgradeButton={access === GroupsAccessStatus.HasAccess}
         />
     )

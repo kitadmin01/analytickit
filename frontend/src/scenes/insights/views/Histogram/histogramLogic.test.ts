@@ -1,7 +1,7 @@
-import { histogramLogic } from './histogramLogic'
-import { initKeaTests } from '~/test/init'
-import { getConfig } from 'scenes/insights/views/Histogram/histogramUtils'
-import { FunnelLayout } from 'lib/constants'
+import{histogramLogic}from'./histogramLogic'
+import {initKeaTests}from '~/test/init'
+import { getConfig}from 'scenes/insights/views/Histogram/histogramUtils'
+import {FunnelLayout}from 'lib/constants'
 
 describe('histogramLogic', () => {
     let logic: ReturnType<typeof histogramLogic.build>

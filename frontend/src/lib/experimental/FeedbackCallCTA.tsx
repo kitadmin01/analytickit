@@ -5,11 +5,11 @@ import { Button } from 'antd'
 import { kea, useActions, useValues } from 'kea'
 import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
 import type { feedbackCallLogicType } from './FeedbackCallCTAType'
-import posthog from 'posthog-js'
+import analytickit from 'analytickit-js'
 import { lemonToast } from 'lib/components/lemonToast'
 
 /**
- * CURRENTLY DISABLED. To enable, set a new `FEEDBACK_CALL_KEY` and create either a multivariate FF or an experiment on PostHog.
+ * CURRENTLY DISABLED. To enable, set a new `FEEDBACK_CALL_KEY` and create either a multivariate FF or an experiment on analytickit.
  * Displays a banner from the bottom of the screen to prompt users to join us for a call.
  */
 
@@ -65,7 +65,7 @@ const feedbackCallLogic = kea<feedbackCallLogicType>({
     },
     listeners: ({ actions }) => ({
         reportAndDismiss: ({ result }) => {
-            posthog.capture('experimentation call prompt action', { result })
+            analytickit.capture('experimentation call prompt action', { result })
             localStorage.setItem(FEEDBACK_CALL_KEY, 'true')
             actions.hide()
             if (result === 'more-info') {
@@ -104,7 +104,7 @@ export function FeedbackCallCTA(): JSX.Element | null {
                     <div className="question">{copy.description}</div>
                     <div className="action-buttons" style={{ width: 240 }}>
                         <a
-                            href="https://calendly.com/posthog-feedback"
+                            href="https://calendly.com/analytickit-feedback"
                             target="_blank"
                             rel="noreferrer"
                             onClick={() => reportAndDismiss('call')}

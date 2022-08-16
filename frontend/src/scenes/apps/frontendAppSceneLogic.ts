@@ -1,18 +1,18 @@
-import { BuiltLogic, connect, kea, key, LogicWrapper, props, selectors, path } from 'kea'
-import { frontendAppsLogic } from 'scenes/apps/frontendAppsLogic'
-import { Breadcrumb, FrontendApp, FrontendAppConfig } from '~/types'
-import type { frontendAppSceneLogicType } from './frontendAppSceneLogicType'
-import { subscriptions } from 'kea-subscriptions'
-import { objectsEqual } from 'lib/utils'
+import{BuiltLogic, connect, kea, key, LogicWrapper, props, selectors, path}from 'kea'
+import {frontendAppsLogic}from 'scenes/apps/frontendAppsLogic'
+import {Breadcrumb, FrontendApp, FrontendAppConfig} from '~/types'
+import type { frontendAppSceneLogicType}from './frontendAppSceneLogicType'
+import {subscriptions}from 'kea-subscriptions'
+import { objectsEqual}from 'lib/utils'
 
 export interface FrontendAppSceneLogicProps {
-    /** Used as the logic's key */
-    id: number
+/** Used as the logic's key */
+id: number
 }
 
 /** Logic responsible for loading the injected frontend scene */
 export const frontendAppSceneLogic = kea<frontendAppSceneLogicType>([
-    path(['scenes', 'apps', 'frontendAppSceneLogic']),
+path(['scenes', 'apps', 'frontendAppSceneLogic']),
     props({} as FrontendAppSceneLogicProps),
     key((props) => props.id),
     connect({
@@ -48,12 +48,12 @@ export const frontendAppSceneLogic = kea<frontendAppSceneLogicType>([
                                 : `Loading app...`,
                         },
                     ]
-                )
-            },
-            { resultEqualityCheck: objectsEqual },
-        ],
-    })),
-    subscriptions(({ cache }) => ({
+)
+},
+{resultEqualityCheck: objectsEqual},
+],
+})),
+subscriptions(({ cache }) => ({
         builtLogic: (builtLogic: BuiltLogic) => {
             cache.unmount?.()
             cache.unmount = builtLogic?.mount()

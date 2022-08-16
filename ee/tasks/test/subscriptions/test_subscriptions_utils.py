@@ -5,11 +5,11 @@ import pytest
 
 from ee.tasks.subscriptions.subscription_utils import DEFAULT_MAX_ASSET_COUNT, generate_assets
 from ee.tasks.test.subscriptions.subscriptions_test_factory import create_subscription
-from posthog.models.dashboard import Dashboard
-from posthog.models.dashboard_tile import DashboardTile
-from posthog.models.exported_asset import ExportedAsset
-from posthog.models.insight import Insight
-from posthog.test.base import APIBaseTest
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.dashboard_tile import DashboardTile
+from analytickit.models.exported_asset import ExportedAsset
+from analytickit.models.insight import Insight
+from analytickit.test.base import APIBaseTest
 
 
 @patch("ee.tasks.subscriptions.subscription_utils.group")

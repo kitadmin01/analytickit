@@ -1,53 +1,53 @@
-import { Properties } from '@posthog/plugin-scaffold'
-import { captureException } from '@sentry/node'
+import{Properties}from'@analytickit/plugin-scaffold'
+import {captureException} from '@sentry/node'
 import escapeStringRegexp from 'escape-string-regexp'
 import equal from 'fast-deep-equal'
-import { StatsD } from 'hot-shots'
+import {StatsD}from 'hot-shots'
 import RE2 from 're2'
 
 import {
-    Action,
-    ActionStep,
-    ActionStepUrlMatching,
-    CohortPropertyFilter,
-    Element,
-    ElementPropertyFilter,
-    EventPropertyFilter,
-    IngestionEvent,
-    IngestionPersonData,
-    PersonPropertyFilter,
-    PropertyFilter,
-    PropertyFilterWithOperator,
-    PropertyOperator,
-} from '../../types'
-import { DB } from '../../utils/db/db'
-import { extractElements } from '../../utils/db/elements-chain'
-import { stringToBoolean } from '../../utils/env-utils'
-import { stringify } from '../../utils/utils'
-import { ActionManager } from './action-manager'
-import { LazyPersonContainer } from './lazy-person-container'
+Action,
+ActionStep,
+ActionStepUrlMatching,
+CohortPropertyFilter,
+Element,
+ElementPropertyFilter,
+EventPropertyFilter,
+IngestionEvent,
+IngestionPersonData,
+PersonPropertyFilter,
+PropertyFilter,
+PropertyFilterWithOperator,
+PropertyOperator,
+}from '../../types'
+import {DB}from '../../utils/db/db'
+import {extractElements}from '../../utils/db/elements-chain'
+import {stringToBoolean}from '../../utils/env-utils'
+import { stringify}from '../../utils/utils'
+import {ActionManager}from './action-manager'
+import {LazyPersonContainer} from './lazy-person-container'
 
 /** These operators can only be matched if the provided filter's value has the right type. */
-const propertyOperatorToRequiredValueType: Partial<Record<PropertyOperator, string[]>> = {
-    [PropertyOperator.IContains]: ['string'],
-    [PropertyOperator.NotIContains]: ['string'],
-    [PropertyOperator.Regex]: ['string'],
-    [PropertyOperator.NotRegex]: ['string'],
-    [PropertyOperator.GreaterThan]: ['number', 'boolean'],
-    [PropertyOperator.LessThan]: ['number', 'boolean'],
+const propertyOperatorToRequiredValueType: Partial < Record<PropertyOperator, string[]>> = {
+[PropertyOperator.IContains]: ['string'],
+[PropertyOperator.NotIContains]: ['string'],
+[PropertyOperator.Regex]: ['string'],
+[PropertyOperator.NotRegex]: ['string'],
+[PropertyOperator.GreaterThan]: ['number', 'boolean'],
+[PropertyOperator.LessThan]: ['number', 'boolean'],
 }
 
 /** These operators do match when the property is not there, as opposed to normal ones. */
-const emptyMatchingOperator: Partial<Record<PropertyOperator, boolean>> = {
-    [PropertyOperator.IsNotSet]: true,
-    [PropertyOperator.IsNot]: true,
-    [PropertyOperator.NotIContains]: true,
-    [PropertyOperator.NotRegex]: true,
+const emptyMatchingOperator: Partial < Record<PropertyOperator, boolean>> = {
+[PropertyOperator.IsNotSet]: true,
+[PropertyOperator.IsNot]: true,
+[PropertyOperator.NotIContains]: true,
+[PropertyOperator.NotRegex]: true,
 }
 
 /** Return whether two values compare to each other according to the specified operator.
- * This simulates the behavior of ClickHouse (or other DBMSs) which like to cast values in SELECTs to the column's type.
- */
+* This simulates the behavior of ClickHouse (or other DBMSs) which like to cast values in SELECTs to the column's type.
+*/
 export function castingCompare(
     a: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
     b: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
@@ -122,9 +122,9 @@ export class ActionMatcher {
         }
         const teamActionsMatching: boolean[] = await Promise.all(
             teamActions.map((action) => this.checkAction(event, elements, personContainer, action))
-        )
-        const matches: Action[] = []
-        for (let i = 0; i < teamActionsMatching.length; i++) {
+)
+const matches: Action[] = []
+for (let i = 0; i < teamActionsMatching.length; i++) {
             if (teamActionsMatching[i]) {
                 matches.push(teamActions[i])
             }
@@ -181,16 +181,16 @@ export class ActionMatcher {
             this.checkStepUrl(event, step) &&
             this.checkStepEvent(event, step) &&
             (await this.checkStepFilters(event, elements, personContainer, step))
-        )
-    }
+)
+}
 
-    /**
-     * Sublevel 2 of action matching.
-     *
-     * Return whether the event is a match for the step's "URL" constraint.
-     * Step properties: `url_matching`, `url`.
-     */
-    private checkStepUrl(event: IngestionEvent, step: ActionStep): boolean {
+/**
+* Sublevel 2 of action matching.
+*
+* Return whether the event is a match for the step's "URL" constraint.
+* Step properties: `url_matching`, `url`.
+*/
+private checkStepUrl(event: IngestionEvent, step: ActionStep): boolean {
         // CHECK CONDITIONS, OTHERWISE SKIPPED
         if (step.url) {
             const eventUrl = event.properties?.$current_url
@@ -349,9 +349,9 @@ export class ActionMatcher {
             const okValues = Array.isArray(filter.value) ? filter.value : [filter.value]
             return okValues.some((okValue) =>
                 okValue ? this.checkElementsAgainstSelector(elements, okValue.toString()) : false
-            )
-        } else {
-            return elements.some((element) => this.checkPropertiesAgainstFilter(element, filter))
+)
+}else {
+return elements.some((element) => this.checkPropertiesAgainstFilter(element, filter))
         }
     }
 

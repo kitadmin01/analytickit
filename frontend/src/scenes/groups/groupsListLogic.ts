@@ -1,32 +1,32 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { groupsAccessLogic } from 'lib/introductions/groupsAccessLogic'
-import { capitalizeFirstLetter } from 'lib/utils'
-import { teamLogic } from 'scenes/teamLogic'
-import { urls } from 'scenes/urls'
-import { groupsModel } from '~/models/groupsModel'
-import { Breadcrumb, Group } from '~/types'
-import type { groupsListLogicType } from './groupsListLogicType'
+import {groupsAccessLogic}from 'lib/introductions/groupsAccessLogic'
+import {capitalizeFirstLetter}from 'lib/utils'
+import {teamLogic} from 'scenes/teamLogic'
+import {urls }from 'scenes/urls'
+import { groupsModel}from '~/models/groupsModel'
+import {Breadcrumb, Group}from '~/types'
+import type {groupsListLogicType}from './groupsListLogicType'
 
 export interface GroupsPaginatedResponse {
-    next: string | null
-    previous: string | null
-    results: Group[]
+next: string | null
+previous: string | null
+results: Group[]
 }
 
 export const groupsListLogic = kea<groupsListLogicType>({
-    path: ['groups', 'groupsListLogic'],
-    connect: {
-        values: [
-            teamLogic,
-            ['currentTeamId'],
-            groupsModel,
-            ['groupTypes', 'aggregationLabel'],
-            groupsAccessLogic,
-            ['groupsEnabled'],
-        ],
-    },
-    actions: () => ({
+path: ['groups', 'groupsListLogic'],
+connect: {
+values: [
+teamLogic,
+['currentTeamId'],
+groupsModel,
+['groupTypes', 'aggregationLabel'],
+groupsAccessLogic,
+['groupsEnabled'],
+],
+},
+actions:() => ({
         loadGroups: (url?: string | null) => ({ url }),
         setTab: (tab: string) => ({ tab }),
     }),

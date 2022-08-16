@@ -1,46 +1,46 @@
-import { Properties } from '@posthog/plugin-scaffold'
-import { StatsD } from 'hot-shots'
+import{Properties}from'@analytickit/plugin-scaffold'
+import {StatsD} from 'hot-shots'
 import LRU from 'lru-cache'
-import { DateTime } from 'luxon'
+import {DateTime}from 'luxon'
 
-import { ONE_HOUR, ONE_MINUTE } from '../../config/constants'
-import { PluginsServerConfig, PropertyType, Team, TeamId } from '../../types'
-import { DB } from '../../utils/db/db'
-import { timeoutGuard } from '../../utils/db/utils'
-import { posthog } from '../../utils/posthog'
-import { status } from '../../utils/status'
-import { getByAge, UUIDT } from '../../utils/utils'
-import { detectPropertyDefinitionTypes } from './property-definitions-auto-discovery'
-import { PropertyDefinitionsCache } from './property-definitions-cache'
+import {ONE_HOUR, ONE_MINUTE}from '../../config/constants'
+import {PluginsServerConfig, PropertyType, Team, TeamId }from '../../types'
+import {DB}from '../../utils/db/db'
+import {timeoutGuard}from '../../utils/db/utils'
+import {analytickit}from '../../utils/analytickit'
+import {status }from '../../utils/status'
+import {getByAge, UUIDT} from '../../utils/utils'
+import {detectPropertyDefinitionTypes}from './property-definitions-auto-discovery'
+import {PropertyDefinitionsCache}from './property-definitions-cache'
 
 // for e.g. internal events we don't want to be available for users in the UI
 const EVENTS_WITHOUT_EVENT_DEFINITION = ['$$plugin_metrics']
 // These are used internally for manipulating person/group properties
 const NOT_SYNCED_PROPERTIES = new Set([
-    '$set',
-    '$set_once',
-    '$unset',
-    '$group_0',
-    '$group_1',
-    '$group_2',
-    '$group_3',
-    '$group_4',
+'$set',
+'$set_once',
+'$unset',
+'$group_0',
+'$group_1',
+'$group_2',
+'$group_3',
+'$group_4',
 ])
 
-type TeamCache<T> = Map<TeamId, [T, number]>
+type TeamCache< T> = Map<TeamId, [T, number]>
 
 export class TeamManager {
-    db: DB
-    teamCache: TeamCache<Team | null>
-    eventDefinitionsCache: Map<TeamId, Set<string>>
-    eventPropertiesCache: LRU<string, Set<string>> // Map<JSON.stringify([TeamId, Event], Set<Property>>
-    eventLastSeenCache: LRU<string, number> // key: JSON.stringify([team_id, event]); value: parseInt(YYYYMMDD)
-    propertyDefinitionsCache: PropertyDefinitionsCache
-    instanceSiteUrl: string
-    statsd?: StatsD
-    private readonly lruCacheSize: number
+db: DB
+teamCache: TeamCache < Team | null>
+eventDefinitionsCache: Map < TeamId, Set<string>>
+eventPropertiesCache: LRU < string, Set<string>> // Map<JSON.stringify([TeamId, Event], Set<Property>>
+eventLastSeenCache: LRU < string, number> // key: JSON.stringify([team_id, event]); value: parseInt(YYYYMMDD)
+propertyDefinitionsCache: PropertyDefinitionsCache
+instanceSiteUrl: string
+statsd?: StatsD
+private readonly lruCacheSize: number
 
-    constructor(db: DB, serverConfig: PluginsServerConfig, statsd?: StatsD) {
+constructor(db: DB, serverConfig: PluginsServerConfig, statsd?: StatsD) {
         this.db = db
         this.statsd = statsd
         this.teamCache = new Map()
@@ -113,26 +113,26 @@ export class TeamManager {
             status.info('Inserting new event definition with last_seen_at')
             this.eventLastSeenCache.set(cacheKey, cacheTime)
             await this.db.postgresQuery(
-                `INSERT INTO posthog_eventdefinition (id, name, volume_30_day, query_usage_30_day, team_id, last_seen_at, created_at)
+                `INSERT INTO analytickit_eventdefinition (id, name, volume_30_day, query_usage_30_day, team_id, last_seen_at, created_at)
 VALUES ($1, $2, NULL, NULL, $3, $4, NOW()) ON CONFLICT
-ON CONSTRAINT posthog_eventdefinition_team_id_name_80fa0b87_uniq DO UPDATE SET last_seen_at=$4`,
+ON CONSTRAINT analytickit_eventdefinition_team_id_name_80fa0b87_uniq DO UPDATE SET last_seen_at=$4`,
                 [new UUIDT().toString(), event, team.id, DateTime.now()],
                 'insertEventDefinition'
-            )
-            this.eventDefinitionsCache.get(team.id)?.add(event)
+)
+this.eventDefinitionsCache.get(team.id)?.add(event)
         } else {
             if ((this.eventLastSeenCache.get(cacheKey) ?? 0) < cacheTime) {
                 this.eventLastSeenCache.set(cacheKey, cacheTime)
                 await this.db.postgresQuery(
-                    `UPDATE posthog_eventdefinition SET last_seen_at=$1 WHERE team_id=$2 AND name=$3`,
+                    `UPDATE analytickit_eventdefinition SET last_seen_at=$1 WHERE team_id=$2 AND name=$3`,
                     [DateTime.now(), team.id, event],
                     'updateEventLastSeenAt'
-                )
-            }
-        }
-    }
+)
+}
+}
+}
 
-    private async syncEventProperties(team: Team, event: string, properties: Properties) {
+private async syncEventProperties(team: Team, event: string, properties: Properties) {
         const key = JSON.stringify([team.id, event])
         let existingProperties = this.eventPropertiesCache.get(key)
         const toInsert: Array<[string, string, TeamId]> = []
@@ -149,13 +149,13 @@ ON CONSTRAINT posthog_eventdefinition_team_id_name_80fa0b87_uniq DO UPDATE SET l
         }
 
         await this.db.postgresBulkInsert(
-            `INSERT INTO posthog_eventproperty (event, property, team_id) VALUES {VALUES} ON CONFLICT DO NOTHING`,
+            `INSERT INTO analytickit_eventproperty (event, property, team_id) VALUES {VALUES} ON CONFLICT DO NOTHING`,
             toInsert,
             'insertEventProperty'
-        )
-    }
+)
+}
 
-    private async syncPropertyDefinitions(properties: Properties, team: Team) {
+private async syncPropertyDefinitions(properties: Properties, team: Team) {
         const toInsert: Array<[string, string, boolean, null, null, TeamId, PropertyType | null]> = []
         for (const key of this.getPropertyKeys(properties)) {
             const value = properties[key]
@@ -170,33 +170,33 @@ ON CONSTRAINT posthog_eventdefinition_team_id_name_80fa0b87_uniq DO UPDATE SET l
 
         await this.db.postgresBulkInsert(
             `
-            INSERT INTO posthog_propertydefinition (id, name, is_numerical, volume_30_day, query_usage_30_day, team_id, property_type)
+            INSERT INTO analytickit_propertydefinition (id, name, is_numerical, volume_30_day, query_usage_30_day, team_id, property_type)
             VALUES {VALUES}
-            ON CONFLICT ON CONSTRAINT posthog_propertydefinition_team_id_name_e21599fc_uniq
-            DO UPDATE SET property_type=EXCLUDED.property_type WHERE posthog_propertydefinition.property_type IS NULL
+            ON CONFLICT ON CONSTRAINT analytickit_propertydefinition_team_id_name_e21599fc_uniq
+            DO UPDATE SET property_type=EXCLUDED.property_type WHERE analytickit_propertydefinition.property_type IS NULL
             `,
             toInsert,
             'insertPropertyDefinition'
-        )
-    }
+)
+}
 
-    private async setTeamIngestedEvent(team: Team, properties: Properties) {
+private async setTeamIngestedEvent(team: Team, properties: Properties) {
         if (team && !team.ingested_event) {
             await this.db.postgresQuery(
-                `UPDATE posthog_team SET ingested_event = $1 WHERE id = $2`,
+                `UPDATE analytickit_team SET ingested_event = $1 WHERE id = $2`,
                 [true, team.id],
                 'setTeamIngestedEvent'
-            )
+)
 
-            // First event for the team captured
-            const organizationMembers = await this.db.postgresQuery(
-                'SELECT distinct_id FROM posthog_user JOIN posthog_organizationmembership ON posthog_user.id = posthog_organizationmembership.user_id WHERE organization_id = $1',
-                [team.organization_id],
-                'posthog_organizationmembership'
-            )
-            const distinctIds: { distinct_id: string }[] = organizationMembers.rows
-            for (const { distinct_id } of distinctIds) {
-                posthog.capture({
+// First event for the team captured
+const organizationMembers = await this.db.postgresQuery(
+'SELECT distinct_id FROM analytickit_user JOIN analytickit_organizationmembership ON analytickit_user.id = analytickit_organizationmembership.user_id WHERE organization_id = $1',
+[team.organization_id],
+'analytickit_organizationmembership'
+)
+const distinctIds: {distinct_id: string}[] = organizationMembers.rows
+for (const { distinct_id } of distinctIds) {
+                analytickit.capture({
                     distinctId: distinct_id,
                     event: 'first team event ingested',
                     properties: {
@@ -219,22 +219,22 @@ ON CONSTRAINT posthog_eventdefinition_team_id_name_80fa0b87_uniq DO UPDATE SET l
         let eventDefinitionsCache = this.eventDefinitionsCache.get(teamId)
         if (!eventDefinitionsCache) {
             const eventNames = await this.db.postgresQuery(
-                'SELECT name FROM posthog_eventdefinition WHERE team_id = $1',
+                'SELECT name FROM analytickit_eventdefinition WHERE team_id = $1',
                 [teamId],
                 'fetchEventDefinitions'
-            )
-            eventDefinitionsCache = new Set(eventNames.rows.map((r) => r.name))
-            this.eventDefinitionsCache.set(teamId, eventDefinitionsCache)
+)
+eventDefinitionsCache = new Set(eventNames.rows.map((r) => r.name))
+this.eventDefinitionsCache.set(teamId, eventDefinitionsCache)
         }
 
         if (!this.propertyDefinitionsCache.has(teamId)) {
             const eventProperties = await this.db.postgresQuery(
-                'SELECT name, property_type FROM posthog_propertydefinition WHERE team_id = $1',
+                'SELECT name, property_type FROM analytickit_propertydefinition WHERE team_id = $1',
                 [teamId],
                 'fetchPropertyDefinitions'
-            )
+)
 
-            this.propertyDefinitionsCache.initialize(teamId, eventProperties.rows)
+this.propertyDefinitionsCache.initialize(teamId, eventProperties.rows)
         }
 
         const cacheKey = JSON.stringify([teamId, event])
@@ -251,11 +251,11 @@ ON CONSTRAINT posthog_eventdefinition_team_id_name_80fa0b87_uniq DO UPDATE SET l
             // All-in-all, not the end of the world, but a slight nuisance.
 
             const eventProperties = await this.db.postgresQuery(
-                'SELECT property FROM posthog_eventproperty WHERE team_id = $1 AND event = $2',
+                'SELECT property FROM analytickit_eventproperty WHERE team_id = $1 AND event = $2',
                 [teamId, event],
                 'fetchEventProperties'
-            )
-            for (const { property } of eventProperties.rows) {
+)
+for(const { property } of eventProperties.rows) {
                 properties.add(property)
             }
         }

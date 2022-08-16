@@ -1,13 +1,13 @@
-import { Properties } from '@posthog/plugin-scaffold'
+import{Properties}from'@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
-import { ProducerRecord } from 'kafkajs'
-import { DateTime } from 'luxon'
+import { ProducerRecord}from 'kafkajs'
+import {DateTime }from 'luxon'
 
-import { defaultConfig } from '../../config/config'
-import { KAFKA_PERSON } from '../../config/kafka-topics'
-import { BasePerson, Person, RawPerson, TimestampFormat } from '../../types'
-import { castTimestampOrNow } from '../../utils/utils'
-import { PluginLogEntrySource, PluginLogEntryType, PluginLogLevel } from './../../types'
+import {defaultConfig }from '../../config/config'
+import {KAFKA_PERSON}from '../../config/kafka-topics'
+import {BasePerson, Person, RawPerson, TimestampFormat }from '../../types'
+import {castTimestampOrNow}from '../../utils/utils'
+import {PluginLogEntrySource, PluginLogEntryType, PluginLogLevel}from './../../types'
 
 export function unparsePersonPartial(person: Partial<Person>): Partial<RawPerson> {
     return { ...(person as BasePerson), ...(person.created_at ? { created_at: person.created_at.toISO() } : {}) }
@@ -131,7 +131,7 @@ export function shouldStoreLog(
     return true
 }
 
-// keep in sync with posthog/posthog/api/utils.py::safe_clickhouse_string
+// keep in sync with analytickit/analytickit/api/utils.py::safe_clickhouse_string
 export function safeClickhouseString(str: string): string {
     // character is a surrogate
     return str.replace(/[\ud800-\udfff]/gu, (match) => {

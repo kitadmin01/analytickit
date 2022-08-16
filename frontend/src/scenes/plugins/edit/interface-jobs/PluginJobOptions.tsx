@@ -1,5 +1,5 @@
 import { Tooltip } from 'lib/components/Tooltip'
-import { LemonTag } from '@posthog/lemon-ui'
+import { LemonTag } from '@analytickit/lemon-ui'
 import React from 'react'
 import { JobSpec } from '~/types'
 import { PluginJobConfiguration } from './PluginJobConfiguration'

@@ -1,32 +1,32 @@
-import { RetryError } from '@posthog/plugin-scaffold'
+import{RetryError}from'@analytickit/plugin-scaffold'
 import equal from 'fast-deep-equal'
-import { VM } from 'vm2'
+import {VM}from 'vm2'
 
-import { runInSpan } from '../../sentry'
+import {runInSpan}from '../../sentry'
 import {
-    Hub,
-    PluginConfig,
-    PluginConfigVMResponse,
-    PluginLogEntrySource,
-    PluginLogEntryType,
-    PluginTask,
-    PluginTaskType,
-    VMMethods,
-} from '../../types'
-import { clearError, processError } from '../../utils/db/error'
-import { disablePlugin, setPluginCapabilities } from '../../utils/db/sql'
-import { status } from '../../utils/status'
-import { pluginDigest } from '../../utils/utils'
-import { getNextRetryMs } from '../retries'
-import { getVMPluginCapabilities, shouldSetupPluginInServer } from '../vm/capabilities'
-import { createPluginConfigVM } from './vm'
+Hub,
+PluginConfig,
+PluginConfigVMResponse,
+PluginLogEntrySource,
+PluginLogEntryType,
+PluginTask,
+PluginTaskType,
+VMMethods,
+}from '../../types'
+import {clearError, processError}from '../../utils/db/error'
+import { disablePlugin, setPluginCapabilities}from '../../utils/db/sql'
+import {status}from '../../utils/status'
+import {pluginDigest} from '../../utils/utils'
+import {getNextRetryMs}from '../retries'
+import {getVMPluginCapabilities, shouldSetupPluginInServer }from '../vm/capabilities'
+import {createPluginConfigVM}from './vm'
 
 export const VM_INIT_MAX_RETRIES = 5
 export const INITIALIZATION_RETRY_MULTIPLIER = 2
 export const INITIALIZATION_RETRY_BASE_MS = 5000
 
 export class SetupPluginError extends Error {
-    constructor(message: string) {
+constructor(message: string) {
         super(message)
         this.name = 'SetupPluginError'
     }
@@ -101,15 +101,15 @@ export class LazyPluginVM {
                 await this.createLogEntry(
                     'Cannot load scheduled tasks because the app errored during setup.',
                     PluginLogEntryType.Error
-                )
-            }
-        }
-        return tasks || {}
-    }
+)
+}
+}
+return tasks || {}
+}
 
-    public async getVmMethod<T extends keyof VMMethods>(method: T): Promise<VMMethods[T] | null> {
-        let vmMethod = (await this.resolveInternalVm)?.methods[method] || null
-        if (!this.ready && vmMethod) {
+public async getVmMethod < T extends keyof VMMethods>(method: T): Promise<VMMethods[T] | null> {
+let vmMethod = (await this.resolveInternalVm)?.methods[method] || null
+if (!this.ready && vmMethod) {
             const pluginReady = await this.setupPluginIfNeeded()
             if (!pluginReady) {
                 vmMethod = null
@@ -140,9 +140,9 @@ export class LazyPluginVM {
                     const shouldSetupPlugin = shouldSetupPluginInServer(
                         this.hub.capabilities,
                         this.pluginConfig.plugin!.capabilities!
-                    )
+)
 
-                    if (!shouldSetupPlugin) {
+if (!shouldSetupPlugin) {
                         resolve(null)
                         return
                     }
@@ -188,9 +188,9 @@ export class LazyPluginVM {
                         description: this.pluginConfig.plugin?.name || '?',
                     },
                     () => this._setupPlugin(vm)
-                )
-            } catch (error) {
-                status.warn('⚠️', error.message)
+)
+}catch (error) {
+status.warn('⚠️', error.message)
                 return false
             }
         }
@@ -210,8 +210,8 @@ export class LazyPluginVM {
                     description: this.pluginConfig.plugin?.name || '?',
                 },
                 () => vm?.run(`${this.vmResponseVariable}.methods.setupPlugin?.()`)
-            )
-            this.hub.statsd?.increment('plugin.setup.success', { plugin: this.pluginConfig.plugin?.name ?? '?' })
+)
+this.hub.statsd?.increment('plugin.setup.success', { plugin: this.pluginConfig.plugin?.name ?? '?' })
             this.hub.statsd?.timing('plugin.setup.timing', timer, { plugin: this.pluginConfig.plugin?.name ?? '?' })
             this.ready = true
             status.info('🔌', `setupPlugin succeeded for ${logInfo}.`)
@@ -232,15 +232,15 @@ export class LazyPluginVM {
                     INITIALIZATION_RETRY_BASE_MS,
                     INITIALIZATION_RETRY_MULTIPLIER,
                     this.totalInitAttemptsCounter
-                )
-                const nextRetryInfo = `Retrying in ${nextRetryMs / 1000} s...`
-                status.warn('⚠️', `setupPlugin failed with ${error} for ${logInfo}. ${nextRetryInfo}`)
+)
+const nextRetryInfo = `Retrying in ${nextRetryMs / 1000} s...`
+status.warn('⚠️', `setupPlugin failed with ${error} for ${logInfo}. ${nextRetryInfo}`)
                 await this.createLogEntry(
                     `setupPlugin failed with ${error} (instance ID ${this.hub.instanceId}). ${nextRetryInfo}`,
                     PluginLogEntryType.Error
-                )
-                this.initRetryTimeout = setTimeout(async () => {
-                    await this._setupPlugin(vm)
+)
+this.initRetryTimeout = setTimeout(async () => {
+await this._setupPlugin(vm)
                 }, nextRetryMs)
             } else {
                 this.inErroredState = true
@@ -248,8 +248,8 @@ export class LazyPluginVM {
                 await this.createLogEntry(
                     `setupPlugin failed with ${error} (instance ID ${this.hub.instanceId}). Disabled the app!`,
                     PluginLogEntryType.Error
-                )
-                throw new SetupPluginError(`setupPlugin failed with ${error} for ${logInfo}. Disabled the app!`)
+)
+throw new SetupPluginError(`setupPlugin failed with ${error} for ${logInfo}. Disabled the app!`)
             }
         }
     }
@@ -271,7 +271,7 @@ export class LazyPluginVM {
         })
         await processError(this.hub, this.pluginConfig, error)
         await disablePlugin(this.hub, this.pluginConfig.id)
-        await this.hub.db.celeryApplyAsync('posthog.tasks.email.send_fatal_plugin_error', [
+        await this.hub.db.celeryApplyAsync('analytickit.tasks.email.send_fatal_plugin_error', [
             this.pluginConfig.id,
             // Using the `updated_at` field for email campaign idempotency. It's safer to provide it to the task
             // from here, because the value DB may change in the DB while the task is queued.

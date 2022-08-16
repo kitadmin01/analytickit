@@ -1,18 +1,18 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { toParams } from 'lib/utils'
-import { teamLogic } from 'scenes/teamLogic'
-import { groupsModel } from '~/models/groupsModel'
-import { Breadcrumb, Group } from '~/types'
-import type { groupLogicType } from './groupLogicType'
-import { urls } from 'scenes/urls'
-import { capitalizeFirstLetter } from 'lib/utils'
-import { groupDisplayId } from 'scenes/persons/GroupActorHeader'
+import {toParams}from 'lib/utils'
+import {teamLogic}from 'scenes/teamLogic'
+import {groupsModel}from '~/models/groupsModel'
+import {Breadcrumb, Group}from '~/types'
+import type {groupLogicType}from './groupLogicType'
+import {urls}from 'scenes/urls'
+import {capitalizeFirstLetter}from 'lib/utils'
+import {groupDisplayId}from 'scenes/persons/GroupActorHeader'
 
 export const groupLogic = kea<groupLogicType>({
-    path: ['groups', 'groupLogic'],
-    connect: { values: [teamLogic, ['currentTeamId'], groupsModel, ['groupTypes', 'aggregationLabel']] },
-    actions: () => ({
+path: ['groups', 'groupLogic'],
+connect: {values: [teamLogic, ['currentTeamId'], groupsModel, ['groupTypes', 'aggregationLabel']] },
+actions:() => ({
         setGroup: (groupTypeIndex: number, groupKey: string) => ({ groupTypeIndex, groupKey }),
     }),
     loaders: ({ values }) => ({

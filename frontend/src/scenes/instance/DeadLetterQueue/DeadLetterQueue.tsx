@@ -31,7 +31,7 @@ export function DeadLetterQueue(): JSX.Element {
                         </p>
                         <p>
                             If you're an admin and don't have access, set <code>is_staff=true</code> for your user on
-                            the PostgreSQL <code>posthog_user</code> table.
+                            the PostgreSQL <code>analytickit_user</code> table.
                         </p>
                     </>
                 }

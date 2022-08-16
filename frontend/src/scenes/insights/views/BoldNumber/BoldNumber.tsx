@@ -14,7 +14,7 @@ import { toLocalFilters } from 'scenes/insights/filters/ActionFilter/entityFilte
 import { InsightTooltip } from 'scenes/insights/InsightTooltip/InsightTooltip'
 import { personsModalLogic } from 'scenes/trends/personsModalLogic'
 import { IconFlare, IconTrendingDown, IconTrendingFlat, IconTrendingUp } from 'lib/components/icons'
-import { LemonRow } from '@posthog/lemon-ui'
+import { LemonRow } from '@analytickit/lemon-ui'
 import { percentage } from 'lib/utils'
 import { InsightEmptyState } from 'scenes/insights/EmptyStates'
 

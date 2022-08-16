@@ -1,8 +1,8 @@
-from posthog.client import sync_execute
-from posthog.models import Team
-from posthog.models.group.util import create_group
-from posthog.models.team.util import delete_teams_clickhouse_data
-from posthog.test.base import BaseTest, ClickhouseDestroyTablesMixin, ClickhouseTestMixin
+from analytickit.client import sync_execute
+from analytickit.models import Team
+from analytickit.models.group.util import create_group
+from analytickit.models.team.util import delete_teams_clickhouse_data
+from analytickit.test.base import BaseTest, ClickhouseDestroyTablesMixin, ClickhouseTestMixin
 
 
 class TestEnterpriseDeleteEvents(ClickhouseTestMixin, ClickhouseDestroyTablesMixin, BaseTest):

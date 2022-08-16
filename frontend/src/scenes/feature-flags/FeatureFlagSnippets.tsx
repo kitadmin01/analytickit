@@ -23,7 +23,7 @@ export function JSSnippet({ flagKey }: { flagKey: string }): JSX.Element {
     return (
         <>
             <CodeSnippet language={Language.JavaScript} wrap>
-                {`if (posthog.isFeatureEnabled('${flagKey ?? ''}')) {
+                {`if (analytickit.isFeatureEnabled('${flagKey ?? ''}')) {
     // run your activation code here
 }`}
             </CodeSnippet>
@@ -35,7 +35,7 @@ export function PHPSnippet({ flagKey }: { flagKey: string }): JSX.Element {
     return (
         <>
             <CodeSnippet language={Language.PHP} wrap>
-                {`if (PostHog::isFeatureEnabled('${flagKey}', 'some distinct id')) {
+                {`if (analytickit::isFeatureEnabled('${flagKey}', 'some distinct id')) {
     // do something here
 }`}
             </CodeSnippet>
@@ -61,7 +61,7 @@ export function RubySnippet({ flagKey }: { flagKey: string }): JSX.Element {
     return (
         <>
             <CodeSnippet language={Language.Ruby} wrap>
-                {`is_my_flag_enabled = posthog.is_feature_enabled('${flagKey}', 'user distinct id')
+                {`is_my_flag_enabled = analytickit.is_feature_enabled('${flagKey}', 'user distinct id')
 
 if is_my_flag_enabled
   # Do something differently for this user
@@ -75,7 +75,7 @@ export function PythonSnippet({ flagKey }: { flagKey: string }): JSX.Element {
     return (
         <>
             <CodeSnippet language={Language.Python} wrap>
-                {`if posthog.feature_enabled("${flagKey}", "user_distinct_id"):
+                {`if analytickit.feature_enabled("${flagKey}", "user_distinct_id"):
     runAwesomeFeature()
 `}
             </CodeSnippet>

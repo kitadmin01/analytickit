@@ -1,15 +1,15 @@
-import { onFilterChange } from 'scenes/insights/filters/BreakdownFilter/taxonomicBreakdownFilterUtils'
-import { TaxonomicFilterGroup, TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
+import{onFilterChange}from'scenes/insights/filters/BreakdownFilter/taxonomicBreakdownFilterUtils'
+import {TaxonomicFilterGroup, TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
 
 const taxonomicGroupFor = (
-    type: TaxonomicFilterGroupType,
-    groupTypeIndex: number | undefined = undefined
-): TaxonomicFilterGroup => ({
-    type: type,
-    groupTypeIndex: groupTypeIndex,
-    name: 'unused in these tests',
-    searchPlaceholder: 'unused in these tests',
-    getName: () => 'unused in these tests',
+type: TaxonomicFilterGroupType,
+groupTypeIndex: number | undefined = undefined
+): TaxonomicFilterGroup = > ({
+type: type,
+groupTypeIndex: groupTypeIndex,
+name: 'unused in these tests',
+searchPlaceholder: 'unused in these tests',
+getName: () => 'unused in these tests',
     getValue: () => 'unused in these tests',
     getPopupHeader: () => 'unused in these tests',
 })
@@ -55,9 +55,9 @@ describe('taxonomic breakdown filter utils', () => {
             const group: TaxonomicFilterGroup = taxonomicGroupFor(
                 TaxonomicFilterGroupType.CohortsWithAllUsers,
                 undefined
-            )
+)
 
-            onChange(changedBreakdown, group)
+onChange(changedBreakdown, group)
 
             expect(setFilters).toHaveBeenCalledWith({
                 breakdown_type: 'cohort',
@@ -128,8 +128,8 @@ describe('taxonomic breakdown filter utils', () => {
             const group: TaxonomicFilterGroup = taxonomicGroupFor(
                 TaxonomicFilterGroupType.CohortsWithAllUsers,
                 undefined
-            )
-            onChange(changedBreakdown, group)
+)
+onChange(changedBreakdown, group)
             expect(setFilters).toHaveBeenCalledWith({
                 breakdown_type: 'cohort',
                 breakdown: ['all', 1, 2],

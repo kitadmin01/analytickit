@@ -1,8 +1,8 @@
 from uuid import uuid4
 
-from posthog.api.test.test_session_recordings import factory_test_session_recordings_api
-from posthog.models.session_recording_event.util import create_session_recording_event
-from posthog.test.base import ClickhouseTestMixin
+from analytickit.api.test.test_session_recordings import factory_test_session_recordings_api
+from analytickit.models.session_recording_event.util import create_session_recording_event
+from analytickit.test.base import ClickhouseTestMixin
 
 
 def _create_session_recording_event(**kwargs):
@@ -11,5 +11,6 @@ def _create_session_recording_event(**kwargs):
     )
 
 
-class ClickhouseTestSessionRecordingsAPI(ClickhouseTestMixin, factory_test_session_recordings_api(_create_session_recording_event)):  # type: ignore
+class ClickhouseTestSessionRecordingsAPI(ClickhouseTestMixin, factory_test_session_recordings_api(
+    _create_session_recording_event)):  # type: ignore
     pass

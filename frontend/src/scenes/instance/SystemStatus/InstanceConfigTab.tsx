@@ -108,7 +108,7 @@ export function InstanceConfigTab(): JSX.Element {
                     </h3>
                     <div className="mb-4">
                         Changing these settings will take effect on your entire instance.{' '}
-                        <a href="https://posthog.com/docs/self-host/configure/instance-settings" target="_blank">
+                        <a href="https://analytickit.com/docs/self-host/configure/instance-settings" target="_blank">
                             Learn more <IconOpenInNew style={{ verticalAlign: 'middle' }} />
                         </a>
                         .
@@ -157,7 +157,7 @@ export function InstanceConfigTab(): JSX.Element {
             </h3>
             <div className="mb-4">
                 These settings can only be modified by environment variables.{' '}
-                <a href="https://posthog.com/docs/self-host/configure/environment-variables" target="_blank">
+                <a href="https://analytickit.com/docs/self-host/configure/environment-variables" target="_blank">
                     Learn more <IconOpenInNew style={{ verticalAlign: 'middle' }} />
                 </a>
                 .

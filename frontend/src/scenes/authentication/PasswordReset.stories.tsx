@@ -60,7 +60,7 @@ export const Success = (): JSX.Element => {
         },
     })
     useEffect(() => {
-        passwordResetLogic.actions.reset({ email: 'test@posthog.com' })
+        passwordResetLogic.actions.reset({ email: 'test@analytickit.com' })
     }, [])
     return <PasswordReset />
 }

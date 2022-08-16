@@ -19,7 +19,7 @@ export function NewFeatureBanner(): JSX.Element | null {
                 Upgrade
             </LinkButton>
             <Link
-                to="https://posthog.com/docs/user-guides/experimentation?utm_medium=in-product&utm_campaign=upgrade-site-banner-learn-more"
+                to="https://analytickit.com/docs/user-guides/experimentation?utm_medium=in-product&utm_campaign=upgrade-site-banner-learn-more"
                 target="_blank"
                 ata-attr="site-banner-learn-more-experimentation"
                 style={{ marginLeft: 8 }}

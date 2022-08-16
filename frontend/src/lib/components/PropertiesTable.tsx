@@ -11,7 +11,7 @@ import { useValues } from 'kea'
 import { propertyDefinitionsModel } from '~/models/propertyDefinitionsModel'
 import { LemonButton } from './LemonButton'
 import { NewPropertyComponent } from 'scenes/persons/NewPropertyComponent'
-import { LemonInput } from '@posthog/lemon-ui'
+import { LemonInput } from '@analytickit/lemon-ui'
 
 type HandledType = 'string' | 'number' | 'bigint' | 'boolean' | 'undefined' | 'null'
 type Type = HandledType | 'symbol' | 'object' | 'function'
@@ -54,7 +54,7 @@ function ValueDisplay({
     const { describeProperty } = useValues(propertyDefinitionsModel)
 
     const [editing, setEditing] = useState(false)
-    // Can edit if a key and edit callback is set, the property is custom (i.e. not PostHog), and the value is in the root of the object (i.e. no nested objects)
+    // Can edit if a key and edit callback is set, the property is custom (i.e. not analytickit), and the value is in the root of the object (i.e. no nested objects)
     const canEdit = rootKey && !keyMappingKeys.includes(rootKey) && (!nestingLevel || nestingLevel <= 1) && onEdit
 
     const textBasedTypes = ['string', 'number', 'bigint'] // Values that are edited with a text box
@@ -145,7 +145,7 @@ interface PropertiesTableType extends BasePropertyType {
     embedded?: boolean
     onDelete?: (key: string) => void
     className?: string
-    /* only event types are detected and so describe-able. see https://github.com/PostHog/posthog/issues/9245 */
+    /* only event types are detected and so describe-able. see https://github.com/analytickit/analytickit/issues/9245 */
     useDetectedPropertyType?: boolean
 }
 

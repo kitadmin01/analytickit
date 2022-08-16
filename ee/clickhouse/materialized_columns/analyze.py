@@ -16,13 +16,13 @@ from ee.settings import (
     MATERIALIZE_COLUMNS_MAX_AT_ONCE,
     MATERIALIZE_COLUMNS_MINIMUM_QUERY_TIME,
 )
-from posthog.clickhouse.materialized_columns.util import instance_memoize
-from posthog.client import sync_execute
-from posthog.models.filters.mixins.utils import cached_property
-from posthog.models.person.sql import GET_PERSON_PROPERTIES_COUNT
-from posthog.models.property import PropertyName, TableWithProperties
-from posthog.models.property_definition import PropertyDefinition
-from posthog.models.team import Team
+from analytickit.clickhouse.materialized_columns.util import instance_memoize
+from analytickit.client import sync_execute
+from analytickit.models.filters.mixins.utils import cached_property
+from analytickit.models.person.sql import GET_PERSON_PROPERTIES_COUNT
+from analytickit.models.property import PropertyName, TableWithProperties
+from analytickit.models.property_definition import PropertyDefinition
+from analytickit.models.team import Team
 
 Suggestion = Tuple[TableWithProperties, PropertyName, int]
 
@@ -121,12 +121,12 @@ def _analyze(queries: List[Query]) -> List[Suggestion]:
 
 
 def materialize_properties_task(
-    columns_to_materialize: Optional[List[Suggestion]] = None,
-    time_to_analyze_hours: int = MATERIALIZE_COLUMNS_ANALYSIS_PERIOD_HOURS,
-    maximum: int = MATERIALIZE_COLUMNS_MAX_AT_ONCE,
-    min_query_time: int = MATERIALIZE_COLUMNS_MINIMUM_QUERY_TIME,
-    backfill_period_days: int = MATERIALIZE_COLUMNS_BACKFILL_PERIOD_DAYS,
-    dry_run: bool = False,
+        columns_to_materialize: Optional[List[Suggestion]] = None,
+        time_to_analyze_hours: int = MATERIALIZE_COLUMNS_ANALYSIS_PERIOD_HOURS,
+        maximum: int = MATERIALIZE_COLUMNS_MAX_AT_ONCE,
+        min_query_time: int = MATERIALIZE_COLUMNS_MINIMUM_QUERY_TIME,
+        backfill_period_days: int = MATERIALIZE_COLUMNS_BACKFILL_PERIOD_DAYS,
+        dry_run: bool = False,
 ) -> None:
     """
     Creates materialized columns for event and person properties based off of slow queries

@@ -1,7 +1,7 @@
 import json
 
 from ee.api.test.base import APILicensedTest
-from posthog.models import User
+from analytickit.models import User
 
 
 class TestQueryMiddleware(APILicensedTest):

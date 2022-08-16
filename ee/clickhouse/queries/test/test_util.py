@@ -3,13 +3,13 @@ from datetime import datetime
 import pytz
 from freezegun.api import freeze_time
 
-from posthog.client import sync_execute
-from posthog.models.action import Action
-from posthog.models.action_step import ActionStep
-from posthog.models.cohort import Cohort
-from posthog.queries.breakdown_props import _parse_breakdown_cohorts
-from posthog.queries.util import get_earliest_timestamp
-from posthog.test.base import _create_event
+from analytickit.client import sync_execute
+from analytickit.models.action import Action
+from analytickit.models.action_step import ActionStep
+from analytickit.models.cohort import Cohort
+from analytickit.queries.breakdown_props import _parse_breakdown_cohorts
+from analytickit.queries.util import get_earliest_timestamp
+from analytickit.test.base import _create_event
 
 
 @freeze_time("2021-01-21")
@@ -34,7 +34,7 @@ def test_get_earliest_timestamp_with_no_events(db, team):
 def test_parse_breakdown_cohort_query(db, team):
     action = Action.objects.create(team=team, name="$pageview")
     ActionStep.objects.create(action=action, event="$pageview")
-    cohort1 = Cohort.objects.create(team=team, groups=[{"action_id": action.pk, "days": 3}], name="cohort1",)
+    cohort1 = Cohort.objects.create(team=team, groups=[{"action_id": action.pk, "days": 3}], name="cohort1", )
     queries, params = _parse_breakdown_cohorts([cohort1])
     assert len(queries) == 1
     sync_execute(queries[0], params)

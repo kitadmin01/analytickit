@@ -61,7 +61,7 @@ export function ThirdPartyPanel(): JSX.Element {
                                                 </LemonTag>
                                             ))}
                                         </h3>
-                                        <p className="mb-0 text-muted">Send events from {source.name} into PostHog</p>
+                                        <p className="mb-0 text-muted">Send events from {source.name} into analytickit</p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -70,7 +70,7 @@ export function ThirdPartyPanel(): JSX.Element {
                                         type="secondary"
                                         onClick={() => {
                                             window.open(
-                                                `https://posthog.com${
+                                                `https://analytickit.com${
                                                     source.type === ThirdPartySourceType.Integration
                                                         ? `/docs/integrate/third-party/${source.name}`
                                                         : `/integrations/${source.pluginName}`
@@ -181,11 +181,11 @@ export function IntegrationInstructionsModal(): JSX.Element {
                                                 The{' '}
                                                 <a target="_blank" href={thirdPartyIntegrationSource.docsLink}>
                                                     official {thirdPartyIntegrationSource.name} docs page for the
-                                                    PostHog integration
+                                                    analytickit integration
                                                 </a>{' '}
                                                 provides a detailed overview of how to set up this integration.
                                             </p>
-                                            <b>PostHog Project API Key</b>
+                                            <b>analytickit Project API Key</b>
                                             <CodeSnippet copyDescription="project API key">
                                                 {currentTeam?.api_token || ''}
                                             </CodeSnippet>
@@ -215,7 +215,7 @@ export function IntegrationInstructionsModal(): JSX.Element {
                                         <p className="text-muted">
                                             <b>
                                                 In order to access the session recordings feature, you'll also have to{' '}
-                                                <Link to="/ingestion/web">integrate posthog js</Link>.
+                                                <Link to="/ingestion/web">integrate analytickit js</Link>.
                                             </b>
                                         </p>
                                     </div>

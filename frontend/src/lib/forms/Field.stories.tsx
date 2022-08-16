@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentMeta } from '@storybook/react'
 import { Field, PureField } from './Field'
-import { LemonButton, LemonCheckbox, LemonInput, LemonSelect, LemonTextArea } from '@posthog/lemon-ui'
+import { LemonButton, LemonCheckbox, LemonInput, LemonSelect, LemonTextArea } from '@analytickit/lemon-ui'
 import { kea, path, useAllValues } from 'kea'
 import { Form, forms } from 'kea-forms'
 
@@ -15,7 +15,7 @@ export default {
             description: {
                 component: `
 
-[Related Figma area](https://www.figma.com/file/Y9G24U4r04nEjIDGIEGuKI/PostHog-Design-System-One?node-id=3139%3A1388)
+[Related Figma area](https://www.figma.com/file/Y9G24U4r04nEjIDGIEGuKI/analytickit-Design-System-One?node-id=3139%3A1388)
 
 Fields are a wrapping component that take care of rendering a label, input and error messages in a standard format.
 

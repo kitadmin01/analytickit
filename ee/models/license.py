@@ -7,9 +7,9 @@ from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from rest_framework import exceptions, status
 
-from posthog.celery import sync_all_organization_available_features
-from posthog.constants import AvailableFeature
-from posthog.models.utils import sane_repr
+from analytickit.celery import sync_all_organization_available_features
+from analytickit.constants import AvailableFeature
+from analytickit.models.utils import sane_repr
 
 
 class LicenseError(exceptions.APIException):
@@ -90,7 +90,7 @@ def get_licensed_users_available() -> Optional[int]:
     """
 
     license = License.objects.first_valid()
-    from posthog.models import OrganizationInvite
+    from analytickit.models import OrganizationInvite
 
     if license:
         if license.max_users is None:

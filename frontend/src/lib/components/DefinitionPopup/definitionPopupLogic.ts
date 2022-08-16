@@ -1,34 +1,34 @@
-import { kea } from 'kea'
-import type { definitionPopupLogicType } from './definitionPopupLogicType'
-import { TaxonomicDefinitionTypes, TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
-import { capitalizeFirstLetter } from 'lib/utils'
-import { getSingularType } from 'lib/components/DefinitionPopup/utils'
-import { ActionType, AvailableFeature, CohortType, EventDefinition, PropertyDefinition } from '~/types'
-import { urls } from 'scenes/urls'
+import{kea}from'kea'
+import type {definitionPopupLogicType}from './definitionPopupLogicType'
+import {TaxonomicDefinitionTypes, TaxonomicFilterGroupType }from 'lib/components/TaxonomicFilter/types'
+import {capitalizeFirstLetter}from 'lib/utils'
+import {getSingularType}from 'lib/components/DefinitionPopup/utils'
+import { ActionType, AvailableFeature, CohortType, EventDefinition, PropertyDefinition} from '~/types'
+import {urls }from 'scenes/urls'
 import api from 'lib/api'
-import { eventDefinitionsModel } from '~/models/eventDefinitionsModel'
-import { actionsModel } from '~/models/actionsModel'
-import { propertyDefinitionsModel } from '~/models/propertyDefinitionsModel'
-import { cohortsModel } from '~/models/cohortsModel'
+import {eventDefinitionsModel }from '~/models/eventDefinitionsModel'
+import {actionsModel}from '~/models/actionsModel'
+import {propertyDefinitionsModel}from '~/models/propertyDefinitionsModel'
+import {cohortsModel} from '~/models/cohortsModel'
 import equal from 'fast-deep-equal'
-import { userLogic } from 'scenes/userLogic'
-import { lemonToast } from '../lemonToast'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { FEATURE_FLAGS } from 'lib/constants'
+import {userLogic} from 'scenes/userLogic'
+import {lemonToast }from '../lemonToast'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import {FEATURE_FLAGS}from 'lib/constants'
 
 const IS_TEST_MODE = process.env.NODE_ENV === 'test'
 
 export enum DefinitionPopupState {
-    Edit = 'edit',
-    View = 'view',
+Edit = 'edit',
+View = 'view',
 }
 
 export interface DefinitionPopupLogicProps {
-    /* String type accounts for types with `TaxonomicFilterGroupType.GroupsPrefix` prefix */
-    type: TaxonomicFilterGroupType | string
-    /* Callback to update specific item in in-memory list */
-    updateRemoteItem?: (item: TaxonomicDefinitionTypes) => void
+/* String type accounts for types with `TaxonomicFilterGroupType.GroupsPrefix` prefix */
+type: TaxonomicFilterGroupType | string
+/* Callback to update specific item in in-memory list */
+updateRemoteItem?: (item: TaxonomicDefinitionTypes) => void
     onMouseLeave?: () => void
     onCancel?: () => void
     onSave?: () => void
@@ -106,10 +106,10 @@ export const definitionPopupLogic = kea<definitionPopupLogicType>({
                             definition = await api.update(
                                 `api/projects/@current/property_definitions/${_eventProperty.id}`,
                                 _eventProperty
-                            )
-                            propertyDefinitionsModel
-                                .findMounted()
-                                ?.actions.updatePropertyDefinition(definition as PropertyDefinition)
+)
+propertyDefinitionsModel
+.findMounted()
+?.actions.updatePropertyDefinition(definition as PropertyDefinition)
                         } else if (values.type === TaxonomicFilterGroupType.Cohorts) {
                             // Cohort
                             const _cohort = definition as CohortType
@@ -228,11 +228,11 @@ export const definitionPopupLogic = kea<definitionPopupLogicType>({
                     ?.actions?.reportDataManagementDefinitionSaveSucceeded(
                         values.type,
                         performance.now() - cache.startTime
-                    )
-                cache.startTime = undefined
-            }
-        },
-        handleSaveFailure: ({ error }) => {
+)
+cache.startTime = undefined
+}
+},
+handleSaveFailure: ({ error }) => {
             if (cache.startTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
@@ -240,11 +240,11 @@ export const definitionPopupLogic = kea<definitionPopupLogicType>({
                         values.type,
                         performance.now() - cache.startTime,
                         error
-                    )
-                cache.startTime = undefined
-            }
-        },
-        handleCancel: () => {
+)
+cache.startTime = undefined
+}
+},
+handleCancel:() => {
             actions.setPopupState(DefinitionPopupState.View)
             actions.setLocalDefinition(values.definition)
             props?.onCancel?.()

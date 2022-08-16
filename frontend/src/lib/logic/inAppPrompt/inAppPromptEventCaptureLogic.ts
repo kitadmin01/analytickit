@@ -1,10 +1,10 @@
-import { kea, path, actions, listeners } from 'kea'
-import type { inAppPromptEventCaptureLogicType } from './inAppPromptEventCaptureLogicType'
-import posthog from 'posthog-js'
-import { PromptType } from './inAppPromptLogic'
+import{kea, path, actions, listeners}from 'kea'
+import type {inAppPromptEventCaptureLogicType}from './inAppPromptEventCaptureLogicType'
+import analytickit from 'analytickit-js'
+import {PromptType}from './inAppPromptLogic'
 
 const inAppPromptEventCaptureLogic = kea<inAppPromptEventCaptureLogicType>([
-    path(['lib', 'logic', 'inAppPrompt', 'eventCapture']),
+path(['lib', 'logic', 'inAppPrompt', 'eventCapture']),
     actions({
         reportPromptShown: (type: PromptType, sequence: string, step: number, totalSteps: number) => ({
             type,
@@ -28,7 +28,7 @@ const inAppPromptEventCaptureLogic = kea<inAppPromptEventCaptureLogicType>([
     }),
     listeners({
         reportPromptShown: ({ type, sequence, step, totalSteps }) => {
-            posthog.capture('prompt shown', {
+            analytickit.capture('prompt shown', {
                 type,
                 sequence,
                 step,
@@ -36,35 +36,35 @@ const inAppPromptEventCaptureLogic = kea<inAppPromptEventCaptureLogicType>([
             })
         },
         reportPromptForward: ({ sequence, step, totalSteps }) => {
-            posthog.capture('prompt forward', {
+            analytickit.capture('prompt forward', {
                 sequence,
                 step,
                 totalSteps,
             })
         },
         reportPromptBackward: ({ sequence, step, totalSteps }) => {
-            posthog.capture('prompt backward', {
+            analytickit.capture('prompt backward', {
                 sequence,
                 step,
                 totalSteps,
             })
         },
         reportPromptSequenceDismissed: ({ sequence, step, totalSteps }) => {
-            posthog.capture('prompt sequence dismissed', {
+            analytickit.capture('prompt sequence dismissed', {
                 sequence,
                 step,
                 totalSteps,
             })
         },
         reportPromptSequenceCompleted: ({ sequence, step, totalSteps }) => {
-            posthog.capture('prompt sequence completed', {
+            analytickit.capture('prompt sequence completed', {
                 sequence,
                 step,
                 totalSteps,
             })
         },
         reportTutorialSkipped: () => {
-            posthog.capture('tutorial skipped')
+            analytickit.capture('tutorial skipped')
         },
     }),
 ])

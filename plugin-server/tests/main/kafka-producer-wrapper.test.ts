@@ -1,7 +1,7 @@
-import { CompressionTypes, Producer } from 'kafkajs'
+import{CompressionTypes, Producer}from 'kafkajs'
 
-import { PluginsServerConfig } from '../../src/types'
-import { KafkaProducerWrapper } from '../../src/utils/db/kafka-producer-wrapper'
+import { PluginsServerConfig}from '../../src/types'
+import {KafkaProducerWrapper}from '../../src/utils/db/kafka-producer-wrapper'
 
 describe('KafkaProducerWrapper', () => {
     let producer: KafkaProducerWrapper

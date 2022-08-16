@@ -121,7 +121,7 @@ export function RetentionSummary({ insightProps }: EditorFilterProps): JSX.Eleme
                 <p className="text-muted mt-4">
                     Want to learn more about retention?{' '}
                     <a
-                        href="https://posthog.com/docs/features/retention?utm_campaign=learn-more-horizontal&utm_medium=in-product"
+                        href="https://analytickit.com/docs/features/retention?utm_campaign=learn-more-horizontal&utm_medium=in-product"
                         target="_blank"
                         rel="noopener"
                         style={{ display: 'inline-flex', alignItems: 'center' }}

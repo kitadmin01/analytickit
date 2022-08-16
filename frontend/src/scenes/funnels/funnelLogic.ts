@@ -1,106 +1,106 @@
-import { BreakPointFunction, kea } from 'kea'
+import{BreakPointFunction, kea}from 'kea'
 import equal from 'fast-deep-equal'
 import api from 'lib/api'
-import { insightLogic } from 'scenes/insights/insightLogic'
-import { autoCaptureEventToDescription, average, percentage, sum } from 'lib/utils'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import type { funnelLogicType } from './funnelLogicType'
+import {insightLogic}from 'scenes/insights/insightLogic'
+import {autoCaptureEventToDescription, average, percentage, sum}from 'lib/utils'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import type {funnelLogicType }from './funnelLogicType'
 import {
-    AvailableFeature,
-    BinCountValue,
-    BreakdownKeyType,
-    EntityTypes,
-    FilterType,
-    FlattenedFunnelStep,
-    FlattenedFunnelStepByBreakdown,
-    FunnelAPIResponse,
-    FunnelConversionWindowTimeUnit,
-    FunnelCorrelation,
-    FunnelCorrelationResultsType,
-    FunnelCorrelationType,
-    FunnelStep,
-    FunnelStepRangeEntityFilter,
-    FunnelStepReference,
-    FunnelStepWithConversionMetrics,
-    FunnelStepWithNestedBreakdown,
-    FunnelsTimeConversionBins,
-    FunnelTimeConversionMetrics,
-    FunnelVizType,
-    InsightLogicProps,
-    InsightType,
-    PropertyFilter,
-    PropertyOperator,
-    StepOrderValue,
-    TeamType,
-    TrendResult,
-} from '~/types'
-import { BIN_COUNT_AUTO, FunnelLayout } from 'lib/constants'
+AvailableFeature,
+BinCountValue,
+BreakdownKeyType,
+EntityTypes,
+FilterType,
+FlattenedFunnelStep,
+FlattenedFunnelStepByBreakdown,
+FunnelAPIResponse,
+FunnelConversionWindowTimeUnit,
+FunnelCorrelation,
+FunnelCorrelationResultsType,
+FunnelCorrelationType,
+FunnelStep,
+FunnelStepRangeEntityFilter,
+FunnelStepReference,
+FunnelStepWithConversionMetrics,
+FunnelStepWithNestedBreakdown,
+FunnelsTimeConversionBins,
+FunnelTimeConversionMetrics,
+FunnelVizType,
+InsightLogicProps,
+InsightType,
+PropertyFilter,
+PropertyOperator,
+StepOrderValue,
+TeamType,
+TrendResult,
+}from '~/types'
+import {BIN_COUNT_AUTO, FunnelLayout}from 'lib/constants'
 
 import {
-    aggregateBreakdownResult,
-    getClampedStepRangeFilter,
-    getLastFilledStep,
-    getMeanAndStandardDeviation,
-    getReferenceStep,
-    getVisibilityIndex,
-    isBreakdownFunnelResults,
-    isStepsEmpty,
-    isValidBreakdownParameter,
-    getBreakdownStepValues,
-    getIncompleteConversionWindowStartDate,
-    generateBaselineConversionUrl,
-} from './funnelUtils'
-import { personsModalLogic } from 'scenes/trends/personsModalLogic'
-import { dashboardsModel } from '~/models/dashboardsModel'
-import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
-import { keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
-import { teamLogic } from '../teamLogic'
-import { personPropertiesModel } from '~/models/personPropertiesModel'
-import { groupPropertiesModel } from '~/models/groupPropertiesModel'
-import { userLogic } from 'scenes/userLogic'
-import { visibilitySensorLogic } from 'lib/components/VisibilitySensor/visibilitySensorLogic'
-import { elementsToAction } from 'scenes/events/createActionFromEvent'
-import { groupsModel } from '~/models/groupsModel'
-import { dayjs } from 'lib/dayjs'
-import { lemonToast } from 'lib/components/lemonToast'
+aggregateBreakdownResult,
+getClampedStepRangeFilter,
+getLastFilledStep,
+getMeanAndStandardDeviation,
+getReferenceStep,
+getVisibilityIndex,
+isBreakdownFunnelResults,
+isStepsEmpty,
+isValidBreakdownParameter,
+getBreakdownStepValues,
+getIncompleteConversionWindowStartDate,
+generateBaselineConversionUrl,
+}from './funnelUtils'
+import {personsModalLogic}from 'scenes/trends/personsModalLogic'
+import { dashboardsModel}from '~/models/dashboardsModel'
+import {cleanFilters}from 'scenes/insights/utils/cleanFilters'
+import {keyForInsightLogicProps} from 'scenes/insights/sharedUtils'
+import {teamLogic}from '../teamLogic'
+import {personPropertiesModel}from '~/models/personPropertiesModel'
+import {groupPropertiesModel}from '~/models/groupPropertiesModel'
+import {userLogic }from 'scenes/userLogic'
+import { visibilitySensorLogic}from 'lib/components/VisibilitySensor/visibilitySensorLogic'
+import {elementsToAction}from 'scenes/events/createActionFromEvent'
+import {groupsModel} from '~/models/groupsModel'
+import {dayjs}from 'lib/dayjs'
+import {lemonToast}from 'lib/components/lemonToast'
 
 /* Chosen via heuristics by eyeballing some values
- * Assuming a normal distribution, then 90% of values are within 1.5 standard deviations of the mean
- * which gives a ballpark of 1 highlighting every 10 breakdown values
- */
+* Assuming a normal distribution, then 90% of values are within 1.5 standard deviations of the mean
+* which gives a ballpark of 1 highlighting every 10 breakdown values
+*/
 const DEVIATION_SIGNIFICANCE_MULTIPLIER = 1.5
 
 // List of events that should be excluded, if we don't have an explicit list of
 // excluded properties. Copied from
-// https://github.com/PostHog/posthog/issues/6474#issuecomment-952044722
+// https://github.com/analytickit/analytickit/issues/6474#issuecomment-952044722
 export const DEFAULT_EXCLUDED_PERSON_PROPERTIES = [
-    '$initial_geoip_postal_code',
-    '$initial_geoip_latitude',
-    '$initial_geoip_longitude',
-    '$geoip_latitude',
-    '$geoip_longitude',
-    '$geoip_postal_code',
-    '$geoip_continent_code',
-    '$geoip_continent_name',
-    '$initial_geoip_continent_code',
-    '$initial_geoip_continent_name',
-    '$geoip_time_zone',
-    '$geoip_country_code',
-    '$geoip_subdivision_1_code',
-    '$initial_geoip_subdivision_1_code',
-    '$geoip_subdivision_2_code',
-    '$initial_geoip_subdivision_2_code',
-    '$geoip_subdivision_name',
-    '$initial_geoip_subdivision_name',
+'$initial_geoip_postal_code',
+'$initial_geoip_latitude',
+'$initial_geoip_longitude',
+'$geoip_latitude',
+'$geoip_longitude',
+'$geoip_postal_code',
+'$geoip_continent_code',
+'$geoip_continent_name',
+'$initial_geoip_continent_code',
+'$initial_geoip_continent_name',
+'$geoip_time_zone',
+'$geoip_country_code',
+'$geoip_subdivision_1_code',
+'$initial_geoip_subdivision_1_code',
+'$geoip_subdivision_2_code',
+'$initial_geoip_subdivision_2_code',
+'$geoip_subdivision_name',
+'$initial_geoip_subdivision_name',
 ]
 
 export type openPersonsModelProps = {
-    step: FunnelStep
-    converted: boolean
+step: FunnelStep
+converted: boolean
 }
 
 export const funnelLogic = kea<funnelLogicType>({
-    path: (key) => ['scenes', 'funnels', 'funnelLogic', key],
+path: (key) => ['scenes', 'funnels', 'funnelLogic', key],
     props: {} as InsightLogicProps,
     key: keyForInsightLogicProps('insight_funnel'),
 
@@ -283,20 +283,20 @@ export const funnelLogic = kea<funnelLogicType>({
                         FunnelCorrelationResultsType.EventWithProperties,
                         'load event with properties',
                         { name: eventName }
-                    )
+)
 
-                    return {
-                        [eventName]: results.map((result) => ({
-                            ...result,
-                            result_type: FunnelCorrelationResultsType.EventWithProperties,
-                        })),
-                    }
-                },
-            },
-        ],
-    }),
+return {
+[eventName]: results.map((result) => ({
+...result,
+result_type: FunnelCorrelationResultsType.EventWithProperties,
+})),
+}
+},
+},
+],
+}),
 
-    reducers: ({ props }) => ({
+reducers: ({ props }) => ({
         people: {
             clearFunnel: () => [],
         },
@@ -464,30 +464,30 @@ export const funnelLogic = kea<funnelLogicType>({
                                 singlePropertyClone.breakdown_value = breakdown_value
                                 return singlePropertyClone
                             })
-                        )
-                    }
-                    return result
-                } else {
-                    return []
-                }
-            },
-        ],
-        conversionWindow: [
-            (s) => [s.filters],
-            ({ funnel_window_interval, funnel_window_interval_unit }) => ({
-                funnel_window_interval: funnel_window_interval || 14,
-                funnel_window_interval_unit: funnel_window_interval_unit || FunnelConversionWindowTimeUnit.Day,
-            }),
-        ],
-        timeConversionResults: [
-            (s) => [s.results, s.filters],
-            (results, filters): FunnelsTimeConversionBins | null => {
-                return filters.funnel_viz_type === FunnelVizType.TimeToConvert
-                    ? (results as FunnelsTimeConversionBins)
-                    : null
-            },
-        ],
-        isStepsEmpty: [() => [selectors.filters], (filters: FilterType) => isStepsEmpty(filters)],
+)
+}
+return result
+}else {
+return []
+}
+},
+],
+conversionWindow: [
+(s) = > [s.filters],
+({funnel_window_interval, funnel_window_interval_unit}) = > ({
+funnel_window_interval: funnel_window_interval || 14,
+funnel_window_interval_unit: funnel_window_interval_unit || FunnelConversionWindowTimeUnit.Day,
+}),
+],
+timeConversionResults: [
+(s) = > [s.results, s.filters],
+(results, filters): FunnelsTimeConversionBins | null = > {
+return filters.funnel_viz_type = == FunnelVizType.TimeToConvert
+? (results as FunnelsTimeConversionBins)
+: null
+},
+],
+isStepsEmpty: [() => [selectors.filters], (filters: FilterType) => isStepsEmpty(filters)],
         propertiesForUrl: [() => [selectors.filters], (filters: FilterType) => cleanFilters(filters)],
         isValidFunnel: [
             () => [selectors.filters, selectors.stepsWithCount, selectors.histogramGraphData],
@@ -637,12 +637,12 @@ export const funnelLogic = kea<funnelLogicType>({
                         : apiParams.breakdown ?? undefined
                     stepsWithNestedBreakdown = aggregateBreakdownResult(results, breakdownProperty).sort(
                         (a, b) => a.order - b.order
-                    )
-                }
+)
+}
 
-                return !!filters.breakdowns || !!filters.breakdown
-                    ? stepsWithNestedBreakdown
-                    : ([...stepResults] as FunnelStep[]).sort((a, b) => a.order - b.order)
+return !!filters.breakdowns || !!filters.breakdown
+? stepsWithNestedBreakdown
+: ([...stepResults] as FunnelStep[]).sort((a, b) => a.order - b.order)
             },
         ],
         stepsWithCount: [
@@ -707,26 +707,26 @@ export const funnelLogic = kea<funnelLogicType>({
                     // Per step breakdown significance
                     const [meanFromPrevious, stdDevFromPrevious] = getMeanAndStandardDeviation(
                         step.nested_breakdown?.map((item) => item.conversionRates.fromPrevious)
-                    )
-                    const [meanFromBasis, stdDevFromBasis] = getMeanAndStandardDeviation(
-                        step.nested_breakdown?.map((item) => item.conversionRates.fromBasisStep)
-                    )
-                    const [meanTotal, stdDevTotal] = getMeanAndStandardDeviation(
-                        step.nested_breakdown?.map((item) => item.conversionRates.total)
-                    )
+)
+const [meanFromBasis, stdDevFromBasis] = getMeanAndStandardDeviation(
+step.nested_breakdown?.map((item) => item.conversionRates.fromBasisStep)
+)
+const [meanTotal, stdDevTotal] = getMeanAndStandardDeviation(
+step.nested_breakdown?.map((item) => item.conversionRates.total)
+)
 
-                    const isOutlier = (value: number, mean: number, stdDev: number): boolean => {
-                        return (
+const isOutlier = (value: number, mean: number, stdDev: number): boolean => {
+return (
                             value > mean + stdDev * DEVIATION_SIGNIFICANCE_MULTIPLIER ||
                             value < mean - stdDev * DEVIATION_SIGNIFICANCE_MULTIPLIER
-                        )
-                    }
+)
+}
 
-                    const nestedBreakdown = step.nested_breakdown?.map((item) => {
-                        return {
-                            ...item,
-                            significant: {
-                                fromPrevious: isOutlier(
+const nestedBreakdown = step.nested_breakdown?.map((item) => {
+return {
+...item,
+significant: {
+fromPrevious: isOutlier(
                                     item.conversionRates.fromPrevious,
                                     meanFromPrevious,
                                     stdDevFromPrevious
@@ -761,8 +761,8 @@ export const funnelLogic = kea<funnelLogicType>({
                     nested_breakdown: (!!baseLineSteps?.steps
                         ? [baseLineSteps.steps[stepIndex], ...(step?.nested_breakdown ?? [])]
                         : step?.nested_breakdown
-                    )
-                        ?.map((b, breakdownIndex) => ({
+)
+?.map((b, breakdownIndex) => ({
                             ...b,
                             order: breakdownIndex,
                         }))
@@ -784,13 +784,13 @@ export const funnelLogic = kea<funnelLogicType>({
                         nestedRowKeys: step.nested_breakdown
                             ? step.nested_breakdown.map((breakdownStep) =>
                                   getVisibilityIndex(step, breakdownStep.breakdown_value)
-                              )
-                            : [],
-                        isBreakdownParent,
-                        breakdown_value: isBreakdownParent ? ['Baseline'] : step.breakdown_value,
-                        breakdown: isBreakdownParent ? ['baseline'] : step.breakdown,
-                    })
-                    if (step.nested_breakdown?.length) {
+)
+: [],
+isBreakdownParent,
+breakdown_value: isBreakdownParent ? ['Baseline'] : step.breakdown_value,
+breakdown: isBreakdownParent ? ['baseline'] : step.breakdown,
+})
+if (step.nested_breakdown?.length) {
                         step.nested_breakdown.forEach((breakdownStep, i) => {
                             flattenedSteps.push({
                                 ...breakdownStep,
@@ -907,8 +907,8 @@ export const funnelLogic = kea<funnelLogicType>({
                         (correlation) =>
                             correlationTypes.includes(correlation.correlation_type) &&
                             !excludedEventNames.includes(correlation.event.event)
-                    )
-                    .map((value) => {
+)
+.map((value) => {
                         return {
                             ...value,
                             odds_ratio:
@@ -930,8 +930,8 @@ export const funnelLogic = kea<funnelLogicType>({
                         (correlation) =>
                             propertyCorrelationTypes.includes(correlation.correlation_type) &&
                             !excludedPropertyNames.includes(correlation.event.event.split('::')[0])
-                    )
-                    .map((value) => {
+)
+.map((value) => {
                         return {
                             ...value,
                             odds_ratio:
@@ -964,8 +964,8 @@ export const funnelLogic = kea<funnelLogicType>({
                                 (correlation) =>
                                     correlationTypes.includes(correlation.correlation_type) &&
                                     !excludedEventPropertyNames.includes(correlation.event.event.split('::')[1])
-                            )
-                            .map((value) => {
+)
+.map((value) => {
                                 return {
                                     ...value,
                                     odds_ratio:
@@ -1131,10 +1131,10 @@ export const funnelLogic = kea<funnelLogicType>({
                             (truePositive + falseNegative) *
                             (trueNegative + falsePositive) *
                             (trueNegative + falseNegative)
-                    )
+)
 
-                const correlationScoreStrength =
-                    Math.abs(correlationScore) > 0.5 ? 'strong' : Math.abs(correlationScore) > 0.3 ? 'moderate' : 'weak'
+const correlationScoreStrength =
+Math.abs(correlationScore) > 0.5 ? 'strong' : Math.abs(correlationScore) > 0.3 ? 'moderate' : 'weak'
 
                 return {
                     correlationScore,
@@ -1221,8 +1221,8 @@ export const funnelLogic = kea<funnelLogicType>({
                       }
                     : filters,
                 values.filters
-            )
-            insightLogic(props).actions.setFilters(cleanedParams)
+)
+insightLogic(props).actions.setFilters(cleanedParams)
         },
         setEventExclusionFilters: ({ filters }) => {
             const exclusions = (filters.events as FunnelStepRangeEntityFilter[]).map((exclusion) => {
@@ -1244,11 +1244,11 @@ export const funnelLogic = kea<funnelLogicType>({
                           e_i === index
                               ? getClampedStepRangeFilter({ stepRange: eventFilter, filters: values.filters })
                               : e
-                      )
-                    : [],
-            })
-        },
-        clearFunnel: ({}) => {
+)
+: [],
+})
+},
+clearFunnel: ({}) => {
             actions.setFilters({ new_entity: values.filters.new_entity }, false, true)
         },
         openPersonsModalForStep: ({ step, converted }) => {
@@ -1302,11 +1302,11 @@ export const funnelLogic = kea<funnelLogicType>({
                     FunnelCorrelationResultsType.Properties,
                     'person modal',
                     values.filters.funnel_correlation_person_entity
-                )
-            } else {
-                const { name, properties } = parseEventAndProperty(correlation.event)
+)
+}else {
+const { name, properties}= parseEventAndProperty(correlation.event)
 
-                personsModalLogic.actions.loadPeopleFromUrl({
+personsModalLogic.actions.loadPeopleFromUrl({
                     url: success ? correlation.success_people_url : correlation.failure_people_url,
                     funnelStep: success ? values.stepsWithCount.length : -2,
                     label: name,
@@ -1345,9 +1345,9 @@ export const funnelLogic = kea<funnelLogicType>({
                 {
                     property_name: propertyName,
                 }
-            )
-        },
-        excludeEventFromProject: async ({ eventName }) => {
+)
+},
+excludeEventFromProject: async ({ eventName }) => {
             appendToCorrelationConfig('excluded_event_names', values.excludedEventNames, eventName)
 
             eventUsageLogic.actions.reportCorrelationInteraction(FunnelCorrelationResultsType.Events, 'exclude event', {
@@ -1363,42 +1363,42 @@ export const funnelLogic = kea<funnelLogicType>({
                 {
                     person_property: propertyName,
                 }
-            )
-        },
-        hideSkewWarning: () => {
+)
+},
+hideSkewWarning: () => {
             eventUsageLogic.actions.reportCorrelationInteraction(
                 FunnelCorrelationResultsType.Events,
                 'hide skew warning'
-            )
-        },
-        setCorrelationTypes: ({ types }) => {
+)
+},
+setCorrelationTypes: ({ types }) => {
             eventUsageLogic.actions.reportCorrelationInteraction(
                 FunnelCorrelationResultsType.Events,
                 'set correlation types',
                 { types }
-            )
-        },
-        setPropertyCorrelationTypes: ({ types }) => {
+)
+},
+setPropertyCorrelationTypes: ({ types }) => {
             eventUsageLogic.actions.reportCorrelationInteraction(
                 FunnelCorrelationResultsType.Properties,
                 'set property correlation types',
                 { types }
-            )
-        },
-        setPropertyNames: async ({ propertyNames }) => {
+)
+},
+setPropertyNames: async ({ propertyNames }) => {
             actions.loadPropertyCorrelations({})
             eventUsageLogic.actions.reportCorrelationInteraction(
                 FunnelCorrelationResultsType.Properties,
                 'set property names',
                 { property_names: propertyNames.length === values.allProperties.length ? '$all' : propertyNames }
-            )
-        },
-        sendCorrelationAnalysisFeedback: () => {
+)
+},
+sendCorrelationAnalysisFeedback: () => {
             eventUsageLogic.actions.reportCorrelationAnalysisDetailedFeedback(
                 values.correlationFeedbackRating,
                 values.correlationDetailedFeedback
-            )
-            actions.setCorrelationFeedbackRating(0)
+)
+actions.setCorrelationFeedbackRating(0)
             actions.setCorrelationDetailedFeedback('')
             lemonToast.success('Thanks for your feedback! Your comments help us improve')
         },

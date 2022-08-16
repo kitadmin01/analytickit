@@ -4,12 +4,12 @@ from typing import Dict, Literal, Optional, Tuple, Union, cast
 from jsonschema import ValidationError
 
 from ee.clickhouse.queries.paths.paths_event_query import ClickhousePathEventQuery
-from posthog.constants import FUNNEL_PATH_BETWEEN_STEPS
-from posthog.models import Filter
-from posthog.models.filters.path_filter import PathFilter
-from posthog.models.team.team import Team
-from posthog.queries.funnels.funnel_persons import ClickhouseFunnelActors
-from posthog.queries.paths.paths import Paths
+from analytickit.constants import FUNNEL_PATH_BETWEEN_STEPS
+from analytickit.models import Filter
+from analytickit.models.filters.path_filter import PathFilter
+from analytickit.models.team.team import Team
+from analytickit.queries.funnels.funnel_persons import ClickhouseFunnelActors
+from analytickit.queries.paths.paths import Paths
 
 
 class ClickhousePaths(Paths):
@@ -28,9 +28,9 @@ class ClickhousePaths(Paths):
             self.params["regex_groupings"] = regex_groupings
 
         if (
-            self._filter.max_edge_weight
-            and self._filter.min_edge_weight
-            and self._filter.max_edge_weight < self._filter.min_edge_weight
+                self._filter.max_edge_weight
+                and self._filter.min_edge_weight
+                and self._filter.max_edge_weight < self._filter.min_edge_weight
         ):
             raise ValidationError("Max Edge weight can't be lower than min edge weight")
 

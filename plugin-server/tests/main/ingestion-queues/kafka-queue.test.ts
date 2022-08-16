@@ -1,17 +1,17 @@
-import { KAFKA_EVENTS_PLUGIN_INGESTION } from '../../../src/config/kafka-topics'
-import { ServerInstance, startPluginsServer } from '../../../src/main/pluginsServer'
-import { LogLevel, PluginsServerConfig } from '../../../src/types'
-import { Hub } from '../../../src/types'
-import { UUIDT } from '../../../src/utils/utils'
-import { makePiscina } from '../../../src/worker/piscina'
-import { createPosthog, DummyPostHog } from '../../../src/worker/vm/extensions/posthog'
-import { writeToFile } from '../../../src/worker/vm/extensions/test-utils'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../../helpers/clickhouse'
-import { resetKafka } from '../../helpers/kafka'
-import { pluginConfig39 } from '../../helpers/plugins'
-import { resetTestDatabase } from '../../helpers/sql'
+import{KAFKA_EVENTS_PLUGIN_INGESTION}from'../../../src/config/kafka-topics'
+import {ServerInstance, startPluginsServer}from '../../../src/main/pluginsServer'
+import {LogLevel, PluginsServerConfig}from '../../../src/types'
+import {Hub}from '../../../src/types'
+import {UUIDT}from '../../../src/utils/utils'
+import {makePiscina}from '../../../src/worker/piscina'
+import {createanalytickit, Dummyanalytickit}from '../../../src/worker/vm/extensions/analytickit'
+import {writeToFile}from '../../../src/worker/vm/extensions/test-utils'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../../helpers/clickhouse'
+import {resetKafka}from '../../helpers/kafka'
+import {pluginConfig39} from '../../helpers/plugins'
+import {resetTestDatabase}from '../../helpers/sql'
 
-const { console: testConsole } = writeToFile
+const {console: testConsole}= writeToFile
 
 jest.mock('../../../src/utils/status')
 jest.setTimeout(70000) // 60 sec timeout
@@ -28,7 +28,7 @@ const extraServerConfig: Partial<PluginsServerConfig> = {
 describe.skip('KafkaQueue', () => {
     let hub: Hub
     let stopServer: () => Promise<void>
-    let posthog: DummyPostHog
+    let analytickit: Dummyanalytickit
     let pluginServer: ServerInstance
 
     beforeAll(async () => {
@@ -42,7 +42,7 @@ describe.skip('KafkaQueue', () => {
         pluginServer = await startPluginsServer(extraServerConfig, makePiscina)
         hub = pluginServer.hub
         stopServer = pluginServer.stop
-        posthog = createPosthog(hub, pluginConfig39)
+        analytickit = createanalytickit(hub, pluginConfig39)
     })
 
     afterEach(async () => {
@@ -59,7 +59,7 @@ describe.skip('KafkaQueue', () => {
 
         const uuid = new UUIDT().toString()
 
-        await posthog.capture('custom event', { name: 'haha', uuid, distinct_id: 'some_id' })
+        await analytickit.capture('custom event', { name: 'haha', uuid, distinct_id: 'some_id' })
 
         await delayUntilEventIngested(() => hub.db.fetchEvents())
 
@@ -72,8 +72,8 @@ describe.skip('KafkaQueue', () => {
 
         const mainIngestionCalls = statsdTimingCalls.filter(
             (item: string[]) => item[0] === 'kafka_queue.single_ingestion'
-        )
-        expect(mainIngestionCalls.length).toEqual(1)
+)
+expect(mainIngestionCalls.length).toEqual(1)
 
         const bufferCalls = statsdTimingCalls.filter((item: string[]) => item[0] === 'kafka_queue.ingest_buffer_event')
         expect(bufferCalls.length).toEqual(1)

@@ -1,11 +1,11 @@
-import * as d3 from 'd3'
-import { INITIAL_CONFIG } from 'scenes/insights/views/Histogram/histogramUtils'
-import { D3Selector, D3Transition } from 'lib/hooks/useD3'
+import* as d3 from 'd3'
+import {INITIAL_CONFIG }from 'scenes/insights/views/Histogram/histogramUtils'
+import {D3Selector, D3Transition} from 'lib/hooks/useD3'
 
 export const getOrCreateEl = (
-    container: D3Selector,
-    selector: string,
-    createCallback: () => D3Selector
+container: D3Selector,
+selector: string,
+createCallback:() => D3Selector
 ): D3Selector => {
     const el = container.select(selector)
     if (el.empty()) {

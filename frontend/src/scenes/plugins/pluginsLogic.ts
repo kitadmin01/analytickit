@@ -1,45 +1,45 @@
-import { actions, afterMount, connect, kea, listeners, path, reducers, selectors } from 'kea'
-import { loaders } from 'kea-loaders'
-import { actionToUrl, router, urlToAction } from 'kea-router'
-import type { pluginsLogicType } from './pluginsLogicType'
+import{actions, afterMount, connect, kea, listeners, path, reducers, selectors}from 'kea'
+import {loaders}from 'kea-loaders'
+import { actionToUrl, router, urlToAction}from 'kea-router'
+import type {pluginsLogicType}from './pluginsLogicType'
 import api from 'lib/api'
-import { PersonalAPIKeyType, PluginConfigType, PluginType } from '~/types'
+import {PersonalAPIKeyType, PluginConfigType, PluginType} from '~/types'
 import {
-    PluginInstallationType,
-    PluginRepositoryEntry,
-    PluginTab,
-    PluginTypeWithConfig,
-    PluginUpdateStatusType,
-} from './types'
-import { userLogic } from 'scenes/userLogic'
-import { getConfigSchemaArray, getConfigSchemaObject, getPluginConfigFormData } from 'scenes/plugins/utils'
-import posthog from 'posthog-js'
-import type { FormInstance } from 'antd/lib/form/hooks/useForm.d'
-import { canGloballyManagePlugins, canInstallPlugins } from './access'
-import { teamLogic } from '../teamLogic'
-import { createDefaultPluginSource } from 'scenes/plugins/source/createDefaultPluginSource'
-import { frontendAppsLogic } from 'scenes/apps/frontendAppsLogic'
-import { urls } from 'scenes/urls'
+PluginInstallationType,
+PluginRepositoryEntry,
+PluginTab,
+PluginTypeWithConfig,
+PluginUpdateStatusType,
+}from './types'
+import {userLogic}from 'scenes/userLogic'
+import {getConfigSchemaArray, getConfigSchemaObject, getPluginConfigFormData}from 'scenes/plugins/utils'
+import analytickit from 'analytickit-js'
+import type {FormInstance}from 'antd/lib/form/hooks/useForm.d'
+import {canGloballyManagePlugins, canInstallPlugins}from './access'
+import {teamLogic}from '../teamLogic'
+import {createDefaultPluginSource}from 'scenes/plugins/source/createDefaultPluginSource'
+import {frontendAppsLogic}from 'scenes/apps/frontendAppsLogic'
+import {urls}from 'scenes/urls'
 
 export type PluginForm = FormInstance
 
 export enum PluginSection {
-    Upgrade = 'upgrade',
-    Installed = 'installed',
-    Enabled = 'enabled',
-    Disabled = 'disabled',
+Upgrade = 'upgrade',
+Installed = 'installed',
+Enabled = 'enabled',
+Disabled = 'disabled',
 }
 
 export interface PluginSelectionType {
-    name: string
-    url?: string
-    tab: PluginTab
+name: string
+url?: string
+tab: PluginTab
 }
 
 const PAGINATION_DEFAULT_MAX_PAGES = 10
 
 function capturePluginEvent(event: string, plugin: PluginType, type?: PluginInstallationType): void {
-    posthog.capture(event, {
+    analytickit.capture(event, {
         plugin_name: plugin.name,
         plugin_url: plugin.url?.startsWith('file:') ? 'file://masked-local-path' : plugin.url,
         plugin_tag: plugin.tag,
@@ -125,8 +125,8 @@ export const pluginsLogic = kea<pluginsLogicType>([
                     const response = await api.create(
                         'api/organizations/@current/plugins',
                         pluginType === 'source' ? { plugin_type: pluginType, name: url } : { url }
-                    )
-                    if (pluginType === 'source') {
+)
+if (pluginType === 'source') {
                         await api.update(`api/organizations/@current/plugins/${response.id}/update_source`, {
                             'plugin.json': createDefaultPluginSource(url)['plugin.json'],
                         })
@@ -468,9 +468,9 @@ export const pluginsLogic = kea<pluginsLogicType>([
                                 ([key, { default: def }]) => {
                                     config[key] = def
                                 }
-                            )
-                            const { currentTeam } = teamLogic.values
-                            if (!currentTeam) {
+)
+const {currentTeam}= teamLogic.values
+if (!currentTeam) {
                                 throw new Error("Can't list installed plugins with no user or team!")
                             }
                             pluginConfig = {
@@ -531,14 +531,16 @@ export const pluginsLogic = kea<pluginsLogicType>([
                         plugin_type !== PluginInstallationType.Source &&
                         ((latest_tag && tag !== latest_tag) ||
                             (updateStatus && !updateStatus.error && (updateStatus.updated || !updateStatus.upToDate)))
-                )
-            },
-        ],
-        installedPluginUrls: [
-            (s) => [s.installedPlugins, userLogic.selectors.user],
-            (installedPlugins, user) => {
-                const names: Record<string, boolean> = {}
-                installedPlugins.forEach((plugin) => {
+)
+},
+],
+installedPluginUrls: [
+(s) = > [s.installedPlugins, userLogic.selectors.user],
+(installedPlugins, user) = > {
+const names: Record < string, boolean> = {
+
+}
+installedPlugins.forEach((plugin) => {
                     if (plugin.url && plugin.organization_id === user?.organization?.id) {
                         names[plugin.url.replace(/\/+$/, '')] = true
                     }
@@ -597,14 +599,14 @@ export const pluginsLogic = kea<pluginsLogicType>([
                 searchTerm
                     ? uninstalledPlugins.filter((plugin) =>
                           plugin.name.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
-                    : uninstalledPlugins,
-        ],
-        filteredDisabledPlugins: [
-            (s) => [s.searchTerm, s.disabledPlugins],
-            (searchTerm, disabledPlugins) =>
-                searchTerm
-                    ? disabledPlugins.filter((plugin) => plugin.name.toLowerCase().includes(searchTerm.toLowerCase()))
+)
+: uninstalledPlugins,
+],
+filteredDisabledPlugins: [
+(s) = > [s.searchTerm, s.disabledPlugins],
+(searchTerm, disabledPlugins) = >
+searchTerm
+? disabledPlugins.filter((plugin) => plugin.name.toLowerCase().includes(searchTerm.toLowerCase()))
                     : disabledPlugins,
         ],
         filteredEnabledPlugins: [
@@ -620,34 +622,36 @@ export const pluginsLogic = kea<pluginsLogicType>([
                 searchTerm
                     ? pluginsNeedingUpdates.filter((plugin) =>
                           plugin.name.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
-                    : pluginsNeedingUpdates,
-        ],
-        sortableEnabledPlugins: [
-            (s) => [s.filteredEnabledPlugins],
-            (filteredEnabledPlugins) => {
-                return filteredEnabledPlugins.filter(
+)
+: pluginsNeedingUpdates,
+],
+sortableEnabledPlugins: [
+(s) = > [s.filteredEnabledPlugins],
+(filteredEnabledPlugins) = > {
+return filteredEnabledPlugins.filter(
                     (plugin) =>
                         !plugin.capabilities ||
                         (plugin.capabilities.methods &&
                             (plugin.capabilities.methods.includes('processEvent') ||
                                 plugin.capabilities.methods.includes('processEventBatch')))
-                )
-            },
-        ],
-        unsortableEnabledPlugins: [
-            (s) => [s.filteredEnabledPlugins, s.sortableEnabledPlugins],
-            (filteredEnabledPlugins, sortableEnabledPlugins) => {
-                return filteredEnabledPlugins.filter(
+)
+},
+],
+unsortableEnabledPlugins: [
+(s) = > [s.filteredEnabledPlugins, s.sortableEnabledPlugins],
+(filteredEnabledPlugins, sortableEnabledPlugins) = > {
+return filteredEnabledPlugins.filter(
                     (enabledPlugin) => !sortableEnabledPlugins.map((plugin) => plugin.name).includes(enabledPlugin.name)
-                )
-            },
-        ],
-        pluginUrlToMaintainer: [
-            (s) => [s.repository],
-            (repository) => {
-                const pluginNameToMaintainerMap: Record<string, string> = {}
-                for (const plugin of Object.values(repository)) {
+)
+},
+],
+pluginUrlToMaintainer: [
+(s) = > [s.repository],
+(repository) => {
+const pluginNameToMaintainerMap: Record < string, string> = {
+
+}
+for(const plugin of Object.values(repository)) {
                     pluginNameToMaintainerMap[plugin.url] = plugin.maintainer || ''
                 }
                 return pluginNameToMaintainerMap
@@ -731,25 +735,25 @@ export const pluginsLogic = kea<pluginsLogicType>([
             const pluginConfig = editingPlugin.pluginConfig.config
             const configSchema = getConfigSchemaArray(editingPlugin?.config_schema || [])
 
-            const posthogApiKeySchema = configSchema.find(({ key }) => key === 'posthogApiKey')
-            if (posthogApiKeySchema && !pluginConfig?.posthogApiKey) {
+            const analytickitApiKeySchema = configSchema.find(({ key }) => key === 'analytickitApiKey')
+            if (analytickitApiKeySchema && !pluginConfig?.analytickitApiKey) {
                 try {
-                    const { value: posthogApiKey }: PersonalAPIKeyType = await api.create('api/personal_api_keys/', {
+                    const { value: analytickitApiKey }: PersonalAPIKeyType = await api.create('api/personal_api_keys/', {
                         label: `Plugin: ${editingPlugin.name}`,
                     })
                     breakpoint()
-                    form.setFieldsValue({ posthogApiKey })
+                    form.setFieldsValue({ analytickitApiKey })
                 } catch (e) {
                     console.error(e)
                 }
             }
 
-            const posthogHostSchema = configSchema.find(({ key }) => key === 'posthogHost')
+            const analytickitHostSchema = configSchema.find(({ key }) => key === 'analytickitHost')
             if (
-                posthogHostSchema &&
-                (!pluginConfig?.posthogHost || pluginConfig.posthogHost === 'https://app.posthog.com')
+                analytickitHostSchema &&
+                (!pluginConfig?.analytickitHost || pluginConfig.analytickitHost === 'https://app.analytickit.com')
             ) {
-                form.setFieldsValue({ posthogHost: window.location.origin })
+                form.setFieldsValue({ analytickitHost: window.location.origin })
             }
         },
     })),

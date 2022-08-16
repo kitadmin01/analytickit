@@ -1,13 +1,13 @@
-import { DateTime } from 'luxon'
+import{DateTime}from'luxon'
 
-import { Hub, Person, PropertyOperator, PropertyUpdateOperation, Team, TimestampFormat } from '../../src/types'
-import { DB } from '../../src/utils/db/db'
-import { createHub } from '../../src/utils/db/hub'
-import { generateKafkaPersonUpdateMessage } from '../../src/utils/db/utils'
-import { castTimestampOrNow, RaceConditionError, UUIDT } from '../../src/utils/utils'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../helpers/clickhouse'
-import { getFirstTeam, insertRow, resetTestDatabase } from '../helpers/sql'
-import { plugin60 } from './../helpers/plugins'
+import {Hub, Person, PropertyOperator, PropertyUpdateOperation, Team, TimestampFormat}from '../../src/types'
+import {DB}from '../../src/utils/db/db'
+import {createHub}from '../../src/utils/db/hub'
+import {generateKafkaPersonUpdateMessage}from '../../src/utils/db/utils'
+import {castTimestampOrNow, RaceConditionError, UUIDT}from '../../src/utils/utils'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../helpers/clickhouse'
+import {getFirstTeam, insertRow, resetTestDatabase }from '../helpers/sql'
+import {plugin60}from './../helpers/plugins'
 
 jest.mock('../../src/utils/status')
 
@@ -31,7 +31,7 @@ describe('DB', () => {
 
     describe('fetchAllActionsGroupedByTeam() and fetchAction()', () => {
         beforeEach(async () => {
-            await insertRow(hub.db.postgres, 'posthog_action', {
+            await insertRow(hub.db.postgres, 'analytickit_action', {
                 id: 69,
                 team_id: 2,
                 name: 'Test Action',
@@ -68,7 +68,7 @@ describe('DB', () => {
         })
 
         it('returns actions with steps', async () => {
-            await insertRow(hub.db.postgres, 'posthog_actionstep', {
+            await insertRow(hub.db.postgres, 'analytickit_actionstep', {
                 id: 913,
                 action_id: 69,
                 tag_name: null,
@@ -135,7 +135,7 @@ describe('DB', () => {
         })
 
         it('returns actions with correct `ee_hook`', async () => {
-            await hub.db.postgres.query('UPDATE posthog_action SET post_to_slack = false')
+            await hub.db.postgres.query('UPDATE analytickit_action SET post_to_slack = false')
             await insertRow(hub.db.postgres, 'ee_hook', {
                 id: 'abc',
                 team_id: 2,
@@ -176,7 +176,7 @@ describe('DB', () => {
         })
 
         it('does not return actions that dont match conditions', async () => {
-            await hub.db.postgres.query('UPDATE posthog_action SET post_to_slack = false')
+            await hub.db.postgres.query('UPDATE analytickit_action SET post_to_slack = false')
 
             const result = await db.fetchAllActionsGroupedByTeam()
             expect(result).toEqual({})
@@ -185,7 +185,7 @@ describe('DB', () => {
         })
 
         it('does not return actions which are deleted', async () => {
-            await hub.db.postgres.query('UPDATE posthog_action SET deleted = true')
+            await hub.db.postgres.query('UPDATE analytickit_action SET deleted = true')
 
             const result = await db.fetchAllActionsGroupedByTeam()
             expect(result).toEqual({})
@@ -194,7 +194,7 @@ describe('DB', () => {
         })
 
         it('does not return actions with incorrect ee_hook', async () => {
-            await hub.db.postgres.query('UPDATE posthog_action SET post_to_slack = false')
+            await hub.db.postgres.query('UPDATE analytickit_action SET post_to_slack = false')
             await insertRow(hub.db.postgres, 'ee_hook', {
                 id: 'abc',
                 team_id: 2,
@@ -232,7 +232,7 @@ describe('DB', () => {
             })
 
             it('does not blow up', async () => {
-                await hub.db.postgres.query('UPDATE posthog_action SET post_to_slack = false')
+                await hub.db.postgres.query('UPDATE analytickit_action SET post_to_slack = false')
 
                 const result = await db.fetchAllActionsGroupedByTeam()
                 expect(result).toEqual({})
@@ -243,15 +243,15 @@ describe('DB', () => {
 
     async function fetchPersonByPersonId(teamId: number, personId: number): Promise<Person | undefined> {
         const selectResult = await db.postgresQuery(
-            `SELECT * FROM posthog_person WHERE team_id = $1 AND id = $2`,
+            `SELECT * FROM analytickit_person WHERE team_id = $1 AND id = $2`,
             [teamId, personId],
             'fetchPersonByPersonId'
-        )
+)
 
-        return selectResult.rows[0]
-    }
+return selectResult.rows[0]
+}
 
-    describe('createPerson', () => {
+describe('createPerson', () => {
         let team: Team
         const uuid = new UUIDT().toString()
         const distinctId = 'distinct_id1'
@@ -294,9 +294,9 @@ describe('DB', () => {
                 false,
                 uuid,
                 [distinctId]
-            )
-            const fetched_person = await fetchPersonByPersonId(team.id, person.id)
-            expect(fetched_person!.is_identified).toEqual(false)
+)
+const fetched_person = await fetchPersonByPersonId(team.id, person.id)
+expect(fetched_person!.is_identified).toEqual(false)
             expect(fetched_person!.properties).toEqual({ a: 123, b: false, c: 'bbb' })
             expect(fetched_person!.properties_last_operation).toEqual({
                 a: PropertyUpdateOperation.Set,
@@ -347,8 +347,8 @@ describe('DB', () => {
                 personDbBefore.is_identified,
                 personDbBefore.uuid,
                 1
-            )
-            expect(db.kafkaProducer!.queueMessage).toHaveBeenLastCalledWith(expected_message)
+)
+expect(db.kafkaProducer!.queueMessage).toHaveBeenLastCalledWith(expected_message)
         })
     })
 
@@ -420,10 +420,10 @@ describe('DB', () => {
                             version: 101,
                         }),
                     ])
-                )
+)
 
-                const personsFinal = await fetchPersonsRows({ final: true })
-                expect(personsFinal).toEqual(
+const personsFinal = await fetchPersonsRows({ final: true })
+expect(personsFinal).toEqual(
                     expect.arrayContaining([
                         expect.objectContaining({
                             id: uuid,
@@ -431,12 +431,12 @@ describe('DB', () => {
                             version: 101,
                         }),
                     ])
-                )
-            })
-        })
-    })
+)
+})
+})
+})
 
-    describe('fetchPerson()', () => {
+describe('fetchPerson()', () => {
         it('returns undefined if person does not exist', async () => {
             const team = await getFirstTeam(hub)
             const person = await hub.db.fetchPerson(team.id, 'some_id')
@@ -463,11 +463,11 @@ describe('DB', () => {
                     created_at: TIMESTAMP,
                     version: 0,
                 })
-            )
-        })
-    })
+)
+})
+})
 
-    describe('fetchGroupTypes() and insertGroupType()', () => {
+describe('fetchGroupTypes() and insertGroupType()', () => {
         it('fetches group types that have been inserted', async () => {
             expect(await db.fetchGroupTypes(2)).toEqual({})
             expect(await db.insertGroupType(2, 'g0', 0)).toEqual([0, true])
@@ -509,9 +509,9 @@ describe('DB', () => {
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-            )
+)
 
-            expect(await db.fetchGroup(3, 0, 'group_key')).toEqual(undefined)
+expect(await db.fetchGroup(3, 0, 'group_key')).toEqual(undefined)
             expect(await db.fetchGroup(2, 1, 'group_key')).toEqual(undefined)
             expect(await db.fetchGroup(2, 1, 'group_key2')).toEqual(undefined)
         })
@@ -526,9 +526,9 @@ describe('DB', () => {
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-            )
+)
 
-            expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
+expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
                 id: expect.any(Number),
                 team_id: 2,
                 group_type_index: 0,
@@ -551,9 +551,9 @@ describe('DB', () => {
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-            )
+)
 
-            await expect(
+await expect(
                 db.insertGroup(
                     2,
                     0,
@@ -563,8 +563,8 @@ describe('DB', () => {
                     { prop: TIMESTAMP.toISO() },
                     { prop: PropertyUpdateOperation.Set },
                     1
-                )
-            ).rejects.toEqual(new RaceConditionError('Parallel posthog_group inserts, retry'))
+)
+).rejects.toEqual(new RaceConditionError('Parallel analytickit_group inserts, retry'))
         })
 
         it('handles updates', async () => {
@@ -577,12 +577,12 @@ describe('DB', () => {
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-            )
+)
 
-            const originalGroup = await db.fetchGroup(2, 0, 'group_key')
+const originalGroup = await db.fetchGroup(2, 0, 'group_key')
 
-            const timestamp2 = DateTime.fromISO('2000-10-14T12:42:06.502Z').toUTC()
-            await db.updateGroup(
+const timestamp2 = DateTime.fromISO('2000-10-14T12:42:06.502Z').toUTC()
+await db.updateGroup(
                 2,
                 0,
                 'group_key',
@@ -591,9 +591,9 @@ describe('DB', () => {
                 { prop: timestamp2.toISO(), prop2: timestamp2.toISO() },
                 { prop: PropertyUpdateOperation.Set, prop2: PropertyUpdateOperation.Set },
                 2
-            )
+)
 
-            expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
+expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
                 id: originalGroup!.id,
                 team_id: 2,
                 group_type_index: 0,
@@ -609,26 +609,26 @@ describe('DB', () => {
 
     describe('addOrUpdatePublicJob', () => {
         it('updates the column if the job name is new', async () => {
-            await insertRow(db.postgres, 'posthog_plugin', { ...plugin60, id: 88 })
+            await insertRow(db.postgres, 'analytickit_plugin', { ...plugin60, id: 88 })
 
             const jobName = 'newJob'
             const jobPayload = { foo: 'string' }
             await db.addOrUpdatePublicJob(88, jobName, jobPayload)
             const publicJobs = (
-                await db.postgresQuery('SELECT public_jobs FROM posthog_plugin WHERE id = $1', [88], 'testPublicJob1')
+                await db.postgresQuery('SELECT public_jobs FROM analytickit_plugin WHERE id = $1', [88], 'testPublicJob1')
             ).rows[0].public_jobs
 
             expect(publicJobs[jobName]).toEqual(jobPayload)
         })
 
         it('updates the column if the job payload is new', async () => {
-            await insertRow(db.postgres, 'posthog_plugin', { ...plugin60, id: 88, public_jobs: { foo: 'number' } })
+            await insertRow(db.postgres, 'analytickit_plugin', { ...plugin60, id: 88, public_jobs: { foo: 'number' } })
 
             const jobName = 'newJob'
             const jobPayload = { foo: 'string' }
             await db.addOrUpdatePublicJob(88, jobName, jobPayload)
             const publicJobs = (
-                await db.postgresQuery('SELECT public_jobs FROM posthog_plugin WHERE id = $1', [88], 'testPublicJob1')
+                await db.postgresQuery('SELECT public_jobs FROM analytickit_plugin WHERE id = $1', [88], 'testPublicJob1')
             ).rows[0].public_jobs
 
             expect(publicJobs[jobName]).toEqual(jobPayload)
@@ -662,9 +662,9 @@ describe('DB', () => {
                 false,
                 uuid,
                 [distinctId]
-            )
-            const res = await db.getPersonData(2, distinctId)
-            expect(res?.uuid).toEqual(uuid)
+)
+const res = await db.getPersonData(2, distinctId)
+expect(res?.uuid).toEqual(uuid)
             expect(res?.created_at.toISO()).toEqual(TIMESTAMP.toUTC().toISO())
             expect(res?.properties).toEqual({ a: 12345, b: false, c: 'bbb' })
         })
@@ -683,8 +683,8 @@ describe('DB', () => {
                 false,
                 uuid,
                 [distinctId]
-            )
-            db.personAndGroupsCachingEnabledTeams.add(2)
+)
+db.personAndGroupsCachingEnabledTeams.add(2)
             const res = await db.getPersonData(2, distinctId)
             expect(res?.uuid).toEqual(uuid)
             expect(res?.created_at.toISO()).toEqual(TIMESTAMP.toUTC().toISO())
@@ -706,18 +706,18 @@ describe('DB', () => {
                 false,
                 uuid,
                 [distinctId]
-            )
-            await db.postgresQuery(
+)
+await db.postgresQuery(
                 // not cached
                 `
-            UPDATE posthog_person SET properties = $3
+            UPDATE analytickit_person SET properties = $3
             WHERE team_id = $1 AND uuid = $2
             `,
                 [2, uuid, JSON.stringify({ prop: 'val-that-isnt-cached' })],
                 'testGroupPropertiesOnEvents'
-            )
-            const res = await db.getPersonData(2, distinctId)
-            expect(res?.properties).toEqual({ a: 333, b: false, c: 'bbb' })
+)
+const res = await db.getPersonData(2, distinctId)
+expect(res?.properties).toEqual({ a: 333, b: false, c: 'bbb' })
         })
 
         describe('getGroupDataCache() and updateGroupDataCache()', () => {
@@ -789,11 +789,11 @@ describe('DB', () => {
                     1,
                     undefined,
                     { cache: false }
-                )
+)
 
-                const groupsData = await db.fetchGroupDataAndUpdateCache(2, identifiers)
+const groupsData = await db.fetchGroupDataAndUpdateCache(2, identifiers)
 
-                expect(groupsData).toEqual([
+expect(groupsData).toEqual([
                     {
                         identifier: { index: 0, key: 'abc' },
                         data: { properties: { a: 3 }, created_at: TIMESTAMP },
@@ -872,10 +872,10 @@ describe('DB', () => {
                     1,
                     undefined,
                     { cache: false }
-                )
+)
 
-                const columns = await db.fetchGroupColumnsValues(2, identifiers)
-                expect(columns).toEqual({
+const columns = await db.fetchGroupColumnsValues(2, identifiers)
+expect(columns).toEqual({
                     group0_properties: JSON.stringify({ a: 3 }),
                     group0_created_at: castTimestampOrNow(TIMESTAMP, TimestampFormat.ClickHouse),
                 })
@@ -893,25 +893,25 @@ describe('DB', () => {
         beforeEach(async () => {
             team = await getFirstTeam(hub)
             const plug = await db.postgresQuery(
-                'INSERT INTO posthog_plugin (name, organization_id, config_schema, from_json, from_web, is_global, is_preinstalled, is_stateless, created_at, capabilities) values($1, $2, $3, false, false, false, false, false, $4, $5) RETURNING id',
+                'INSERT INTO analytickit_plugin (name, organization_id, config_schema, from_json, from_web, is_global, is_preinstalled, is_stateless, created_at, capabilities) values($1, $2, $3, false, false, false, false, false, $4, $5) RETURNING id',
                 ['My Plug', team.organization_id, [], new Date(), {}],
                 ''
-            )
-            plugin = plug.rows[0].id
-        })
+)
+plugin = plug.rows[0].id
+})
 
-        test('fetches from the database', async () => {
+test('fetches from the database', async () => {
             let source = await db.getPluginSource(plugin, 'index.ts')
             expect(source).toBe(null)
 
             await db.postgresQuery(
-                'INSERT INTO posthog_pluginsourcefile (id, plugin_id, filename, source) values($1, $2, $3, $4)',
+                'INSERT INTO analytickit_pluginsourcefile (id, plugin_id, filename, source) values($1, $2, $3, $4)',
                 [new UUIDT().toString(), plugin, 'index.ts', 'USE THE SOURCE'],
                 ''
-            )
+)
 
-            source = await db.getPluginSource(plugin, 'index.ts')
-            expect(source).toBe('USE THE SOURCE')
+source = await db.getPluginSource(plugin, 'index.ts')
+expect(source).toBe('USE THE SOURCE')
         })
     })
 
@@ -945,14 +945,14 @@ describe('DB', () => {
 
         async function getAllHashKeyOverrides(): Promise<any> {
             const result = await db.postgresQuery(
-                'SELECT feature_flag_key, hash_key, person_id FROM posthog_featureflaghashkeyoverride',
+                'SELECT feature_flag_key, hash_key, person_id FROM analytickit_featureflaghashkeyoverride',
                 [],
                 ''
-            )
-            return result.rows
-        }
+)
+return result.rows
+}
 
-        beforeEach(async () => {
+beforeEach(async () => {
             team = await getFirstTeam(hub)
             const sourcePerson = await db.createPerson(
                 TIMESTAMP,
@@ -964,34 +964,38 @@ describe('DB', () => {
                 false,
                 new UUIDT().toString(),
                 ['source_person']
-            )
-            const targetPerson = await db.createPerson(
-                TIMESTAMP,
-                {},
-                {},
-                {},
-                team.id,
-                null,
-                false,
-                new UUIDT().toString(),
-                ['target_person']
-            )
-            sourcePersonID = sourcePerson.id
-            targetPersonID = targetPerson.id
-        })
+)
+const targetPerson = await db.createPerson(
+TIMESTAMP,
+{},
+{
 
-        it("doesn't fail on empty data", async () => {
+},
+{
+
+},
+team.id,
+null,
+false,
+new UUIDT().toString(),
+                ['target_person']
+)
+sourcePersonID = sourcePerson.id
+targetPersonID = targetPerson.id
+})
+
+it("doesn't fail on empty data", async () => {
             await db.addFeatureFlagHashKeysForMergedPerson(team.id, sourcePersonID, targetPersonID)
         })
 
         it('updates all valid keys when target person had no overrides', async () => {
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: sourcePersonID,
                 feature_flag_key: 'aloha',
                 hash_key: 'override_value_for_aloha',
             })
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: sourcePersonID,
                 feature_flag_key: 'beta-feature',
@@ -1016,23 +1020,23 @@ describe('DB', () => {
                         person_id: targetPersonID,
                     },
                 ])
-            )
-        })
+)
+})
 
-        it('updates all valid keys when conflicts with target person', async () => {
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+it('updates all valid keys when conflicts with target person', async () => {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: sourcePersonID,
                 feature_flag_key: 'aloha',
                 hash_key: 'override_value_for_aloha',
             })
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: sourcePersonID,
                 feature_flag_key: 'beta-feature',
                 hash_key: 'override_value_for_beta_feature',
             })
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: targetPersonID,
                 feature_flag_key: 'beta-feature',
@@ -1057,17 +1061,17 @@ describe('DB', () => {
                         person_id: targetPersonID,
                     },
                 ])
-            )
-        })
+)
+})
 
-        it('updates nothing when target person overrides exist', async () => {
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+it('updates nothing when target person overrides exist', async () => {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: targetPersonID,
                 feature_flag_key: 'aloha',
                 hash_key: 'override_value_for_aloha',
             })
-            await insertRow(db.postgres, 'posthog_featureflaghashkeyoverride', {
+            await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: targetPersonID,
                 feature_flag_key: 'beta-feature',
@@ -1092,7 +1096,7 @@ describe('DB', () => {
                         person_id: targetPersonID,
                     },
                 ])
-            )
-        })
-    })
+)
+})
+})
 })

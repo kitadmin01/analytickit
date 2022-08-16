@@ -16,7 +16,7 @@ Cypress.on('window:before:load', (win) => {
 })
 
 beforeEach(() => {
-    cy.intercept('https://app.posthog.com/decide/*', (req) =>
+    cy.intercept('https://app.analytickit.com/decide/*', (req) =>
         req.reply(
             decideResponse({
                 'toolbar-launch-side-action': true,
@@ -28,13 +28,13 @@ beforeEach(() => {
         cy.intercept('/api/users/@me/', { fixture: 'api/user-enterprise' })
 
         cy.request('POST', '/api/login/', {
-            email: 'test@posthog.com',
+            email: 'test@analytickit.com',
             password: '12345678',
         })
         cy.visit('/?no-preloaded-app-context=true')
     } else {
         cy.request('POST', '/api/login/', {
-            email: 'test@posthog.com',
+            email: 'test@analytickit.com',
             password: '12345678',
         })
         cy.visit('/insights')

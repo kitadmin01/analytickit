@@ -4,7 +4,7 @@ import { useValues } from 'kea'
 import { teamLogic } from 'scenes/teamLogic'
 
 function RubyInstallSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.Bash}>{'gem "posthog-ruby"'}</CodeSnippet>
+    return <CodeSnippet language={Language.Bash}>{'gem "analytickit-ruby"'}</CodeSnippet>
 }
 
 function RubySetupSnippet(): JSX.Element {
@@ -12,7 +12,7 @@ function RubySetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.Ruby}>
-            {`posthog = PostHog::Client.new({
+            {`analytickit = analytickit::Client.new({
     api_key: "${currentTeam?.api_token}",
     api_host: "${window.location.origin}",
     on_error: Proc.new { |status, msg| print msg }
@@ -24,7 +24,7 @@ function RubySetupSnippet(): JSX.Element {
 function RubyCaptureSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Ruby}>
-            {"posthog.capture({\n    distinct_id: 'test-id',\n    event: 'test-event'})"}
+            {"analytickit.capture({\n    distinct_id: 'test-id',\n    event: 'test-event'})"}
         </CodeSnippet>
     )
 }

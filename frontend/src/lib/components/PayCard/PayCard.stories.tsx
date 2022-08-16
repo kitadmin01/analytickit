@@ -23,5 +23,5 @@ PayCard_.args = {
     title: 'Get a deeper understanding of your users',
     caption:
         'Advanced features such as interconnection with funnels, grouping & wildcarding and exclusions can help you gain deeper insights.',
-    docsLink: 'https://posthog.com/docs/user-guides/paths',
+    docsLink: 'https://analytickit.com/docs/user-guides/paths',
 }

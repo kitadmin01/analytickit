@@ -30,7 +30,7 @@ export function SocialLoginLink({ provider, queryString }: SocialLoginButtonProp
     }
 
     // SAML-based login requires an extra param as technically we can support multiple SAML backends
-    const extraParam = provider === 'saml' ? (queryString ? '&idp=posthog_custom' : '?idp=posthog_custom') : ''
+    const extraParam = provider === 'saml' ? (queryString ? '&idp=analytickit_custom' : '?idp=analytickit_custom') : ''
 
     return (
         <Button

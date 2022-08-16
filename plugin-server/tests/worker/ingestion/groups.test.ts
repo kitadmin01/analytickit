@@ -1,4 +1,4 @@
-import { addGroupProperties } from '../../../src/worker/ingestion/groups'
+import{addGroupProperties}from'../../../src/worker/ingestion/groups'
 
 describe('addGroupProperties()', () => {
     let mockGroupTypeManager: any
@@ -24,7 +24,7 @@ describe('addGroupProperties()', () => {
         const properties = {
             foo: 'bar',
             $groups: {
-                organization: 'PostHog',
+                organization: 'analytickit',
                 project: 'web',
                 foobar: 'afsafa',
             },
@@ -33,11 +33,11 @@ describe('addGroupProperties()', () => {
         expect(await addGroupProperties(2, properties, mockGroupTypeManager)).toEqual({
             foo: 'bar',
             $groups: {
-                organization: 'PostHog',
+                organization: 'analytickit',
                 project: 'web',
                 foobar: 'afsafa',
             },
-            $group_0: 'PostHog',
+            $group_0: 'analytickit',
             $group_1: 'web',
         })
 

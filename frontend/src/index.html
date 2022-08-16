@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% include "head.html" %}
-    </head>
-    <body>
-        {% include "overlays.html" %}
-        <script>
+<head>
+    {% include "head.html" %}
+</head>
+<body>
+{% include "overlays.html" %}
+<script>
             if (!('entries' in Object) ||
                 !('fromEntries' in Object) ||
                 !('flatMap' in Array.prototype)
@@ -14,11 +14,13 @@
                 div.style.color = '#fef6f6'
                 div.style.background = '#920c0c'
                 div.style.padding = '5px 10px'
-                div.innerHTML = 'You are using a really old browser. Please upgrade to fully enjoy PostHog!'
+                div.innerHTML = 'You are using a really old browser. Please upgrade to fully enjoy analytickit!'
                 document.body.prepend(div)
             }
-        </script>
-        <div id="root"></div>
-        {% include "live_server_inject.html" %}
-    </body>
+
+
+</script>
+<div id="root"></div>
+{% include "live_server_inject.html" %}
+</body>
 </html>

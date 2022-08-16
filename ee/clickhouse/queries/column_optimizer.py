@@ -1,14 +1,14 @@
 from typing import Counter, List, Set, cast
 
-from posthog.constants import TREND_FILTER_TYPE_ACTIONS, FunnelCorrelationType
-from posthog.models.action.util import get_action_tables_and_properties
-from posthog.models.entity import Entity
-from posthog.models.filters.mixins.utils import cached_property
-from posthog.models.filters.stickiness_filter import StickinessFilter
-from posthog.models.filters.utils import GroupTypeIndex
-from posthog.models.property import PropertyIdentifier
-from posthog.models.property.util import box_value, extract_tables_and_properties
-from posthog.queries.column_optimizer.foss_column_optimizer import FOSSColumnOptimizer
+from analytickit.constants import TREND_FILTER_TYPE_ACTIONS, FunnelCorrelationType
+from analytickit.models.action.util import get_action_tables_and_properties
+from analytickit.models.entity import Entity
+from analytickit.models.filters.mixins.utils import cached_property
+from analytickit.models.filters.stickiness_filter import StickinessFilter
+from analytickit.models.filters.utils import GroupTypeIndex
+from analytickit.models.property import PropertyIdentifier
+from analytickit.models.property.util import box_value, extract_tables_and_properties
+from analytickit.queries.column_optimizer.foss_column_optimizer import FOSSColumnOptimizer
 
 
 class EnterpriseColumnOptimizer(FOSSColumnOptimizer):
@@ -70,9 +70,9 @@ class EnterpriseColumnOptimizer(FOSSColumnOptimizer):
                 counter += get_action_tables_and_properties(entity.get_action())
 
         if (
-            not isinstance(self.filter, StickinessFilter)
-            and self.filter.correlation_type == FunnelCorrelationType.PROPERTIES
-            and self.filter.correlation_property_names
+                not isinstance(self.filter, StickinessFilter)
+                and self.filter.correlation_type == FunnelCorrelationType.PROPERTIES
+                and self.filter.correlation_property_names
         ):
 
             if self.filter.aggregation_group_type_index is not None:

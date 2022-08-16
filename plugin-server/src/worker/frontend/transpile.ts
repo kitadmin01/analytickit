@@ -1,4 +1,4 @@
-import { transform } from '@babel/standalone'
+import{transform}from'@babel/standalone'
 
 export function transpileFrontend(rawCode: string): string {
     const { code } = transform(rawCode, {

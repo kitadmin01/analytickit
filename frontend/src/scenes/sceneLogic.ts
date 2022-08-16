@@ -1,42 +1,44 @@
-import { BuiltLogic, kea } from 'kea'
-import { router } from 'kea-router'
-import posthog from 'posthog-js'
-import type { sceneLogicType } from './sceneLogicType'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { preflightLogic } from './PreflightCheck/preflightLogic'
-import { AvailableFeature } from '~/types'
-import { userLogic } from './userLogic'
-import { handleLoginRedirect } from './authentication/loginLogic'
-import { teamLogic } from './teamLogic'
-import { urls } from 'scenes/urls'
-import { SceneExport, Params, Scene, SceneConfig, SceneParams, LoadedScene } from 'scenes/sceneTypes'
-import { emptySceneParams, preloadedScenes, redirects, routes, sceneConfigurations } from 'scenes/scenes'
-import { organizationLogic } from './organizationLogic'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { UPGRADE_LINK } from 'lib/constants'
+import{BuiltLogic, kea}from 'kea'
+import {router }from 'kea-router'
+import analytickit from 'analytickit-js'
+import type {sceneLogicType}from './sceneLogicType'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import { preflightLogic}from './PreflightCheck/preflightLogic'
+import {AvailableFeature}from '~/types'
+import {userLogic}from './userLogic'
+import {handleLoginRedirect}from './authentication/loginLogic'
+import {teamLogic} from './teamLogic'
+import {urls }from 'scenes/urls'
+import { SceneExport, Params, Scene, SceneConfig, SceneParams, LoadedScene}from 'scenes/sceneTypes'
+import {emptySceneParams, preloadedScenes, redirects, routes, sceneConfigurations }from 'scenes/scenes'
+import { organizationLogic}from './organizationLogic'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import {UPGRADE_LINK}from 'lib/constants'
 
 /** Mapping of some scenes that aren't directly accessible from the sidebar to ones that are - for the sidebar. */
-const sceneNavAlias: Partial<Record<Scene, Scene>> = {
-    [Scene.Action]: Scene.DataManagement,
-    [Scene.Actions]: Scene.DataManagement,
-    [Scene.EventDefinitions]: Scene.DataManagement,
-    [Scene.EventPropertyDefinitions]: Scene.DataManagement,
-    [Scene.EventDefinition]: Scene.DataManagement,
-    [Scene.EventPropertyDefinition]: Scene.DataManagement,
-    [Scene.Person]: Scene.Persons,
-    [Scene.Cohort]: Scene.Cohorts,
-    [Scene.Groups]: Scene.Persons,
-    [Scene.Experiment]: Scene.Experiments,
-    [Scene.Group]: Scene.Persons,
-    [Scene.Dashboard]: Scene.Dashboards,
-    [Scene.FeatureFlag]: Scene.FeatureFlags,
+const sceneNavAlias: Partial < Record<Scene, Scene>> = {
+[Scene.Action]: Scene.DataManagement,
+[Scene.Actions]: Scene.DataManagement,
+[Scene.EventDefinitions]: Scene.DataManagement,
+[Scene.EventPropertyDefinitions]: Scene.DataManagement,
+[Scene.EventDefinition]: Scene.DataManagement,
+[Scene.EventPropertyDefinition]: Scene.DataManagement,
+[Scene.Person]: Scene.Persons,
+[Scene.Cohort]: Scene.Cohorts,
+[Scene.Groups]: Scene.Persons,
+[Scene.Experiment]: Scene.Experiments,
+[Scene.Group]: Scene.Persons,
+[Scene.Dashboard]: Scene.Dashboards,
+[Scene.FeatureFlag]: Scene.FeatureFlags,
 }
 
 export const sceneLogic = kea<sceneLogicType>({
-    props: {} as {
-        scenes?: Record<Scene, () => any>
-    },
-    connect: () => ({
+props: {
+
+}as {
+scenes?: Record < Scene, () => any>
+},
+connect:() => ({
         logic: [router, userLogic, preflightLogic],
         values: [featureFlagLogic, ['featureFlags']],
         actions: [router, ['locationChanged']],
@@ -207,7 +209,7 @@ export const sceneLogic = kea<sceneLogicType>({
             }
         },
         takeToPricing: () => {
-            posthog.capture('upgrade modal pricing interaction')
+            analytickit.capture('upgrade modal pricing interaction')
             const link = UPGRADE_LINK(preflightLogic.values.preflight?.cloud)
             if (link.target) {
                 window.open(link.url, link.target)
@@ -216,7 +218,7 @@ export const sceneLogic = kea<sceneLogicType>({
             }
         },
         setScene: ({ scene, scrollToTop }, _, __, previousState) => {
-            posthog.capture('$pageview')
+            analytickit.capture('$pageview')
 
             // if we clicked on a link, scroll to top
             const previousScene = selectors.scene(previousState)

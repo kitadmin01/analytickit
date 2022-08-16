@@ -1,16 +1,16 @@
-import { PluginsServerConfig } from '../../types'
-import { status } from '../../utils/status'
+import{PluginsServerConfig}from'../../types'
+import {status}from '../../utils/status'
 
 const aws = require('aws-sdk')
 
 let S3: typeof aws.S3 | null = null
 
 export interface ObjectStorage {
-    healthcheck: () => Promise<boolean>
+healthcheck:() => Promise<boolean>
 }
 
 // Object Storage added without any uses to flush out deployment concerns.
-// see https://github.com/PostHog/posthog/pull/9901
+// see https://github.com/analytickit/analytickit/pull/9901
 export const connectObjectStorage = (serverConfig: Partial<PluginsServerConfig>): ObjectStorage => {
     let storage = {
         healthcheck: async () => {

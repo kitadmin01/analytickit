@@ -11,7 +11,7 @@ export function PlatformPanel(): JSX.Element {
 
     return (
         <div className="welcome-panel">
-            <h1 className="ingestion-title">Welcome to PostHog</h1>
+            <h1 className="ingestion-title">Welcome to analytickit</h1>
             <p>
                 First things first, where do you want to send events from? You can always instrument more sources later.
             </p>

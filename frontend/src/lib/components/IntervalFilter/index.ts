@@ -1,1 +1,1 @@
-export * from './IntervalFilter'
+export* from './IntervalFilter'

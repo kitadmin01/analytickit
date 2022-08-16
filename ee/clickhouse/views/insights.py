@@ -9,11 +9,11 @@ from ee.clickhouse.queries.funnels.funnel_correlation import FunnelCorrelation
 from ee.clickhouse.queries.paths import ClickhousePaths
 from ee.clickhouse.queries.retention import ClickhouseRetention
 from ee.clickhouse.queries.stickiness import ClickhouseStickiness
-from posthog.api.insight import InsightViewSet
-from posthog.decorators import cached_function
-from posthog.models import Insight, User
-from posthog.models.dashboard import Dashboard
-from posthog.models.filters import Filter
+from analytickit.api.insight import InsightViewSet
+from analytickit.decorators import cached_function
+from analytickit.models import Insight, User
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.filters import Filter
 
 
 class CanEditInsight(BasePermission):

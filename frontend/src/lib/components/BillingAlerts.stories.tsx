@@ -32,7 +32,7 @@ const Template = (): JSX.Element => {
         router.actions.push(urls.dashboard(2))
         const payload: BillingType = {
             should_setup_billing: false,
-            subscription_url: 'https://posthog.com',
+            subscription_url: 'https://analytickit.com',
 
             // BillingAlertType.UsageLimitExceeded
             billing_limit_exceeded: false,
@@ -58,7 +58,7 @@ const Template = (): JSX.Element => {
 
         if (alertType === BillingAlertType.SetupBilling) {
             payload.should_setup_billing = true
-            payload.subscription_url = 'https://posthog.com'
+            payload.subscription_url = 'https://analytickit.com'
         }
         if (alertType === BillingAlertType.UsageLimitExceeded) {
             payload.billing_limit_exceeded = true

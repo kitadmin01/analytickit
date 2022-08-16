@@ -9,7 +9,7 @@ import { teamLogic } from 'scenes/teamLogic'
 function JSInstallSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Bash}>
-            {['npm install posthog-js', '# OR', 'yarn add posthog-js'].join('\n')}
+            {['npm install analytickit-js', '# OR', 'yarn add analytickit-js'].join('\n')}
         </CodeSnippet>
     )
 }
@@ -20,9 +20,9 @@ function JSSetupSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.JavaScript}>
             {[
-                "import posthog from 'posthog-js'",
+                "import analytickit from 'analytickit-js'",
                 '',
-                `posthog.init('${currentTeam?.api_token}', { api_host: '${window.location.origin}' })`,
+                `analytickit.init('${currentTeam?.api_token}', { api_host: '${window.location.origin}' })`,
             ].join('\n')}
         </CodeSnippet>
     )
@@ -30,7 +30,7 @@ function JSSetupSnippet(): JSX.Element {
 
 function JSEventSnippet(): JSX.Element {
     return (
-        <CodeSnippet language={Language.JavaScript}>{`posthog.capture('my event', { property: 'value' })`}</CodeSnippet>
+        <CodeSnippet language={Language.JavaScript}>{`analytickit.capture('my event', { property: 'value' })`}</CodeSnippet>
     )
 }
 
@@ -61,7 +61,7 @@ export function WebInstructions(): JSX.Element {
                 Just add this snippet to your website and we'll automatically capture page views, sessions and all
                 relevant interactions within your website.{' '}
                 <Link
-                    to="https://posthog.com/product-features/event-autocapture?utm_medium=in-product&utm_campaign=ingestion-web"
+                    to="https://analytickit.com/product-features/event-autocapture?utm_medium=in-product&utm_campaign=ingestion-web"
                     target="_blank"
                     rel="noopener"
                 >
@@ -79,10 +79,10 @@ export function WebInstructions(): JSX.Element {
             <LemonDivider thick dashed />
             <h2>Option 2. Javascript Library</h2>
             <p>
-                Use this option if you want more granular control of how PostHog runs in your website and the events you
+                Use this option if you want more granular control of how analytickit runs in your website and the events you
                 capture. Recommended for teams with more stable products and more defined analytics requirements.{' '}
                 <Link
-                    to="https://posthog.com/docs/integrations/js-integration/?utm_medium=in-product&utm_campaign=ingestion-web"
+                    to="https://analytickit.com/docs/integrations/js-integration/?utm_medium=in-product&utm_campaign=ingestion-web"
                     target="_blank"
                     rel="noopener"
                 >
@@ -94,7 +94,7 @@ export function WebInstructions(): JSX.Element {
             <JSInstallSnippet />
             <h3>
                 Configure &amp; initialize (see more{' '}
-                <Link to="https://posthog.com/docs/integrations/js-integration#config" target="_blank" rel="noopener">
+                <Link to="https://analytickit.com/docs/integrations/js-integration#config" target="_blank" rel="noopener">
                     configuration options
                 </Link>
                 )

@@ -1,8 +1,8 @@
-import { Hub } from '../../src/types'
-import { createHub } from '../../src/utils/db/hub'
-import { PluginsApiKeyManager } from '../../src/worker/vm/extensions/helpers/api-key-manager'
-import { createUserTeamAndOrganization } from '../helpers/sql'
-import { POSTGRES_TRUNCATE_TABLES_QUERY } from '../helpers/sql'
+import{Hub}from'../../src/types'
+import {createHub}from '../../src/utils/db/hub'
+import {PluginsApiKeyManager}from '../../src/worker/vm/extensions/helpers/api-key-manager'
+import {createUserTeamAndOrganization }from '../helpers/sql'
+import {POSTGRES_TRUNCATE_TABLES_QUERY}from '../helpers/sql'
 
 describe('PluginsApiKeyManager', () => {
     let hub: Hub
@@ -36,28 +36,28 @@ describe('PluginsApiKeyManager', () => {
             '017d107d-219a-0000-ddef-84f776dcf22b',
             orgId2,
             '017d107d-21a2-0001-4032-b47cdf5e09dc'
-        )
+)
 
-        const key1 = await pluginsApiKeyManager.fetchOrCreatePersonalApiKey(orgId1)
-        expect(hub.db.createUser).toHaveBeenCalledTimes(1)
+const key1 = await pluginsApiKeyManager.fetchOrCreatePersonalApiKey(orgId1)
+expect(hub.db.createUser).toHaveBeenCalledTimes(1)
         expect(hub.db.createUser).toHaveBeenCalledWith(
             expect.objectContaining({
                 organizationMembershipLevel: 8,
                 organization_id: orgId1,
             })
-        )
+)
 
-        const key2 = await pluginsApiKeyManager.fetchOrCreatePersonalApiKey(orgId2)
-        expect(hub.db.createUser).toHaveBeenCalledTimes(2)
+const key2 = await pluginsApiKeyManager.fetchOrCreatePersonalApiKey(orgId2)
+expect(hub.db.createUser).toHaveBeenCalledTimes(2)
         expect(hub.db.createUser).toHaveBeenCalledWith(
             expect.objectContaining({
                 organizationMembershipLevel: 8,
                 organization_id: orgId2,
             })
-        )
+)
 
-        // check that we've created two bots with two distinct keys
-        expect(key1).not.toEqual(key2)
+// check that we've created two bots with two distinct keys
+expect(key1).not.toEqual(key2)
 
         // check that we hit the cache
         await pluginsApiKeyManager.fetchOrCreatePersonalApiKey(orgId1)

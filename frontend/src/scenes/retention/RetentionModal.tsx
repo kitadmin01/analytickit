@@ -13,7 +13,7 @@ import './RetentionTable.scss'
 import { urls } from 'scenes/urls'
 import { groupDisplayId } from 'scenes/persons/GroupActorHeader'
 import { asDisplay } from 'scenes/persons/PersonHeader'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import { triggerExport } from 'lib/components/ExportButton/exporter'
 import { ExporterFormat } from '~/types'
 

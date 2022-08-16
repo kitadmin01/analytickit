@@ -1,10 +1,10 @@
 from django.db import transaction
 from django.db.models import Q
 
-from posthog.models import Tag as TagModel
-from posthog.models import TaggedItem as TaggedItemModel
-from posthog.models import Team
-from posthog.test.base import TestMigrations
+from analytickit.models import Tag as TagModel
+from analytickit.models import TaggedItem as TaggedItemModel
+from analytickit.models import Team
+from analytickit.test.base import TestMigrations
 
 
 class TagsTestCase(TestMigrations):
@@ -21,7 +21,7 @@ class TagsTestCase(TestMigrations):
         EnterprisePropertyDefinition = apps.get_model("ee", "EnterprisePropertyDefinition")
 
         # Setup
-        # apps.get_model("posthog", "Tag") doesn't work in setup because of a dependency issue
+        # apps.get_model("analytickit", "Tag") doesn't work in setup because of a dependency issue
         tag = TagModel.objects.create(name="existing tag", team_id=self.team.id)
         self.event_definition = EnterpriseEventDefinition.objects.create(
             team_id=self.team.id,
@@ -41,7 +41,7 @@ class TagsTestCase(TestMigrations):
             organization=self.organization,
             api_token="token12345",
             test_account_filters=[
-                {"key": "email", "value": "@posthog.com", "operator": "not_icontains", "type": "person"},
+                {"key": "email", "value": "@analytickit.com", "operator": "not_icontains", "type": "person"},
             ],
         )
         self.team2_total_property_definitions = 1_001
@@ -57,8 +57,8 @@ class TagsTestCase(TestMigrations):
         )
 
     def test_tags_migrated(self):
-        Tag = self.apps.get_model("posthog", "Tag")  # type: ignore
-        TaggedItem = self.apps.get_model("posthog", "TaggedItem")  # type: ignore
+        Tag = self.apps.get_model("analytickit", "Tag")  # type: ignore
+        TaggedItem = self.apps.get_model("analytickit", "TaggedItem")  # type: ignore
         EnterpriseEventDefinition = self.apps.get_model("ee", "EnterpriseEventDefinition")  # type: ignore
         EnterprisePropertyDefinition = self.apps.get_model("ee", "EnterprisePropertyDefinition")  # type: ignore
 

@@ -6,7 +6,7 @@ import { useDebounce } from 'use-debounce'
 const DEFAULT_DELAY_MS = 500
 
 export type TooltipProps = AntdTooltipProps & {
-    /** Whether Ant Design's default Tooltip behavior should be used instead of PostHog's. */
+    /** Whether Ant Design's default Tooltip behavior should be used instead of analytickit's. */
     isDefaultTooltip?: boolean
     delayMs?: number
 }

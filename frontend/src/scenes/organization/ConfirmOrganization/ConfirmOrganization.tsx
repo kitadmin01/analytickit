@@ -52,7 +52,7 @@ export function ConfirmOrganization(): JSX.Element {
                                     Some reasons that you may accidentally end up here are:
                                     <ul style={{ paddingInlineStart: '1rem', marginBottom: 0, marginBlockEnd: 0 }}>
                                         <li>You're logging in with the wrong email address</li>
-                                        <li>Your PostHog account is at a different URL</li>
+                                        <li>Your analytickit account is at a different URL</li>
                                         <li>You need an invitation from a colleague</li>
                                     </ul>
                                 </p>
@@ -109,11 +109,11 @@ export function ConfirmOrganization(): JSX.Element {
 
                 <div className="text-center terms-and-conditions-text mt-4 text-muted">
                     By creating an account, you agree to our{' '}
-                    <a href={`https://posthog.com/terms`} target="_blank" rel="noopener">
+                    <a href={`https://analytickit.com/terms`} target="_blank" rel="noopener">
                         Terms of Service
                     </a>{' '}
                     and{' '}
-                    <a href={`https://posthog.com/privacy`} target="_blank" rel="noopener">
+                    <a href={`https://analytickit.com/privacy`} target="_blank" rel="noopener">
                         Privacy Policy
                     </a>
                     .
@@ -121,11 +121,11 @@ export function ConfirmOrganization(): JSX.Element {
                 <LemonDivider thick dashed className="my-6" />
                 <div className="text-center terms-and-conditions-text mt-4 text-muted">
                     Have questions?{' '}
-                    <a href={`https://posthog.com/support`} target="_blank" rel="noopener">
+                    <a href={`https://analytickit.com/support`} target="_blank" rel="noopener">
                         Visit support
                     </a>{' '}
                     or{' '}
-                    <a href={`https://posthog.com/docs`} target="_blank" rel="noopener">
+                    <a href={`https://analytickit.com/docs`} target="_blank" rel="noopener">
                         read our documentation
                     </a>
                     .

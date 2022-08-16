@@ -41,7 +41,7 @@ import { ActivityScope } from 'lib/components/ActivityLog/humanizeActivity'
 import { ActivityLog } from 'lib/components/ActivityLog/ActivityLog'
 import { insightActivityDescriber } from 'scenes/saved-insights/activityDescriptions'
 import { CalendarOutlined } from '@ant-design/icons'
-import { LemonInput, LemonSelect, LemonSelectOptions } from '@posthog/lemon-ui'
+import { LemonInput, LemonSelect, LemonSelectOptions } from '@analytickit/lemon-ui'
 
 const { TabPane } = Tabs
 

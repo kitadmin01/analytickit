@@ -1,14 +1,14 @@
-import * as IORedis from 'ioredis'
-import { DateTime } from 'luxon'
+import* as IORedis from 'ioredis'
+import {DateTime }from 'luxon'
 
-import { Hub, PreIngestionEvent } from '../../../src/types'
-import { createHub } from '../../../src/utils/db/hub'
-import { UUIDT } from '../../../src/utils/utils'
-import { LazyPersonContainer } from '../../../src/worker/ingestion/lazy-person-container'
-import { EventsProcessor } from '../../../src/worker/ingestion/process-event'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../../helpers/clickhouse'
-import { resetKafka } from '../../helpers/kafka'
-import { resetTestDatabase } from '../../helpers/sql'
+import {Hub, PreIngestionEvent}from '../../../src/types'
+import {createHub}from '../../../src/utils/db/hub'
+import {UUIDT}from '../../../src/utils/utils'
+import {LazyPersonContainer}from '../../../src/worker/ingestion/lazy-person-container'
+import {EventsProcessor}from '../../../src/worker/ingestion/process-event'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../../helpers/clickhouse'
+import {resetKafka}from '../../helpers/kafka'
+import {resetTestDatabase}from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 jest.setTimeout(600000) // 600 sec timeout.
@@ -98,8 +98,8 @@ describe('EventsProcessor#createEvent()', () => {
                 $group_3: '',
                 $group_4: '',
             })
-        )
-        expect(result).toEqual(preIngestionEvent)
+)
+expect(result).toEqual(preIngestionEvent)
         expect(jest.mocked(eventsProcessor.db.getPersonData)).not.toHaveBeenCalled()
     })
 
@@ -113,15 +113,15 @@ describe('EventsProcessor#createEvent()', () => {
             {},
             {},
             1
-        )
+)
 
-        await eventsProcessor.createEvent(
+await eventsProcessor.createEvent(
             { ...preIngestionEvent, properties: { $group_0: 'group_key' } },
             personContainer
-        )
+)
 
-        const events = await delayUntilEventIngested(() => hub.db.fetchEvents())
-        expect(events.length).toEqual(1)
+const events = await delayUntilEventIngested(() => hub.db.fetchEvents())
+expect(events.length).toEqual(1)
         expect(events[0]).toEqual(
             expect.objectContaining({
                 $group_0: 'group_key',
@@ -137,10 +137,10 @@ describe('EventsProcessor#createEvent()', () => {
                 group3_properties: '',
                 group4_properties: '',
             })
-        )
-    })
+)
+})
 
-    it('emits event with person columns if not previously fetched', async () => {
+it('emits event with person columns if not previously fetched', async () => {
         jest.spyOn(eventsProcessor.db, 'getPersonData')
         await eventsProcessor.db.createPerson(
             DateTime.fromISO(timestamp).toUTC(),
@@ -152,21 +152,21 @@ describe('EventsProcessor#createEvent()', () => {
             false,
             personUuid,
             ['my_id']
-        )
+)
 
-        await eventsProcessor.createEvent(
+await eventsProcessor.createEvent(
             {
                 ...preIngestionEvent,
                 properties: { $set: { a: 1 } },
             },
             // :TRICKY: We pretend the person has been updated in-between processing and creating the event
             new LazyPersonContainer(2, 'my_id', hub)
-        )
+)
 
-        await eventsProcessor.kafkaProducer.flush()
+await eventsProcessor.kafkaProducer.flush()
 
-        const events = await delayUntilEventIngested(() => hub.db.fetchEvents())
-        expect(events.length).toEqual(1)
+const events = await delayUntilEventIngested(() => hub.db.fetchEvents())
+expect(events.length).toEqual(1)
         expect(events[0]).toEqual(
             expect.objectContaining({
                 uuid: eventUuid,
@@ -174,10 +174,10 @@ describe('EventsProcessor#createEvent()', () => {
                 person_id: personUuid,
                 person_properties: { foo: 'bar', a: 1 },
             })
-        )
-    })
+)
+})
 
-    it('handles the person no longer existing', async () => {
+it('handles the person no longer existing', async () => {
         await eventsProcessor.createEvent(preIngestionEvent, new LazyPersonContainer(2, 'my_id', hub))
         await eventsProcessor.kafkaProducer.flush()
 
@@ -190,6 +190,6 @@ describe('EventsProcessor#createEvent()', () => {
                 person_id: '00000000-0000-0000-0000-000000000000',
                 person_properties: '',
             })
-        )
-    })
+)
+})
 })

@@ -1,6 +1,6 @@
-import { tableConfigLogic } from 'lib/components/ResizableTable/tableConfigLogic'
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
+import{tableConfigLogic}from'lib/components/ResizableTable/tableConfigLogic'
+import {expectLogic}from 'kea-test-utils'
+import { initKeaTests}from '~/test/init'
 
 describe('tableConfigLogic', () => {
     let logic: ReturnType<typeof tableConfigLogic.build>

@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon'
+import{DateTime}from'luxon'
 
-import { Hub } from '../../../src/types'
-import { createHub } from '../../../src/utils/db/hub'
-import { UUIDT } from '../../../src/utils/utils'
-import { PersonManager } from '../../../src/worker/ingestion/person-manager'
-import { resetTestDatabase } from '../../helpers/sql'
+import {Hub}from '../../../src/types'
+import {createHub}from '../../../src/utils/db/hub'
+import { UUIDT}from '../../../src/utils/utils'
+import {PersonManager}from '../../../src/worker/ingestion/person-manager'
+import {resetTestDatabase}from '../../helpers/sql'
 
 describe('PersonManager.isNewPerson', () => {
     let personManager: PersonManager

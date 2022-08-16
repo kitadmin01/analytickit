@@ -14,7 +14,7 @@ import { teamLogic } from 'scenes/teamLogic'
 import { organizationLogic } from 'scenes/organizationLogic'
 import { dayjs } from 'lib/dayjs'
 import { LemonTextArea } from '../LemonTextArea/LemonTextArea'
-import { LemonButton, LemonCheckbox } from '@posthog/lemon-ui'
+import { LemonButton, LemonCheckbox } from '@analytickit/lemon-ui'
 import { IconClose, IconDelete } from '../icons'
 
 function coordinateContains(e: MouseEvent, element: DOMRect): boolean {

@@ -1,12 +1,12 @@
-# TODO: Once Clickhouse is moved out of EE, move test cases to posthog/api/test/test_instance_settings.py
+# TODO: Once Clickhouse is moved out of EE, move test cases to analytickit/api/test/test_instance_settings.py
 from rest_framework import status
 
 from ee.api.test.base import APILicensedTest
-from posthog.client import sync_execute
-from posthog.models.instance_setting import get_instance_setting
-from posthog.models.session_recording_event.sql import SESSION_RECORDING_EVENTS_DATA_TABLE
-from posthog.settings.data_stores import CLICKHOUSE_DATABASE
-from posthog.test.base import ClickhouseTestMixin, snapshot_clickhouse_alter_queries
+from analytickit.client import sync_execute
+from analytickit.models.instance_setting import get_instance_setting
+from analytickit.models.session_recording_event.sql import SESSION_RECORDING_EVENTS_DATA_TABLE
+from analytickit.settings.data_stores import CLICKHOUSE_DATABASE
+from analytickit.test.base import ClickhouseTestMixin, snapshot_clickhouse_alter_queries
 
 
 class TestInstanceSettings(ClickhouseTestMixin, APILicensedTest):

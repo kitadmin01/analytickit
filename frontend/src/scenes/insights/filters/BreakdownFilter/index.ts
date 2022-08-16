@@ -1,1 +1,1 @@
-export { BreakdownFilter } from './TaxonomicBreakdownFilter'
+export{BreakdownFilter}from'./TaxonomicBreakdownFilter'

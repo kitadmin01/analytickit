@@ -1,7 +1,7 @@
-import { confirmOrganizationLogic } from './confirmOrganizationLogic'
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { router } from 'kea-router'
+import{confirmOrganizationLogic}from'./confirmOrganizationLogic'
+import {expectLogic}from 'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {router }from 'kea-router'
 
 describe('confirmOrganizationLogic', () => {
     let logic: ReturnType<typeof confirmOrganizationLogic.build>

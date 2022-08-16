@@ -2,7 +2,7 @@ from rest_framework import status
 
 from ee.api.test.base import APILicensedTest
 from ee.models.explicit_team_membership import ExplicitTeamMembership
-from posthog.models import OrganizationMembership, Team, User
+from analytickit.models import OrganizationMembership, Team, User
 
 
 class TestTeamMembershipsAPI(APILicensedTest):
@@ -17,7 +17,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.OWNER
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         self.assertEqual(self.team.explicit_memberships.count(), 0)
 
@@ -25,7 +25,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER,},
+            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -36,7 +36,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.ADMIN
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         self.assertEqual(self.team.explicit_memberships.count(), 0)
 
@@ -44,7 +44,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER,},
+            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -55,7 +55,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.MEMBER
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         self.assertEqual(self.team.explicit_memberships.count(), 0)
 
@@ -108,7 +108,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
             team=self.team, parent_membership=self.organization_membership, level=ExplicitTeamMembership.Level.MEMBER
         )
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         self.assertEqual(self.team.explicit_memberships.count(), 1)
 
@@ -131,13 +131,13 @@ class TestTeamMembershipsAPI(APILicensedTest):
 
         self.assertEqual(self.team.explicit_memberships.count(), 1)
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         response = self.client.post("/api/projects/@current/explicit_members/", {"user_uuid": new_user.uuid})
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER,},
+            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -151,13 +151,13 @@ class TestTeamMembershipsAPI(APILicensedTest):
             team=self.team, parent_membership=self.organization_membership, level=ExplicitTeamMembership.Level.MEMBER
         )
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         response = self.client.post("/api/projects/@current/explicit_members/", {"user_uuid": new_user.uuid})
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER,},
+            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -166,7 +166,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.ADMIN
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         response = self.client.post(
             "/api/projects/@current/explicit_members/",
@@ -175,7 +175,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN,},
+            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -187,7 +187,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
             team=self.team, parent_membership=self.organization_membership, level=ExplicitTeamMembership.Level.MEMBER
         )
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         response = self.client.post(
             "/api/projects/@current/explicit_members/",
@@ -207,7 +207,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
             team=self.team, parent_membership=self.organization_membership, level=ExplicitTeamMembership.Level.ADMIN
         )
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         response = self.client.post(
             "/api/projects/@current/explicit_members/",
@@ -216,7 +216,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN,},
+            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -227,14 +227,14 @@ class TestTeamMembershipsAPI(APILicensedTest):
         another_team = Team.objects.create(organization=self.organization, access_control=True)
 
         new_user: User = User.objects.create_and_join(
-            self.organization, "rookie@posthog.com", None,
+            self.organization, "rookie@analytickit.com", None,
         )
 
         response = self.client.post(f"/api/projects/{another_team.id}/explicit_members/", {"user_uuid": new_user.uuid})
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER,},
+            {"effective_level": ExplicitTeamMembership.Level.MEMBER, "level": ExplicitTeamMembership.Level.MEMBER, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -246,7 +246,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
             "Acme", "mallory@acme.com", None, team_fields={"access_control": True}
         )
 
-        response = self.client.post(f"/api/projects/{new_team.id}/explicit_members/", {"user_uuid": new_user.uuid,})
+        response = self.client.post(f"/api/projects/{new_team.id}/explicit_members/", {"user_uuid": new_user.uuid, })
         response_data = response.json()
 
         self.assertDictEqual(
@@ -259,7 +259,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.save()
         _, new_team, new_user = User.objects.bootstrap("Acme", "mallory@acme.com", None)
 
-        response = self.client.post(f"/api/projects/@current/explicit_members/", {"user_uuid": new_user.uuid,})
+        response = self.client.post(f"/api/projects/@current/explicit_members/", {"user_uuid": new_user.uuid, })
         response_data = response.json()
 
         self.assertDictEqual(
@@ -270,9 +270,9 @@ class TestTeamMembershipsAPI(APILicensedTest):
     def test_add_member_to_nonexistent_project_forbidden(self):
         self.organization_membership.level = OrganizationMembership.Level.ADMIN
         self.organization_membership.save()
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
-        response = self.client.post(f"/api/projects/2137/explicit_members/", {"user_uuid": new_user.uuid,})
+        response = self.client.post(f"/api/projects/2137/explicit_members/", {"user_uuid": new_user.uuid, })
         response_data = response.json()
 
         self.assertDictEqual(self.not_found_response("Project not found."), response_data)
@@ -282,7 +282,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.OWNER
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
         new_org_membership: OrganizationMembership = OrganizationMembership.objects.get(
             user=new_user, organization=self.organization
         )
@@ -294,7 +294,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN,},
+            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -303,7 +303,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.MEMBER
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
         new_org_membership: OrganizationMembership = OrganizationMembership.objects.get(
             user=new_user, organization=self.organization
         )
@@ -343,7 +343,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
             team=self.team, parent_membership=self.organization_membership, level=ExplicitTeamMembership.Level.ADMIN
         )
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
         new_org_membership: OrganizationMembership = OrganizationMembership.objects.get(
             user=new_user, organization=self.organization
         )
@@ -355,7 +355,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         response_data = response.json()
 
         self.assertDictContainsSubset(
-            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN,},
+            {"effective_level": ExplicitTeamMembership.Level.ADMIN, "level": ExplicitTeamMembership.Level.ADMIN, },
             response_data,
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -364,7 +364,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.ADMIN
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
         new_org_membership: OrganizationMembership = OrganizationMembership.objects.get(
             user=new_user, organization=self.organization
         )
@@ -378,7 +378,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.organization_membership.level = OrganizationMembership.Level.MEMBER
         self.organization_membership.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
         new_org_membership: OrganizationMembership = OrganizationMembership.objects.get(
             user=new_user, organization=self.organization
         )
@@ -395,7 +395,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
             team=self.team, parent_membership=self.organization_membership, level=ExplicitTeamMembership.Level.ADMIN
         )
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
         new_org_membership: OrganizationMembership = OrganizationMembership.objects.get(
             user=new_user, organization=self.organization
         )
@@ -411,7 +411,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         self.team.access_control = False
         self.team.save()
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         response = self.client.post("/api/projects/@current/explicit_members/", {"user_uuid": new_user.uuid})
         response_data = response.json()
@@ -464,7 +464,7 @@ class TestTeamMembershipsAPI(APILicensedTest):
         )
         Team.objects.create(organization=self.organization)
 
-        new_user: User = User.objects.create_and_join(self.organization, "rookie@posthog.com", None)
+        new_user: User = User.objects.create_and_join(self.organization, "rookie@analytickit.com", None)
 
         self.assertEqual(self.team.explicit_memberships.count(), 1)
 

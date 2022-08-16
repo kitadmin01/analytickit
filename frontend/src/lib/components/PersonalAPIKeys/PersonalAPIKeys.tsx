@@ -8,7 +8,7 @@ import { humanFriendlyDetailedTime } from 'lib/utils'
 import { CopyToClipboardInline } from '../CopyToClipboard'
 import { ColumnsType } from 'antd/lib/table'
 import { LemonButton } from '../LemonButton'
-import { LemonInput, LemonModal } from '@posthog/lemon-ui'
+import { LemonInput, LemonModal } from '@analytickit/lemon-ui'
 import { AlertMessage } from '../AlertMessage'
 import { IconPlus } from '../icons'
 
@@ -156,13 +156,13 @@ export function PersonalAPIKeys(): JSX.Element {
             <p>
                 These keys allow full access to your personal account through the API, as if you were logged in. You can
                 also use them in integrations, such as{' '}
-                <a href="https://zapier.com/apps/posthog/">our premium Zapier one</a>.
+                <a href="https://zapier.com/apps/analytickit/">our premium Zapier one</a>.
                 <br />
                 Try not to keep disused keys around. If you have any suspicion that one of these may be compromised,
                 delete it and use a new one.
                 <br />
-                <a href="https://posthog.com/docs/api/overview#authentication">
-                    More about API authentication in PostHog Docs.
+                <a href="https://analytickit.com/docs/api/overview#authentication">
+                    More about API authentication in analytickit Docs.
                 </a>
             </p>
             <LemonButton

@@ -6,14 +6,14 @@ from uuid import uuid4
 
 from django.utils import timezone
 
-from posthog.client import sync_execute
-from posthog.models import Group, Person, PersonDistinctId, Team
-from posthog.models.event.sql import EVENTS_DATA_TABLE
-from posthog.test.base import _create_event, flush_persons_and_events
+from analytickit.client import sync_execute
+from analytickit.models import Group, Person, PersonDistinctId, Team
+from analytickit.models.event.sql import EVENTS_DATA_TABLE
+from analytickit.test.base import _create_event, flush_persons_and_events
 
 
 def journeys_for(
-    events_by_person: Dict[str, List[Dict[str, Any]]], team: Team, create_people: bool = True
+        events_by_person: Dict[str, List[Dict[str, Any]]], team: Team, create_people: bool = True
 ) -> Dict[str, Person]:
     """
     Helper for creating specific events for a team.

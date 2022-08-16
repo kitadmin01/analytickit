@@ -8,7 +8,7 @@ function PHPConfigSnippet(): JSX.Element {
         <CodeSnippet language={Language.JSON}>
             {`{
     "require": {
-        "posthog/posthog-php": "1.0.*"
+        "analytickit/analytickit-php": "1.0.*"
     }
 }`}
         </CodeSnippet>
@@ -24,7 +24,7 @@ function PHPSetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.PHP}>
-            {`PostHog::init('${currentTeam?.api_token}',
+            {`analytickit::init('${currentTeam?.api_token}',
     array('host' => '${window.location.origin}')
 );`}
         </CodeSnippet>
@@ -34,7 +34,7 @@ function PHPSetupSnippet(): JSX.Element {
 function PHPCaptureSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.PHP}>
-            {"PostHog::capture(array(\n    'distinctId' => 'test-user',\n    'event' => 'test-event'\n));"}
+            {"analytickit::capture(array(\n    'distinctId' => 'test-user',\n    'event' => 'test-event'\n));"}
         </CodeSnippet>
     )
 }

@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon'
+import{DateTime}from'luxon'
 
-import { Hub } from '../../../src/types'
-import { createHub } from '../../../src/utils/db/hub'
-import { UUIDT } from '../../../src/utils/utils'
-import { LazyPersonContainer } from '../../../src/worker/ingestion/lazy-person-container'
-import { resetTestDatabase } from '../../helpers/sql'
+import {Hub}from '../../../src/types'
+import {createHub}from '../../../src/utils/db/hub'
+import { UUIDT}from '../../../src/utils/utils'
+import {LazyPersonContainer}from '../../../src/worker/ingestion/lazy-person-container'
+import {resetTestDatabase}from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 

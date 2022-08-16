@@ -19,10 +19,10 @@ export function BookmarkletPanel(): JSX.Element {
                 <div style={{ padding: '0px 16px' }}>
                     <h1 className="ingestion-title mb-2">Just exploring?</h1>
                     <h2 style={{ fontSize: 20, fontWeight: 800 }}>
-                        Immediately run PostHog on your website for some initial exploring
+                        Immediately run analytickit on your website for some initial exploring
                     </h2>
                     <p>
-                        If you want to quickly test PostHog in your website without changing any code, try out our
+                        If you want to quickly test analytickit in your website without changing any code, try out our
                         bookmarklet.
                     </p>
                     <Row gutter={24} style={{ marginLeft: 0, marginRight: 0 }} className="bookmarklet-warning">
@@ -41,7 +41,7 @@ export function BookmarkletPanel(): JSX.Element {
                         <Col>
                             <h3 className="font-light">Steps</h3>
                             <ol style={{ paddingLeft: 18 }}>
-                                <li>Drag the PostHog Bookmarklet link below to your bookmarks toolbar.</li>
+                                <li>Drag the analytickit Bookmarklet link below to your bookmarks toolbar.</li>
                                 <li>Open the website you want to track and click on the bookmark you just added.</li>
                                 <li>Click continue below and see events coming in.</li>
                             </ol>

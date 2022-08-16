@@ -1,17 +1,17 @@
-import { defaultConfig } from './config/config'
-import { connectObjectStorage } from './main/services/object_storage'
-import { status } from './utils/status'
-import { createRedis } from './utils/utils'
+import{defaultConfig}from'./config/config'
+import {connectObjectStorage }from './main/services/object_storage'
+import {status}from './utils/status'
+import {createRedis}from './utils/utils'
 
 const redisHealthcheck = async (): Promise<boolean> => {
-    const redis = await createRedis(defaultConfig)
-    try {
-        const ping = await redis.get('@posthog-plugin-server/ping')
-        if (ping) {
-            status.info('💚', `Redis key @posthog-plugin-server/ping found with value ${ping}`)
+const redis = await createRedis(defaultConfig)
+try {
+const ping = await redis.get('@analytickit-plugin-server/ping')
+if(ping) {
+            status.info('💚', `Redis key @analytickit-plugin-server/ping found with value ${ping}`)
             return true
         } else {
-            status.error('💔', 'Redis key @posthog-plugin-server/ping not found! Plugin server seems to be offline')
+            status.error('💔', 'Redis key @analytickit-plugin-server/ping not found! Plugin server seems to be offline')
             return false
         }
     } catch (error) {

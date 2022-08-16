@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useResizeObserver } from './useResizeObserver'
+import{useCallback, useEffect, useRef, useState}from 'react'
+import {useResizeObserver}from './useResizeObserver'
 
 /** Determine whether an element is horizontally scrollable, on the left and on the right respectively. */
 export function useScrollable(): [React.RefObject<HTMLDivElement>, string[]] {

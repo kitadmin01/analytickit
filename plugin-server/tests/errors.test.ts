@@ -1,11 +1,11 @@
-import { startPluginsServer } from '../src/main/pluginsServer'
-import { Hub, LogLevel, PluginsServerConfig } from '../src/types'
-import { makePiscina } from '../src/worker/piscina'
-import { createPosthog, DummyPostHog } from '../src/worker/vm/extensions/posthog'
-import { delayUntilEventIngested, resetTestDatabaseClickhouse } from './helpers/clickhouse'
-import { resetKafka } from './helpers/kafka'
-import { pluginConfig39 } from './helpers/plugins'
-import { getErrorForPluginConfig, resetTestDatabase } from './helpers/sql'
+import{startPluginsServer}from'../src/main/pluginsServer'
+import {Hub, LogLevel, PluginsServerConfig}from '../src/types'
+import { makePiscina}from '../src/worker/piscina'
+import {createanalytickit, Dummyanalytickit} from '../src/worker/vm/extensions/analytickit'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse}from './helpers/clickhouse'
+import {resetKafka}from './helpers/kafka'
+import {pluginConfig39}from './helpers/plugins'
+import {getErrorForPluginConfig, resetTestDatabase}from './helpers/sql'
 
 jest.setTimeout(60000) // 60 sec timeout
 
@@ -17,7 +17,7 @@ const extraServerConfig: Partial<PluginsServerConfig> = {
 describe('error do not take down ingestion', () => {
     let hub: Hub
     let stopServer: () => Promise<void>
-    let posthog: DummyPostHog
+    let analytickit: Dummyanalytickit
 
     beforeAll(async () => {
         await resetKafka()
@@ -38,12 +38,12 @@ describe('error do not take down ingestion', () => {
             }
         `,
             extraServerConfig
-        )
-        await resetTestDatabaseClickhouse(extraServerConfig)
+)
+await resetTestDatabaseClickhouse(extraServerConfig)
         const startResponse = await startPluginsServer(extraServerConfig, makePiscina)
         hub = startResponse.hub
         stopServer = startResponse.stop
-        posthog = createPosthog(hub, pluginConfig39)
+        analytickit = createanalytickit(hub, pluginConfig39)
     })
 
     afterEach(async () => {
@@ -55,7 +55,7 @@ describe('error do not take down ingestion', () => {
         expect(await getErrorForPluginConfig(pluginConfig39.id)).toBe(null)
 
         for (let i = 0; i < 4; i++) {
-            await posthog.capture('broken event', { crash: 'throw' })
+            await analytickit.capture('broken event', { crash: 'throw' })
         }
 
         await delayUntilEventIngested(() => hub.db.fetchEvents(), 4)
@@ -71,7 +71,7 @@ describe('error do not take down ingestion', () => {
         expect(await getErrorForPluginConfig(pluginConfig39.id)).toBe(null)
 
         for (let i = 0; i < 4; i++) {
-            await posthog.capture('broken event', { crash: 'throw in promise' })
+            await analytickit.capture('broken event', { crash: 'throw in promise' })
         }
 
         await delayUntilEventIngested(() => hub.db.fetchEvents(), 4)
@@ -87,7 +87,7 @@ describe('error do not take down ingestion', () => {
         expect(await getErrorForPluginConfig(pluginConfig39.id)).toBe(null)
 
         for (let i = 0; i < 4; i++) {
-            await posthog.capture('broken event', { crash: 'reject in promise' })
+            await analytickit.capture('broken event', { crash: 'reject in promise' })
         }
 
         await delayUntilEventIngested(() => hub.db.fetchEvents(), 4)

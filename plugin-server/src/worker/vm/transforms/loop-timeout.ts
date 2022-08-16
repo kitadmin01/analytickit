@@ -2,12 +2,12 @@
 // https://medium.com/@bvjebin/js-infinite-loops-killing-em-e1c2f5f2db7f
 // https://github.com/jsbin/loop-protect/blob/master/lib/index.js
 
-import * as types from '@babel/types'
+import* as types from '@babel/types'
 
-import { PluginGen } from './common'
+import {PluginGen}from './common'
 
 const generateBefore = (t: typeof types, id: any) =>
-    t.variableDeclaration('const', [
+t.variableDeclaration('const', [
         t.variableDeclarator(id, t.callExpression(t.memberExpression(t.identifier('Date'), t.identifier('now')), [])),
     ])
 
@@ -42,14 +42,14 @@ const generateInside = ({
                     } on line ${line}:${ch}`
                 ),
             ])
-        )
-    )
+)
+)
 }
 
 const protect =
-    (t: typeof types, timeout: number) =>
-    (path: any): void => {
-        if (!path.node.loc) {
+(t: typeof types, timeout: number) = >
+(path: any): void = > {
+if(!path.node.loc) {
             // I don't really know _how_ we get into this state, but https://jsbin.com/mipesawapi/1/ triggers it,
             // and the node, I'm guessing after translation, doesn't have a line in the code, so this blows up.
             return

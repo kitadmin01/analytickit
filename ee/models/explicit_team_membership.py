@@ -2,10 +2,10 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 
-from posthog.models.utils import UUIDModel, sane_repr
+from analytickit.models.utils import UUIDModel, sane_repr
 
 if TYPE_CHECKING:
-    from posthog.models.organization import OrganizationMembership
+    from analytickit.models.organization import OrganizationMembership
 
 
 # We call models that grant a user access to some grouping of users a "membership"
@@ -17,13 +17,13 @@ class ExplicitTeamMembership(UUIDModel):
         ADMIN = 8, "administrator"
 
     team: models.ForeignKey = models.ForeignKey(
-        "posthog.Team",
+        "analytickit.Team",
         on_delete=models.CASCADE,
         related_name="explicit_memberships",
         related_query_name="explicit_membership",
     )
     parent_membership: models.ForeignKey = models.ForeignKey(
-        "posthog.OrganizationMembership",
+        "analytickit.OrganizationMembership",
         on_delete=models.CASCADE,
         related_name="explicit_team_memberships",
         related_query_name="explicit_team_membership",

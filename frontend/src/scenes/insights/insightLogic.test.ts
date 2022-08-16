@@ -1,33 +1,34 @@
-import { expectLogic, partial } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { createEmptyInsight, insightLogic } from './insightLogic'
+import{expectLogic, partial}from 'kea-test-utils'
+import {initKeaTests }from '~/test/init'
+import {createEmptyInsight, insightLogic}from './insightLogic'
 import {
-    AnyPropertyFilter,
-    AvailableFeature,
-    BreakdownType,
-    FilterLogicalOperator,
-    InsightModel,
-    InsightShortId,
-    InsightType,
-    ItemMode,
-    PropertyGroupFilter,
-    PropertyOperator,
-} from '~/types'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { combineUrl, router } from 'kea-router'
-import { dashboardLogic } from 'scenes/dashboard/dashboardLogic'
-import { savedInsightsLogic } from 'scenes/saved-insights/savedInsightsLogic'
-import { urls } from 'scenes/urls'
+AnyPropertyFilter,
+AvailableFeature,
+BreakdownType,
+FilterLogicalOperator,
+InsightModel,
+InsightShortId,
+InsightType,
+ItemMode,
+PropertyGroupFilter,
+PropertyOperator,
+}from '~/types'
+import {eventUsageLogic} from 'lib/utils/eventUsageLogic'
+import {combineUrl, router}from 'kea-router'
+import {dashboardLogic}from 'scenes/dashboard/dashboardLogic'
+import {savedInsightsLogic}from 'scenes/saved-insights/savedInsightsLogic'
+import {urls} from 'scenes/urls'
 import * as Sentry from '@sentry/react'
-import { resumeKeaLoadersErrors, silenceKeaLoadersErrors } from '~/initKea'
-import { useMocks } from '~/mocks/jest'
-import { useAvailableFeatures } from '~/mocks/features'
-import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
+import {resumeKeaLoadersErrors, silenceKeaLoadersErrors}from '~/initKea'
+import {useMocks}from '~/mocks/jest'
+import {useAvailableFeatures}from '~/mocks/features'
+import { cleanFilters}from 'scenes/insights/utils/cleanFilters'
 
 const API_FILTERS = {
-    insight: InsightType.TRENDS as InsightType,
-    events: [{ id: 3 }],
-    properties: [{ value: 'a', operator: PropertyOperator.Exact, key: 'a', type: 'a' }],
+insight: InsightType.TRENDS as InsightType,
+events: [{ id: 3}],
+properties: [{value: 'a', operator: PropertyOperator.Exact, key: 'a', type: 'a'
+}],
 }
 
 const Insight12 = '12' as InsightShortId
@@ -718,10 +719,10 @@ describe('insightLogic', () => {
         expect(Sentry.captureException).toHaveBeenCalledWith(
             new Error('Will not override empty filters in saveInsight.'),
             expect.any(Object)
-        )
-    })
+)
+})
 
-    describe('filterPropertiesCount selector', () => {
+describe('filterPropertiesCount selector', () => {
         const standardPropertyFilter = { value: 'lol', operator: PropertyOperator.Exact, key: 'lol', type: 'lol' }
         const cases: {
             properties: AnyPropertyFilter[] | PropertyGroupFilter

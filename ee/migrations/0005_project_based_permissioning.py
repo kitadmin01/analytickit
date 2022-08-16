@@ -4,13 +4,12 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import posthog.models.utils
+import analytickit.models.utils
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("posthog", "0170_project_based_permissioning"),
+        ("analytickit", "0170_project_based_permissioning"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("ee", "0004_enterpriseeventdefinition_enterprisepropertydefinition"),
     ]
@@ -22,7 +21,7 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.UUIDField(
-                        default=posthog.models.utils.UUIDT, editable=False, primary_key=True, serialize=False
+                        default=analytickit.models.utils.UUIDT, editable=False, primary_key=True, serialize=False
                     ),
                 ),
                 ("level", models.PositiveSmallIntegerField(choices=[(1, "member"), (8, "administrator")], default=1)),
@@ -34,7 +33,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="explicit_memberships",
                         related_query_name="explicit_membership",
-                        to="posthog.team",
+                        to="analytickit.team",
                     ),
                 ),
                 (
@@ -43,7 +42,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="explicit_team_memberships",
                         related_query_name="explicit_team_membership",
-                        to="posthog.organizationmembership",
+                        to="analytickit.organizationmembership",
                     ),
                 ),
             ],

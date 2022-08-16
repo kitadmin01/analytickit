@@ -1,4 +1,4 @@
-import { personInitialAndUTMProperties } from '../../../src/utils/db/utils'
+import{personInitialAndUTMProperties}from'../../../src/utils/db/utils'
 
 describe('personInitialAndUTMProperties()', () => {
     it('adds initial and utm properties', () => {
@@ -9,7 +9,7 @@ describe('personInitialAndUTMProperties()', () => {
             $os: 'Mac OS X',
             $browser_version: '95',
             $initial_referring_domain: 'https://google.com',
-            $initial_referrer_url: 'https://google.com/?q=posthog',
+            $initial_referrer_url: 'https://google.com/?q=analytickit',
             utm_medium: 'twitter',
             gclid: 'GOOGLE ADS ID',
             $elements: [
@@ -25,7 +25,7 @@ describe('personInitialAndUTMProperties()', () => {
             $os: 'Mac OS X',
             $browser_version: '95',
             $initial_referring_domain: 'https://google.com',
-            $initial_referrer_url: 'https://google.com/?q=posthog',
+            $initial_referrer_url: 'https://google.com/?q=analytickit',
             utm_medium: 'twitter',
             gclid: 'GOOGLE ADS ID',
             $elements: [

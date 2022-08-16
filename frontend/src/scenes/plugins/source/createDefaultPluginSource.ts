@@ -1,5 +1,5 @@
-export const createDefaultPluginSource = (name: string): Record<string, any> => ({
-    'index.ts': `// Learn more about plugins at: https://posthog.com/docs/apps/build
+exportconstcreateDefaultPluginSource = (name: string): Record<string, any> => ({
+'index.ts': `// Learn more about plugins at: https://analytickit.com/docs/apps/build
 
 // Processes each event, optionally transforming it
 export function processEvent(event, { config }) {
@@ -39,11 +39,11 @@ export const scene = {
                 <h1>My Favourite Cow</h1>
                 <img src="https://media.giphy.com/media/RYKFEEjtYpxL2/giphy.gif" />
             </div>
-        )
-    },
+)
+},
 }
 `,
-    'plugin.json': JSON.stringify(
+'plugin.json': JSON.stringify(
         {
             name: name ?? 'My Plugin',
             config: [

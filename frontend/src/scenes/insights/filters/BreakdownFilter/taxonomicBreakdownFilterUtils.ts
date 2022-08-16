@@ -1,14 +1,14 @@
-import { BreakdownType, FilterType, PropertyDefinition } from '~/types'
+import{BreakdownType, FilterType, PropertyDefinition}from '~/types'
 import {
-    TaxonomicFilterGroup,
-    TaxonomicFilterGroupType,
-    TaxonomicFilterValue,
-} from 'lib/components/TaxonomicFilter/types'
-import { taxonomicFilterTypeToPropertyFilterType } from 'lib/components/PropertyFilters/utils'
+TaxonomicFilterGroup,
+TaxonomicFilterGroupType,
+TaxonomicFilterValue,
+}from 'lib/components/TaxonomicFilter/types'
+import {taxonomicFilterTypeToPropertyFilterType }from 'lib/components/PropertyFilters/utils'
 
 interface FilterChange {
-    useMultiBreakdown: string | boolean | undefined
-    breakdownParts: (string | number)[]
+useMultiBreakdown: string | boolean | undefined
+breakdownParts:(string | number)[]
     setFilters: (filters: Partial<FilterType>, mergeFilters?: boolean) => void
     getPropertyDefinition: (propertyName: string | number) => PropertyDefinition | null
 }

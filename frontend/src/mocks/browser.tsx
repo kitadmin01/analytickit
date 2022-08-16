@@ -14,5 +14,5 @@ export const mswDecorator = (mocks: Mocks): ((Story: () => JSX.Element) => JSX.E
     }
 
 export const useFeatureFlags = (featureFlags: string[]): void => {
-    ;(window as any).POSTHOG_APP_CONTEXT.persisted_feature_flags = featureFlags
+    ;(window as any).analytickit_APP_CONTEXT.persisted_feature_flags = featureFlags
 }

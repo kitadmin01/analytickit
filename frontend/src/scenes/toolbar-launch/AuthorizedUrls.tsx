@@ -58,7 +58,7 @@ function AuthorizedUrlForm({ actionId }: { actionId?: number }): JSX.Element {
             <Field name="url">
                 <LemonInput
                     autoFocus
-                    placeholder="Enter a URL or wildcard subdomain (e.g. https://*.posthog.com)"
+                    placeholder="Enter a URL or wildcard subdomain (e.g. https://*.analytickit.com)"
                     data-attr="url-input"
                 />
             </Field>

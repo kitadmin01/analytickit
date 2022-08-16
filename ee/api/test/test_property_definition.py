@@ -7,9 +7,9 @@ from rest_framework import status
 
 from ee.models.license import License, LicenseManager
 from ee.models.property_definition import EnterprisePropertyDefinition
-from posthog.models import EventProperty, Tag
-from posthog.models.property_definition import PropertyDefinition
-from posthog.test.base import APIBaseTest
+from analytickit.models import EventProperty, Tag
+from analytickit.models.property_definition import PropertyDefinition
+from analytickit.test.base import APIBaseTest
 
 
 class TestPropertyDefinitionEnterpriseAPI(APIBaseTest):
@@ -132,7 +132,7 @@ class TestPropertyDefinitionEnterpriseAPI(APIBaseTest):
         property = EnterprisePropertyDefinition.objects.create(team=self.team, name="enterprise property")
         response = self.client.patch(
             f"/api/projects/@current/property_definitions/{str(property.id)}/",
-            {"description": "This is a description.", "tags": ["official", "internal"],},
+            {"description": "This is a description.", "tags": ["official", "internal"], },
         )
         response_data = response.json()
         self.assertEqual(response_data["description"], "This is a description.")
@@ -182,7 +182,7 @@ class TestPropertyDefinitionEnterpriseAPI(APIBaseTest):
             f"/api/projects/@current/property_definitions/{str(property.id)}/", data={"description": "test"},
         )
         self.assertEqual(response.status_code, status.HTTP_402_PAYMENT_REQUIRED)
-        self.assertIn("This feature is part of the premium PostHog offering.", response.json()["detail"])
+        self.assertIn("This feature is part of the premium analytickit offering.", response.json()["detail"])
 
     def test_with_expired_license(self):
         super(LicenseManager, cast(LicenseManager, License.objects)).create(
@@ -193,7 +193,7 @@ class TestPropertyDefinitionEnterpriseAPI(APIBaseTest):
             f"/api/projects/@current/property_definitions/{str(property.id)}/", data={"description": "test"},
         )
         self.assertEqual(response.status_code, status.HTTP_402_PAYMENT_REQUIRED)
-        self.assertIn("This feature is part of the premium PostHog offering.", response.json()["detail"])
+        self.assertIn("This feature is part of the premium analytickit offering.", response.json()["detail"])
 
     def test_filter_property_definitions(self):
         super(LicenseManager, cast(LicenseManager, License.objects)).create(

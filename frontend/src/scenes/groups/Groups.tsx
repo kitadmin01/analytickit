@@ -101,7 +101,7 @@ export function Groups(): JSX.Element {
                             No {plural} found. Make sure to send properties with your {singular} for them to show up in
                             the list.{' '}
                             <a
-                                href="https://posthog.com/docs/user-guides/group-analytics"
+                                href="https://analytickit.com/docs/user-guides/group-analytics"
                                 rel="noopener"
                                 target="_blank"
                             >
@@ -109,7 +109,7 @@ export function Groups(): JSX.Element {
                             </a>
                         </AlertMessage>
                         <CodeSnippet language={Language.JavaScript} wrap>
-                            {`posthog.group('${singular}', 'id:5', {\n` +
+                            {`analytickit.group('${singular}', 'id:5', {\n` +
                                 `    name: 'Awesome ${currentTabName}',\n` +
                                 '    value: 11\n' +
                                 '});'}

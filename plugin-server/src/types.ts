@@ -1,232 +1,232 @@
-import ClickHouse from '@posthog/clickhouse'
+importClickHousefrom'@analytickit/clickhouse'
 import {
-    Element,
-    Meta,
-    PluginAttachment,
-    PluginConfigSchema,
-    PluginEvent,
-    ProcessedPluginEvent,
-    Properties,
-} from '@posthog/plugin-scaffold'
-import { Pool as GenericPool } from 'generic-pool'
-import { TaskList } from 'graphile-worker'
-import { StatsD } from 'hot-shots'
-import { Redis } from 'ioredis'
-import { Kafka } from 'kafkajs'
-import { DateTime } from 'luxon'
-import { JobQueueManager } from 'main/job-queues/job-queue-manager'
-import { Job } from 'node-schedule'
-import { Pool } from 'pg'
-import { VM } from 'vm2'
+Element,
+Meta,
+PluginAttachment,
+PluginConfigSchema,
+PluginEvent,
+ProcessedPluginEvent,
+Properties,
+}from '@analytickit/plugin-scaffold'
+import {Pool as GenericPool}from 'generic-pool'
+import {TaskList}from 'graphile-worker'
+import {StatsD}from 'hot-shots'
+import {Redis}from 'ioredis'
+import {Kafka}from 'kafkajs'
+import {DateTime}from 'luxon'
+import { JobQueueManager}from 'main/job-queues/job-queue-manager'
+import {Job}from 'node-schedule'
+import {Pool}from 'pg'
+import {VM}from 'vm2'
 
-import { ObjectStorage } from './main/services/object_storage'
-import { DB } from './utils/db/db'
-import { KafkaProducerWrapper } from './utils/db/kafka-producer-wrapper'
-import { InternalMetrics } from './utils/internal-metrics'
-import { UUID } from './utils/utils'
-import { ActionManager } from './worker/ingestion/action-manager'
-import { ActionMatcher } from './worker/ingestion/action-matcher'
-import { HookCommander } from './worker/ingestion/hooks'
-import { OrganizationManager } from './worker/ingestion/organization-manager'
-import { PersonManager } from './worker/ingestion/person-manager'
-import { EventsProcessor } from './worker/ingestion/process-event'
-import { SiteUrlManager } from './worker/ingestion/site-url-manager'
-import { TeamManager } from './worker/ingestion/team-manager'
-import { PluginsApiKeyManager } from './worker/vm/extensions/helpers/api-key-manager'
-import { RootAccessManager } from './worker/vm/extensions/helpers/root-acess-manager'
-import { LazyPluginVM } from './worker/vm/lazy'
-import { PromiseManager } from './worker/vm/promise-manager'
+import {ObjectStorage}from './main/services/object_storage'
+import {DB}from './utils/db/db'
+import {KafkaProducerWrapper}from './utils/db/kafka-producer-wrapper'
+import {InternalMetrics}from './utils/internal-metrics'
+import {UUID }from './utils/utils'
+import {ActionManager}from './worker/ingestion/action-manager'
+import {ActionMatcher}from './worker/ingestion/action-matcher'
+import {HookCommander}from './worker/ingestion/hooks'
+import {OrganizationManager}from './worker/ingestion/organization-manager'
+import {PersonManager}from './worker/ingestion/person-manager'
+import {EventsProcessor}from './worker/ingestion/process-event'
+import {SiteUrlManager}from './worker/ingestion/site-url-manager'
+import {TeamManager}from './worker/ingestion/team-manager'
+import {PluginsApiKeyManager}from './worker/vm/extensions/helpers/api-key-manager'
+import {RootAccessManager}from './worker/vm/extensions/helpers/root-acess-manager'
+import { LazyPluginVM}from './worker/vm/lazy'
+import {PromiseManager}from './worker/vm/promise-manager'
 
 export enum LogLevel {
-    None = 'none',
-    Debug = 'debug',
-    Info = 'info',
-    Log = 'log',
-    Warn = 'warn',
-    Error = 'error',
+None = 'none',
+Debug = 'debug',
+Info = 'info',
+Log = 'log',
+Warn = 'warn',
+Error = 'error',
 }
 
-export const logLevelToNumber: Record<LogLevel, number> = {
-    [LogLevel.None]: 0,
-    [LogLevel.Debug]: 10,
-    [LogLevel.Info]: 20,
-    [LogLevel.Log]: 30,
-    [LogLevel.Warn]: 40,
-    [LogLevel.Error]: 50,
+export const logLevelToNumber: Record < LogLevel, number> = {
+[LogLevel.None]: 0,
+[LogLevel.Debug]: 10,
+[LogLevel.Info]: 20,
+[LogLevel.Log]: 30,
+[LogLevel.Warn]: 40,
+[LogLevel.Error]: 50,
 }
 
 export enum KafkaSecurityProtocol {
-    Plaintext = 'PLAINTEXT',
-    SaslPlaintext = 'SASL_PLAINTEXT',
-    Ssl = 'SSL',
-    SaslSsl = 'SASL_SSL',
+Plaintext = 'PLAINTEXT',
+SaslPlaintext = 'SASL_PLAINTEXT',
+Ssl = 'SSL',
+SaslSsl = 'SASL_SSL',
 }
 
 export enum KafkaSaslMechanism {
-    Plain = 'plain',
-    ScramSha256 = 'scram-sha-256',
-    ScramSha512 = 'scram-sha-512',
+Plain = 'plain',
+ScramSha256 = 'scram-sha-256',
+ScramSha512 = 'scram-sha-512',
 }
 
-export interface PluginsServerConfig extends Record<string, any> {
-    WORKER_CONCURRENCY: number
-    TASKS_PER_WORKER: number
-    TASK_TIMEOUT: number
-    DATABASE_URL: string | null
-    POSTHOG_DB_NAME: string | null
-    POSTHOG_DB_USER: string
-    POSTHOG_DB_PASSWORD: string
-    POSTHOG_POSTGRES_HOST: string
-    POSTHOG_POSTGRES_PORT: number
-    CLICKHOUSE_HOST: string
-    CLICKHOUSE_DATABASE: string
-    CLICKHOUSE_USER: string
-    CLICKHOUSE_PASSWORD: string | null
-    CLICKHOUSE_CA: string | null
-    CLICKHOUSE_SECURE: boolean
-    KAFKA_HOSTS: string
-    KAFKA_CLIENT_CERT_B64: string | null
-    KAFKA_CLIENT_CERT_KEY_B64: string | null
-    KAFKA_TRUSTED_CERT_B64: string | null
-    KAFKA_SECURITY_PROTOCOL: KafkaSecurityProtocol | null
-    KAFKA_SASL_MECHANISM: KafkaSaslMechanism | null
-    KAFKA_SASL_USER: string | null
-    KAFKA_SASL_PASSWORD: string | null
-    KAFKA_CONSUMPTION_TOPIC: string | null
-    KAFKA_PRODUCER_MAX_QUEUE_SIZE: number
-    KAFKA_MAX_MESSAGE_BATCH_SIZE: number
-    KAFKA_FLUSH_FREQUENCY_MS: number
-    REDIS_URL: string
-    POSTHOG_REDIS_PASSWORD: string
-    POSTHOG_REDIS_HOST: string
-    POSTHOG_REDIS_PORT: number
-    BASE_DIR: string
-    PLUGINS_RELOAD_PUBSUB_CHANNEL: string
-    LOG_LEVEL: LogLevel
-    SENTRY_DSN: string | null
-    SENTRY_PLUGIN_SERVER_TRACING_SAMPLE_RATE: number
-    STATSD_HOST: string | null
-    STATSD_PORT: number
-    STATSD_PREFIX: string
-    SCHEDULE_LOCK_TTL: number
-    REDIS_POOL_MIN_SIZE: number
-    REDIS_POOL_MAX_SIZE: number
-    DISABLE_MMDB: boolean
-    DISTINCT_ID_LRU_SIZE: number
-    EVENT_PROPERTY_LRU_SIZE: number
-    INTERNAL_MMDB_SERVER_PORT: number
-    JOB_QUEUES: string
-    JOB_QUEUE_GRAPHILE_URL: string
-    JOB_QUEUE_GRAPHILE_SCHEMA: string
-    JOB_QUEUE_GRAPHILE_PREPARED_STATEMENTS: boolean
-    JOB_QUEUE_S3_AWS_ACCESS_KEY: string
-    JOB_QUEUE_S3_AWS_SECRET_ACCESS_KEY: string
-    JOB_QUEUE_S3_AWS_REGION: string
-    JOB_QUEUE_S3_BUCKET_NAME: string
-    JOB_QUEUE_S3_PREFIX: string
-    CRASH_IF_NO_PERSISTENT_JOB_QUEUE: boolean
-    STALENESS_RESTART_SECONDS: number
-    HEALTHCHECK_MAX_STALE_SECONDS: number
-    CAPTURE_INTERNAL_METRICS: boolean
-    PISCINA_USE_ATOMICS: boolean
-    PISCINA_ATOMICS_TIMEOUT: number
-    SITE_URL: string | null
-    MAX_PENDING_PROMISES_PER_WORKER: number
-    KAFKA_PARTITIONS_CONSUMED_CONCURRENTLY: number
-    CLICKHOUSE_DISABLE_EXTERNAL_SCHEMAS: boolean
-    CLICKHOUSE_DISABLE_EXTERNAL_SCHEMAS_TEAMS: string
-    CLICKHOUSE_JSON_EVENTS_KAFKA_TOPIC: string
-    CONVERSION_BUFFER_ENABLED: boolean
-    CONVERSION_BUFFER_ENABLED_TEAMS: string
-    BUFFER_CONVERSION_SECONDS: number
-    PERSON_INFO_TO_REDIS_TEAMS: string
-    PERSON_INFO_CACHE_TTL: number
-    KAFKA_HEALTHCHECK_SECONDS: number
-    HISTORICAL_EXPORTS_ENABLED: boolean
-    OBJECT_STORAGE_ENABLED: boolean
-    OBJECT_STORAGE_ENDPOINT: string
-    OBJECT_STORAGE_ACCESS_KEY_ID: string
-    OBJECT_STORAGE_SECRET_ACCESS_KEY: string
-    OBJECT_STORAGE_SESSION_RECORDING_FOLDER: string
-    OBJECT_STORAGE_BUCKET: string
-    PLUGIN_SERVER_MODE: 'ingestion' | 'async' | null
-    KAFKAJS_LOG_LEVEL: 'NOTHING' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR'
+export interface PluginsServerConfig extends Record < string, any> {
+WORKER_CONCURRENCY: number
+TASKS_PER_WORKER: number
+TASK_TIMEOUT: number
+DATABASE_URL: string | null
+analytickit_DB_NAME: string | null
+analytickit_DB_USER: string
+analytickit_DB_PASSWORD: string
+analytickit_POSTGRES_HOST: string
+analytickit_POSTGRES_PORT: number
+CLICKHOUSE_HOST: string
+CLICKHOUSE_DATABASE: string
+CLICKHOUSE_USER: string
+CLICKHOUSE_PASSWORD: string | null
+CLICKHOUSE_CA: string | null
+CLICKHOUSE_SECURE: boolean
+KAFKA_HOSTS: string
+KAFKA_CLIENT_CERT_B64: string | null
+KAFKA_CLIENT_CERT_KEY_B64: string | null
+KAFKA_TRUSTED_CERT_B64: string | null
+KAFKA_SECURITY_PROTOCOL: KafkaSecurityProtocol | null
+KAFKA_SASL_MECHANISM: KafkaSaslMechanism | null
+KAFKA_SASL_USER: string | null
+KAFKA_SASL_PASSWORD: string | null
+KAFKA_CONSUMPTION_TOPIC: string | null
+KAFKA_PRODUCER_MAX_QUEUE_SIZE: number
+KAFKA_MAX_MESSAGE_BATCH_SIZE: number
+KAFKA_FLUSH_FREQUENCY_MS: number
+REDIS_URL: string
+analytickit_REDIS_PASSWORD: string
+analytickit_REDIS_HOST: string
+analytickit_REDIS_PORT: number
+BASE_DIR: string
+PLUGINS_RELOAD_PUBSUB_CHANNEL: string
+LOG_LEVEL: LogLevel
+SENTRY_DSN: string | null
+SENTRY_PLUGIN_SERVER_TRACING_SAMPLE_RATE: number
+STATSD_HOST: string | null
+STATSD_PORT: number
+STATSD_PREFIX: string
+SCHEDULE_LOCK_TTL: number
+REDIS_POOL_MIN_SIZE: number
+REDIS_POOL_MAX_SIZE: number
+DISABLE_MMDB: boolean
+DISTINCT_ID_LRU_SIZE: number
+EVENT_PROPERTY_LRU_SIZE: number
+INTERNAL_MMDB_SERVER_PORT: number
+JOB_QUEUES: string
+JOB_QUEUE_GRAPHILE_URL: string
+JOB_QUEUE_GRAPHILE_SCHEMA: string
+JOB_QUEUE_GRAPHILE_PREPARED_STATEMENTS: boolean
+JOB_QUEUE_S3_AWS_ACCESS_KEY: string
+JOB_QUEUE_S3_AWS_SECRET_ACCESS_KEY: string
+JOB_QUEUE_S3_AWS_REGION: string
+JOB_QUEUE_S3_BUCKET_NAME: string
+JOB_QUEUE_S3_PREFIX: string
+CRASH_IF_NO_PERSISTENT_JOB_QUEUE: boolean
+STALENESS_RESTART_SECONDS: number
+HEALTHCHECK_MAX_STALE_SECONDS: number
+CAPTURE_INTERNAL_METRICS: boolean
+PISCINA_USE_ATOMICS: boolean
+PISCINA_ATOMICS_TIMEOUT: number
+SITE_URL: string | null
+MAX_PENDING_PROMISES_PER_WORKER: number
+KAFKA_PARTITIONS_CONSUMED_CONCURRENTLY: number
+CLICKHOUSE_DISABLE_EXTERNAL_SCHEMAS: boolean
+CLICKHOUSE_DISABLE_EXTERNAL_SCHEMAS_TEAMS: string
+CLICKHOUSE_JSON_EVENTS_KAFKA_TOPIC: string
+CONVERSION_BUFFER_ENABLED: boolean
+CONVERSION_BUFFER_ENABLED_TEAMS: string
+BUFFER_CONVERSION_SECONDS: number
+PERSON_INFO_TO_REDIS_TEAMS: string
+PERSON_INFO_CACHE_TTL: number
+KAFKA_HEALTHCHECK_SECONDS: number
+HISTORICAL_EXPORTS_ENABLED: boolean
+OBJECT_STORAGE_ENABLED: boolean
+OBJECT_STORAGE_ENDPOINT: string
+OBJECT_STORAGE_ACCESS_KEY_ID: string
+OBJECT_STORAGE_SECRET_ACCESS_KEY: string
+OBJECT_STORAGE_SESSION_RECORDING_FOLDER: string
+OBJECT_STORAGE_BUCKET: string
+PLUGIN_SERVER_MODE: 'ingestion' | 'async' | null
+KAFKAJS_LOG_LEVEL: 'NOTHING' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR'
 }
 
 export interface Hub extends PluginsServerConfig {
-    instanceId: UUID
-    // what tasks this server will tackle - e.g. ingestion, scheduled plugins or others.
-    capabilities: PluginServerCapabilities
-    // active connections to Postgres, Redis, ClickHouse, Kafka, StatsD
-    db: DB
-    postgres: Pool
-    redisPool: GenericPool<Redis>
-    clickhouse: ClickHouse
-    kafka: Kafka
-    kafkaProducer: KafkaProducerWrapper
-    objectStorage: ObjectStorage
-    // metrics
-    statsd?: StatsD
-    internalMetrics?: InternalMetrics
-    pluginMetricsJob: Job | undefined
-    // currently enabled plugin status
-    plugins: Map<PluginId, Plugin>
-    pluginConfigs: Map<PluginConfigId, PluginConfig>
-    pluginConfigsPerTeam: Map<TeamId, PluginConfig[]>
-    pluginSchedule: Record<string, PluginConfigId[]> | null
-    pluginSchedulePromises: Record<string, Record<PluginConfigId, Promise<any> | null>>
-    // unique hash for each plugin config; used to verify IDs caught on stack traces for unhandled promise rejections
-    pluginConfigSecrets: Map<PluginConfigId, string>
-    pluginConfigSecretLookup: Map<string, PluginConfigId>
-    // tools
-    teamManager: TeamManager
-    organizationManager: OrganizationManager
-    pluginsApiKeyManager: PluginsApiKeyManager
-    rootAccessManager: RootAccessManager
-    promiseManager: PromiseManager
-    actionManager: ActionManager
-    actionMatcher: ActionMatcher
-    hookCannon: HookCommander
-    eventsProcessor: EventsProcessor
-    personManager: PersonManager
-    jobQueueManager: JobQueueManager
-    siteUrlManager: SiteUrlManager
-    // diagnostics
-    lastActivity: number
-    lastActivityType: string
-    statelessVms: StatelessVmMap
-    conversionBufferEnabledTeams: Set<number>
+instanceId: UUID
+// what tasks this server will tackle - e.g. ingestion, scheduled plugins or others.
+capabilities: PluginServerCapabilities
+// active connections to Postgres, Redis, ClickHouse, Kafka, StatsD
+db: DB
+postgres: Pool
+redisPool: GenericPool< Redis>
+clickhouse: ClickHouse
+kafka: Kafka
+kafkaProducer: KafkaProducerWrapper
+objectStorage: ObjectStorage
+// metrics
+statsd?: StatsD
+internalMetrics?: InternalMetrics
+pluginMetricsJob: Job | undefined
+// currently enabled plugin status
+plugins: Map < PluginId, Plugin>
+pluginConfigs: Map < PluginConfigId, PluginConfig>
+pluginConfigsPerTeam: Map < TeamId, PluginConfig[]>
+pluginSchedule: Record < string, PluginConfigId[]> | null
+pluginSchedulePromises: Record < string, Record<PluginConfigId, Promise<any> | null>>
+// unique hash for each plugin config; used to verify IDs caught on stack traces for unhandled promise rejections
+pluginConfigSecrets: Map < PluginConfigId, string>
+pluginConfigSecretLookup: Map < string, PluginConfigId>
+// tools
+teamManager: TeamManager
+organizationManager: OrganizationManager
+pluginsApiKeyManager: PluginsApiKeyManager
+rootAccessManager: RootAccessManager
+promiseManager: PromiseManager
+actionManager: ActionManager
+actionMatcher: ActionMatcher
+hookCannon: HookCommander
+eventsProcessor: EventsProcessor
+personManager: PersonManager
+jobQueueManager: JobQueueManager
+siteUrlManager: SiteUrlManager
+// diagnostics
+lastActivity: number
+lastActivityType: string
+statelessVms: StatelessVmMap
+conversionBufferEnabledTeams: Set < number>
 }
 
 export interface PluginServerCapabilities {
-    ingestion?: boolean
-    pluginScheduledTasks?: boolean
-    processPluginJobs?: boolean
-    processAsyncHandlers?: boolean
-    http?: boolean
+ingestion?: boolean
+pluginScheduledTasks?: boolean
+processPluginJobs?: boolean
+processAsyncHandlers?: boolean
+http?: boolean
 }
 
 export type EnqueuedJob = EnqueuedPluginJob | EnqueuedBufferJob
 export interface EnqueuedPluginJob {
-    type: string
-    payload: Record<string, any>
-    timestamp: number
-    pluginConfigId: number
-    pluginConfigTeam: number
+type: string
+payload: Record < string, any>
+timestamp: number
+pluginConfigId: number
+pluginConfigTeam: number
 }
 
 export interface EnqueuedBufferJob {
-    eventPayload: PluginEvent
-    timestamp: number
+eventPayload: PluginEvent
+timestamp: number
 }
 
 export enum JobName {
-    PLUGIN_JOB = 'pluginJob',
-    BUFFER_JOB = 'bufferJob',
+PLUGIN_JOB = 'pluginJob',
+BUFFER_JOB = 'bufferJob',
 }
 
 export interface JobQueue {
-    startConsumer: (jobHandlers: TaskList) => Promise<void> | void
+startConsumer:(jobHandlers: TaskList) => Promise<void> | void
     stopConsumer: () => Promise<void> | void
     pauseConsumer: () => Promise<void> | void
     resumeConsumer: () => Promise<void> | void
@@ -510,7 +510,7 @@ export interface Team {
 }
 
 /** Re-export Element from scaffolding, for backwards compat. */
-export { Element } from '@posthog/plugin-scaffold'
+export { Element } from '@analytickit/plugin-scaffold'
 
 /** Usable Event model. */
 export interface Event {
@@ -706,7 +706,7 @@ export interface Hook {
     updated: string
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export enum PropertyOperator {
     Exact = 'exact',
     IsNot = 'is_not',
@@ -722,46 +722,46 @@ export enum PropertyOperator {
     IsDateAfter = 'is_date_after',
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 interface PropertyFilterBase {
     key: string
     value?: string | number | Array<string | number> | null
     label?: string
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export interface PropertyFilterWithOperator extends PropertyFilterBase {
     operator?: PropertyOperator
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export interface EventPropertyFilter extends PropertyFilterWithOperator {
     type: 'event'
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export interface PersonPropertyFilter extends PropertyFilterWithOperator {
     type: 'person'
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export interface ElementPropertyFilter extends PropertyFilterWithOperator {
     type: 'element'
     key: 'tag_name' | 'text' | 'href' | 'selector'
     value: string | string[]
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export interface CohortPropertyFilter extends PropertyFilterBase {
     type: 'cohort'
     key: 'id'
     value: number | string
 }
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export type PropertyFilter = EventPropertyFilter | PersonPropertyFilter | ElementPropertyFilter | CohortPropertyFilter
 
-/** Sync with posthog/frontend/src/types.ts */
+/** Sync with analytickit/frontend/src/types.ts */
 export enum ActionStepUrlMatching {
     Contains = 'contains',
     Regex = 'regex',

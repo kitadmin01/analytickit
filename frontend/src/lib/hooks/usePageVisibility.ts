@@ -1,17 +1,17 @@
-import { useEffect } from 'react'
+import{useEffect}from'react'
 
 /**
- *
- * The Page Visibility API provides events you can watch for to know when a document becomes visible or hidden,
- * as well as features to look at the current visibility state of the page.
- *
- * When the user minimizes the window or switches to another tab, the API sends a visibilitychange event
- * to let listeners know the state of the page has changed.
- *
- * see https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
- *
- * @param callback when page visibility changes this is called with true if the page is visible and false otherwise
- */
+*
+* The Page Visibility API provides events you can watch for to know when a document becomes visible or hidden,
+* as well as features to look at the current visibility state of the page.
+*
+* When the user minimizes the window or switches to another tab, the API sends a visibilitychange event
+* to let listeners know the state of the page has changed.
+*
+* see https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+*
+* @param callback when page visibility changes this is called with true if the page is visible and false otherwise
+*/
 export function usePageVisibility(callback: (pageIsVisible: boolean) => void): void {
     useEffect(() => {
         // adapted from https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API#example

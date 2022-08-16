@@ -4,13 +4,13 @@ from freezegun import freeze_time
 
 from ee.tasks.subscriptions.email_subscriptions import send_email_subscription_report
 from ee.tasks.test.subscriptions.subscriptions_test_factory import create_subscription
-from posthog.models.dashboard import Dashboard
-from posthog.models.exported_asset import ExportedAsset
-from posthog.models.insight import Insight
-from posthog.models.instance_setting import set_instance_setting
-from posthog.models.subscription import Subscription
-from posthog.tasks.test.utils_email_tests import mock_email_messages
-from posthog.test.base import APIBaseTest
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.exported_asset import ExportedAsset
+from analytickit.models.insight import Insight
+from analytickit.models.instance_setting import set_instance_setting
+from analytickit.models.subscription import Subscription
+from analytickit.tasks.test.utils_email_tests import mock_email_messages
+from analytickit.test.base import APIBaseTest
 
 
 @patch("ee.tasks.subscriptions.email_subscriptions.EmailMessage")
@@ -31,32 +31,32 @@ class TestEmailSubscriptionsTasks(APIBaseTest):
         self.asset = ExportedAsset.objects.create(team=self.team, insight_id=self.insight.id, export_format="image/png")
         self.subscription = create_subscription(team=self.team, insight=self.insight, created_by=self.user)
 
-    def test_subscription_delivery(self, MockEmailMessage: MagicMock,) -> None:
+    def test_subscription_delivery(self, MockEmailMessage: MagicMock, ) -> None:
         mocked_email_messages = mock_email_messages(MockEmailMessage)
 
-        send_email_subscription_report("test1@posthog.com", self.subscription, [self.asset])
+        send_email_subscription_report("test1@analytickit.com", self.subscription, [self.asset])
 
         assert len(mocked_email_messages) == 1
         assert mocked_email_messages[0].send.call_count == 1
         assert "is ready!" in mocked_email_messages[0].html_body
         assert f"/exporter/export-my-test-subscription.png?token=ey" in mocked_email_messages[0].html_body
 
-    def test_new_subscription_delivery(self, MockEmailMessage: MagicMock,) -> None:
+    def test_new_subscription_delivery(self, MockEmailMessage: MagicMock, ) -> None:
         mocked_email_messages = mock_email_messages(MockEmailMessage)
 
         send_email_subscription_report(
-            "test1@posthog.com", self.subscription, [self.asset], invite_message="My invite message"
+            "test1@analytickit.com", self.subscription, [self.asset], invite_message="My invite message"
         )
 
         assert len(mocked_email_messages) == 1
         assert mocked_email_messages[0].send.call_count == 1
 
         assert f"has subscribed you" in mocked_email_messages[0].html_body
-        assert "Someone subscribed you to a PostHog Insight" == mocked_email_messages[0].subject
+        assert "Someone subscribed you to a analytickit Insight" == mocked_email_messages[0].subject
         assert "This subscription is sent every day. The next subscription will be sent on Wednesday February 02, 2022"
         assert "My invite message" in mocked_email_messages[0].html_body
 
-    def test_should_have_different_text_for_self(self, MockEmailMessage: MagicMock,) -> None:
+    def test_should_have_different_text_for_self(self, MockEmailMessage: MagicMock, ) -> None:
         mocked_email_messages = mock_email_messages(MockEmailMessage)
 
         send_email_subscription_report(
@@ -66,9 +66,9 @@ class TestEmailSubscriptionsTasks(APIBaseTest):
         assert len(mocked_email_messages) == 1
         assert mocked_email_messages[0].send.call_count == 1
         assert "You have been subscribed" in mocked_email_messages[0].html_body
-        assert "You have been subscribed to a PostHog Insight" == mocked_email_messages[0].subject
+        assert "You have been subscribed to a analytickit Insight" == mocked_email_messages[0].subject
 
-    def test_sends_dashboard_subscription(self, MockEmailMessage: MagicMock,) -> None:
+    def test_sends_dashboard_subscription(self, MockEmailMessage: MagicMock, ) -> None:
         mocked_email_messages = mock_email_messages(MockEmailMessage)
 
         subscription = create_subscription(team=self.team, dashboard=self.dashboard, created_by=self.user)
@@ -80,5 +80,5 @@ class TestEmailSubscriptionsTasks(APIBaseTest):
         assert len(mocked_email_messages) == 1
         assert mocked_email_messages[0].send.call_count == 1
         assert "You have been subscribed" in mocked_email_messages[0].html_body
-        assert "You have been subscribed to a PostHog Dashboard" == mocked_email_messages[0].subject
+        assert "You have been subscribed to a analytickit Dashboard" == mocked_email_messages[0].subject
         assert f"SHOWING 1 OF 10 DASHBOARD INSIGHTS" in mocked_email_messages[0].html_body

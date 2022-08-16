@@ -1,30 +1,30 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { lemonToast } from 'lib/components/lemonToast'
-import { PrevalidatedInvite } from '~/types'
-import type { inviteSignupLogicType } from './inviteSignupLogicType'
+import {lemonToast}from 'lib/components/lemonToast'
+import {PrevalidatedInvite}from '~/types'
+import type {inviteSignupLogicType }from './inviteSignupLogicType'
 
 export enum ErrorCodes {
-    InvalidInvite = 'invalid_invite',
-    InvalidRecipient = 'invalid_recipient',
-    Unknown = 'unknown',
+InvalidInvite = 'invalid_invite',
+InvalidRecipient = 'invalid_recipient',
+Unknown = 'unknown',
 }
 
 export interface ErrorInterface {
-    code: ErrorCodes
-    detail?: string
+code: ErrorCodes
+detail?: string
 }
 
 export interface AcceptInvitePayloadInterface {
-    first_name?: string
-    password: string
-    email_opt_in: boolean
+first_name?: string
+password: string
+email_opt_in: boolean
 }
 
 export const inviteSignupLogic = kea<inviteSignupLogicType>({
-    path: ['scenes', 'authentication', 'inviteSignupLogic'],
-    actions: {
-        setError: (payload: ErrorInterface) => ({ payload }),
+path: ['scenes', 'authentication', 'inviteSignupLogic'],
+actions: {
+setError:(payload: ErrorInterface) => ({ payload }),
     },
     reducers: {
         error: [
@@ -75,7 +75,7 @@ export const inviteSignupLogic = kea<inviteSignupLogicType>({
     }),
     listeners: ({ values }) => ({
         acceptInviteSuccess: async (_, breakpoint) => {
-            lemonToast.success(`You have joined ${values.invite?.organization_name}! Taking you to PostHog now…`)
+            lemonToast.success(`You have joined ${values.invite?.organization_name}! Taking you to analytickit now…`)
             await breakpoint(2000) // timeout for the user to read the toast
             window.location.href = '/' // hard refresh because the current_organization changed
         },

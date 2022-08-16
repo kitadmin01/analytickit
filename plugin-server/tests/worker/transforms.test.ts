@@ -1,8 +1,8 @@
-import { Hub } from '../../src/types'
-import { createHub } from '../../src/utils/db/hub'
-import { code } from '../../src/utils/utils'
-import { transformCode } from '../../src/worker/vm/transforms'
-import { resetTestDatabase } from '../helpers/sql'
+import{Hub}from'../../src/types'
+import {createHub}from '../../src/utils/db/hub'
+import {code}from '../../src/utils/utils'
+import {transformCode}from '../../src/worker/vm/transforms'
+import {resetTestDatabase}from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 
@@ -223,7 +223,7 @@ describe('transforms', () => {
 
             expect(() => {
                 transformCode(rawCode, hub, { 'node-fetch': { default: () => true } })
-            }).toThrow("/index.ts: Cannot import 'kea'! This package is not provided by PostHog in plugins.")
+            }).toThrow("/index.ts: Cannot import 'kea'! This package is not provided by analytickit in plugins.")
         })
 
         it('replaces requires', () => {
@@ -257,7 +257,7 @@ describe('transforms', () => {
 
             expect(() => {
                 transformCode(rawCode, hub, { 'node-fetch': { default: () => true } })
-            }).toThrow("/index.ts: Cannot import 'kea'! This package is not provided by PostHog in plugins.")
+            }).toThrow("/index.ts: Cannot import 'kea'! This package is not provided by analytickit in plugins.")
         })
     })
 })

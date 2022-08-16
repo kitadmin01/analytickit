@@ -2,7 +2,7 @@ import React from 'react'
 import { useValues, useActions } from 'kea'
 import { compareFilterLogic } from './compareFilterLogic'
 import { insightLogic } from 'scenes/insights/insightLogic'
-import { LemonCheckbox } from '@posthog/lemon-ui'
+import { LemonCheckbox } from '@analytickit/lemon-ui'
 
 export function CompareFilter(): JSX.Element | null {
     const { insightProps } = useValues(insightLogic)

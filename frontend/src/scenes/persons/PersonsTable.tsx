@@ -74,7 +74,7 @@ export function PersonsTable({
             rowKey="id"
             pagination={{
                 controlled: true,
-                pageSize: 100, // From `posthog/api/person.py`
+                pageSize: 100, // From `analytickit/api/person.py`
                 onForward: hasNext
                     ? () => {
                           loadNext?.()

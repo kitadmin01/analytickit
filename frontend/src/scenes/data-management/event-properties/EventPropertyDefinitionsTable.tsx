@@ -16,7 +16,7 @@ import { DataManagementPageTabs, DataManagementTab } from 'scenes/data-managemen
 import { UsageDisabledWarning } from 'scenes/events/UsageDisabledWarning'
 import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
 import { PageHeader } from 'lib/components/PageHeader'
-import { LemonInput } from '@posthog/lemon-ui'
+import { LemonInput } from '@analytickit/lemon-ui'
 import { AlertMessage } from 'lib/components/AlertMessage'
 
 export const scene: SceneExport = {
@@ -84,7 +84,7 @@ export function EventPropertyDefinitionsTable(): JSX.Element {
         <div data-attr="manage-events-table">
             <PageHeader
                 title="Data Management"
-                caption="Use data management to organize events that come into PostHog. Reduce noise, clarify usage, and help collaborators get the most value from your data."
+                caption="Use data management to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
                 tabbedPage
             />
             <DataManagementPageTabs tab={DataManagementTab.EventPropertyDefinitions} />

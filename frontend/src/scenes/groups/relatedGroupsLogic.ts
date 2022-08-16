@@ -1,19 +1,22 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { toParams } from 'lib/utils'
-import { teamLogic } from 'scenes/teamLogic'
-import { ActorType } from '~/types'
-import type { relatedGroupsLogicType } from './relatedGroupsLogicType'
+import {toParams}from 'lib/utils'
+import {teamLogic}from 'scenes/teamLogic'
+import {ActorType}from '~/types'
+import type {relatedGroupsLogicType} from './relatedGroupsLogicType'
 
 export const relatedGroupsLogic = kea<relatedGroupsLogicType>({
-    path: ['scenes', 'groups', 'relatedGroupsLogic'],
-    connect: { values: [teamLogic, ['currentTeamId']] },
+path: ['scenes', 'groups', 'relatedGroupsLogic'],
+connect: {values: [teamLogic, ['currentTeamId']]
+},
 
-    props: {} as {
-        groupTypeIndex: number | null
-        id: string
-    },
-    key: (props) => `${props.groupTypeIndex ?? 'person'}-${props.id}`,
+props: {
+
+}as {
+groupTypeIndex: number | null
+id: string
+},
+key:(props) => `${props.groupTypeIndex ?? 'person'}-${props.id}`,
 
     actions: () => ({
         loadRelatedActors: true,

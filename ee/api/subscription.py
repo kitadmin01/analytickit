@@ -9,18 +9,18 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
 from ee.tasks import subscriptions
-from posthog.api.forbid_destroy_model import ForbidDestroyModel
-from posthog.api.routing import StructuredViewSetMixin
-from posthog.api.shared import UserBasicSerializer
-from posthog.auth import PersonalAPIKeyAuthentication
-from posthog.constants import AvailableFeature
-from posthog.models.subscription import Subscription, unsubscribe_using_token
-from posthog.permissions import (
+from analytickit.api.forbid_destroy_model import ForbidDestroyModel
+from analytickit.api.routing import StructuredViewSetMixin
+from analytickit.api.shared import UserBasicSerializer
+from analytickit.auth import PersonalAPIKeyAuthentication
+from analytickit.constants import AvailableFeature
+from analytickit.models.subscription import Subscription, unsubscribe_using_token
+from analytickit.permissions import (
     PremiumFeaturePermission,
     ProjectMembershipNecessaryPermissions,
     TeamMemberAccessPermission,
 )
-from posthog.utils import str_to_bool
+from analytickit.utils import str_to_bool
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

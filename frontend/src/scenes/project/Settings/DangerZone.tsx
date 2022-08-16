@@ -3,7 +3,7 @@ import { useActions, useValues } from 'kea'
 import { Input, Modal } from 'antd'
 import { teamLogic } from 'scenes/teamLogic'
 import { RestrictedComponentProps } from '../../../lib/components/RestrictedArea'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import { IconDelete } from 'lib/components/icons'
 
 export function DeleteProjectModal({

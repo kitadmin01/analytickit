@@ -1,26 +1,27 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
-import { DateTime } from 'luxon'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {DateTime} from 'luxon'
 
-import { JobName, Person } from '../../../../src/types'
-import { UUIDT } from '../../../../src/utils/utils'
+import {JobName, Person}from '../../../../src/types'
+import {UUIDT}from '../../../../src/utils/utils'
 import {
-    emitToBufferStep,
-    shouldSendEventToBuffer,
-} from '../../../../src/worker/ingestion/event-pipeline/1-emitToBufferStep'
-import { LazyPersonContainer } from '../../../../src/worker/ingestion/lazy-person-container'
+emitToBufferStep,
+shouldSendEventToBuffer,
+}from '../../../../src/worker/ingestion/event-pipeline/1-emitToBufferStep'
+import {LazyPersonContainer}from '../../../../src/worker/ingestion/lazy-person-container'
 
 const now = DateTime.fromISO('2020-01-01T12:00:05.200Z')
 
 const pluginEvent: PluginEvent = {
-    event: '$pageview',
-    properties: { foo: 'bar' },
-    timestamp: '2020-02-23T02:15:00Z',
-    now: '2020-02-23T02:15:00Z',
-    team_id: 2,
-    distinct_id: 'my_id',
-    ip: null,
-    site_url: 'https://example.com',
-    uuid: new UUIDT().toString(),
+event: '$pageview',
+properties: { foo: 'bar'
+},
+timestamp: '2020-02-23T02:15:00Z',
+now: '2020-02-23T02:15:00Z',
+team_id: 2,
+distinct_id: 'my_id',
+ip: null,
+site_url: 'https://example.com',
+uuid: new UUIDT().toString(),
 }
 
 const existingPerson: Person = {
@@ -167,12 +168,12 @@ describe('shouldSendEventToBuffer()', () => {
         const eventIos = {
             ...pluginEvent,
             event: 'some_event',
-            properties: { $lib: 'posthog-ios' },
+            properties: { $lib: 'analytickit-ios' },
         }
         const eventAndroid = {
             ...pluginEvent,
             event: 'some_event',
-            properties: { $lib: 'posthog-android' },
+            properties: { $lib: 'analytickit-android' },
         }
 
         expect(shouldSendEventToBuffer(runner.hub, eventIos, undefined, 2)).toEqual(false)

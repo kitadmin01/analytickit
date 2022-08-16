@@ -7,7 +7,7 @@ function AndroidInstallSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Java}>
             {`dependencies {
-    implementation 'com.posthog.android:posthog:1.+'
+    implementation 'com.analytickit.android:analytickit:1.+'
 }`}
         </CodeSnippet>
     )
@@ -19,29 +19,29 @@ function AndroidSetupSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Java}>
             {`public class SampleApp extends Application {
-    private static final String POSTHOG_API_KEY = "${currentTeam?.api_token}";
-    private static final String POSTHOG_HOST = "${window.location.origin}";
+    private static final String analytickit_API_KEY = "${currentTeam?.api_token}";
+    private static final String analytickit_HOST = "${window.location.origin}";
 
     @Override
     public void onCreate() {
-        // Create a PostHog client with the given context, API key and host
-        PostHog posthog = new PostHog.Builder(this, POSTHOG_API_KEY, POSTHOG_HOST)
+        // Create a analytickit client with the given context, API key and host
+        analytickit analytickit = new analytickit.Builder(this, analytickit_API_KEY, analytickit_HOST)
             .captureApplicationLifecycleEvents() // Record certain application events automatically!
             .recordScreenViews() // Record screen views automatically!
             .build();
 
         // Set the initialized instance as a globally accessible instance
-        PostHog.setSingletonInstance(posthog);
+        analytickit.setSingletonInstance(analytickit);
 
-        // Now any time you call PostHog.with, the custom instance will be returned
-        PostHog posthog = PostHog.with(this);
+        // Now any time you call analytickit.with, the custom instance will be returned
+        analytickit analytickit = analytickit.with(this);
     }`}
         </CodeSnippet>
     )
 }
 
 function AndroidCaptureSnippet(): JSX.Element {
-    return <CodeSnippet language={Language.Java}>PostHog.with(this).capture("test-event");</CodeSnippet>
+    return <CodeSnippet language={Language.Java}>analytickit.with(this).capture("test-event");</CodeSnippet>
 }
 
 export function AndroidInstructions(): JSX.Element {

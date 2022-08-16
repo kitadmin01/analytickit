@@ -6,7 +6,7 @@ import { useActions, useValues } from 'kea'
 import { HeatmapStats } from '~/toolbar/stats/HeatmapStats'
 import { ActionsTab } from '~/toolbar/actions/ActionsTab'
 import { ButtonWindow } from '~/toolbar/button/ButtonWindow'
-import { posthog } from '~/toolbar/posthog'
+import { analytickit } from '~/toolbar/analytickit'
 import { FeatureFlags } from '~/toolbar/flags/FeatureFlags'
 import { featureFlagsLogic } from '~/toolbar/flags/featureFlagsLogic'
 
@@ -40,7 +40,7 @@ export function DraggableButton(): JSX.Element {
                     saveDragPosition(x, y)
                 }}
                 onStop={(_, { x, y }) => {
-                    posthog.capture('toolbar dragged', { x, y })
+                    analytickit.capture('toolbar dragged', { x, y })
                     saveDragPosition(x, y)
                 }}
             >

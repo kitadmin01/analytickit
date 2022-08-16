@@ -4,14 +4,14 @@ from rest_framework.exceptions import ValidationError
 
 from ee.clickhouse.queries.funnels.funnel_correlation import EventContingencyTable, EventStats, FunnelCorrelation
 from ee.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
-from posthog.constants import INSIGHT_FUNNELS
-from posthog.models.action import Action
-from posthog.models.action_step import ActionStep
-from posthog.models.element import Element
-from posthog.models.filters import Filter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.test.base import (
+from analytickit.constants import INSIGHT_FUNNELS
+from analytickit.models.action import Action
+from analytickit.models.action_step import ActionStep
+from analytickit.models.element import Element
+from analytickit.models.filters import Filter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.test.base import (
     APIBaseTest,
     ClickhouseTestMixin,
     _create_event,
@@ -20,7 +20,7 @@ from posthog.test.base import (
     snapshot_clickhouse_queries,
     test_with_materialized_columns,
 )
-from posthog.test.test_journeys import journeys_for
+from analytickit.test.test_journeys import journeys_for
 
 
 def _create_action(**kwargs):
@@ -33,7 +33,6 @@ def _create_action(**kwargs):
 
 
 class TestClickhouseFunnelCorrelation(ClickhouseTestMixin, APIBaseTest):
-
     maxDiff = None
 
     def _get_actors_for_event(self, filter: Filter, event_name: str, properties=None, success=True):
@@ -174,23 +173,23 @@ class TestClickhouseFunnelCorrelation(ClickhouseTestMixin, APIBaseTest):
         for i in range(3):
             person_id = f"user_{i}"
             events = [
-                {"event": "user signed up", "timestamp": "2020-01-02T14:00:00", "properties": {"key": "val"},},
+                {"event": "user signed up", "timestamp": "2020-01-02T14:00:00", "properties": {"key": "val"}, },
                 # same event, but missing property, so not part of action.
-                {"event": "user signed up", "timestamp": "2020-01-02T14:10:00",},
+                {"event": "user signed up", "timestamp": "2020-01-02T14:10:00", },
             ]
             if i % 2 == 0:
                 events.append(
-                    {"event": "positively_related", "timestamp": "2020-01-03T14:00:00",}
+                    {"event": "positively_related", "timestamp": "2020-01-03T14:00:00", }
                 )
             events.append(
-                {"event": "paid", "timestamp": "2020-01-04T14:00:00", "properties": {"key": "val"},}
+                {"event": "paid", "timestamp": "2020-01-04T14:00:00", "properties": {"key": "val"}, }
             )
 
             journey[person_id] = events
 
         # one failure needed
         journey["failure"] = [
-            {"event": "user signed up", "timestamp": "2020-01-02T14:00:00", "properties": {"key": "val"},},
+            {"event": "user signed up", "timestamp": "2020-01-02T14:00:00", "properties": {"key": "val"}, },
         ]
 
         journeys_for(events_by_person=journey, team=self.team)  # type: ignore
@@ -208,7 +207,7 @@ class TestClickhouseFunnelCorrelation(ClickhouseTestMixin, APIBaseTest):
         )
         filters = {
             "events": [],
-            "actions": [{"id": sign_up_action.id, "order": 0}, {"id": paid_action.id, "order": 1},],
+            "actions": [{"id": sign_up_action.id, "order": 0}, {"id": paid_action.id, "order": 1}, ],
             "insight": INSIGHT_FUNNELS,
             "date_from": "2020-01-01",
             "date_to": "2020-01-14",
@@ -361,7 +360,7 @@ class TestClickhouseFunnelCorrelation(ClickhouseTestMixin, APIBaseTest):
 
         # Now exclude all groups in positive
         filter = filter.with_data(
-            {"properties": [{"key": "industry", "value": "finance", "type": "group", "group_type_index": 0}],}
+            {"properties": [{"key": "industry", "value": "finance", "type": "group", "group_type_index": 0}], }
         )
         result = FunnelCorrelation(filter, self.team)._run()[0]
 

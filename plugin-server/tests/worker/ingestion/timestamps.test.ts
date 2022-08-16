@@ -1,7 +1,7 @@
-import { PluginEvent } from '@posthog/plugin-scaffold'
-import { DateTime } from 'luxon'
+import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {DateTime} from 'luxon'
 
-import { parseDate, parseEventTimestamp } from '../../../src/worker/ingestion/timestamps'
+import {parseDate, parseEventTimestamp}from '../../../src/worker/ingestion/timestamps'
 
 describe('parseDate()', () => {
     const timestamps = [

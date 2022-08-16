@@ -5,7 +5,7 @@ import { SystemStatusRow, SystemStatusSubrows } from '~/types'
 import { IconOpenInNew } from 'lib/components/icons'
 import { Link } from 'lib/components/Link'
 import { RenderMetricValue } from './RenderMetricValue'
-import { LemonTable } from '@posthog/lemon-ui'
+import { LemonTable } from '@analytickit/lemon-ui'
 
 const METRIC_KEY_TO_INTERNAL_LINK = {
     async_migrations_ok: '/instance/async_migrations',

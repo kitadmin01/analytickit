@@ -1,6 +1,6 @@
 ---
 name: Performance issue report
-about: Long response times, high resource usage? Ensuring PostHog's scalable is our top priority
+about: Long response times, high resource usage? Ensuring analytickit's scalable is our top priority
 labels: performance
 ---
 
@@ -16,11 +16,9 @@ labels: performance
 
 ## Environment
 
-- [ ] PostHog Cloud
-- [ ] self-hosted PostHog, version/commit: _please provide_
+- [ ] analytickit Cloud
+- [ ] self-hosted analytickit, version/commit: _please provide_
 
 ## Additional context
 
-
-
-#### *Thank you* for your performance issue report – we want PostHog to go supersonic!
+#### *Thank you* for your performance issue report – we want analytickit to go supersonic!

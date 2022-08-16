@@ -2,8 +2,8 @@
 
 set -e
 
-echo "Upgrading PostHog. This will cause a few minutes of downtime."
-read -r -p "Do you want to upgarde PostHog? [y/N] " response
+echo "Upgrading analytickit. This will cause a few minutes of downtime."
+read -r -p "Do you want to upgarde analytickit? [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
 then
     echo "OK!"
@@ -21,7 +21,7 @@ echo ""
 echo "PRIOR TO THIS VERISON, the Postgres and Clickhouse containers did NOT have persistent named volumes."
 echo "If you choose to upgrade, you 💣 may lose data 💣 contained in anonymous volumes."
 echo ""
-echo "See the discussion here for more information: https://github.com/PostHog/posthog/pull/11256"
+echo "See the discussion here for more information: https://github.com/analytickit/analytickit/pull/11256"
 echo ""
 echo "WE STRONGLY RECOMMEND YOU:"
 echo ""
@@ -29,8 +29,8 @@ echo "✅ back up your entire environment/installation (vm, host, etc.), includi
 echo "✅ specifically back up the contents of :"
 echo "  ☑ /var/lib/postgresql/data in the postgres (root_db_1) container"
 echo "  ☑ /var/lib/clickhouse in the root_clickhouse_1 (root_clickhouse_1) container"
-echo "and be ready to check/recopy the data before you boot Posthog next."
-read -r -p "Do you want to upgarde PostHog? [y/N] " response
+echo "and be ready to check/recopy the data before you boot analytickit next."
+read -r -p "Do you want to upgarde analytickit? [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
 then
     echo "OK!"
@@ -38,15 +38,15 @@ else
     exit
 fi
 
-[[ -f ".env" ]] && export $(cat .env | xargs) || ( echo "No .env file found. Please create it with POSTHOG_SECRET and DOMAIN set." && exit 1)
-export POSTHOG_APP_TAG="${POSTHOG_APP_TAG:-latest-release}"
+[[ -f ".env" ]] && export $(cat .env | xargs) || ( echo "No .env file found. Please create it with analytickit_SECRET and DOMAIN set." && exit 1)
+export analytickit_APP_TAG="${analytickit_APP_TAG:-latest-release}"
 
-cd posthog
+cd analytickit
 git pull
 cd ../
 
 rm -f docker-compose.yml
-cp posthog/docker-compose.hobby.yml docker-compose.yml.tmpl
+cp analytickit/docker-compose.hobby.yml docker-compose.yml.tmpl
 envsubst < docker-compose.yml.tmpl > docker-compose.yml
 rm docker-compose.yml.tmpl
 
@@ -70,7 +70,7 @@ echo "Before we restart the stack, you should restore data you have backed up fr
 echo ""
 echo ""
 
-read -r -p "Do you want to restart the Posthog stack now ? (docker-compose up) [y/N] " response
+read -r -p "Do you want to restart the analytickit stack now ? (docker-compose up) [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
 then
     echo "OK, Restarting the stack!"
@@ -80,4 +80,4 @@ else
     exit
 fi
 
-echo "PostHog upgraded successfully!"
+echo "analytickit upgraded successfully!"

@@ -1,24 +1,24 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
 import Fuse from 'fuse.js'
-import type { featureFlagsLogicType } from './featureFlagsLogicType'
-import { Breadcrumb, FeatureFlagType } from '~/types'
-import { teamLogic } from '../teamLogic'
-import { urls } from 'scenes/urls'
-import { router } from 'kea-router'
+import type {featureFlagsLogicType}from './featureFlagsLogicType'
+import {Breadcrumb, FeatureFlagType}from '~/types'
+import {teamLogic} from '../teamLogic'
+import { urls}from 'scenes/urls'
+import {router}from 'kea-router'
 
 export enum FeatureFlagsTabs {
-    OVERVIEW = 'overview',
-    HISTORY = 'history',
+OVERVIEW = 'overview',
+HISTORY = 'history',
 }
 
 export const featureFlagsLogic = kea<featureFlagsLogicType>({
-    path: ['scenes', 'feature-flags', 'featureFlagsLogic'],
-    connect: {
-        values: [teamLogic, ['currentTeamId']],
-    },
-    actions: {
-        updateFlag: (flag: FeatureFlagType) => ({ flag }),
+path: ['scenes', 'feature-flags', 'featureFlagsLogic'],
+connect: {
+values: [teamLogic, ['currentTeamId']],
+},
+actions: {
+updateFlag:(flag: FeatureFlagType) => ({ flag }),
         deleteFlag: (id: number) => ({ id }),
         setSearchTerm: (searchTerm: string) => ({ searchTerm }),
         setActiveTab: (tabKey: FeatureFlagsTabs) => ({ tabKey }),

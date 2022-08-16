@@ -1,16 +1,18 @@
-import { kea } from 'kea'
-import type { featureFlagLogicType } from './featureFlagLogicType'
-import posthog from 'posthog-js'
-import { getAppContext } from 'lib/utils/getAppContext'
-import { AppContext } from '~/types'
+import{kea}from'kea'
+import type {featureFlagLogicType}from './featureFlagLogicType'
+import analytickit from 'analytickit-js'
+import {getAppContext}from 'lib/utils/getAppContext'
+import {AppContext}from '~/types'
 
 export type FeatureFlagsSet = {
-    [flag: string]: boolean | string
+[flag: string]: boolean | string
 }
-const eventsNotified: Record<string, boolean> = {}
+const eventsNotified: Record <string, boolean> = {
+
+}
 function notifyFlagIfNeeded(flag: string, flagState: string | boolean): void {
     if (!eventsNotified[flag]) {
-        posthog.capture('$feature_flag_called', {
+        analytickit.capture('$feature_flag_called', {
             $feature_flag: flag,
             $feature_flag_response: flagState,
         })
@@ -45,11 +47,11 @@ function spyOnFeatureFlags(featureFlags: FeatureFlagsSet): FeatureFlagsSet {
                     return flagState
                 },
             }
-        )
-    } else {
-        // Fallback for IE11. Won't track "false" results. ¯\_(ツ)_/¯
-        const flags: FeatureFlagsSet = {}
-        for (const flag of Object.keys(availableFlags)) {
+)
+}else {
+// Fallback for IE11. Won't track "false" results. ¯\_(ツ)_/¯
+const flags: FeatureFlagsSet = {}
+for(const flag of Object.keys(availableFlags)) {
             Object.defineProperty(flags, flag, {
                 get: function () {
                     if (flag === 'toJSON') {
@@ -88,7 +90,7 @@ export const featureFlagLogic = kea<featureFlagLogicType>({
 
     events: ({ actions }) => ({
         afterMount: () => {
-            posthog.onFeatureFlags(actions.setFeatureFlags)
+            analytickit.onFeatureFlags(actions.setFeatureFlags)
         },
     }),
 })

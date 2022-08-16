@@ -1,14 +1,14 @@
-import posthoganalytics
+import analytickitanalytics
 import requests
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.utils.timezone import now
 
 from ee.models.license import License
-from posthog.client import sync_execute
-from posthog.models import User
-from posthog.settings import SITE_URL
-from posthog.tasks.status_report import get_instance_licenses
+from analytickit.client import sync_execute
+from analytickit.models import User
+from analytickit.settings import SITE_URL
+from analytickit.tasks.status_report import get_instance_licenses
 
 
 def send_license_usage():
@@ -25,8 +25,8 @@ def send_license_usage():
             {"date_from": date_from, "date_to": date_to},
         )[0][0]
         response = requests.post(
-            "https://license.posthog.com/licenses/usage",
-            data={"date": date_from.strftime("%Y-%m-%d"), "key": license.key, "events_count": events_count,},
+            "https://license.analytickit.com/licenses/usage",
+            data={"date": date_from.strftime("%Y-%m-%d"), "key": license.key, "events_count": events_count, },
         )
 
         if response.status_code == 404 and response.json().get("code") == "not_found":
@@ -38,7 +38,7 @@ def send_license_usage():
             license.save()
 
         if not response.ok:
-            posthoganalytics.capture(
+            analytickitanalytics.capture(
                 user.distinct_id,  # type: ignore
                 "send license usage data error",
                 {
@@ -48,11 +48,11 @@ def send_license_usage():
                     "events_count": events_count,
                     "organization_name": user.current_organization.name,  # type: ignore
                 },
-                groups={"organization": str(user.current_organization.id), "instance": SITE_URL,},  # type: ignore
+                groups={"organization": str(user.current_organization.id), "instance": SITE_URL, },  # type: ignore
             )
             return
         else:
-            posthoganalytics.capture(
+            analytickitanalytics.capture(
                 user.distinct_id,  # type: ignore
                 "send license usage data",
                 {
@@ -61,10 +61,10 @@ def send_license_usage():
                     "license_keys": get_instance_licenses(),
                     "organization_name": user.current_organization.name,  # type: ignore
                 },
-                groups={"organization": str(user.current_organization.id), "instance": SITE_URL,},  # type: ignore
+                groups={"organization": str(user.current_organization.id), "instance": SITE_URL, },  # type: ignore
             )
     except Exception as err:
-        posthoganalytics.capture(
+        analytickitanalytics.capture(
             user.distinct_id,  # type: ignore
             "send license usage data error",
             {
@@ -72,5 +72,5 @@ def send_license_usage():
                 "date": date_from.strftime("%Y-%m-%d"),
                 "organization_name": user.current_organization.name,  # type: ignore
             },
-            groups={"organization": str(user.current_organization.id), "instance": SITE_URL,},  # type: ignore
+            groups={"organization": str(user.current_organization.id), "instance": SITE_URL, },  # type: ignore
         )

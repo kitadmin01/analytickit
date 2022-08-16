@@ -1,18 +1,18 @@
-import { actions, kea, key, listeners, path, props, reducers, selectors } from 'kea'
-import { PropertyDefinition } from '~/types'
+import{actions, kea, key, listeners, path, props, reducers, selectors}from 'kea'
+import {PropertyDefinition}from '~/types'
 import api from 'lib/api'
-import { actionToUrl, combineUrl, router, urlToAction } from 'kea-router'
+import {actionToUrl, combineUrl, router, urlToAction}from 'kea-router'
 import {
-    normalizePropertyDefinitionEndpointUrl,
-    PropertyDefinitionsPaginatedResponse,
-} from 'scenes/data-management/events/eventDefinitionsTableLogic'
-import type { eventPropertyDefinitionsTableLogicType } from './eventPropertyDefinitionsTableLogicType'
-import { objectsEqual } from 'lib/utils'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { loaders } from 'kea-loaders'
+normalizePropertyDefinitionEndpointUrl,
+PropertyDefinitionsPaginatedResponse,
+}from 'scenes/data-management/events/eventDefinitionsTableLogic'
+import type {eventPropertyDefinitionsTableLogicType}from './eventPropertyDefinitionsTableLogicType'
+import {objectsEqual}from 'lib/utils'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import {loaders }from 'kea-loaders'
 
 export interface Filters {
-    property: string
+property: string
 }
 
 function cleanFilters(filter: Partial<Filters>): Filters {
@@ -131,33 +131,33 @@ export const eventPropertyDefinitionsTableLogic = kea<eventPropertyDefinitionsTa
                         search: values.filters.property,
                     },
                     true
-                )
-            )
-        },
-        loadEventPropertyDefinitionsSuccess: () => {
+)
+)
+},
+loadEventPropertyDefinitionsSuccess: () => {
             if (cache.propertiesStartTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
                     ?.actions.reportDataManagementEventPropertyDefinitionsPageLoadSucceeded(
                         performance.now() - cache.propertiesStartTime,
                         values.eventPropertyDefinitions.results.length
-                    )
-                cache.propertiesStartTime = undefined
-            }
-        },
-        loadEventPropertyDefinitionsFailure: ({ error }) => {
+)
+cache.propertiesStartTime = undefined
+}
+},
+loadEventPropertyDefinitionsFailure: ({ error }) => {
             if (cache.propertiesStartTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
                     ?.actions.reportDataManagementEventPropertyDefinitionsPageLoadFailed(
                         performance.now() - cache.propertiesStartTime,
                         error ?? 'There was an unknown error fetching property definitions.'
-                    )
-                cache.propertiesStartTime = undefined
-            }
-        },
-    })),
-    urlToAction(({ actions, values }) => ({
+)
+cache.propertiesStartTime = undefined
+}
+},
+})),
+urlToAction(({ actions, values }) => ({
         '/data-management/event-properties': (_, searchParams) => {
             if (!objectsEqual(cleanFilters(values.filters), cleanFilters(router.values.searchParams))) {
                 actions.setFilters(searchParams as Filters)

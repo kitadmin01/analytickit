@@ -1,6 +1,6 @@
 from typing import List
 
-from posthog.tasks.org_usage_report import OrgReport, send_all_reports
+from analytickit.tasks.org_usage_report import OrgReport, send_all_reports
 
 
 def send_all_org_usage_reports(*, dry_run: bool = False) -> List[OrgReport]:

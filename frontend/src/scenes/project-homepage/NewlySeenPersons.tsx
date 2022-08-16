@@ -47,7 +47,7 @@ export function NewlySeenPersons(): JSX.Element {
                 title: 'There are no newly seen persons',
                 description: 'Learn more about identifying persons and ingesting data in the documentation.',
                 buttonText: 'Documentation',
-                buttonTo: 'https://posthog.com/docs/integrate/identifying-users',
+                buttonTo: 'https://analytickit.com/docs/integrate/identifying-users',
             }}
             items={persons.slice(0, 5)}
             renderRow={(person: PersonType, index) => <PersonRow key={index} person={person} />}

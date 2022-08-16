@@ -72,12 +72,12 @@ export function PlayerConsole(): JSX.Element | null {
                             <h3 style={{ textAlign: 'center' }}>There are no console logs for this recording</h3>
 
                             <p className="text-muted" style={{ textAlign: 'center' }}>
-                                For logs to appear, the feature must first be enabled in <code>posthog-js</code>.
+                                For logs to appear, the feature must first be enabled in <code>analytickit-js</code>.
                             </p>
                             <LemonButton
                                 type="secondary"
                                 className="my-2"
-                                href="https://posthog.com/docs/user-guides/recordings?utm_campaign=session-recording&utm_medium=in-product"
+                                href="https://analytickit.com/docs/user-guides/recordings?utm_campaign=session-recording&utm_medium=in-product"
                             >
                                 Learn more
                             </LemonButton>

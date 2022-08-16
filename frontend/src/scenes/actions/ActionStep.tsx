@@ -10,7 +10,7 @@ import { ActionStepType } from '~/types'
 
 const { Text } = Typography
 
-const learnMoreLink = 'https://posthog.com/docs/user-guides/actions?utm_medium=in-product&utm_campaign=action-page'
+const learnMoreLink = 'https://analytickit.com/docs/user-guides/actions?utm_medium=in-product&utm_campaign=action-page'
 
 interface Props {
     step: ActionStepType
@@ -71,7 +71,7 @@ export function ActionStep({ step, actionId, isOnlyStep, index, identifier, onDe
 
                                 <small>
                                     <a
-                                        href="https://posthog.com/docs/libraries"
+                                        href="https://analytickit.com/docs/libraries"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >

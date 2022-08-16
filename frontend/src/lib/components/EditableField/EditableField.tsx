@@ -105,7 +105,7 @@ export function EditableField({
                 placement="right"
                 title={
                     paywall
-                        ? "This field is part of PostHog's collaboration feature set and requires a premium plan."
+                        ? "This field is part of analytickit's collaboration feature set and requires a premium plan."
                         : undefined
                 }
             >

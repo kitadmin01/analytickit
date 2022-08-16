@@ -1,5 +1,5 @@
-import { EmptyPropertyFilter, PropertyFilter, PropertyOperator } from '../../../types'
-import { isValidPropertyFilter } from 'lib/components/PropertyFilters/utils'
+import{EmptyPropertyFilter, PropertyFilter, PropertyOperator}from '../../../types'
+import { isValidPropertyFilter}from 'lib/components/PropertyFilters/utils'
 
 describe('isValidPropertyFilter()', () => {
     it('returns values correctly', () => {

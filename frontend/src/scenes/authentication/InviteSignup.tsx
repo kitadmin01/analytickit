@@ -53,15 +53,15 @@ function HelperLinks(): JSX.Element {
             <span className="mx-2">|</span>
             <a
                 className="plain-link"
-                href={`https://posthog.com?${UTM_TAGS}&utm_message=invalid-invite`}
+                href={`https://analytickit.com?${UTM_TAGS}&utm_message=invalid-invite`}
                 rel="noopener"
             >
-                PostHog Website
+                analytickit Website
             </a>
             <span className="mx-2">|</span>
             <a
                 className="plain-link"
-                href={`https://posthog.com/slack?${UTM_TAGS}&utm_message=invalid-invite`}
+                href={`https://analytickit.com/slack?${UTM_TAGS}&utm_message=invalid-invite`}
                 rel="noopener"
             >
                 Contact Us
@@ -70,11 +70,11 @@ function HelperLinks(): JSX.Element {
     )
 }
 
-function BackToPostHog(): JSX.Element {
+function BackToanalytickit(): JSX.Element {
     const { push } = useActions(router)
     return (
         <Button icon={<ArrowLeftOutlined />} block onClick={() => push(urls.default())}>
-            Go back to PostHog
+            Go back to analytickit
         </Button>
     )
 }
@@ -92,7 +92,7 @@ function ErrorView(): JSX.Element | null {
                     <b>ask them for a new invite</b>.
                 </>
             ),
-            actions: user ? <BackToPostHog /> : <HelperLinks />,
+            actions: user ? <BackToanalytickit /> : <HelperLinks />,
         },
         [ErrorCodes.InvalidRecipient]: {
             title: 'Oops! You cannot use this invite link',
@@ -119,12 +119,12 @@ function ErrorView(): JSX.Element | null {
                     </div>
                 </>
             ),
-            actions: user ? <BackToPostHog /> : <HelperLinks />,
+            actions: user ? <BackToanalytickit /> : <HelperLinks />,
         },
         [ErrorCodes.Unknown]: {
             title: 'Oops! We could not validate this invite link',
             detail: `${error?.detail} There was an issue with your invite link, please try again in a few seconds. If the problem persists, contact us.`,
-            actions: user ? <BackToPostHog /> : <HelperLinks />,
+            actions: user ? <BackToanalytickit /> : <HelperLinks />,
         },
     }
 
@@ -158,7 +158,7 @@ function AuthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite }): 
                 </Row>
                 <Row>
                     <span>
-                        You will accept the invite under your <b>existing PostHog account</b> ({user?.email})
+                        You will accept the invite under your <b>existing analytickit account</b> ({user?.email})
                     </span>
                 </Row>
                 {user && (
@@ -187,13 +187,13 @@ function AuthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite }): 
                             </Button>
                             <div className="mt-4">
                                 <Link to="/">
-                                    <ArrowLeftOutlined /> Go back to PostHog
+                                    <ArrowLeftOutlined /> Go back to analytickit
                                 </Link>
                             </div>
                         </>
                     ) : (
                         <Button block onClick={() => (window.location.href = '/')}>
-                            Go to PostHog <ArrowRightOutlined />
+                            Go to analytickit <ArrowRightOutlined />
                         </Button>
                     )}
                 </div>
@@ -266,7 +266,7 @@ function UnauthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite })
                                 Hello{invite?.first_name ? ` ${invite.first_name}` : ''}! You've been invited to join
                             </h1>
                             <div className="company">{invite?.organization_name || 'us'}</div>
-                            <h1 className="page-title">on PostHog</h1>
+                            <h1 className="page-title">on analytickit</h1>
                             <div className="mobile-continue">
                                 <Button icon={<ArrowDownOutlined />} type="default" onClick={goToMainContent}>
                                     Continue
@@ -284,7 +284,7 @@ function UnauthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite })
                         />
                         <div className="password-login">
                             <h3 className="l3 text-center">
-                                {socialAuthAvailable ? 'Or create your own password' : 'Create your PostHog account'}
+                                {socialAuthAvailable ? 'Or create your own password' : 'Create your analytickit account'}
                             </h3>
                             <form onSubmit={handleFormSubmit}>
                                 <div className="input-set">
@@ -354,11 +354,11 @@ function UnauthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite })
                             </form>
                             <div className="mt-4 text-center">
                                 By clicking continue you agree to our{' '}
-                                <a href="https://posthog.com/terms" target="_blank" rel="noopener">
+                                <a href="https://analytickit.com/terms" target="_blank" rel="noopener">
                                     Terms of Service
                                 </a>{' '}
                                 and{' '}
-                                <a href="https://posthog.com/privacy" target="_blank" rel="noopener">
+                                <a href="https://analytickit.com/privacy" target="_blank" rel="noopener">
                                     Privacy Policy
                                 </a>
                                 .

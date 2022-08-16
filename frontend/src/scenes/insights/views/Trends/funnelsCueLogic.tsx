@@ -3,7 +3,7 @@ import { InsightLogicProps, InsightType } from '~/types'
 import { keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
 import { insightLogic } from 'scenes/insights/insightLogic'
 import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import posthog from 'posthog-js'
+import analytickit from 'analytickit-js'
 import { FEATURE_FLAGS } from 'lib/constants'
 import type { funnelsCueLogicType } from './funnelsCueLogicType'
 
@@ -36,8 +36,8 @@ export const funnelsCueLogic = kea<funnelsCueLogicType>({
     },
     listeners: ({ actions, values }) => ({
         optOut: async ({ userOptedOut }) => {
-            posthog.capture('funnel cue 7301 - terminated', { user_opted_out: userOptedOut })
-            posthog.people.set({ funnels_cue_3701_opt_out: true })
+            analytickit.capture('funnel cue 7301 - terminated', { user_opted_out: userOptedOut })
+            analytickit.people.set({ funnels_cue_3701_opt_out: true })
             // funnels_cue_3701_opt_out -> will add the user to a FF that will permanently exclude the user
             actions.setPermanentOptOut()
         },
@@ -45,7 +45,7 @@ export const funnelsCueLogic = kea<funnelsCueLogicType>({
             const step_count = (filters.events?.length ?? 0) + (filters.actions?.length ?? 0)
             if (!values.isFirstLoad && filters.insight === InsightType.TRENDS && step_count >= 3) {
                 actions.setShouldShow(true)
-                !values.permanentOptOut && posthog.capture('funnel cue 7301 - shown', { step_count })
+                !values.permanentOptOut && analytickit.capture('funnel cue 7301 - shown', { step_count })
             } else if (values.shown && filters.insight === InsightType.FUNNELS) {
                 actions.optOut(false)
             } else {

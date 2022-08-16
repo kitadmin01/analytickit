@@ -8,7 +8,7 @@ import type { actionsTabLogicType } from './actionsTabLogicType'
 import { ActionType } from '~/types'
 import { ActionDraftType, ActionForm, AntdFieldData } from '~/toolbar/types'
 import { FormInstance } from 'antd/lib/form'
-import { posthog } from '~/toolbar/posthog'
+import { analytickit } from '~/toolbar/analytickit'
 import { lemonToast } from 'lib/components/lemonToast'
 import { urls } from 'scenes/urls'
 
@@ -181,7 +181,7 @@ export const actionsTabLogic = kea<actionsTabLogicType>({
 
             lemonToast.success('Action saved', {
                 button: {
-                    label: 'Open in PostHog',
+                    label: 'Open in analytickit',
                     action: () => window.open(`${apiURL}${urls.action(response.id)}`, '_blank'),
                 },
             })
@@ -200,11 +200,11 @@ export const actionsTabLogic = kea<actionsTabLogicType>({
         },
         showButtonActions: () => {
             actionsLogic.actions.getActions()
-            posthog.capture('toolbar mode triggered', { mode: 'actions', enabled: true })
+            analytickit.capture('toolbar mode triggered', { mode: 'actions', enabled: true })
         },
         hideButtonActions: () => {
             actions.setShowActionsTooltip(false)
-            posthog.capture('toolbar mode triggered', { mode: 'actions', enabled: false })
+            analytickit.capture('toolbar mode triggered', { mode: 'actions', enabled: false })
         },
         [actionsLogic.actionTypes.getActionsSuccess]: () => {
             const { userIntent } = toolbarLogic.values

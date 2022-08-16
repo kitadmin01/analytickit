@@ -1,18 +1,18 @@
-import { lemonToast } from '@posthog/lemon-ui'
-import { kea, path, listeners, selectors, connect, afterMount, actions } from 'kea'
-import { loaders } from 'kea-loaders'
-import { router, urlToAction } from 'kea-router'
+import{lemonToast}from'@analytickit/lemon-ui'
+import {kea, path, listeners, selectors, connect, afterMount, actions}from 'kea'
+import {loaders }from 'kea-loaders'
+import {router, urlToAction}from 'kea-router'
 import api from 'lib/api'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import { urls } from 'scenes/urls'
-import { IntegrationType, SlackChannelType } from '~/types'
+import {preflightLogic} from 'scenes/PreflightCheck/preflightLogic'
+import {urls}from 'scenes/urls'
+import {IntegrationType, SlackChannelType}from '~/types'
 
-import type { integrationsLogicType } from './integrationsLogicType'
+import type {integrationsLogicType}from './integrationsLogicType'
 
 // NOTE: Slack enforces HTTPS urls so to aid local dev we change to https so the redirect works.
 // Just means we have to change it back to http once redirected.
 export const getSlackRedirectUri = (next: string = ''): string =>
-    `${window.location.origin.replace('http://', 'https://')}/integrations/slack/redirect${
+`${window.location.origin.replace('http://', 'https://')}/integrations/slack/redirect${
         next ? '?next=' + encodeURIComponent(next) : ''
     }`
 
@@ -22,7 +22,7 @@ export const getSlackEventsUri = (): string =>
 // Modified version of https://app.slack.com/app-settings/TSS5W8YQZ/A03KWE2FJJ2/app-manifest to match current instance
 export const getSlackAppManifest = (): any => ({
     display_information: {
-        name: 'PostHog',
+        name: 'analytickit',
         description: 'Product Insights right where you need them',
         background_color: '#f54e00',
     },
@@ -33,7 +33,7 @@ export const getSlackAppManifest = (): any => ({
             messages_tab_read_only_enabled: true,
         },
         bot_user: {
-            display_name: 'PostHog',
+            display_name: 'analytickit',
             always_online: false,
         },
         unfurl_domains: [window.location.hostname],

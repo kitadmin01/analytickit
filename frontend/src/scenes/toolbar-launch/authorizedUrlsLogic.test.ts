@@ -1,9 +1,9 @@
-import { appEditorUrl, authorizedUrlsLogic, validateProposedURL } from 'scenes/toolbar-launch/authorizedUrlsLogic'
-import { initKeaTests } from '~/test/init'
-import { router } from 'kea-router'
-import { expectLogic } from 'kea-test-utils'
-import { useMocks } from '~/mocks/jest'
-import { urls } from 'scenes/urls'
+import{appEditorUrl, authorizedUrlsLogic, validateProposedURL}from 'scenes/toolbar-launch/authorizedUrlsLogic'
+import {initKeaTests}from '~/test/init'
+import {router} from 'kea-router'
+import {expectLogic}from 'kea-test-utils'
+import {useMocks}from '~/mocks/jest'
+import {urls }from 'scenes/urls'
 
 describe('the authorized urls logic', () => {
     let logic: ReturnType<typeof authorizedUrlsLogic.build>
@@ -27,10 +27,10 @@ describe('the authorized urls logic', () => {
     it('encodes an app url correctly', () => {
         expect(appEditorUrl('http://127.0.0.1:8000')).toEqual(
             '/api/user/redirect_to_site/?userIntent=add-action&appUrl=http%3A%2F%2F127.0.0.1%3A8000'
-        )
-    })
+)
+})
 
-    it('can be launched with adding a new URL focussed', async () => {
+it('can be launched with adding a new URL focussed', async () => {
         router.actions.push(`${urls.toolbarLaunch()}?addNew=true`)
         await expectLogic(logic).toDispatchActions(['newUrl'])
     })
@@ -59,19 +59,19 @@ describe('the authorized urls logic', () => {
             {
                 proposedUrl: 'https://notsovalid.*.*',
                 validityMessage:
-                    'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your PostHog data.',
+                    'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your analytickit data.',
             },
             {
                 proposedUrl: 'https://*.*.*',
                 validityMessage:
-                    'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your PostHog data.',
+                    'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your analytickit data.',
             },
             { proposedUrl: 'https://valid*.example.com', validityMessage: undefined },
             { proposedUrl: 'https://*.valid.com', validityMessage: undefined },
             {
                 proposedUrl: 'https://not.*.valid.*',
                 validityMessage:
-                    'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your PostHog data.',
+                    'You can only wildcard subdomains. If you wildcard the domain or TLD, people might be able to gain access to your analytickit data.',
             },
         ]
 
@@ -84,8 +84,8 @@ describe('the authorized urls logic', () => {
         it('fails if the proposed URL is already authorized', () => {
             expect(validateProposedURL('https://valid.*.example.com', ['https://valid.*.example.com'])).toBe(
                 'This URL is already registered.'
-            )
-            expect(
+)
+expect(
                 validateProposedURL('https://valid.and-not-already-authorized.example.com', [
                     'https://valid.*.example.com',
                 ])

@@ -1,9 +1,9 @@
-import os from 'os'
+importosfrom'os'
 
-import { LogLevel, PluginsServerConfig } from '../types'
-import { isDevEnv, isTestEnv, stringToBoolean } from '../utils/env-utils'
-import { KAFKAJS_LOG_LEVEL_MAPPING } from './constants'
-import { KAFKA_EVENTS_JSON, KAFKA_EVENTS_PLUGIN_INGESTION } from './kafka-topics'
+import {LogLevel, PluginsServerConfig} from '../types'
+import { isDevEnv, isTestEnv, stringToBoolean}from '../utils/env-utils'
+import {KAFKAJS_LOG_LEVEL_MAPPING} from './constants'
+import {KAFKA_EVENTS_JSON, KAFKA_EVENTS_PLUGIN_INGESTION}from './kafka-topics'
 
 export const defaultConfig = overrideWithEnv(getDefaultConfig())
 export const configHelp = getConfigHelp()
@@ -13,23 +13,23 @@ export function getDefaultConfig(): PluginsServerConfig {
 
     return {
         DATABASE_URL: isTestEnv()
-            ? 'postgres://posthog:posthog@localhost:5432/test_posthog'
+            ? 'postgres://analytickit:analytickit@localhost:5432/test_analytickit'
             : isDevEnv()
-            ? 'postgres://posthog:posthog@localhost:5432/posthog'
+            ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
             : null,
-        POSTHOG_DB_NAME: null,
-        POSTHOG_DB_USER: 'postgres',
-        POSTHOG_DB_PASSWORD: '',
-        POSTHOG_POSTGRES_HOST: 'localhost',
-        POSTHOG_POSTGRES_PORT: 5432,
+        analytickit_DB_NAME: null,
+        analytickit_DB_USER: 'postgres',
+        analytickit_DB_PASSWORD: '',
+        analytickit_POSTGRES_HOST: 'localhost',
+        analytickit_POSTGRES_PORT: 5432,
         CLICKHOUSE_HOST: 'localhost',
-        CLICKHOUSE_DATABASE: isTestEnv() ? 'posthog_test' : 'default',
+        CLICKHOUSE_DATABASE: isTestEnv() ? 'analytickit_test' : 'default',
         CLICKHOUSE_USER: 'default',
         CLICKHOUSE_PASSWORD: null,
         CLICKHOUSE_CA: null,
         CLICKHOUSE_SECURE: false,
         CLICKHOUSE_DISABLE_EXTERNAL_SCHEMAS: true,
-        KAFKA_HOSTS: 'kafka:9092', // KEEP IN SYNC WITH posthog/settings/data_stores.py
+        KAFKA_HOSTS: 'kafka:9092', // KEEP IN SYNC WITH analytickit/settings/data_stores.py
         KAFKA_CLIENT_CERT_B64: null,
         KAFKA_CLIENT_CERT_KEY_B64: null,
         KAFKA_TRUSTED_CERT_B64: null,
@@ -42,9 +42,9 @@ export function getDefaultConfig(): PluginsServerConfig {
         KAFKA_MAX_MESSAGE_BATCH_SIZE: 900_000,
         KAFKA_FLUSH_FREQUENCY_MS: isTestEnv() ? 5 : 500,
         REDIS_URL: 'redis://127.0.0.1',
-        POSTHOG_REDIS_PASSWORD: '',
-        POSTHOG_REDIS_HOST: '',
-        POSTHOG_REDIS_PORT: 6379,
+        analytickit_REDIS_PASSWORD: '',
+        analytickit_REDIS_HOST: '',
+        analytickit_REDIS_PORT: 6379,
         BASE_DIR: '.',
         PLUGINS_RELOAD_PUBSUB_CHANNEL: 'reload-plugins',
         WORKER_CONCURRENCY: coreCount,
@@ -85,7 +85,7 @@ export function getDefaultConfig(): PluginsServerConfig {
         CLICKHOUSE_JSON_EVENTS_KAFKA_TOPIC: KAFKA_EVENTS_JSON,
         CONVERSION_BUFFER_ENABLED: false,
         CONVERSION_BUFFER_ENABLED_TEAMS: '',
-        BUFFER_CONVERSION_SECONDS: 60, // KEEP IN SYNC WITH posthog/settings/ingestion.py
+        BUFFER_CONVERSION_SECONDS: 60, // KEEP IN SYNC WITH analytickit/settings/ingestion.py
         PERSON_INFO_TO_REDIS_TEAMS: '',
         PERSON_INFO_CACHE_TTL: 5 * 60, // 5 min
         KAFKA_HEALTHCHECK_SECONDS: 20,
@@ -95,7 +95,7 @@ export function getDefaultConfig(): PluginsServerConfig {
         OBJECT_STORAGE_ACCESS_KEY_ID: 'object_storage_root_user',
         OBJECT_STORAGE_SECRET_ACCESS_KEY: 'object_storage_root_password',
         OBJECT_STORAGE_SESSION_RECORDING_FOLDER: 'session_recordings',
-        OBJECT_STORAGE_BUCKET: 'posthog',
+        OBJECT_STORAGE_BUCKET: 'analytickit',
         PLUGIN_SERVER_MODE: null,
         KAFKAJS_LOG_LEVEL: 'WARN',
     }
@@ -155,7 +155,7 @@ export function getConfigHelp(): Record<keyof PluginsServerConfig, string> {
         STALENESS_RESTART_SECONDS: 'trigger a restart if no event ingested for this duration',
         HEALTHCHECK_MAX_STALE_SECONDS:
             'maximum number of seconds the plugin server can go without ingesting events before the healthcheck fails',
-        CAPTURE_INTERNAL_METRICS: 'capture internal metrics for posthog in posthog',
+        CAPTURE_INTERNAL_METRICS: 'capture internal metrics for analytickit in analytickit',
         PISCINA_USE_ATOMICS:
             'corresponds to the piscina useAtomics config option (https://github.com/piscinajs/piscina#constructor-new-piscinaoptions)',
         PISCINA_ATOMICS_TIMEOUT:
@@ -216,7 +216,7 @@ export function overrideWithEnv(
             `Invalid KAFKAJS_LOG_LEVEL ${newConfig.KAFKAJS_LOG_LEVEL}. Valid: ${Object.keys(
                 KAFKAJS_LOG_LEVEL_MAPPING
             ).join(', ')}`
-        )
-    }
-    return newConfig
+)
+}
+return newConfig
 }

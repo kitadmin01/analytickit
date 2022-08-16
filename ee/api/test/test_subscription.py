@@ -4,10 +4,10 @@ import pytest
 from rest_framework import status
 
 from ee.api.test.base import APILicensedTest
-from posthog.models.dashboard import Dashboard
-from posthog.models.filters.filter import Filter
-from posthog.models.insight import Insight
-from posthog.models.subscription import Subscription
+from analytickit.models.dashboard import Dashboard
+from analytickit.models.filters.filter import Filter
+from analytickit.models.insight import Insight
+from analytickit.models.subscription import Subscription
 
 
 @patch("ee.api.subscription.subscriptions")
@@ -34,7 +34,7 @@ class TestSubscription(APILicensedTest):
         payload = {
             "insight": self.insight.id,
             "target_type": "email",
-            "target_value": "test@posthog.com",
+            "target_value": "test@analytickit.com",
             "frequency": "weekly",
             "interval": 1,
             "start_date": "2022-01-01T00:00:00",
@@ -62,7 +62,7 @@ class TestSubscription(APILicensedTest):
             "dashboard": None,
             "insight": self.insight.id,
             "target_type": "email",
-            "target_value": "test@posthog.com",
+            "target_value": "test@analytickit.com",
             "frequency": "weekly",
             "interval": 1,
             "byweekday": None,
@@ -99,11 +99,11 @@ class TestSubscription(APILicensedTest):
         mock_subscription_tasks.handle_subscription_value_change.delay.reset_mock()
         response = self.client.patch(
             f"/api/projects/{self.team.id}/subscriptions/{data['id']}",
-            {"target_value": "test@posthog.com,new_user@posthog.com", "invite_message": "hi new user"},
+            {"target_value": "test@analytickit.com,new_user@analytickit.com", "invite_message": "hi new user"},
         )
         updated_data = response.json()
-        assert updated_data["target_value"] == "test@posthog.com,new_user@posthog.com"
+        assert updated_data["target_value"] == "test@analytickit.com,new_user@analytickit.com"
 
         mock_subscription_tasks.handle_subscription_value_change.delay.assert_called_once_with(
-            data["id"], "test@posthog.com", "hi new user"
+            data["id"], "test@analytickit.com", "hi new user"
         )

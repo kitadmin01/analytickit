@@ -1,62 +1,62 @@
-import { actions, afterMount, connect, kea, key, listeners, path, props, reducers, selectors } from 'kea'
-import type { featureFlagLogicType } from './featureFlagLogicType'
+import{actions, afterMount, connect, kea, key, listeners, path, props, reducers, selectors}from 'kea'
+import type {featureFlagLogicType}from './featureFlagLogicType'
 import {
-    AnyPropertyFilter,
-    Breadcrumb,
-    FeatureFlagType,
-    MultivariateFlagOptions,
-    MultivariateFlagVariant,
-    PropertyFilter,
-} from '~/types'
+AnyPropertyFilter,
+Breadcrumb,
+FeatureFlagType,
+MultivariateFlagOptions,
+MultivariateFlagVariant,
+PropertyFilter,
+}from '~/types'
 import api from 'lib/api'
-import { router } from 'kea-router'
-import { convertPropertyGroupToProperties, deleteWithUndo } from 'lib/utils'
-import { urls } from 'scenes/urls'
-import { teamLogic } from '../teamLogic'
-import { featureFlagsLogic } from 'scenes/feature-flags/featureFlagsLogic'
-import { groupsModel } from '~/models/groupsModel'
-import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
-import { lemonToast } from 'lib/components/lemonToast'
-import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
-import { urlToAction } from 'kea-router'
-import { loaders } from 'kea-loaders'
-import { forms } from 'kea-forms'
+import {router}from 'kea-router'
+import {convertPropertyGroupToProperties, deleteWithUndo} from 'lib/utils'
+import {urls }from 'scenes/urls'
+import { teamLogic}from '../teamLogic'
+import {featureFlagsLogic}from 'scenes/feature-flags/featureFlagsLogic'
+import {groupsModel}from '~/models/groupsModel'
+import {TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
+import {lemonToast}from 'lib/components/lemonToast'
+import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
+import {urlToAction }from 'kea-router'
+import {loaders} from 'kea-loaders'
+import {forms}from 'kea-forms'
 
 const NEW_FLAG: FeatureFlagType = {
-    id: null,
-    created_at: null,
-    key: '',
-    name: '',
-    filters: { groups: [{ properties: [], rollout_percentage: null }], multivariate: null },
-    deleted: false,
-    active: true,
-    created_by: null,
-    is_simple_flag: false,
-    rollout_percentage: null,
-    ensure_experience_continuity: false,
-    experiment_set: null,
+id: null,
+created_at: null,
+key: '',
+name: '',
+filters: {groups: [{properties: [], rollout_percentage: null }], multivariate: null},
+deleted: false,
+active: true,
+created_by: null,
+is_simple_flag: false,
+rollout_percentage: null,
+ensure_experience_continuity: false,
+experiment_set: null,
 }
 const NEW_VARIANT = {
-    key: '',
-    name: '',
-    rollout_percentage: 0,
+key: '',
+name: '',
+rollout_percentage: 0,
 }
 const EMPTY_MULTIVARIATE_OPTIONS: MultivariateFlagOptions = {
-    variants: [
-        {
-            key: '',
-            name: '',
-            rollout_percentage: 100,
-        },
-    ],
+variants: [
+{
+key: '',
+name: '',
+rollout_percentage: 100,
+},
+],
 }
 
 export interface FeatureFlagLogicProps {
-    id: number | 'new'
+id: number | 'new'
 }
 
 export const featureFlagLogic = kea<featureFlagLogicType>([
-    path(['scenes', 'feature-flags', 'featureFlagLogic']),
+path(['scenes', 'feature-flags', 'featureFlagLogic']),
     props({} as FeatureFlagLogicProps),
     key(({ id }) => id ?? 'new'),
     connect({
@@ -276,10 +276,10 @@ export const featureFlagLogic = kea<featureFlagLogicType>([
                         return await api.update(
                             `api/projects/${values.currentTeamId}/feature_flags/${updatedFlag.id}`,
                             flag
-                        )
-                    }
-                } catch (error: any) {
-                    if (error.code === 'behavioral_cohort_found' || error.code === 'cohort_does_not_exist') {
+)
+}
+}catch (error: any) {
+if(error.code === 'behavioral_cohort_found' || error.code === 'cohort_does_not_exist') {
                         eventUsageLogic.actions.reportFailedToCreateFeatureFlagWithCohort(error.code, error.detail)
                     }
                     throw error

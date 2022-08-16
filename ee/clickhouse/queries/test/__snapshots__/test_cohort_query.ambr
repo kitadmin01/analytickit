@@ -10,9 +10,9 @@
             countIf(timestamp > now() - INTERVAL 2 week
                     AND timestamp < now()
                     AND event = '$pageview') > 0 AS performed_event_condition_None_level_level_0_level_0_level_1_0,
-            minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://posthog.com/feedback/123'
+            minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://analytickit.com/feedback/123'
                                AND event = '$autocapture'))) >= now() - INTERVAL 2 week
-     AND minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://posthog.com/feedback/123'
+     AND minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://analytickit.com/feedback/123'
                             AND event = '$autocapture'))) < now() as first_time_condition_None_level_level_0_level_1_level_0_0
      FROM events e
      INNER JOIN
@@ -34,7 +34,7 @@
         WHERE team_id = 2
         GROUP BY id
         HAVING max(is_deleted) = 0
-        AND (((has(['test@posthog.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', ''))))))) person ON person.person_id = behavior_query.person_id
+        AND (((has(['test@analytickit.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', ''))))))) person ON person.person_id = behavior_query.person_id
   WHERE 1 = 1
     AND ((((performed_event_condition_None_level_level_0_level_0_level_0_0)
            OR (performed_event_condition_None_level_level_0_level_0_level_1_0))
@@ -337,7 +337,7 @@
         WHERE team_id = 2
         GROUP BY id
         HAVING max(is_deleted) = 0
-        AND ((has(['test@posthog.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '')))))) person ON person.person_id = funnel_query.person_id
+        AND ((has(['test@analytickit.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '')))))) person ON person.person_id = funnel_query.person_id
   WHERE 1 = 1
     AND (((steps_0)
           AND (performed_event_multiple_condition_None_level_level_0_level_1_0))) SETTINGS allow_experimental_window_functions = 1
@@ -377,7 +377,7 @@
         HAVING max(is_deleted) = 0)) person ON person.person_id = behavior_query.person_id
   WHERE 1 = 1
     AND (((performed_event_condition_None_level_level_0_level_0_0)
-          OR (has(['test@posthog.com'], replaceRegexpAll(JSONExtractRaw(person_props, '$sample_field'), '^"|"$', ''))))) SETTINGS allow_experimental_window_functions = 1
+          OR (has(['test@analytickit.com'], replaceRegexpAll(JSONExtractRaw(person_props, '$sample_field'), '^"|"$', ''))))) SETTINGS allow_experimental_window_functions = 1
   '
 ---
 # name: TestCohortQuery.test_person_materialized
@@ -414,7 +414,7 @@
         HAVING max(is_deleted) = 0)) person ON person.person_id = behavior_query.person_id
   WHERE 1 = 1
     AND (((performed_event_condition_None_level_level_0_level_0_0)
-          OR (has(['test@posthog.com'], "pmat_$sample_field")))) SETTINGS allow_experimental_window_functions = 1
+          OR (has(['test@analytickit.com'], "pmat_$sample_field")))) SETTINGS allow_experimental_window_functions = 1
   '
 ---
 # name: TestCohortQuery.test_person_properties_with_pushdowns
@@ -429,9 +429,9 @@
             countIf(timestamp > now() - INTERVAL 2 week
                     AND timestamp < now()
                     AND event = '$pageview') > 0 AS performed_event_condition_None_level_level_0_level_0_level_1_0,
-            minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://posthog.com/feedback/123'
+            minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://analytickit.com/feedback/123'
                                AND event = '$autocapture'))) >= now() - INTERVAL 2 week
-     AND minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://posthog.com/feedback/123'
+     AND minIf(timestamp, ((replaceRegexpAll(JSONExtractRaw(properties, '$current_url'), '^"|"$', '') = 'https://analytickit.com/feedback/123'
                             AND event = '$autocapture'))) < now() as first_time_condition_None_level_level_0_level_1_level_0_0
      FROM events e
      INNER JOIN
@@ -454,7 +454,7 @@
         WHERE team_id = 2
         GROUP BY id
         HAVING max(is_deleted) = 0
-        AND (((has(['test@posthog.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', ''))))))) person ON person.person_id = behavior_query.person_id
+        AND (((has(['test@analytickit.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', ''))))))) person ON person.person_id = behavior_query.person_id
   WHERE 1 = 1
     AND ((((performed_event_condition_None_level_level_0_level_0_level_0_0)
            OR (performed_event_condition_None_level_level_0_level_0_level_1_0)
@@ -470,10 +470,10 @@
   WHERE team_id = 2
   GROUP BY id
   HAVING max(is_deleted) = 0
-  AND (((has(['test1@posthog.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '')))
-        OR (has(['test2@posthog.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', ''))))
+  AND (((has(['test1@analytickit.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '')))
+        OR (has(['test2@analytickit.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', ''))))
        OR ((has(['test3'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'name'), '^"|"$', '')))
-           AND (has(['test3@posthog.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '')))))
+           AND (has(['test3@analytickit.com'], replaceRegexpAll(JSONExtractRaw(argMax(person.properties, _timestamp), 'email'), '^"|"$', '')))))
   '
 ---
 # name: TestCohortQuery.test_precalculated_cohort_filter_with_extra_filters

@@ -1,6 +1,6 @@
-# PostHog Plugin Server
+# analytickit Plugin Server
 
-[![npm package](https://img.shields.io/npm/v/@posthog/plugin-server?style=flat-square)](https://www.npmjs.com/package/@posthog/plugin-server)
+[![npm package](https://img.shields.io/npm/v/@analytickit/plugin-server?style=flat-square)](https://www.npmjs.com/package/@analytickit/plugin-server)
 [![MIT License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 This service takes care of processing events with plugins and more.
@@ -9,17 +9,24 @@ This service takes care of processing events with plugins and more.
 
 Let's get you developing the plugin server in no time:
 
-1. Have virtual environment from the main PostHog repo active.
+1. Have virtual environment from the main analytickit repo active.
 
 1. Install dependencies and prepare for takeoff by running command `yarn`.
 
-1. Start a development instance of [PostHog](/PostHog/posthog) - [instructions here](https://posthog.com/docs/developing-locally). After all, this is the _PostHog_ Plugin Server, and it works in conjuction with the main server.
+1. Start a development instance of [analytickit](/analytickit/analytickit)
+    - [instructions here](https://analytickit.com/docs/developing-locally). After all, this is the _analytickit_ Plugin
+      Server, and it works in conjuction with the main server.
 
-1. Make sure that the plugin server is configured correctly (see [Configuration](#Configuration)). The following settings need to be the same for the plugin server and the main server: `DATABASE_URL`, `REDIS_URL`, `KAFKA_HOSTS`, `CLICKHOUSE_HOST`, `CLICKHOUSE_DATABASE`, `CLICKHOUSE_USER`, and `CLICKHOUSE_PASSWORD`. Their default values should work just fine in local development though.
+1. Make sure that the plugin server is configured correctly (see [Configuration](#Configuration)). The following
+   settings need to be the same for the plugin server and the main server: `DATABASE_URL`, `REDIS_URL`, `KAFKA_HOSTS`
+   , `CLICKHOUSE_HOST`, `CLICKHOUSE_DATABASE`, `CLICKHOUSE_USER`, and `CLICKHOUSE_PASSWORD`. Their default values should
+   work just fine in local development though.
 
-1. Start the plugin server in autoreload mode with `yarn start:dev`, or in compiled mode with `yarn build && yarn start:dist`, and develop away!
+1. Start the plugin server in autoreload mode with `yarn start:dev`, or in compiled mode
+   with `yarn build && yarn start:dist`, and develop away!
 
-1. Prepare for running tests with `yarn setup:test`, which will run the necessary migrations. Run the tests themselves with `yarn test:{1,2}`.
+1. Prepare for running tests with `yarn setup:test`, which will run the necessary migrations. Run the tests themselves
+   with `yarn test:{1,2}`.
 
 ## CLI flags
 
@@ -58,7 +65,7 @@ There's a multitude of settings you can use to control the plugin server. Use th
 
 | Name                                   | Description                                                                                                                                                                                                    | Default value                         |
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| DATABASE_URL                           | Postgres database URL                                                                                                                                                                                          | `'postgres://localhost:5432/posthog'` |
+| DATABASE_URL                           | Postgres database URL                                                                                                                                                                                          | `'postgres://localhost:5432/analytickit'` |
 | REDIS_URL                              | Redis store URL                                                                                                                                                                                                | `'redis://localhost'`                 |
 | BASE_DIR                               | base path for resolving local plugins                                                                                                                                                                          | `'.'`                                 |
 | WORKER_CONCURRENCY                     | number of concurrent worker threads                                                                                                                                                                            | `0` – all cores                       |
@@ -89,7 +96,7 @@ There's a multitude of settings you can use to control the plugin server. Use th
 | DISABLE_MMDB                           | whether to disable MMDB IP location capabilities                                                                                                                                                               | `false`                               |
 | INTERNAL_MMDB_SERVER_PORT              | port of the internal server used for IP location (0 means random)                                                                                                                                              | `0`                                   |
 | DISTINCT_ID_LRU_SIZE                   | size of persons distinct ID LRU cache                                                                                                                                                                          | `10000`                               |
-| CAPTURE_INTERNAL_METRICS               | whether to capture internal metrics for posthog in posthog                                                                                                                                                     | `false`                               |
+| CAPTURE_INTERNAL_METRICS               | whether to capture internal metrics for analytickit in analytickit                                                                                                                                                     | `false`                               |
 | PISCINA_USE_ATOMICS                    | corresponds to the piscina useAtomics config option (https://github.com/piscinajs/piscina#constructor-new-piscinaoptions)                                                                                      | `true`                                |
 | PISCINA_ATOMICS_TIMEOUT                | (advanced) corresponds to the length of time (in ms) a piscina worker should block for when looking for tasks - instances with high volumes (100+ events/sec) might benefit from setting this to a lower value | `5000`                                |
 | HEALTHCHECK_MAX_STALE_SECONDS          | 'maximum number of seconds the plugin server can go without ingesting events before the healthcheck fails'                                                                                                     | `7200`                                |
@@ -100,9 +107,10 @@ There's a multitude of settings you can use to control the plugin server. Use th
 ## Releasing a new version
 
 Just bump up `version` in `package.json` on the main branch and the new version will be published automatically,
-with a matching PR in the [main PostHog repo](https://github.com/posthog/posthog) created.
+with a matching PR in the [main analytickit repo](https://github.com/analytickit/analytickit) created.
 
-It's advised to use `bump patch/minor/major` label on PRs - that way the above will be done automatically when the PR is merged.
+It's advised to use `bump patch/minor/major` label on PRs - that way the above will be done automatically when the PR is
+merged.
 
 Courtesy of GitHub Actions.
 
@@ -110,32 +118,53 @@ Courtesy of GitHub Actions.
 
 The story begins with `pluginServer.ts -> startPluginServer`, which is the main thread of the plugin server.
 
-This main thread spawns `WORKER_CONCURRENCY` worker threads, managed using Piscina. Each worker thread runs `TASKS_PER_WORKER` tasks ([concurrentTasksPerWorker](https://github.com/piscinajs/piscina#constructor-new-piscinaoptions)).
+This main thread spawns `WORKER_CONCURRENCY` worker threads, managed using Piscina. Each worker thread
+runs `TASKS_PER_WORKER`
+tasks ([concurrentTasksPerWorker](https://github.com/piscinajs/piscina#constructor-new-piscinaoptions)).
 
 ### Main thread
 
 Let's talk about the main thread first. This has:
 
-1. `pubSub` – Redis powered pub-sub mechanism for reloading plugins whenever a message is published by the main PostHog app.
+1. `pubSub` – Redis powered pub-sub mechanism for reloading plugins whenever a message is published by the main
+   analytickit app.
 
 1. `hub` – Handler of connections to required DBs and queues (ClickHouse, Kafka, Postgres, Redis), holds loaded plugins.
    Created via `hub.ts -> createHub`. Every thread has its own instance.
 
-1. `piscina` – Manager of tasks delegated to threads. `makePiscina` creates the manager, while `createWorker` creates the worker threads.
+1. `piscina` – Manager of tasks delegated to threads. `makePiscina` creates the manager, while `createWorker` creates
+   the worker threads.
 
-1. `pluginScheduleControl` – Controller of scheduled jobs. Responsible for adding Piscina tasks for scheduled jobs, when the time comes. The schedule information makes it into the controller when plugin VMs are created.
+1. `pluginScheduleControl` – Controller of scheduled jobs. Responsible for adding Piscina tasks for scheduled jobs, when
+   the time comes. The schedule information makes it into the controller when plugin VMs are created.
 
-    Scheduled tasks are controlled with [Redlock](https://redis.io/topics/distlock) (redis-based distributed lock), and run on only one plugin server instance in the entire cluster.
+   Scheduled tasks are controlled with [Redlock](https://redis.io/topics/distlock) (redis-based distributed lock), and
+   run on only one plugin server instance in the entire cluster.
 
-1. `jobQueueConsumer` – The internal job queue consumer. This enables retries, scheduling jobs in the future (once) (Note: this is the difference between `pluginScheduleControl` and this internal `jobQueue`). While `pluginScheduleControl` is triggered via `runEveryMinute`, `runEveryHour` tasks, the `jobQueueConsumer` deals with `meta.jobs.doX(event).runAt(new Date())`.
+1. `jobQueueConsumer` – The internal job queue consumer. This enables retries, scheduling jobs in the future (once) (
+   Note: this is the difference between `pluginScheduleControl` and this internal `jobQueue`).
+   While `pluginScheduleControl` is triggered via `runEveryMinute`, `runEveryHour` tasks, the `jobQueueConsumer` deals
+   with `meta.jobs.doX(event).runAt(new Date())`.
 
-    Jobs are enqueued by `job-queue-manager.ts`, which is backed by Postgres-based [Graphile-worker](https://github.com/graphile/worker) (`graphile-queue.ts`).
+   Jobs are enqueued by `job-queue-manager.ts`, which is backed by
+   Postgres-based [Graphile-worker](https://github.com/graphile/worker) (`graphile-queue.ts`).
 
-1. `queue` – Event ingestion queue. This is a Celery (backed by Redis) or Kafka queue, depending on the setup (EE/Cloud is Kafka due to high volume). These are consumed by the `queue` above, and sent off to the Piscina workers (`src/main/ingestion-queues/queue.ts -> ingestEvent`). Since all of the actual ingestion happens inside worker threads, you'll find the specific ingestion code there (`src/worker/ingestion/ingest-event.ts`). There the data is saved into Postgres (and ClickHouse via Kafka on EE/Cloud).
+1. `queue` – Event ingestion queue. This is a Celery (backed by Redis) or Kafka queue, depending on the setup (EE/Cloud
+   is Kafka due to high volume). These are consumed by the `queue` above, and sent off to the Piscina
+   workers (`src/main/ingestion-queues/queue.ts -> ingestEvent`). Since all of the actual ingestion happens inside
+   worker threads, you'll find the specific ingestion code there (`src/worker/ingestion/ingest-event.ts`). There the
+   data is saved into Postgres (and ClickHouse via Kafka on EE/Cloud).
 
-    It's also a good idea to see the producer side of this ingestion queue, which comes from `Posthog/posthog/api/capture.py`. The plugin server gets the `process_event_with_plugins` Celery task from there, in the Postgres pipeline. The ClickHouse via Kafka pipeline gets the data by way of Kafka topic `events_plugin_ingestion`.
+   It's also a good idea to see the producer side of this ingestion queue, which comes
+   from `analytickit/analytickit/api/capture.py`. The plugin server gets the `process_event_with_plugins` Celery task
+   from there, in the Postgres pipeline. The ClickHouse via Kafka pipeline gets the data by way of Kafka
+   topic `events_plugin_ingestion`.
 
-1. `mmdbServer` – TCP server, which works as an interface between the GeoIP MMDB data reader located in main thread memory and plugins ran in worker threads of the same plugin server instance. This way the GeoIP reader is only loaded in one thread and can be used in all. Additionally this mechanism ensures that `mmdbServer` is ready before ingestion is started (database downloaded from [http-mmdb](https://github.com/PostHog/http-mmdb) and read), and keeps the database up to date in the background.
+1. `mmdbServer` – TCP server, which works as an interface between the GeoIP MMDB data reader located in main thread
+   memory and plugins ran in worker threads of the same plugin server instance. This way the GeoIP reader is only loaded
+   in one thread and can be used in all. Additionally this mechanism ensures that `mmdbServer` is ready before ingestion
+   is started (database downloaded from [http-mmdb](https://github.com/analytickit/http-mmdb) and read), and keeps the
+   database up to date in the background.
 
 ### Worker threads
 
@@ -150,8 +179,9 @@ New functions called here are:
 2. `createTaskRunner` – Creates a Piscina task runner that allows to operate on plugin VMs.
 
 > Note:
-> An `organization_id` is tied to a _company_ and its _installed plugins_, a `team_id` is tied to a _project_ and its _plugin configs_ (enabled/disabled+extra config).
+> An `organization_id` is tied to a _company_ and its _installed plugins_, a `team_id` is tied to a _project_ and its _
+> plugin configs_ (enabled/disabled+extra config).
 
 ## Questions?
 
-### [Join our Slack community. 🦔](https://posthog.com/slack)
+### [Join our Slack community. 🦔](https://analytickit.com/slack)

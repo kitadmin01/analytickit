@@ -5,6 +5,15 @@
         "rootDir": "./",
         "noEmit": true
     },
-    "include": [".", "src", "tests", ".eslintrc.js"],
-    "exclude": ["node_modules", "dist", "bin"]
+    "include": [
+        ".",
+        "src",
+        "tests",
+        ".eslintrc.js"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "bin"
+    ]
 }

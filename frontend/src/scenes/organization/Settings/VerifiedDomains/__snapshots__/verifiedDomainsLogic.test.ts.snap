@@ -26,8 +26,8 @@ Object {
         "anonymize_ips": false,
         "api_token": "default-team-api-token",
         "app_urls": Array [
-          "https://posthog.com/",
-          "https://app.posthog.com",
+          "https://analytickit.com/",
+          "https://app.analytickit.com",
         ],
         "completed_snippet_onboarding": true,
         "correlation_config": Object {
@@ -74,7 +74,7 @@ Object {
             "key": "email",
             "operator": "not_icontains",
             "type": "person",
-            "value": "posthog.com",
+            "value": "analytickit.com",
           },
         ],
         "timezone": "Europe/Brussels",
@@ -107,7 +107,7 @@ Object {
   "updatingDomainLoading": false,
   "verifiedDomains": Array [
     Object {
-      "domain": "my.posthog.com",
+      "domain": "my.analytickit.com",
       "id": "8db3b0c2-a0ab-490a-9037-14f3358a81bc",
       "is_verified": true,
       "jit_provisioning_enabled": true,
@@ -115,7 +115,7 @@ Object {
       "verified_at": "2022-01-01T23:59:59",
     },
     Object {
-      "domain": "temp.posthog.com",
+      "domain": "temp.analytickit.com",
       "id": "id_will_be_deleted",
       "is_verified": false,
       "jit_provisioning_enabled": false,

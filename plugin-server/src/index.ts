@@ -1,23 +1,23 @@
-import { defaultConfig, formatConfigHelp } from './config/config'
-import { healthcheckWithExit } from './healthcheck'
-import { initApp } from './init'
-import { GraphileQueue } from './main/job-queues/concurrent/graphile-queue'
-import { startPluginsServer } from './main/pluginsServer'
-import { Status } from './utils/status'
-import { makePiscina } from './worker/piscina'
+import{defaultConfig, formatConfigHelp}from './config/config'
+import {healthcheckWithExit}from './healthcheck'
+import {initApp}from './init'
+import {GraphileQueue}from './main/job-queues/concurrent/graphile-queue'
+import {startPluginsServer}from './main/pluginsServer'
+import {Status}from './utils/status'
+import {makePiscina} from './worker/piscina'
 
-const { version } = require('../package.json')
-const { argv } = process
+const {version}= require('../package.json')
+const {argv }= process
 
 enum AlternativeMode {
-    Help = 'HELP',
-    Version = 'VRSN',
-    Healthcheck = 'HLTH',
-    Migrate = 'MGRT',
+Help = 'HELP',
+Version = 'VRSN',
+Healthcheck = 'HLTH',
+Migrate = 'MGRT',
 }
 
 let alternativeMode: AlternativeMode | undefined
-if (argv.includes('--help') || argv.includes('-h')) {
+if(argv.includes('--help') || argv.includes('-h')) {
     alternativeMode = AlternativeMode.Help
 } else if (argv.includes('--version') || argv.includes('-v')) {
     alternativeMode = AlternativeMode.Version
@@ -29,7 +29,7 @@ if (argv.includes('--help') || argv.includes('-h')) {
 
 const status = new Status(alternativeMode)
 
-status.info('⚡', `@posthog/plugin-server v${version}`)
+status.info('⚡', `@analytickit/plugin-server v${version}`)
 
 switch (alternativeMode) {
     case AlternativeMode.Version:

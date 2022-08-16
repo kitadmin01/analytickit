@@ -1,7 +1,7 @@
-import { CursorUtils, UtilsExtension } from '@posthog/plugin-scaffold'
+import{CursorUtils, UtilsExtension}from '@analytickit/plugin-scaffold'
 
-import { Hub } from '../../../types'
-import { postgresIncrement, postgresSetOnce } from '../utils'
+import {Hub}from '../../../types'
+import {postgresIncrement, postgresSetOnce}from '../utils'
 
 // These are not utils for internal use!
 // These are general utility functions passed as utils in the plugin meta

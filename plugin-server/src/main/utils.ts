@@ -1,15 +1,15 @@
-import * as Sentry from '@sentry/node'
+import* as Sentry from '@sentry/node'
 
-import { Hub } from '../types'
-import { timeoutGuard } from '../utils/db/utils'
-import { status } from '../utils/status'
+import {Hub}from '../types'
+import {timeoutGuard}from '../utils/db/utils'
+import {status}from '../utils/status'
 
-interface FunctionInstrumentation<T, E> {
-    server: Hub
-    event: E
-    timeoutMessage: string
-    statsKey: string
-    func: (event: E) => Promise<T>
+interface FunctionInstrumentation < T, E> {
+server: Hub
+event: E
+timeoutMessage: string
+statsKey: string
+func:(event: E) => Promise<T>
 }
 
 export async function runInstrumentedFunction<T, E>({

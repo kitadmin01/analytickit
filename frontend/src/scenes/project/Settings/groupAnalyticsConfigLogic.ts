@@ -1,15 +1,15 @@
-import { kea } from 'kea'
-import { groupsModel } from '~/models/groupsModel'
-import type { groupAnalyticsConfigLogicType } from './groupAnalyticsConfigLogicType'
+import{kea}from'kea'
+import {groupsModel}from '~/models/groupsModel'
+import type {groupAnalyticsConfigLogicType }from './groupAnalyticsConfigLogicType'
 
 export const groupAnalyticsConfigLogic = kea<groupAnalyticsConfigLogicType>({
-    path: ['scenes', 'project', 'Settings', 'groupAnalyticsConfigLogic'],
-    connect: {
-        values: [groupsModel, ['groupTypes', 'groupTypesLoading']],
-        actions: [groupsModel, ['updateGroupTypesMetadata']],
-    },
-    actions: {
-        setSingular: (groupTypeIndex: number, value: string) => ({ groupTypeIndex, value }),
+path: ['scenes', 'project', 'Settings', 'groupAnalyticsConfigLogic'],
+connect: {
+values: [groupsModel, ['groupTypes', 'groupTypesLoading']],
+actions: [groupsModel, ['updateGroupTypesMetadata']],
+},
+actions: {
+setSingular:(groupTypeIndex: number, value: string) => ({ groupTypeIndex, value }),
         setPlural: (groupTypeIndex: number, value: string) => ({ groupTypeIndex, value }),
         reset: true,
         save: true,

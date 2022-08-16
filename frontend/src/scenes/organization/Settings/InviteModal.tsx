@@ -8,7 +8,7 @@ import { inviteLogic } from './inviteLogic'
 import { IconDelete, IconOpenInNew, IconPlus } from 'lib/components/icons'
 import { LemonButton } from 'lib/components/LemonButton'
 import { AlertMessage } from 'lib/components/AlertMessage'
-import { LemonTextArea, LemonInput } from '@posthog/lemon-ui'
+import { LemonTextArea, LemonInput } from '@analytickit/lemon-ui'
 import { CopyToClipboardInline } from 'lib/components/CopyToClipboard'
 import { OrganizationInviteType } from '~/types'
 import { userLogic } from 'scenes/userLogic'
@@ -24,8 +24,8 @@ export function EmailUnavailableMessage(): JSX.Element {
     return (
         <AlertMessage type="info" style={{ marginTop: 16 }}>
             <>
-                This PostHog instance isn't{' '}
-                <a href="https://posthog.com/docs/self-host/configure/email" target="_blank" rel="noopener">
+                This analytickit instance isn't{' '}
+                <a href="https://analytickit.com/docs/self-host/configure/email" target="_blank" rel="noopener">
                     configured&nbsp;to&nbsp;send&nbsp;emails&nbsp;
                     <IconOpenInNew />
                 </a>
@@ -47,7 +47,7 @@ function InviteRow({ index, isDeletable }: { index: number; isDeletable: boolean
         <div className="flex gap-2">
             <div className="flex-1">
                 <LemonInput
-                    placeholder={`${name.toLowerCase()}@posthog.com`}
+                    placeholder={`${name.toLowerCase()}@analytickit.com`}
                     type="email"
                     className={`error-on-blur${!invitesToSend[index]?.isValid ? ' errored' : ''}`}
                     onChange={(v) => {
@@ -122,17 +122,17 @@ export function InviteModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                     resetInviteRows()
                     onClose()
                 }}
-                title={<>Invite others to {user?.organization?.name || 'PostHog'}</>}
+                title={<>Invite others to {user?.organization?.name || 'analytickit'}</>}
                 description={
                     preflight?.email_service_available ? (
                         <span>
-                            Invite others to your project to collaborate together in PostHog. An invite is specific to
+                            Invite others to your project to collaborate together in analytickit. An invite is specific to
                             an email address and expires after 3 days. Name can be provided for the team member's
                             convenience.
                         </span>
                     ) : (
                         <span>
-                            This PostHog instance isn't configured to send emails. In the meantime, you can generate a
+                            This analytickit instance isn't configured to send emails. In the meantime, you can generate a
                             link for each team member you want to invite. You can always invite others at a later time.{' '}
                             <strong>Make sure you share links with the project members you want to invite.</strong>
                         </span>
@@ -176,8 +176,8 @@ export function InviteModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                         showIcon
                         message={
                             <>
-                                You've hit the limit of team members you can invite to your PostHog instance given your
-                                license. Please contact <a href="mailto:sales@posthog.com">sales@posthog.com</a> to
+                                You've hit the limit of team members you can invite to your analytickit instance given your
+                                license. Please contact <a href="mailto:sales@analytickit.com">sales@analytickit.com</a> to
                                 upgrade your license.
                             </>
                         }
@@ -275,7 +275,7 @@ export function InviteModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                         </div>
                         <LemonTextArea
                             data-attr="invite-optional-message"
-                            placeholder="Tell your teammates why you're inviting them to PostHog"
+                            placeholder="Tell your teammates why you're inviting them to analytickit"
                             onChange={(e) => updateMessage(e)}
                         />
                     </div>

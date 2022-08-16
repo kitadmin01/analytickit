@@ -1,2 +1,2 @@
 # flake8: noqa
-from posthog.conftest import *
+from analytickit.conftest import *

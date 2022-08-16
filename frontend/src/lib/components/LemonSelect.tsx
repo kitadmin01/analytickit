@@ -1,4 +1,4 @@
-import { LemonDivider } from '@posthog/lemon-ui'
+import { LemonDivider } from '@analytickit/lemon-ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { IconClose } from './icons'
 import { LemonButton, LemonButtonWithPopup, LemonButtonWithPopupProps } from './LemonButton'

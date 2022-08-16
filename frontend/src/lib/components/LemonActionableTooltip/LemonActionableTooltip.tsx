@@ -3,7 +3,7 @@ import { Placement } from '@floating-ui/react-dom-interactions'
 import { Popup } from 'lib/components/Popup/Popup'
 import { IconOpenInNew } from 'lib/components/icons'
 import { IconClose, IconChevronLeft, IconChevronRight } from 'lib/components/icons'
-import { LemonButton } from '@posthog/lemon-ui'
+import { LemonButton } from '@analytickit/lemon-ui'
 import './LemonActionableTooltip.scss'
 
 export type LemonActionableTooltipProps = {

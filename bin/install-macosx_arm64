@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install scripts for M1 Macs
-# See https://github.com/PostHog/posthog/issues/2916
+# See https://github.com/analytickit/analytickit/issues/2916
 # NB: use cryptography==3.4.7
 
 # Set ld flags to use OpenSSL installed with brew

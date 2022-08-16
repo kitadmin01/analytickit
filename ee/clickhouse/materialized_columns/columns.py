@@ -4,14 +4,14 @@ from typing import Dict, List, Literal, Union
 
 from django.utils.timezone import now
 
-from posthog.clickhouse.kafka_engine import trim_quotes_expr
-from posthog.clickhouse.materialized_columns.util import cache_for
-from posthog.clickhouse.replication.utils import clickhouse_is_replicated
-from posthog.client import sync_execute
-from posthog.models.instance_setting import get_instance_setting
-from posthog.models.property import PropertyName, TableWithProperties
-from posthog.models.utils import generate_random_short_suffix
-from posthog.settings import CLICKHOUSE_CLUSTER, CLICKHOUSE_DATABASE, TEST
+from analytickit.clickhouse.kafka_engine import trim_quotes_expr
+from analytickit.clickhouse.materialized_columns.util import cache_for
+from analytickit.clickhouse.replication.utils import clickhouse_is_replicated
+from analytickit.client import sync_execute
+from analytickit.models.instance_setting import get_instance_setting
+from analytickit.models.property import PropertyName, TableWithProperties
+from analytickit.models.utils import generate_random_short_suffix
+from analytickit.settings import CLICKHOUSE_CLUSTER, CLICKHOUSE_DATABASE, TEST
 
 ColumnName = str
 
@@ -85,7 +85,7 @@ def materialize(table: TableWithProperties, property: PropertyName, column_name=
 
 
 def backfill_materialized_columns(
-    table: TableWithProperties, properties: List[PropertyName], backfill_period: timedelta, test_settings=None
+        table: TableWithProperties, properties: List[PropertyName], backfill_period: timedelta, test_settings=None
 ) -> None:
     """
     Backfills the materialized column after its creation.

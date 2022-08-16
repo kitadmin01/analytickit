@@ -15,8 +15,8 @@ export function SourcePlugin(): JSX.Element {
             <Card>
                 <Title level={5}>App Editor</Title>
                 <Paragraph>
-                    Write your app directly in PostHog.{' '}
-                    <a href="https://posthog.com/docs/apps" target="_blank">
+                    Write your app directly in analytickit.{' '}
+                    <a href="https://analytickit.com/docs/apps" target="_blank">
                         Read the documentation for more information!
                     </a>
                 </Paragraph>

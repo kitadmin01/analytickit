@@ -3,7 +3,7 @@
     "README.md"
   ],
   "imageSize": 50,
-  "badgeTemplate": "<a href='https://posthog.com/contributors'><img src='https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat-square' /></a>",
+  "badgeTemplate": "<a href='https://analytickit.com/contributors'><img src='https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat-square' /></a>",
   "commit": false,
   "contributors": [
     {
@@ -92,10 +92,10 @@
       ]
     },
     {
-      "login": "posthog-bot",
-      "name": "posthog-bot",
+      "login": "analytickit-bot",
+      "name": "analytickit-bot",
       "avatar_url": "https://avatars.githubusercontent.com/u/69588470?v=4",
-      "profile": "https://github.com/posthog-bot",
+      "profile": "https://github.com/analytickit-bot",
       "contributions": [
         "code"
       ]
@@ -957,10 +957,10 @@
       ]
     },
     {
-      "login": "posthog-contributions-bot[bot]",
-      "name": "posthog-contributions-bot[bot]",
+      "login": "analytickit-contributions-bot[bot]",
+      "name": "analytickit-contributions-bot[bot]",
       "avatar_url": "https://avatars.githubusercontent.com/in/105985?v=4",
-      "profile": "https://github.com/apps/posthog-contributions-bot",
+      "profile": "https://github.com/apps/analytickit-contributions-bot",
       "contributions": [
         "code"
       ]
@@ -1312,7 +1312,7 @@
     },
     {
       "login": "marcushyett-ph",
-      "name": "Marcus Hyett (PostHog)",
+      "name": "Marcus Hyett (analytickit)",
       "avatar_url": "https://avatars.githubusercontent.com/u/85295485?v=4",
       "profile": "https://github.com/marcushyett-ph",
       "contributions": [
@@ -2037,8 +2037,8 @@
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "posthog",
-  "projectOwner": "PostHog",
+  "projectName": "analytickit",
+  "projectOwner": "analytickit",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true

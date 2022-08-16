@@ -1,15 +1,15 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import type { billingLogicType } from './billingLogicType'
-import { PlanInterface, BillingType } from '~/types'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import posthog from 'posthog-js'
-import { sceneLogic } from 'scenes/sceneLogic'
-import { Scene } from 'scenes/sceneTypes'
-import { lemonToast } from 'lib/components/lemonToast'
-import { router } from 'kea-router'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { FEATURE_FLAGS } from 'lib/constants'
+import type {billingLogicType}from './billingLogicType'
+import {PlanInterface, BillingType} from '~/types'
+import {preflightLogic }from 'scenes/PreflightCheck/preflightLogic'
+import analytickit from 'analytickit-js'
+import {sceneLogic }from 'scenes/sceneLogic'
+import { Scene}from 'scenes/sceneTypes'
+import {lemonToast}from 'lib/components/lemonToast'
+import {router}from 'kea-router'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import {FEATURE_FLAGS}from 'lib/constants'
 
 export const UTM_TAGS = 'utm_medium=in-product&utm_campaign=billing-management'
 export const ALLOCATION_THRESHOLD_ALERT = 0.85 // Threshold to show warning of event usage near limit
@@ -17,21 +17,21 @@ export const FREE_PLAN_MAX_EVENTS = 1000000
 export const FREE_PLAN_EVENTS_THRESHOLD = 0.85
 
 export enum BillingAlertType {
-    SetupBilling = 'setup_billing',
-    UsageNearLimit = 'usage_near_limit',
-    UsageLimitExceeded = 'usage_limit_exceeded',
-    FreeUsageNearLimit = 'free_usage_near_limit',
+SetupBilling = 'setup_billing',
+UsageNearLimit = 'usage_near_limit',
+UsageLimitExceeded = 'usage_limit_exceeded',
+FreeUsageNearLimit = 'free_usage_near_limit',
 }
 
 export const billingLogic = kea<billingLogicType>({
-    path: ['scenes', 'billing', 'billingLogic'],
-    actions: {
-        registerInstrumentationProps: true,
-    },
-    connect: {
-        values: [featureFlagLogic, ['featureFlags']],
-    },
-    loaders: ({ actions, values }) => ({
+path: ['scenes', 'billing', 'billingLogic'],
+actions: {
+registerInstrumentationProps: true,
+},
+connect: {
+values: [featureFlagLogic, ['featureFlags']],
+},
+loaders:({ actions, values }) => ({
         billing: [
             null as BillingType | null,
             {
@@ -46,7 +46,7 @@ export const billingLogic = kea<billingLogicType>({
                         router.values.location.pathname !== '/organization/billing/locked' &&
                         values.featureFlags[FEATURE_FLAGS.BILLING_LOCK_EVERYTHING]
                     ) {
-                        posthog.capture('billing locked screen shown')
+                        analytickit.capture('billing locked screen shown')
                         router.actions.replace('/organization/billing/locked')
                     }
                     actions.registerInstrumentationProps()
@@ -176,8 +176,8 @@ export const billingLogic = kea<billingLogicType>({
         },
         registerInstrumentationProps: async (_, breakpoint) => {
             await breakpoint(100)
-            if (posthog && values.billing) {
-                posthog.register({
+            if (analytickit && values.billing) {
+                analytickit.register({
                     has_billing_plan: !!values.billing?.plan,
                     metered_billing: values.billing.plan?.is_metered_billing,
                     event_allocation: values.billing.event_allocation,

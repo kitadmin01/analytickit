@@ -1,39 +1,39 @@
-import { dayjs } from 'lib/dayjs'
-import { kea } from 'kea'
+import{dayjs}from'lib/dayjs'
+import {kea}from 'kea'
 import api from 'lib/api'
-import { systemStatusLogic } from 'scenes/instance/SystemStatus/systemStatusLogic'
-import { organizationLogic } from 'scenes/organizationLogic'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import { sceneLogic } from 'scenes/sceneLogic'
-import { teamLogic } from 'scenes/teamLogic'
-import { userLogic } from 'scenes/userLogic'
-import { VersionType } from '~/types'
-import type { navigationLogicType } from './navigationLogicType'
-import { membersLogic } from 'scenes/organization/Settings/membersLogic'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { FEATURE_FLAGS } from 'lib/constants'
+import {systemStatusLogic}from 'scenes/instance/SystemStatus/systemStatusLogic'
+import { organizationLogic}from 'scenes/organizationLogic'
+import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
+import {sceneLogic}from 'scenes/sceneLogic'
+import {teamLogic}from 'scenes/teamLogic'
+import {userLogic}from 'scenes/userLogic'
+import {VersionType}from '~/types'
+import type {navigationLogicType }from './navigationLogicType'
+import { membersLogic}from 'scenes/organization/Settings/membersLogic'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import {FEATURE_FLAGS} from 'lib/constants'
 
 export type WarningType = 'demo_project' | 'real_project_with_no_events' | 'invite_teammates' | null
 
 export const navigationLogic = kea<navigationLogicType>({
-    path: ['layout', 'navigation', 'navigationLogic'],
-    connect: {
-        values: [sceneLogic, ['sceneConfig'], membersLogic, ['members', 'membersLoading']],
-    },
-    actions: {
-        toggleSideBarBase: true,
-        toggleSideBarMobile: true,
-        hideSideBarMobile: true,
-        openSitePopover: true,
-        closeSitePopover: true,
-        toggleSitePopover: true,
-        showCreateOrganizationModal: true,
-        hideCreateOrganizationModal: true,
-        showCreateProjectModal: true,
-        hideCreateProjectModal: true,
-        toggleProjectSwitcher: true,
-        hideProjectSwitcher: true,
-        openAppSourceEditor: (id: number, pluginId: number) => ({ id, pluginId }),
+path: ['layout', 'navigation', 'navigationLogic'],
+connect: {
+values: [sceneLogic, ['sceneConfig'], membersLogic, ['members', 'membersLoading']],
+},
+actions: {
+toggleSideBarBase: true,
+toggleSideBarMobile: true,
+hideSideBarMobile: true,
+openSitePopover: true,
+closeSitePopover: true,
+toggleSitePopover: true,
+showCreateOrganizationModal: true,
+hideCreateOrganizationModal: true,
+showCreateProjectModal: true,
+hideCreateProjectModal: true,
+toggleProjectSwitcher: true,
+hideProjectSwitcher: true,
+openAppSourceEditor: (id: number, pluginId: number) => ({ id, pluginId }),
         closeAppSourceEditor: true,
         setOpenAppMenu: (id: number | null) => ({ id }),
     },
@@ -152,27 +152,27 @@ export const navigationLogic = kea<navigationLogicType>({
                     !latestVersionLoading &&
                     !preflight?.cloud &&
                     latestVersion &&
-                    latestVersion !== preflight?.posthog_version
-                )
-            },
-        ],
-        demoWarning: [
-            (s) => [
-                organizationLogic.selectors.currentOrganization,
-                teamLogic.selectors.currentTeam,
-                preflightLogic.selectors.preflight,
-                s.members,
-                s.membersLoading,
-                featureFlagLogic.selectors.featureFlags,
-            ],
-            (organization, currentTeam, preflight, members, membersLoading, featureFlags): WarningType => {
-                if (!organization) {
+                    latestVersion !== preflight?.analytickit_version
+)
+},
+],
+demoWarning: [
+(s) = > [
+organizationLogic.selectors.currentOrganization,
+teamLogic.selectors.currentTeam,
+preflightLogic.selectors.preflight,
+s.members,
+s.membersLoading,
+featureFlagLogic.selectors.featureFlags,
+],
+(organization, currentTeam, preflight, members, membersLoading, featureFlags): WarningType = > {
+if(!organization) {
                     return null
                 }
 
                 if (currentTeam?.is_demo && !preflight?.demo) {
                     // If the project is a demo one, show a project-level warning
-                    // Don't show this project-level warning in the PostHog demo environemnt though,
+                    // Don't show this project-level warning in the analytickit demo environemnt though,
                     // as then Announcement is shown instance-wide
                     return 'demo_project'
                 } else if (currentTeam && !currentTeam.ingested_event) {
@@ -194,7 +194,7 @@ export const navigationLogic = kea<navigationLogicType>({
             null as string | null,
             {
                 loadLatestVersion: async () => {
-                    const versions = (await api.get('https://update.posthog.com')) as VersionType[]
+                    const versions = (await api.get('https://update.analytickit.com')) as VersionType[]
                     for (const version of versions) {
                         if (
                             version?.release_date &&

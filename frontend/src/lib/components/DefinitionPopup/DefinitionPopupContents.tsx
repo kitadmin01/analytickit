@@ -7,7 +7,7 @@ import {
 import { useActions, useValues } from 'kea'
 import { definitionPopupLogic, DefinitionPopupState } from 'lib/components/DefinitionPopup/definitionPopupLogic'
 import React, { useEffect } from 'react'
-import { isPostHogProp, keyMapping, PropertyKeyInfo } from 'lib/components/PropertyKeyInfo'
+import { isanalytickitProp, keyMapping, PropertyKeyInfo } from 'lib/components/PropertyKeyInfo'
 import { DefinitionPopup } from 'lib/components/DefinitionPopup/DefinitionPopup'
 import { InfoCircleOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'lib/components/Link'
@@ -85,7 +85,7 @@ function TaxonomyIntroductionSection(): JSX.Element {
             </DefinitionPopup.Grid>
             <DefinitionPopup.Section>
                 <Link
-                    to="https://posthog.com/docs/user-guides/data-management"
+                    to="https://analytickit.com/docs/user-guides/data-management"
                     target="_blank"
                     data-attr="taxonomy-learn-more"
                     style={{ fontWeight: 600, marginTop: 8 }}
@@ -393,7 +393,7 @@ function DefinitionEdit(): JSX.Element {
                         </div>
                     </>
                 )}
-                {definition && definition.name && !isPostHogProp(definition.name) && 'verified' in localDefinition && (
+                {definition && definition.name && !isanalytickitProp(definition.name) && 'verified' in localDefinition && (
                     <VerifiedEventCheckbox
                         verified={!!localDefinition.verified}
                         onChange={(nextVerified) => {

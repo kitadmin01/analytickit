@@ -1,20 +1,20 @@
-import { gzipSync } from 'zlib'
+import{gzipSync}from'zlib'
 
-import { defaultConfig } from '../src/config/config'
-import { ServerInstance, startPluginsServer } from '../src/main/pluginsServer'
-import { EnqueuedJob, Hub, JobName, LogLevel, PluginsServerConfig } from '../src/types'
-import { createHub } from '../src/utils/db/hub'
-import { killProcess } from '../src/utils/kill'
-import { delay } from '../src/utils/utils'
-import { makePiscina } from '../src/worker/piscina'
-import { createPosthog, DummyPostHog } from '../src/worker/vm/extensions/posthog'
-import { writeToFile } from '../src/worker/vm/extensions/test-utils'
-import { resetGraphileSchema } from './helpers/graphile'
-import { pluginConfig39 } from './helpers/plugins'
-import { resetTestDatabase } from './helpers/sql'
+import {defaultConfig}from '../src/config/config'
+import {ServerInstance, startPluginsServer}from '../src/main/pluginsServer'
+import { EnqueuedJob, Hub, JobName, LogLevel, PluginsServerConfig} from '../src/types'
+import {createHub}from '../src/utils/db/hub'
+import { killProcess}from '../src/utils/kill'
+import {delay}from '../src/utils/utils'
+import {makePiscina}from '../src/worker/piscina'
+import {createanalytickit, Dummyanalytickit}from '../src/worker/vm/extensions/analytickit'
+import { writeToFile}from '../src/worker/vm/extensions/test-utils'
+import { resetGraphileSchema}from './helpers/graphile'
+import {pluginConfig39}from './helpers/plugins'
+import {resetTestDatabase}from './helpers/sql'
 
 const mS3WrapperInstance = {
-    upload: jest.fn(),
+upload: jest.fn(),
     getObject: jest.fn(),
     deleteObject: jest.fn(),
     listObjectsV2: jest.fn(),
@@ -77,7 +77,7 @@ async function waitForLogEntries(number: number) {
 
 describe.skip('job queues', () => {
     let server: ServerInstance
-    let posthog: DummyPostHog
+    let analytickit: Dummyanalytickit
 
     beforeEach(async () => {
         testConsole.reset()
@@ -96,23 +96,23 @@ describe.skip('job queues', () => {
     describe('fs queue', () => {
         beforeEach(async () => {
             server = await startPluginsServer(createConfig({ JOB_QUEUES: 'fs' }), makePiscina)
-            posthog = createPosthog(server.hub, pluginConfig39)
+            analytickit = createanalytickit(server.hub, pluginConfig39)
         })
 
         test('jobs get scheduled with runIn', async () => {
-            await posthog.capture('my event', { type: 'runIn' })
+            await analytickit.capture('my event', { type: 'runIn' })
             await waitForLogEntries(2)
             expect(testConsole.read()).toEqual([['processEvent'], ['reply', 'runIn']])
         })
 
         test('jobs get scheduled with runAt', async () => {
-            await posthog.capture('my event', { type: 'runAt' })
+            await analytickit.capture('my event', { type: 'runAt' })
             await waitForLogEntries(2)
             expect(testConsole.read()).toEqual([['processEvent'], ['reply', 'runAt']])
         })
 
         test('jobs get scheduled with runNow', async () => {
-            await posthog.capture('my event', { type: 'runNow' })
+            await analytickit.capture('my event', { type: 'runNow' })
             await waitForLogEntries(2)
             expect(testConsole.read()).toEqual([['processEvent'], ['reply', 'runNow']])
         })
@@ -134,11 +134,11 @@ describe.skip('job queues', () => {
             beforeEach(async () => {
                 const config = await initTest({ JOB_QUEUES: 'graphile' })
                 server = await startPluginsServer(config, makePiscina)
-                posthog = createPosthog(server.hub, pluginConfig39)
+                analytickit = createanalytickit(server.hub, pluginConfig39)
             })
 
             test('graphile job queue', async () => {
-                await posthog.capture('my event', { type: 'runIn' })
+                await analytickit.capture('my event', { type: 'runIn' })
                 await waitForLogEntries(2)
                 expect(testConsole.read()).toEqual([['processEvent'], ['reply', 'runIn']])
             })
@@ -171,8 +171,8 @@ describe.skip('job queues', () => {
             test('default connection', async () => {
                 const config = await initTest({ JOB_QUEUES: 'graphile', JOB_QUEUE_GRAPHILE_URL: '' }, true)
                 server = await startPluginsServer(config, makePiscina)
-                posthog = createPosthog(server.hub, pluginConfig39)
-                await posthog.capture('my event', { type: 'runIn' })
+                analytickit = createanalytickit(server.hub, pluginConfig39)
+                await analytickit.capture('my event', { type: 'runIn' })
                 await waitForLogEntries(2)
                 expect(testConsole.read()).toEqual([['processEvent'], ['reply', 'runIn']])
             })
@@ -189,9 +189,9 @@ describe.skip('job queues', () => {
                             CRASH_IF_NO_PERSISTENT_JOB_QUEUE: true,
                         },
                         false
-                    )
-                    server = await startPluginsServer(config, makePiscina)
-                    await delay(5000)
+)
+server = await startPluginsServer(config, makePiscina)
+await delay(5000)
                     expect(killProcess).toHaveBeenCalled()
                 })
 
@@ -203,10 +203,10 @@ describe.skip('job queues', () => {
                             CRASH_IF_NO_PERSISTENT_JOB_QUEUE: false,
                         },
                         false
-                    )
-                    server = await startPluginsServer(config, makePiscina)
-                    posthog = createPosthog(server.hub, pluginConfig39)
-                    await posthog.capture('my event', { type: 'runIn' })
+)
+server = await startPluginsServer(config, makePiscina)
+analytickit = createanalytickit(server.hub, pluginConfig39)
+await analytickit.capture('my event', { type: 'runIn' })
                     await waitForLogEntries(1)
                     expect(testConsole.read()).toEqual([['processEvent']])
                 })
@@ -230,10 +230,10 @@ describe.skip('job queues', () => {
                     JOB_QUEUE_S3_AWS_ACCESS_KEY: 'access key',
                     JOB_QUEUE_S3_AWS_REGION: 'region',
                 })
-            )
-        })
+)
+})
 
-        afterEach(async () => closeHub?.())
+afterEach(async () => closeHub?.())
 
         test('calls a few functions', async () => {
             // calls a few functions to test the connection on init

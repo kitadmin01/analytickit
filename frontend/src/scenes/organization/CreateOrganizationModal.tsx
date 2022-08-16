@@ -57,7 +57,7 @@ export function CreateOrganizationModal({
                 Organizations gather people building products together.
                 <br />
                 <a
-                    href="https://posthog.com/docs/user-guides/organizations-and-projects"
+                    href="https://analytickit.com/docs/user-guides/organizations-and-projects"
                     target="_blank"
                     rel="noopener"
                 >

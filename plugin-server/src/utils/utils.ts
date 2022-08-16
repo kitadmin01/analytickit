@@ -1,21 +1,23 @@
-import Piscina from '@posthog/piscina'
+importPiscinafrom'@analytickit/piscina'
 import * as Sentry from '@sentry/node'
-import { randomBytes } from 'crypto'
-import Redis, { RedisOptions } from 'ioredis'
-import { DateTime } from 'luxon'
-import { Pool, PoolConfig } from 'pg'
-import { Readable } from 'stream'
+import { randomBytes}from 'crypto'
+import Redis, {RedisOptions}from 'ioredis'
+import { DateTime}from 'luxon'
+import {Pool, PoolConfig}from 'pg'
+import { Readable}from 'stream'
 
-import { LogLevel, Plugin, PluginConfigId, PluginsServerConfig, TimestampFormat } from '../types'
-import { Hub } from './../types'
-import { status } from './status'
+import { LogLevel, Plugin, PluginConfigId, PluginsServerConfig, TimestampFormat} from '../types'
+import { Hub}from './../types'
+import {status}from './status'
 
 /** Time until autoexit (due to error) gives up on graceful exit and kills the process right away. */
 const GRACEFUL_EXIT_PERIOD_SECONDS = 5
 /** Number of Redis error events until the server is killed gracefully. */
 const REDIS_ERROR_COUNTER_LIMIT = 10
 
-export class NoRowsUpdatedError extends Error {}
+export class NoRowsUpdatedError extends Error {
+
+}
 
 export function killGracefully(): void {
     status.error('⏲', 'Shutting plugin server down gracefully with SIGTERM...')
@@ -89,18 +91,18 @@ export class UUID {
             candidate &&
                 typeof candidate === 'string' &&
                 candidate.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i)
-        )
-        if (!isValid && throwOnInvalid) {
+)
+if (!isValid && throwOnInvalid) {
             throw new Error(
                 'String does not match format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (where each X is a hexadecimal character)!'
-            )
-        }
-        return isValid
-    }
+)
+}
+return isValid
+}
 
-    array: Uint8Array
+array: Uint8Array
 
-    constructor(candidate: string | Uint8Array | Buffer) {
+constructor(candidate: string | Uint8Array | Buffer) {
         if (candidate instanceof Uint8Array) {
             if (candidate.byteLength !== 16) {
                 throw new Error(`UUID must be built from exactly 16 bytes, but you provided ${candidate.byteLength}!`)
@@ -179,7 +181,7 @@ export class UUID {
  *
  * Loosely based on [Segment's KSUID](https://github.com/segmentio/ksuid) and
  * on [Twitter's snowflake ID](https://blog.twitter.com/engineering/en_us/a/2010/announcing-snowflake.html).
- * Ported from the PostHog Django app.
+ * Ported from the analytickit Django app.
  */
 export class UUIDT extends UUID {
     static currentSeriesPerMs: Map<number, number> = new Map()
@@ -308,14 +310,14 @@ export async function tryTwice<T extends any>(
 }
 
 export async function createRedis(serverConfig: PluginsServerConfig): Promise<Redis.Redis> {
-    const credentials: Partial<RedisOptions> | undefined = serverConfig.POSTHOG_REDIS_HOST
+    const credentials: Partial<RedisOptions> | undefined = serverConfig.analytickit_REDIS_HOST
         ? {
-              password: serverConfig.POSTHOG_REDIS_PASSWORD,
-              port: serverConfig.POSTHOG_REDIS_PORT,
+              password: serverConfig.analytickit_REDIS_PASSWORD,
+              port: serverConfig.analytickit_REDIS_PORT,
           }
         : undefined
 
-    const redis = new Redis(credentials ? serverConfig.POSTHOG_REDIS_HOST : serverConfig.REDIS_URL, {
+    const redis = new Redis(credentials ? serverConfig.analytickit_REDIS_HOST : serverConfig.REDIS_URL, {
         ...credentials,
         maxRetriesPerRequest: -1,
     })
@@ -357,8 +359,8 @@ export function createPostgresPool(
     onError?: (error: Error) => any
 ): Pool {
     if (typeof configOrDatabaseUrl !== 'string') {
-        if (!configOrDatabaseUrl.DATABASE_URL && !configOrDatabaseUrl.POSTHOG_DB_NAME) {
-            throw new Error('Invalid configuration for Postgres: either DATABASE_URL or POSTHOG_DB_NAME required')
+        if (!configOrDatabaseUrl.DATABASE_URL && !configOrDatabaseUrl.analytickit_DB_NAME) {
+            throw new Error('Invalid configuration for Postgres: either DATABASE_URL or analytickit_DB_NAME required')
         }
     }
     const credentials: Partial<PoolConfig> =
@@ -371,11 +373,11 @@ export function createPostgresPool(
                   connectionString: configOrDatabaseUrl.DATABASE_URL,
               }
             : {
-                  database: configOrDatabaseUrl.POSTHOG_DB_NAME ?? undefined,
-                  user: configOrDatabaseUrl.POSTHOG_DB_USER,
-                  password: configOrDatabaseUrl.POSTHOG_DB_PASSWORD,
-                  host: configOrDatabaseUrl.POSTHOG_POSTGRES_HOST,
-                  port: configOrDatabaseUrl.POSTHOG_POSTGRES_PORT,
+                  database: configOrDatabaseUrl.analytickit_DB_NAME ?? undefined,
+                  user: configOrDatabaseUrl.analytickit_DB_USER,
+                  password: configOrDatabaseUrl.analytickit_DB_PASSWORD,
+                  host: configOrDatabaseUrl.analytickit_POSTGRES_HOST,
+                  port: configOrDatabaseUrl.analytickit_POSTGRES_PORT,
               }
 
     const pgPool = new Pool({
@@ -481,12 +483,12 @@ export function groupBy<T extends Record<string, any>, K extends keyof T>(
               if (currentItem[key] in grouping) {
                   throw new Error(
                       `Key "${String(key)}" has more than one matching value, which is not allowed in flat groupBy!`
-                  )
-              }
-              grouping[currentItem[key]] = currentItem
-              return grouping
-          }, {} as Record<T[K], T>)
-        : objects.reduce((grouping, currentItem) => {
+)
+}
+grouping[currentItem[key]] = currentItem
+return grouping
+}, {} as Record<T[K], T>)
+: objects.reduce((grouping, currentItem) => {
               ;(grouping[currentItem[key]] = grouping[currentItem[key]] || []).push(currentItem)
               return grouping
           }, {} as Record<T[K], T[]>)

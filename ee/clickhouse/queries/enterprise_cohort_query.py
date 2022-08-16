@@ -1,11 +1,11 @@
 from typing import Any, Dict, List, Tuple, cast
 
-from posthog.constants import PropertyOperatorType
-from posthog.models.cohort.util import get_count_operator
-from posthog.models.filters.mixins.utils import cached_property
-from posthog.models.property.property import Property, PropertyGroup
-from posthog.models.utils import PersonPropertiesMode
-from posthog.queries.foss_cohort_query import (
+from analytickit.constants import PropertyOperatorType
+from analytickit.models.cohort.util import get_count_operator
+from analytickit.models.filters.mixins.utils import cached_property
+from analytickit.models.property.property import Property, PropertyGroup
+from analytickit.models.utils import PersonPropertiesMode
+from analytickit.queries.foss_cohort_query import (
     FOSSCohortQuery,
     parse_and_validate_positive_integer,
     validate_entity,
@@ -103,7 +103,7 @@ class EnterpriseCohortQuery(FOSSCohortQuery):
         elif prop.type == "person":
             res, params = self.get_person_condition(prop, prepend, idx)
         elif (
-            prop.type == "static-cohort"
+                prop.type == "static-cohort"
         ):  # "cohort" and "precalculated-cohort" are handled by flattening during initialization
             res, params = self.get_static_cohort_condition(prop, prepend, idx)
         else:

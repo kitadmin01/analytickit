@@ -1,26 +1,26 @@
-import { initKeaTests } from '~/test/init'
-import { CohortLogicProps } from 'scenes/cohorts/cohortLogic'
-import { expectLogic, partial } from 'kea-test-utils'
-import { useMocks } from '~/mocks/jest'
-import { mockCohort } from '~/test/mocks'
-import { teamLogic } from 'scenes/teamLogic'
-import { api } from 'lib/api.mock'
-import { cohortsModel } from '~/models/cohortsModel'
-import { router } from 'kea-router'
-import { urls } from 'scenes/urls'
+import{initKeaTests}from'~/test/init'
+import {CohortLogicProps }from 'scenes/cohorts/cohortLogic'
+import {expectLogic, partial}from 'kea-test-utils'
+import {useMocks}from '~/mocks/jest'
+import {mockCohort}from '~/test/mocks'
+import {teamLogic }from 'scenes/teamLogic'
+import { api}from 'lib/api.mock'
+import {cohortsModel}from '~/models/cohortsModel'
+import {router}from 'kea-router'
+import {urls}from 'scenes/urls'
 import {
-    BehavioralEventType,
-    BehavioralLifecycleType,
-    CohortCriteriaGroupFilter,
-    FilterLogicalOperator,
-    PropertyOperator,
-    TimeUnitType,
-} from '~/types'
-import { BehavioralFilterKey } from 'scenes/cohorts/CohortFilters/types'
-import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
-import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { CRITERIA_VALIDATIONS, NEW_CRITERIA, ROWS } from 'scenes/cohorts/CohortFilters/constants'
-import { cohortEditLogic } from 'scenes/cohorts/cohortEditLogic'
+BehavioralEventType,
+BehavioralLifecycleType,
+CohortCriteriaGroupFilter,
+FilterLogicalOperator,
+PropertyOperator,
+TimeUnitType,
+}from '~/types'
+import {BehavioralFilterKey}from 'scenes/cohorts/CohortFilters/types'
+import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
+import { CRITERIA_VALIDATIONS, NEW_CRITERIA, ROWS}from 'scenes/cohorts/CohortFilters/constants'
+import {cohortEditLogic }from 'scenes/cohorts/cohortEditLogic'
 
 describe('cohortEditLogic', () => {
     let logic: ReturnType<typeof cohortEditLogic.build>
@@ -488,16 +488,16 @@ describe('cohortEditLogic', () => {
                                                                     fieldKey,
                                                                     CRITERIA_VALIDATIONS[type](undefined),
                                                                 ])
-                                                        )
-                                                    ),
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                },
-                            }),
-                        })
-                    expect(api.update).toBeCalledTimes(0)
+)
+),
+],
+},
+],
+},
+},
+}),
+})
+expect(api.update).toBeCalledTimes(0)
                 })
             })
         })

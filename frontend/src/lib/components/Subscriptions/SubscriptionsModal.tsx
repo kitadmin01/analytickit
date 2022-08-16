@@ -3,7 +3,7 @@ import { ManageSubscriptions } from './views/ManageSubscriptions'
 import { EditSubscription } from './views/EditSubscription'
 import { useActions, useValues } from 'kea'
 import { router } from 'kea-router'
-import { LemonButton, LemonButtonWithPopup } from '@posthog/lemon-ui'
+import { LemonButton, LemonButtonWithPopup } from '@analytickit/lemon-ui'
 import { SubscriptionBaseProps, urlForSubscription, urlForSubscriptions } from './utils'
 import { PayGatePage } from '../PayGatePage/PayGatePage'
 import { AvailableFeature } from '~/types'
@@ -55,7 +55,7 @@ export function SubscriptionsModal(props: SubscriptionsModalProps): JSX.Element 
                             </>
                         }
                         caption="Get Insight or Dashboard reports directly to your inbox!"
-                        docsLink="https://posthog.com/docs/user-guides/subscriptions"
+                        docsLink="https://analytickit.com/docs/user-guides/subscriptions"
                     />
                 </div>
             )}

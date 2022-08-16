@@ -5,13 +5,13 @@ from freezegun import freeze_time
 from ee.api.test.base import LicensedTestMixin
 from ee.models.license import License
 from ee.tasks.send_license_usage import send_license_usage
-from posthog.models.team import Team
-from posthog.test.base import APIBaseTest, ClickhouseDestroyTablesMixin, _create_event, flush_persons_and_events
+from analytickit.models.team import Team
+from analytickit.test.base import APIBaseTest, ClickhouseDestroyTablesMixin, _create_event, flush_persons_and_events
 
 
 class SendLicenseUsageTest(LicensedTestMixin, ClickhouseDestroyTablesMixin, APIBaseTest):
     @freeze_time("2021-10-10T23:01:00Z")
-    @patch("posthoganalytics.capture")
+    @patch("analytickitanalytics.capture")
     @patch("requests.post")
     def test_send_license_usage(self, mock_post, mock_capture):
         team2 = Team.objects.create(organization=self.organization)
@@ -34,7 +34,7 @@ class SendLicenseUsageTest(LicensedTestMixin, ClickhouseDestroyTablesMixin, APIB
 
         send_license_usage()
         mock_post.assert_called_once_with(
-            "https://license.posthog.com/licenses/usage",
+            "https://license.analytickit.com/licenses/usage",
             data={"date": "2021-10-09", "key": self.license.key, "events_count": 3},
         )
         mock_capture.assert_called_once_with(
@@ -46,7 +46,7 @@ class SendLicenseUsageTest(LicensedTestMixin, ClickhouseDestroyTablesMixin, APIB
         self.assertEqual(License.objects.get().valid_until.isoformat(), "2021-11-10T23:01:00+00:00")
 
     @freeze_time("2021-10-10T23:01:00Z")
-    @patch("posthoganalytics.capture")
+    @patch("analytickitanalytics.capture")
     @patch("ee.tasks.send_license_usage.sync_execute", side_effect=Exception())
     def test_send_license_error(self, mock_post, mock_capture):
         team2 = Team.objects.create(organization=self.organization)
@@ -71,7 +71,7 @@ class SendLicenseUsageTest(LicensedTestMixin, ClickhouseDestroyTablesMixin, APIB
         )
 
     @freeze_time("2021-10-10T23:01:00Z")
-    @patch("posthoganalytics.capture")
+    @patch("analytickitanalytics.capture")
     @patch("requests.post")
     def test_send_license_not_found(self, mock_post, mock_capture):
         team2 = Team.objects.create(organization=self.organization)

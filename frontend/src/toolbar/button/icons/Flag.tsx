@@ -9,7 +9,7 @@ interface FlagProps extends React.PropsWithoutRef<JSX.IntrinsicElements['svg']> 
 export function Flag({ engaged, animated, ...props }: FlagProps): JSX.Element {
     return engaged ? (
         <svg
-            className={`posthog-toolbar-icon-flag${animated ? ' animated' : ''}`}
+            className={`analytickit-toolbar-icon-flag${animated ? ' animated' : ''}`}
             width="40"
             height="50"
             viewBox="0 0 40 50"

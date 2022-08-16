@@ -10,14 +10,14 @@ from rest_framework.response import Response
 from ee.clickhouse.queries.experiments.funnel_experiment_result import ClickhouseFunnelExperimentResult
 from ee.clickhouse.queries.experiments.secondary_experiment_result import ClickhouseSecondaryExperimentResult
 from ee.clickhouse.queries.experiments.trend_experiment_result import ClickhouseTrendExperimentResult
-from posthog.api.feature_flag import FeatureFlagSerializer
-from posthog.api.routing import StructuredViewSetMixin
-from posthog.api.shared import UserBasicSerializer
-from posthog.constants import INSIGHT_TRENDS, AvailableFeature
-from posthog.models.experiment import Experiment
-from posthog.models.filters.filter import Filter
-from posthog.models.team import Team
-from posthog.permissions import (
+from analytickit.api.feature_flag import FeatureFlagSerializer
+from analytickit.api.routing import StructuredViewSetMixin
+from analytickit.api.shared import UserBasicSerializer
+from analytickit.constants import INSIGHT_TRENDS, AvailableFeature
+from analytickit.models.experiment import Experiment
+from analytickit.models.filters.filter import Filter
+from analytickit.models.team import Team
+from analytickit.permissions import (
     PremiumFeaturePermission,
     ProjectMembershipNecessaryPermissions,
     TeamMemberAccessPermission,
@@ -25,7 +25,6 @@ from posthog.permissions import (
 
 
 class ExperimentSerializer(serializers.ModelSerializer):
-
     feature_flag_key = serializers.CharField(source="get_feature_flag_key")
     created_by = UserBasicSerializer(read_only=True)
 
@@ -141,15 +140,15 @@ class ExperimentSerializer(serializers.ModelSerializer):
 
             for variant in validated_data["parameters"]["feature_flag_variants"]:
                 if (
-                    len(
-                        [
-                            ff_variant
-                            for ff_variant in feature_flag.variants
-                            if ff_variant["key"] == variant["key"]
-                            and ff_variant["rollout_percentage"] == variant["rollout_percentage"]
-                        ]
-                    )
-                    != 1
+                        len(
+                            [
+                                ff_variant
+                                for ff_variant in feature_flag.variants
+                                if ff_variant["key"] == variant["key"]
+                                   and ff_variant["rollout_percentage"] == variant["rollout_percentage"]
+                            ]
+                        )
+                        != 1
                 ):
                     raise ValidationError("Can't update feature_flag_variants on Experiment")
 

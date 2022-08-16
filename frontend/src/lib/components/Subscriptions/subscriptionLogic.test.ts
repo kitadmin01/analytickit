@@ -1,25 +1,25 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { useMocks } from '~/mocks/jest'
-import { InsightShortId, SubscriptionType } from '~/types'
-import { subscriptionLogic } from './subscriptionLogic'
-import { router } from 'kea-router'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {useMocks} from '~/mocks/jest'
+import {InsightShortId, SubscriptionType}from '~/types'
+import {subscriptionLogic}from './subscriptionLogic'
+import {router}from 'kea-router'
 
 const Insight1 = '1' as InsightShortId
 
 export const fixtureSubscriptionResponse = (id: number, args: Partial<SubscriptionType> = {}): SubscriptionType =>
-    ({
-        id,
-        title: 'My example subscription',
-        target_type: 'email',
-        target_value: 'ben@posthog.com,geoff@other-company.com',
-        frequency: 'monthly',
-        interval: 2,
-        start_date: '2022-01-01T00:09:00',
-        byweekday: ['wednesday'],
-        bysetpos: 1,
-        ...args,
-    } as SubscriptionType)
+({
+id,
+title: 'My example subscription',
+target_type: 'email',
+target_value: 'ben@analytickit.com,geoff@other-company.com',
+frequency: 'monthly',
+interval: 2,
+start_date: '2022-01-01T00:09:00',
+byweekday: ['wednesday'],
+bysetpos: 1,
+...args,
+}as SubscriptionType)
 
 describe('subscriptionLogic', () => {
     let newLogic: ReturnType<typeof subscriptionLogic.build>

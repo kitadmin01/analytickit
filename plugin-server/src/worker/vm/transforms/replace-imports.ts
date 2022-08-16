@@ -1,23 +1,25 @@
-import { Hub } from '../../../types'
-import { PluginGen } from './common'
+import{Hub}from'../../../types'
+import {PluginGen}from './common'
 
 export const replaceImports: PluginGen =
-    (server: Hub, imports: Record<string, any> = {}) =>
-    ({ types: t }) => ({
-        visitor: {
-            ImportDeclaration: {
-                exit(path: any) {
+(server: Hub, imports: Record < string, any> = {
+
+}) =>
+({types: t}) = > ({
+visitor: {
+ImportDeclaration: {
+exit(path: any) {
                     const { node } = path
                     const importSource = node.source.value
                     const importedVars = new Map<string, string>()
 
                     if (typeof imports[importSource] === 'undefined') {
                         throw new Error(
-                            `Cannot import '${importSource}'! This package is not provided by PostHog in plugins.`
-                        )
-                    }
+                            `Cannot import '${importSource}'! This package is not provided by analytickit in plugins.`
+)
+}
 
-                    for (const specifier of node.specifiers) {
+for (const specifier of node.specifiers) {
                         if (t.isImportSpecifier(specifier)) {
                             if (t.isStringLiteral(specifier.imported)) {
                                 importedVars.set(specifier.local.name, specifier.imported.value)
@@ -39,35 +41,35 @@ export const replaceImports: PluginGen =
                                     t.identifier('__pluginHostImports'),
                                     t.stringLiteral(importSource),
                                     true
-                                )
-                                return t.variableDeclarator(
+)
+return t.variableDeclarator(
                                     t.identifier(varName),
                                     sourceName === 'default'
                                         ? importExpression
                                         : t.memberExpression(importExpression, t.stringLiteral(sourceName), true)
-                                )
-                            })
-                        )
-                    )
-                },
-            },
-            CallExpression: {
-                exit(path: any) {
+)
+})
+)
+)
+},
+},
+CallExpression: {
+exit(path: any) {
                     const { node } = path
                     if (t.isIdentifier(node.callee) && node.callee.name === 'require' && node.arguments.length === 1) {
                         const importSource = node.arguments[0].value
 
                         if (typeof imports[importSource] === 'undefined') {
                             throw new Error(
-                                `Cannot import '${importSource}'! This package is not provided by PostHog in plugins.`
-                            )
-                        }
+                                `Cannot import '${importSource}'! This package is not provided by analytickit in plugins.`
+)
+}
 
-                        path.replaceWith(
+path.replaceWith(
                             t.memberExpression(t.identifier('__pluginHostImports'), t.stringLiteral(importSource), true)
-                        )
-                    }
-                },
-            },
-        },
-    })
+)
+}
+},
+},
+},
+})

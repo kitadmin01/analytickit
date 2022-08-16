@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a feature for PostHog
+about: Suggest a feature for analytickit
 labels: enhancement, feature
 
 ---
@@ -11,14 +11,8 @@ labels: enhancement, feature
 
 ## Describe the solution you'd like
 
-
-
 ## Describe alternatives you've considered
 
-
-
 ## Additional context
-
-
 
 #### *Thank you* for your feature request – we love each and every one!

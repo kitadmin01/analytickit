@@ -17,7 +17,7 @@ export function FunnelHistogram(): JSX.Element {
     const [width, height] = useSize(ref)
 
     // Must reload the entire graph on a dashboard when values change, otherwise will run into random d3 bugs
-    // See: https://github.com/PostHog/posthog/pull/5259
+    // See: https://github.com/analytickit/analytickit/pull/5259
     const key = isViewedOnDashboard ? hashCodeForString(JSON.stringify(histogramGraphData)) : 'staticGraph'
 
     return (

@@ -1,20 +1,20 @@
-import { parseMetadataResponse, sessionRecordingLogic } from 'scenes/session-recordings/sessionRecordingLogic'
-import { api, MOCK_TEAM_ID } from 'lib/api.mock'
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { eventUsageLogic, RecordingWatchedSource } from 'lib/utils/eventUsageLogic'
+import{parseMetadataResponse, sessionRecordingLogic}from 'scenes/session-recordings/sessionRecordingLogic'
+import {api, MOCK_TEAM_ID}from 'lib/api.mock'
+import {expectLogic} from 'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import { eventUsageLogic, RecordingWatchedSource}from 'lib/utils/eventUsageLogic'
 import recordingSnapshotsJson from './__mocks__/recording_snapshots.json'
 import recordingMetaJson from './__mocks__/recording_meta.json'
 import recordingEventsJson from './__mocks__/recording_events.json'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import { combineUrl, router } from 'kea-router'
-import { RecordingEventType } from '~/types'
-import { resumeKeaLoadersErrors, silenceKeaLoadersErrors } from '~/initKea'
-import { useMocks } from '~/mocks/jest'
+import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
+import {combineUrl, router }from 'kea-router'
+import {RecordingEventType} from '~/types'
+import {resumeKeaLoadersErrors, silenceKeaLoadersErrors}from '~/initKea'
+import {useMocks}from '~/mocks/jest'
 
 const createSnapshotEndpoint = (id: number): string => `api/projects/${MOCK_TEAM_ID}/session_recordings/${id}/snapshots`
 const EVENTS_SESSION_RECORDING_SNAPSHOTS_ENDPOINT_REGEX = new RegExp(
-    `api/projects/${MOCK_TEAM_ID}/session_recordings/\\d/snapshots`
+`api/projects/${MOCK_TEAM_ID}/session_recordings/\\d/snapshots`
 )
 const EVENTS_SESSION_RECORDING_META_ENDPOINT = `api/projects/${MOCK_TEAM_ID}/session_recordings`
 const EVENTS_SESSION_RECORDING_EVENTS_ENDPOINT = `api/projects/${MOCK_TEAM_ID}/events`
@@ -63,9 +63,9 @@ describe('sessionRecordingLogic', () => {
                 {
                     sessionRecordingId: '1',
                 }
-            )
+)
 
-            await expectLogic(logic).toDispatchActions([
+await expectLogic(logic).toDispatchActions([
                 logic.actionCreators.loadRecordingMeta('1'),
                 logic.actionCreators.loadRecordingSnapshots('1'),
             ])

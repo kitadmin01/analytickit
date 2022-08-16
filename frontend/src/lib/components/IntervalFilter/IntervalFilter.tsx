@@ -4,7 +4,7 @@ import { useValues, useActions } from 'kea'
 import { intervals } from 'lib/components/IntervalFilter/intervals'
 import { IntervalType, InsightType } from '~/types'
 import { insightLogic } from 'scenes/insights/insightLogic'
-import { LemonSelect, LemonSelectOptions } from '@posthog/lemon-ui'
+import { LemonSelect, LemonSelectOptions } from '@analytickit/lemon-ui'
 
 interface InvertalFilterProps {
     view: InsightType

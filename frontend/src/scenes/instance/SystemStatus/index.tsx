@@ -36,12 +36,12 @@ export function SystemStatus(): JSX.Element {
                 title="Instance status & settings"
                 caption={
                     <>
-                        Here you can find all the critical runtime details and settings of your PostHog instance. You
+                        Here you can find all the critical runtime details and settings of your analytickit instance. You
                         have access to this because you're a <b>staff user</b>.{' '}
                         <a
                             target="_blank"
                             style={{ display: 'inline-flex', alignItems: 'center' }}
-                            href="https://posthog.com/docs/self-host/configure/instance-settings?utm_medium=in-product&utm_campaign=instance_status"
+                            href="https://analytickit.com/docs/self-host/configure/instance-settings?utm_medium=in-product&utm_campaign=instance_status"
                         >
                             Learn more <IconOpenInNew style={{ marginLeft: 4 }} />
                         </a>
@@ -71,12 +71,12 @@ export function SystemStatus(): JSX.Element {
                             <b>
                                 <code>{window.location.origin}</code>
                             </b>
-                            . In order for PostHog to work properly, please set this to the origin where your instance
+                            . In order for analytickit to work properly, please set this to the origin where your instance
                             is hosted.{' '}
                             <a
                                 target="_blank"
                                 rel="noopener"
-                                href="https://posthog.com/docs/configuring-posthog/environment-variables?utm_medium=in-product&utm_campaign=system-status-site-url-misconfig"
+                                href="https://analytickit.com/docs/configuring-analytickit/environment-variables?utm_medium=in-product&utm_campaign=system-status-site-url-misconfig"
                             >
                                 Learn more <IconOpenInNew />
                             </a>

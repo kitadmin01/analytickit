@@ -1,12 +1,12 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 
-import type { propertyFilterLogicType } from './propertyFilterLogicType'
-import { AnyPropertyFilter, EmptyPropertyFilter, PropertyFilter } from '~/types'
-import { isValidPropertyFilter, parseProperties } from 'lib/components/PropertyFilters/utils'
-import { PropertyFilterLogicProps } from 'lib/components/PropertyFilters/types'
+import type {propertyFilterLogicType}from './propertyFilterLogicType'
+import {AnyPropertyFilter, EmptyPropertyFilter, PropertyFilter}from '~/types'
+import {isValidPropertyFilter, parseProperties}from 'lib/components/PropertyFilters/utils'
+import { PropertyFilterLogicProps}from 'lib/components/PropertyFilters/types'
 
 export const propertyFilterLogic = kea<propertyFilterLogicType>({
-    path: (key) => ['lib', 'components', 'PropertyFilters', 'propertyFilterLogic', key],
+path:(key) => ['lib', 'components', 'PropertyFilters', 'propertyFilterLogic', key],
     props: {} as PropertyFilterLogicProps,
     key: (props) => props.pageKey,
 

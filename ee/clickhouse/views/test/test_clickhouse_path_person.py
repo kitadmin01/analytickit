@@ -5,11 +5,11 @@ from unittest.mock import patch
 from django.core.cache import cache
 from rest_framework import status
 
-from posthog.constants import FUNNEL_PATH_AFTER_STEP, INSIGHT_FUNNELS, INSIGHT_PATHS
-from posthog.models.cohort import Cohort
-from posthog.models.person import Person
-from posthog.tasks.calculate_cohort import insert_cohort_from_insight_filter
-from posthog.test.base import APIBaseTest, ClickhouseTestMixin, _create_event, _create_person
+from analytickit.constants import FUNNEL_PATH_AFTER_STEP, INSIGHT_FUNNELS, INSIGHT_PATHS
+from analytickit.models.cohort import Cohort
+from analytickit.models.person import Person
+from analytickit.tasks.calculate_cohort import insert_cohort_from_insight_filter
+from analytickit.test.base import APIBaseTest, ClickhouseTestMixin, _create_event, _create_person
 
 
 class TestPathPerson(ClickhouseTestMixin, APIBaseTest):
@@ -61,7 +61,7 @@ class TestPathPerson(ClickhouseTestMixin, APIBaseTest):
         self.assertTrue("id" in first_person and "name" in first_person and "distinct_ids" in first_person)
         self.assertEqual(5, j["results"][0]["count"])
 
-    @patch("posthog.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
+    @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_paths_cohort(self, _insert_cohort_from_insight_filter):
         self._create_sample_data(5)
 
@@ -157,7 +157,7 @@ class TestPathPerson(ClickhouseTestMixin, APIBaseTest):
         self.assertEqual(5, len(people))
         self.assertEqual(None, j["next"])
 
-    @patch("posthog.models.person.util.delete_person")
+    @patch("analytickit.models.person.util.delete_person")
     def test_basic_pagination_with_deleted(self, delete_person_patch):
         cache.clear()
         self._create_sample_data(110, delete=True)

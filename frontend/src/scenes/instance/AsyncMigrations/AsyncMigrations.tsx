@@ -66,7 +66,7 @@ export function AsyncMigrations(): JSX.Element {
             title: 'Migration',
             render: function Render(_, asyncMigration: AsyncMigration): JSX.Element {
                 const link =
-                    'https://github.com/PostHog/posthog/blob/master/posthog/async_migrations/migrations/' +
+                    'https://github.com/analytickit/analytickit/blob/master/analytickit/async_migrations/migrations/' +
                     asyncMigration.name +
                     '.py'
                 return (
@@ -233,7 +233,7 @@ export function AsyncMigrations(): JSX.Element {
                                 <p>Manage async migrations in your instance.</p>
                                 <p>
                                     Read about async migrations on our{' '}
-                                    <a href="https://posthog.com/docs/self-host/configure/async-migrations/overview">
+                                    <a href="https://analytickit.com/docs/self-host/configure/async-migrations/overview">
                                         dedicated docs page
                                     </a>
                                     .
@@ -295,7 +295,7 @@ export function AsyncMigrations(): JSX.Element {
                             </p>
                             <p>
                                 If you're an admin and don't have access, set <code>is_staff=true</code> for your user
-                                on the PostgreSQL <code>posthog_user</code> table.
+                                on the PostgreSQL <code>analytickit_user</code> table.
                             </p>
                         </>
                     }

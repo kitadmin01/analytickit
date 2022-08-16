@@ -1,24 +1,30 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { featureFlagsLogic } from '~/toolbar/flags/featureFlagsLogic'
-import { toolbarLogic } from '~/toolbar/toolbarLogic'
-import { CombinedFeatureFlagAndValueType } from '~/types'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {featureFlagsLogic} from '~/toolbar/flags/featureFlagsLogic'
+import {toolbarLogic}from '~/toolbar/toolbarLogic'
+import {CombinedFeatureFlagAndValueType}from '~/types'
 
 const featureFlags = [
-    { feature_flag: { key: 'flag 1' } },
-    { feature_flag: { key: 'flag 2' } },
-    { feature_flag: { key: 'flag 3', name: 'mentions 2' } },
+{feature_flag: {key: 'flag 1'
+}},
+{feature_flag: {key: 'flag 2'
+}},
+{feature_flag: {key: 'flag 3', name: 'mentions 2'
+}},
 ] as CombinedFeatureFlagAndValueType[]
 
 const featureFlagsWithExtraInfo = [
-    { currentValue: undefined, hasOverride: false, hasVariants: false, feature_flag: { key: 'flag 1' } },
-    { currentValue: undefined, hasOverride: false, hasVariants: false, feature_flag: { key: 'flag 2' } },
-    {
-        currentValue: undefined,
-        hasOverride: false,
-        hasVariants: false,
-        feature_flag: { key: 'flag 3', name: 'mentions 2' },
-    },
+{currentValue: undefined, hasOverride: false, hasVariants: false, feature_flag: {key: 'flag 1'
+}},
+{currentValue: undefined, hasOverride: false, hasVariants: false, feature_flag: {key: 'flag 2'
+}},
+{
+currentValue: undefined,
+hasOverride: false,
+hasVariants: false,
+feature_flag: {key: 'flag 3', name: 'mentions 2'
+},
+},
 ]
 
 describe('toolbar featureFlagsLogic', () => {
@@ -30,10 +36,10 @@ describe('toolbar featureFlagsLogic', () => {
                 status: 200,
                 json: () => Promise.resolve(featureFlags),
             } as any as Response)
-        )
-    })
+)
+})
 
-    beforeEach(() => {
+beforeEach(() => {
         initKeaTests()
         toolbarLogic({ apiURL: 'http://localhost' }).mount()
         logic = featureFlagsLogic()
@@ -74,8 +80,8 @@ describe('toolbar featureFlagsLogic', () => {
                 status: 401,
                 json: () => Promise.resolve(featureFlags),
             } as any as Response)
-        )
-        await expectLogic(logic, () => {
+)
+await expectLogic(logic, () => {
             logic.actions.getUserFlags()
         }).toDispatchActions([toolbarLogic.actionTypes.tokenExpired])
     })

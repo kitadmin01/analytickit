@@ -1,20 +1,20 @@
 import json
 from typing import Optional
 
-from posthog.client import query_with_columns, sync_execute
-from posthog.constants import FILTER_TEST_ACCOUNTS
-from posthog.models import Element, Organization, Person, Team
-from posthog.models.cohort import Cohort
-from posthog.models.event.sql import GET_EVENTS_WITH_PROPERTIES
-from posthog.models.event.util import ClickhouseEventSerializer
-from posthog.models.filters import Filter
-from posthog.models.filters.retention_filter import RetentionFilter
-from posthog.models.filters.test.test_filter import TestFilter as PGTestFilters
-from posthog.models.filters.test.test_filter import property_to_Q_test_factory
-from posthog.models.property.util import parse_prop_grouped_clauses
-from posthog.models.utils import PersonPropertiesMode
-from posthog.test.base import ClickhouseTestMixin, _create_event, _create_person
-from posthog.test.test_journeys import journeys_for
+from analytickit.client import query_with_columns, sync_execute
+from analytickit.constants import FILTER_TEST_ACCOUNTS
+from analytickit.models import Element, Organization, Person, Team
+from analytickit.models.cohort import Cohort
+from analytickit.models.event.sql import GET_EVENTS_WITH_PROPERTIES
+from analytickit.models.event.util import ClickhouseEventSerializer
+from analytickit.models.filters import Filter
+from analytickit.models.filters.retention_filter import RetentionFilter
+from analytickit.models.filters.test.test_filter import TestFilter as PGTestFilters
+from analytickit.models.filters.test.test_filter import property_to_Q_test_factory
+from analytickit.models.property.util import parse_prop_grouped_clauses
+from analytickit.models.utils import PersonPropertiesMode
+from analytickit.test.base import ClickhouseTestMixin, _create_event, _create_person
+from analytickit.test.test_journeys import journeys_for
 
 
 def _filter_events(filter: Filter, team: Team, order_by: Optional[str] = None):
@@ -67,7 +67,7 @@ class TestFilters(PGTestFilters):
             {
                 "properties": {
                     "type": "AND",
-                    "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com",}],
+                    "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com", }],
                 }
             },
         )
@@ -77,7 +77,7 @@ class TestFilters(PGTestFilters):
             {
                 "properties": {
                     "type": "AND",
-                    "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com",}],
+                    "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com", }],
                 }
             },
         )
@@ -109,7 +109,7 @@ class TestFilters(PGTestFilters):
 
         self.assertEqual(
             filter.simplify(self.team).properties_to_dict(),
-            {"properties": {"type": "AND", "values": [{"type": "static-cohort", "key": "id", "value": cohort.pk,}],}},
+            {"properties": {"type": "AND", "values": [{"type": "static-cohort", "key": "id", "value": cohort.pk, }], }},
         )
 
     def test_simplify_hasdone_cohort(self):
@@ -118,7 +118,7 @@ class TestFilters(PGTestFilters):
 
         self.assertEqual(
             filter.simplify(self.team).properties_to_dict(),
-            {"properties": {"type": "AND", "values": [{"type": "cohort", "key": "id", "value": cohort.pk,}],}},
+            {"properties": {"type": "AND", "values": [{"type": "cohort", "key": "id", "value": cohort.pk, }], }},
         )
 
     def test_simplify_multi_group_cohort(self):
@@ -142,11 +142,11 @@ class TestFilters(PGTestFilters):
                             "values": [
                                 {
                                     "type": "AND",
-                                    "values": [{"type": "person", "key": "$some_prop", "value": "something",}],
+                                    "values": [{"type": "person", "key": "$some_prop", "value": "something", }],
                                 },
                                 {
                                     "type": "AND",
-                                    "values": [{"type": "person", "key": "$another_prop", "value": "something",}],
+                                    "values": [{"type": "person", "key": "$another_prop", "value": "something", }],
                                 },
                             ],
                         }
@@ -161,7 +161,7 @@ class TestFilters(PGTestFilters):
             groups=[{"properties": [{"key": "email", "operator": "icontains", "value": ".com", "type": "person"}]}],
         )
         recursive_cohort = Cohort.objects.create(
-            team=self.team, groups=[{"properties": [{"type": "cohort", "key": "id", "value": cohort.pk,}]}],
+            team=self.team, groups=[{"properties": [{"type": "cohort", "key": "id", "value": cohort.pk, }]}],
         )
         filter = Filter(data={"properties": [{"type": "cohort", "key": "id", "value": recursive_cohort.pk}]})
 
@@ -170,7 +170,7 @@ class TestFilters(PGTestFilters):
             {
                 "properties": {
                     "type": "AND",
-                    "values": [{"key": "email", "operator": "icontains", "value": ".com", "type": "person",}],
+                    "values": [{"key": "email", "operator": "icontains", "value": ".com", "type": "person", }],
                 }
             },
         )
@@ -180,7 +180,7 @@ class TestFilters(PGTestFilters):
 
         self.assertEqual(
             filter.simplify(self.team).properties_to_dict(),
-            {"properties": {"type": "AND", "values": [{"type": "cohort", "key": "id", "value": 555_555,}],}},
+            {"properties": {"type": "AND", "values": [{"type": "cohort", "key": "id", "value": 555_555, }], }},
         )
 
     def test_simplify_entities(self):
@@ -207,7 +207,7 @@ class TestFilters(PGTestFilters):
                         "name": "$pageview",
                         "properties": {
                             "type": "AND",
-                            "values": [{"key": "email", "operator": "icontains", "value": ".com", "type": "person"},],
+                            "values": [{"key": "email", "operator": "icontains", "value": ".com", "type": "person"}, ],
                         },
                     }
                 ],
@@ -232,7 +232,7 @@ class TestFilters(PGTestFilters):
                         "name": "$pageview",
                         "properties": {
                             "type": "AND",
-                            "values": [{"key": "$group_2", "operator": "is_not", "value": "", "type": "event"},],
+                            "values": [{"key": "$group_2", "operator": "is_not", "value": "", "type": "event"}, ],
                         },
                     }
                 ],
@@ -304,7 +304,8 @@ class TestFiltering(
 
     def test_numerical(self):
         event1_uuid = _create_event(team=self.team, distinct_id="test", event="$pageview", properties={"$a_number": 5})
-        event2_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test", properties={"$a_number": 6},)
+        event2_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test",
+                                    properties={"$a_number": 6}, )
         _create_event(
             team=self.team, event="$pageview", distinct_id="test", properties={"$a_number": "rubbish"},
         )
@@ -369,7 +370,7 @@ class TestFiltering(
         self.assertEqual(len(events), 2)
 
     def test_does_not_contain(self):
-        event1_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test",)
+        event1_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test", )
         event2_uuid = _create_event(
             team=self.team, event="$pageview", distinct_id="test", properties={"$current_url": "https://something.com"},
         )
@@ -389,12 +390,12 @@ class TestFiltering(
             team=self.team,
             event="$pageview",
             distinct_id="test",
-            properties={"$current_url": "https://something.com", "another_key": "value",},
+            properties={"$current_url": "https://something.com", "another_key": "value", },
         )
         _create_event(
             team=self.team, event="$pageview", distinct_id="test", properties={"$current_url": "https://something.com"},
         )
-        filter = Filter(data={"properties": {"$current_url__icontains": "something.com", "another_key": "value",}})
+        filter = Filter(data={"properties": {"$current_url__icontains": "something.com", "another_key": "value", }})
         events = _filter_events(filter, self.team)
         self.assertEqual(events[0]["id"], event2_uuid)
         self.assertEqual(len(events), 1)
@@ -406,7 +407,7 @@ class TestFiltering(
             team=self.team,
             distinct_id="person1",
             event="$pageview",
-            properties={"$current_url": "https://something.com", "another_key": "value",},
+            properties={"$current_url": "https://something.com", "another_key": "value", },
         )
         event_p2_uuid = _create_event(
             team=self.team,
@@ -422,7 +423,7 @@ class TestFiltering(
             team=team2,
             distinct_id="person_team_2",
             event="$pageview",
-            properties={"$current_url": "https://something.com", "another_key": "value",},
+            properties={"$current_url": "https://something.com", "another_key": "value", },
         )
 
         filter = Filter(data={"properties": [{"key": "group", "value": "some group", "type": "person"}]})
@@ -444,7 +445,7 @@ class TestFiltering(
             team=self.team,
             distinct_id="person1",
             event="$pageview",
-            properties={"$current_url": "https://something.com", "another_key": "value",},
+            properties={"$current_url": "https://something.com", "another_key": "value", },
         )
         _create_event(
             team=self.team,
@@ -477,12 +478,12 @@ class TestFiltering(
         self.assertEqual(len(events), 1)
 
     def test_is_not_set_and_is_set(self):
-        event1_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test",)
+        event1_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test", )
         event2_uuid = _create_event(
             team=self.team, event="$pageview", distinct_id="test", properties={"is_first_user": True}
         )
         filter = Filter(
-            data={"properties": [{"key": "is_first_user", "operator": "is_not_set", "value": "is_not_set",}]}
+            data={"properties": [{"key": "is_first_user", "operator": "is_not_set", "value": "is_not_set", }]}
         )
         events = _filter_events(filter, self.team)
         self.assertEqual(events[0]["id"], event1_uuid)
@@ -494,7 +495,7 @@ class TestFiltering(
         self.assertEqual(len(events), 1)
 
     def test_is_not_set_and_is_set_with_missing_value(self):
-        event1_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test",)
+        event1_uuid = _create_event(team=self.team, event="$pageview", distinct_id="test", )
         event2_uuid = _create_event(
             team=self.team, event="$pageview", distinct_id="test", properties={"is_first_user": True}
         )
@@ -563,7 +564,7 @@ class TestFiltering(
             team=self.team,
             event="$autocapture",
             distinct_id="distinct_id",
-            elements=[Element.objects.create(tag_name="a"), Element.objects.create(tag_name="div"),],
+            elements=[Element.objects.create(tag_name="a"), Element.objects.create(tag_name="div"), ],
         )
         _create_event(team=self.team, event="$autocapture", distinct_id="distinct_id")
         filter = Filter(data={"properties": [{"key": "selector", "value": "div > a", "type": "element"}]})
@@ -575,7 +576,7 @@ class TestFiltering(
             team=self.team,
             event="$autocapture",
             distinct_id="distinct_id",
-            elements=[Element.objects.create(tag_name="a", text="some text"), Element.objects.create(tag_name="div"),],
+            elements=[Element.objects.create(tag_name="a", text="some text"), Element.objects.create(tag_name="div"), ],
         )
 
         _create_event(
@@ -600,10 +601,10 @@ class TestFiltering(
         self.assertEqual(len(events_response_2), 1)
 
     def test_filter_out_team_members(self):
-        _create_person(team_id=self.team.pk, distinct_ids=["team_member"], properties={"email": "test@posthog.com"})
+        _create_person(team_id=self.team.pk, distinct_ids=["team_member"], properties={"email": "test@analytickit.com"})
         _create_person(team_id=self.team.pk, distinct_ids=["random_user"], properties={"email": "test@gmail.com"})
         self.team.test_account_filters = [
-            {"key": "email", "value": "@posthog.com", "operator": "not_icontains", "type": "person"}
+            {"key": "email", "value": "@analytickit.com", "operator": "not_icontains", "type": "person"}
         ]
         self.team.save()
         _create_event(team=self.team, distinct_id="team_member", event="$pageview")
@@ -636,11 +637,11 @@ class TestFiltering(
         _create_person(
             team_id=self.team.pk,
             distinct_ids=["person5"],
-            properties={"email": "test@posthog.com", "name": "test", "age": "50"},
+            properties={"email": "test@analytickit.com", "name": "test", "age": "50"},
         )
 
         self.team.test_account_filters = [
-            {"key": "email", "value": "@posthog.com", "operator": "not_icontains", "type": "person"}
+            {"key": "email", "value": "@analytickit.com", "operator": "not_icontains", "type": "person"}
         ]
         self.team.save()
 
@@ -649,19 +650,19 @@ class TestFiltering(
             create_people=False,
             events_by_person={
                 "person1": [
-                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14},}
+                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14}, }
                 ],
                 "person2": [
-                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14},}
+                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14}, }
                 ],
                 "person3": [
-                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14},}
+                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14}, }
                 ],
                 "person4": [
-                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14},}
+                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14}, }
                 ],
                 "person5": [
-                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14},}
+                    {"event": "$pageview", "properties": {"key": "val", "$browser": "Safari", "$browser_version": 14}, }
                 ],
             },
         )
@@ -722,7 +723,7 @@ class TestFiltering(
             name="cohort2",
         )
 
-        filter = Filter(data={"properties": [{"key": "id", "value": cohort1.pk, "type": "cohort"}],}, team=self.team)
+        filter = Filter(data={"properties": [{"key": "id", "value": cohort1.pk, "type": "cohort"}], }, team=self.team)
 
         prop_clause, prop_clause_params = parse_prop_grouped_clauses(
             property_group=filter.property_groups, has_person_id_joined=False, team_id=self.team.pk
@@ -737,7 +738,7 @@ class TestFiltering(
         self.assertEqual(result, person1_distinct_id)
 
         # test cohort2 with negation
-        filter = Filter(data={"properties": [{"key": "id", "value": cohort2.pk, "type": "cohort"}],}, team=self.team)
+        filter = Filter(data={"properties": [{"key": "id", "value": cohort2.pk, "type": "cohort"}], }, team=self.team)
         prop_clause, prop_clause_params = parse_prop_grouped_clauses(
             property_group=filter.property_groups, has_person_id_joined=False, team_id=self.team.pk
         )
@@ -763,7 +764,7 @@ class TestFiltering(
                                 {
                                     "type": "AND",
                                     "values": [
-                                        {"type": "person", "key": "email", "operator": "icontains", "value": ".com",}
+                                        {"type": "person", "key": "email", "operator": "icontains", "value": ".com", }
                                     ],
                                 }
                             ],
@@ -771,8 +772,8 @@ class TestFiltering(
                         {
                             "type": "AND",
                             "values": [
-                                {"type": "person", "key": "email", "operator": "icontains", "value": "arg2",},
-                                {"type": "person", "key": "email", "operator": "icontains", "value": "arg3",},
+                                {"type": "person", "key": "email", "operator": "icontains", "value": "arg2", },
+                                {"type": "person", "key": "email", "operator": "icontains", "value": "arg3", },
                             ],
                         },
                     ],
@@ -790,7 +791,7 @@ class TestFiltering(
                     "values": [
                         {
                             "type": "OR",
-                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com",}],
+                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com", }],
                         },
                         {
                             "type": "AND",
@@ -798,13 +799,13 @@ class TestFiltering(
                                 {
                                     "type": "AND",
                                     "values": [
-                                        {"type": "person", "key": "email", "operator": "icontains", "value": "arg2",}
+                                        {"type": "person", "key": "email", "operator": "icontains", "value": "arg2", }
                                     ],
                                 },
                                 {
                                     "type": "AND",
                                     "values": [
-                                        {"type": "person", "key": "email", "operator": "icontains", "value": "arg3",}
+                                        {"type": "person", "key": "email", "operator": "icontains", "value": "arg3", }
                                     ],
                                 },
                             ],
@@ -825,14 +826,15 @@ class TestFiltering(
                                 {
                                     "type": "AND",
                                     "values": [
-                                        {"type": "person", "key": "email", "operator": "icontains", "value": ".com",}
+                                        {"type": "person", "key": "email", "operator": "icontains", "value": ".com", }
                                     ],
                                 }
                             ],
                         },
                         {
                             "type": "AND",
-                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": "arg2",},],
+                            "values": [
+                                {"type": "person", "key": "email", "operator": "icontains", "value": "arg2", }, ],
                         },
                     ],
                 }
@@ -847,11 +849,11 @@ class TestFiltering(
                     "values": [
                         {
                             "type": "OR",
-                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com",}],
+                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": ".com", }],
                         },
                         {
                             "type": "AND",
-                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": "arg2",}],
+                            "values": [{"type": "person", "key": "email", "operator": "icontains", "value": "arg2", }],
                         },
                     ],
                 }

@@ -1,19 +1,19 @@
-import { actions, kea, path } from 'kea'
+import{actions, kea, path}from 'kea'
 import api from 'lib/api'
-import type { kafkaInspectorLogicType } from './kafkaInspectorLogicType'
-import { forms } from 'kea-forms'
-import { loaders } from 'kea-loaders'
+import type {kafkaInspectorLogicType}from './kafkaInspectorLogicType'
+import {forms}from 'kea-forms'
+import {loaders}from 'kea-loaders'
 export interface KafkaMessage {
-    topic: string
-    partition: number
-    offset: number
-    timestamp: number
-    key: string
-    value: Record<string, any> | string
+topic: string
+partition: number
+offset: number
+timestamp: number
+key: string
+value: Record< string, any> | string
 }
 
 export const kafkaInspectorLogic = kea<kafkaInspectorLogicType>([
-    path(['scenes', 'instance', 'SystemStatus', 'kafkaInspectorLogic']),
+path(['scenes', 'instance', 'SystemStatus', 'kafkaInspectorLogic']),
     actions({
         fetchKafkaMessage: (topic: string, partition: number, offset: number) => ({ topic, partition, offset }),
     }),

@@ -1,57 +1,57 @@
 import {
     BehavioralEventType,
-    CohortType,
-    EventDefinition,
-    EventType,
-    FilterLogicalOperator,
-    IntegrationType,
-    PropertyDefinition,
-    PropertyOperator,
-    SlackChannelType,
-    SubscriptionType,
-    TimeUnitType,
-    UserBasicType,
-} from '~/types'
-import { PROPERTY_MATCH_TYPE } from 'lib/constants'
-import { BehavioralFilterKey } from 'scenes/cohorts/CohortFilters/types'
-import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
+CohortType,
+EventDefinition,
+EventType,
+FilterLogicalOperator,
+IntegrationType,
+PropertyDefinition,
+PropertyOperator,
+SlackChannelType,
+SubscriptionType,
+TimeUnitType,
+UserBasicType,
+}from '~/types'
+import {PROPERTY_MATCH_TYPE}from 'lib/constants'
+import {BehavioralFilterKey}from 'scenes/cohorts/CohortFilters/types'
+import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
 
 export const mockBasicUser: UserBasicType = {
-    id: 0,
-    uuid: '1234',
-    distinct_id: '1234',
-    first_name: 'Tim',
-    email: 'tim@posthog.com',
+id: 0,
+uuid: '1234',
+distinct_id: '1234',
+first_name: 'Tim',
+email: 'tim@analytickit.com',
 }
 
 export const mockEvent: EventType = {
-    id: 'my_id',
-    properties: {
-        $os: 'Mac OS X',
-        $device_type: 'Desktop',
-    },
-    event: 'event1',
-    timestamp: '2022-02-24T09:19:56.920000+00:00',
-    person: {
-        is_identified: true,
-        distinct_ids: ['abcde'],
-        properties: {
-            email: 'alex@posthog.com',
-        },
-    },
-    elements: [],
-    elements_chain: '',
-    elements_hash: null,
+id: 'my_id',
+properties: {
+$os: 'Mac OS X',
+$device_type: 'Desktop',
+},
+event: 'event1',
+timestamp: '2022-02-24T09:19:56.920000+00:00',
+person: {
+is_identified: true,
+distinct_ids: ['abcde'],
+properties: {
+email: 'alex@analytickit.com',
+},
+},
+elements: [],
+elements_chain: '',
+elements_hash: null,
 }
 
 export const mockEventDefinitions: EventDefinition[] = [
-    'event1',
-    'test event',
-    '$click',
-    '$autocapture',
-    'search',
-    'other event',
-    ...Array(50),
+'event1',
+'test event',
+'$click',
+'$autocapture',
+'search',
+'other event',
+...Array(50),
 ].map((name, index) => ({
     id: `uuid-${index}-foobar`,
     name: name || `misc-${index}-generated`,
@@ -181,7 +181,7 @@ export const mockSubscription: SubscriptionType = {
     id: 1,
     title: 'My example subscription',
     target_type: 'email',
-    target_value: 'ben@posthog.com,geoff@other-company.com',
+    target_value: 'ben@analytickit.com,geoff@other-company.com',
     frequency: 'monthly',
     interval: 2,
     start_date: '2022-01-01T00:09:00',
@@ -203,7 +203,7 @@ export const mockIntegration: IntegrationType = {
     config: {
         team: {
             id: '123',
-            name: 'PostHog',
+            name: 'analytickit',
         },
     },
     created_at: '2022-01-01T00:09:00',

@@ -16,7 +16,7 @@ import { SceneExport } from 'scenes/sceneTypes'
 import { InsightErrorState } from 'scenes/insights/EmptyStates'
 import { DashboardHeader } from './DashboardHeader'
 import { PropertyFilters } from 'lib/components/PropertyFilters/PropertyFilters'
-import { LemonDivider } from '@posthog/lemon-ui'
+import { LemonDivider } from '@analytickit/lemon-ui'
 
 interface Props {
     id?: string

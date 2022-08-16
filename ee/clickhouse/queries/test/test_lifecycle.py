@@ -3,17 +3,17 @@ from datetime import datetime, timedelta
 from django.utils.timezone import now
 from freezegun.api import freeze_time
 
-from posthog.constants import FILTER_TEST_ACCOUNTS, TRENDS_LIFECYCLE
-from posthog.models.action import Action
-from posthog.models.action_step import ActionStep
-from posthog.models.filters.filter import Filter
-from posthog.models.group.util import create_group
-from posthog.models.group_type_mapping import GroupTypeMapping
-from posthog.models.person import Person
-from posthog.queries.test.test_lifecycle import lifecycle_test_factory
-from posthog.queries.trends.trends import Trends
-from posthog.test.base import ClickhouseTestMixin, _create_event, _create_person, snapshot_clickhouse_queries
-from posthog.test.test_journeys import journeys_for
+from analytickit.constants import FILTER_TEST_ACCOUNTS, TRENDS_LIFECYCLE
+from analytickit.models.action import Action
+from analytickit.models.action_step import ActionStep
+from analytickit.models.filters.filter import Filter
+from analytickit.models.group.util import create_group
+from analytickit.models.group_type_mapping import GroupTypeMapping
+from analytickit.models.person import Person
+from analytickit.queries.test.test_lifecycle import lifecycle_test_factory
+from analytickit.queries.trends.trends import Trends
+from analytickit.test.base import ClickhouseTestMixin, _create_event, _create_person, snapshot_clickhouse_queries
+from analytickit.test.test_journeys import journeys_for
 
 
 def _create_action(**kwargs):
@@ -24,7 +24,8 @@ def _create_action(**kwargs):
     return action
 
 
-class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends, _create_event, _create_person, _create_action)):  # type: ignore
+class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends, _create_event, _create_person,
+                                                                          _create_action)):  # type: ignore
     @snapshot_clickhouse_queries
     def test_test_account_filters_with_groups(self):
         self.team.test_account_filters = [
@@ -45,12 +46,12 @@ class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends
         journeys_for(
             {
                 "person1": [
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 11, 12), "properties": {"$group_0": "out"},},
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 11, 12), "properties": {"$group_0": "out"}, },
                 ],
                 "person2": [
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 9, 12), "properties": {"$group_0": "in"},},
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 12, 12), "properties": {"$group_0": "in"},},
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 15, 12), "properties": {"$group_0": "in"},},
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 9, 12), "properties": {"$group_0": "in"}, },
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 12, 12), "properties": {"$group_0": "in"}, },
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 15, 12), "properties": {"$group_0": "in"}, },
                 ],
             },
             self.team,
@@ -88,10 +89,10 @@ class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends
         journeys_for(
             {
                 "person1": [
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 12, 12),},
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 13, 12),},
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 15, 12),},
-                    {"event": "$pageview", "timestamp": datetime(2020, 1, 16, 12),},
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 12, 12), },
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 13, 12), },
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 15, 12), },
+                    {"event": "$pageview", "timestamp": datetime(2020, 1, 16, 12), },
                 ],
             },
             self.team,
@@ -167,7 +168,7 @@ class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends
             ],
         )
         self.assertEqual(
-            result[0]["days"], ["2021-04-05", "2021-04-12", "2021-04-19", "2021-04-26", "2021-05-03",],
+            result[0]["days"], ["2021-04-05", "2021-04-12", "2021-04-19", "2021-04-26", "2021-05-03", ],
         )
 
     @snapshot_clickhouse_queries
@@ -187,7 +188,7 @@ class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends
             ],
         )
         self.assertEqual(
-            result[0]["days"], ["2021-02-01", "2021-03-01", "2021-04-01", "2021-05-01",],
+            result[0]["days"], ["2021-02-01", "2021-03-01", "2021-04-01", "2021-05-01", ],
         )
 
     def _setup_returning_lifecycle_data(self, days):
@@ -207,7 +208,8 @@ class TestClickhouseLifecycle(ClickhouseTestMixin, lifecycle_test_factory(Trends
 
     def _run_lifecycle(self, data):
         filter = Filter(
-            data={"events": [{"id": "$pageview", "type": "events", "order": 0}], "shown_as": TRENDS_LIFECYCLE, **data,},
+            data={"events": [{"id": "$pageview", "type": "events", "order": 0}], "shown_as": TRENDS_LIFECYCLE,
+                  **data, },
             team=self.team,
         )
-        return Trends().run(filter, self.team,)
+        return Trends().run(filter, self.team, )

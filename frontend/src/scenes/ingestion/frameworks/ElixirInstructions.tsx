@@ -6,7 +6,7 @@ import { teamLogic } from 'scenes/teamLogic'
 function ElixirInstallSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Elixir}>
-            {'def deps do\n    [\n        {:posthog, "~> 0.1"}\n    ]\nend'}
+            {'def deps do\n    [\n        {:analytickit, "~> 0.1"}\n    ]\nend'}
         </CodeSnippet>
     )
 }
@@ -17,7 +17,7 @@ function ElixirSetupSnippet(): JSX.Element {
 
     return (
         <CodeSnippet language={Language.Elixir}>
-            {'config :posthog,\n    api_url: "' + url + '",\n    api_key: "' + currentTeam?.api_token + '"'}
+            {'config :analytickit,\n    api_url: "' + url + '",\n    api_key: "' + currentTeam?.api_token + '"'}
         </CodeSnippet>
     )
 }

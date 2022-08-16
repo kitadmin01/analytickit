@@ -45,13 +45,13 @@ function ToolbarLaunch(): JSX.Element {
 
     return (
         <div className="toolbar-launch-page">
-            <PageHeader title="Toolbar" caption="The toolbar launches PostHog right in your app or website." />
+            <PageHeader title="Toolbar" caption="The toolbar launches analytickit right in your app or website." />
             <LemonDivider />
 
             <div className="my-4">
                 <LemonSwitch
                     data-tooltip="toolbar-authorized-toggle"
-                    label="Enable the PostHog toolbar"
+                    label="Enable the analytickit toolbar"
                     onChange={() =>
                         updateUser({
                             toolbar_mode: user?.toolbar_mode === 'disabled' ? 'toolbar' : 'disabled',
@@ -69,13 +69,13 @@ function ToolbarLaunch(): JSX.Element {
             </h2>
             <p>
                 These are the domains and URLs where the <Link to={urls.toolbarLaunch()}>Toolbar</Link> will
-                automatically launch if you're signed in to your PostHog account.
+                automatically launch if you're signed in to your analytickit account.
             </p>
             <AuthorizedUrls pageKey="toolbar-launch" />
 
             <div className="footer-caption text-muted mt-4 text-center">
                 Make sure you're using the <Link to={`${urls.projectSettings()}#snippet`}>HTML snippet</Link> or the
-                latest <code>posthog-js</code> version.
+                latest <code>analytickit-js</code> version.
             </div>
 
             <div className="feature-highlight-list mt-8 mx-auto mb-0 flex flex-wrap items-center justify-center">

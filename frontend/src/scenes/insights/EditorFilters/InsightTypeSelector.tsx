@@ -3,7 +3,7 @@ import { insightLogic } from 'scenes/insights/insightLogic'
 import { INSIGHT_TYPE_OPTIONS } from 'scenes/saved-insights/SavedInsights'
 import React from 'react'
 import { EditorFilterProps } from '~/types'
-import { LemonSelect } from '@posthog/lemon-ui'
+import { LemonSelect } from '@analytickit/lemon-ui'
 
 export function InsightTypeSelector({ value }: EditorFilterProps): JSX.Element {
     const { setActiveView } = useActions(insightLogic)

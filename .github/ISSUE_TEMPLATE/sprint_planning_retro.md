@@ -30,11 +30,12 @@ title: Sprint 1.n.0 m/2 - Jan 1 to Jan 12
 5.
 
 ## Support hero this sprint
-<!-- https://posthog.pagerduty.com/schedules#PPLGE4G -->
-Week 1: 
+
+<!-- https://analytickit.pagerduty.com/schedules#PPLGE4G -->
+Week 1:
 Week 2:
 
-## Plan: Proposed Goals for Next Sprint 
+## Plan: Proposed Goals for Next Sprint
 
 Each goal should have a single owner. Owner can only be an engineer.
 

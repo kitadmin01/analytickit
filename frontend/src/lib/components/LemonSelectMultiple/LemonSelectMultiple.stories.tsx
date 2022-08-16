@@ -15,13 +15,13 @@ export default {
                     [`user-${i}`]: {
                         labelComponent: (
                             <span className="flex gap-2 items-center">
-                                <ProfilePicture name={x} email={`${x}@posthog.com`} size="sm" />
+                                <ProfilePicture name={x} email={`${x}@analytickit.com`} size="sm" />
                                 <span>
-                                    {capitalizeFirstLetter(x)} <b>{`<${x}@posthog.com>`}</b>
+                                    {capitalizeFirstLetter(x)} <b>{`<${x}@analytickit.com>`}</b>
                                 </span>
                             </span>
                         ),
-                        label: `${x} ${x}@posthog.com>`,
+                        label: `${x} ${x}@analytickit.com>`,
                     },
                 }),
                 {}

@@ -22,7 +22,7 @@ export default {
             description: {
                 component: `
 
-[Related Figma area](https://www.figma.com/file/Y9G24U4r04nEjIDGIEGuKI/PostHog-Design-System-One?node-id=3139%3A1388)
+[Related Figma area](https://www.figma.com/file/Y9G24U4r04nEjIDGIEGuKI/analytickit-Design-System-One?node-id=3139%3A1388)
 
 Lemon Icons are generally Material Icons with some matching in-house additions. 
 All should be based on a 24px (1.5rem) square viewbox, with icon contents fitting into a 20px (1.25rem) or smaller square. 

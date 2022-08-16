@@ -1,19 +1,19 @@
-import { actions, props, kea, listeners, path, reducers, selectors } from 'kea'
-import type { rollingDateRangeFilterLogicType } from './rollingDateRangeFilterLogicType'
-import { Dayjs } from 'lib/dayjs'
+import{actions, props, kea, listeners, path, reducers, selectors}from 'kea'
+import type { rollingDateRangeFilterLogicType}from './rollingDateRangeFilterLogicType'
+import {Dayjs}from 'lib/dayjs'
 import './RollingDateRangeFilter.scss'
-import { dateFilterToText } from 'lib/utils'
+import {dateFilterToText}from 'lib/utils'
 
 const dateOptionsMap = {
-    q: 'quarters',
-    m: 'months',
-    w: 'weeks',
-    d: 'days',
+q: 'quarters',
+m: 'months',
+w: 'weeks',
+d: 'days',
 }
 
 export type RollingDateFilterLogicPropsType = {
-    selected?: boolean
-    onChange?: (fromDate: string) => void
+selected?: boolean
+onChange?:(fromDate: string) => void
     dateFrom?: Dayjs | string | null
 }
 

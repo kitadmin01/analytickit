@@ -1,15 +1,15 @@
-import { RawOrganization } from '../../types'
-import { DB } from '../../utils/db/db'
-import { timeoutGuard } from '../../utils/db/utils'
-import { getByAge } from '../../utils/utils'
+import{RawOrganization}from'../../types'
+import {DB}from '../../utils/db/db'
+import { timeoutGuard}from '../../utils/db/utils'
+import {getByAge }from '../../utils/utils'
 
-type OrganizationCache<T> = Map<RawOrganization['id'], [T, number]>
+type OrganizationCache < T> = Map<RawOrganization['id'], [T, number]>
 
 export class OrganizationManager {
-    db: DB
-    organizationCache: OrganizationCache<RawOrganization | null>
+db: DB
+organizationCache: OrganizationCache < RawOrganization | null>
 
-    constructor(db: DB) {
+constructor(db: DB) {
         this.db = db
         this.organizationCache = new Map()
     }

@@ -10,19 +10,19 @@ from ee.clickhouse.materialized_columns.analyze import (
 )
 from ee.clickhouse.queries.stickiness import ClickhouseStickiness
 from ee.clickhouse.queries.funnels.funnel_correlation import FunnelCorrelation
-from posthog.queries.funnels import ClickhouseFunnel
-from posthog.queries.property_values import get_property_values_for_key, get_person_property_values_for_key
-from posthog.queries.trends.trends import Trends
-from posthog.queries.session_recordings.session_recording_list import SessionRecordingList
+from analytickit.queries.funnels import ClickhouseFunnel
+from analytickit.queries.property_values import get_property_values_for_key, get_person_property_values_for_key
+from analytickit.queries.trends.trends import Trends
+from analytickit.queries.session_recordings.session_recording_list import SessionRecordingList
 from ee.clickhouse.queries.retention import ClickhouseRetention
-from posthog.queries.util import get_earliest_timestamp
-from posthog.models import Action, ActionStep, Cohort, Team, Organization
-from posthog.models.filters.retention_filter import RetentionFilter
-from posthog.models.filters.session_recordings_filter import SessionRecordingsFilter
-from posthog.models.filters.stickiness_filter import StickinessFilter
-from posthog.models.filters.filter import Filter
-from posthog.models.property import PropertyName, TableWithProperties
-from posthog.constants import FunnelCorrelationType
+from analytickit.queries.util import get_earliest_timestamp
+from analytickit.models import Action, ActionStep, Cohort, Team, Organization
+from analytickit.models.filters.retention_filter import RetentionFilter
+from analytickit.models.filters.session_recordings_filter import SessionRecordingsFilter
+from analytickit.models.filters.stickiness_filter import StickinessFilter
+from analytickit.models.filters.filter import Filter
+from analytickit.models.property import PropertyName, TableWithProperties
+from analytickit.constants import FunnelCorrelationType
 
 MATERIALIZED_PROPERTIES: List[Tuple[TableWithProperties, PropertyName]] = [
     ("events", "$host"),
@@ -124,21 +124,21 @@ class QuerySuite:
 
     @benchmark_clickhouse
     def track_trends_event_property_breakdown(self):
-        filter = Filter(data={"events": [{"id": "$pageview"}], "breakdown": "$host", **DATE_RANGE,})
+        filter = Filter(data={"events": [{"id": "$pageview"}], "breakdown": "$host", **DATE_RANGE, })
 
         with no_materialized_columns():
             Trends().run(filter, self.team)
 
     @benchmark_clickhouse
     def track_trends_event_property_breakdown_materialized(self):
-        filter = Filter(data={"events": [{"id": "$pageview"}], "breakdown": "$host", **DATE_RANGE,})
+        filter = Filter(data={"events": [{"id": "$pageview"}], "breakdown": "$host", **DATE_RANGE, })
 
         Trends().run(filter, self.team)
 
     @benchmark_clickhouse
     def track_trends_person_property_breakdown(self):
         filter = Filter(
-            data={"events": [{"id": "$pageview"}], "breakdown": "$browser", "breakdown_type": "person", **DATE_RANGE,}
+            data={"events": [{"id": "$pageview"}], "breakdown": "$browser", "breakdown_type": "person", **DATE_RANGE, }
         )
 
         with no_materialized_columns():
@@ -147,14 +147,14 @@ class QuerySuite:
     @benchmark_clickhouse
     def track_trends_person_property_breakdown_materialized(self):
         filter = Filter(
-            data={"events": [{"id": "$pageview"}], "breakdown": "$browser", "breakdown_type": "person", **DATE_RANGE,}
+            data={"events": [{"id": "$pageview"}], "breakdown": "$browser", "breakdown_type": "person", **DATE_RANGE, }
         )
 
         Trends().run(filter, self.team)
 
     @benchmark_clickhouse
     def track_trends_dau(self):
-        filter = Filter(data={"events": [{"id": "$pageview", "math": "dau"}], **DATE_RANGE,})
+        filter = Filter(data={"events": [{"id": "$pageview", "math": "dau"}], **DATE_RANGE, })
         Trends().run(filter, self.team)
 
     @benchmark_clickhouse
@@ -291,7 +291,7 @@ class QuerySuite:
     @benchmark_clickhouse
     def track_correlations_by_events(self):
         filter = Filter(
-            data={"events": [{"id": "user signed up"}, {"id": "insight analyzed"}], **SHORT_DATE_RANGE,},
+            data={"events": [{"id": "user signed up"}, {"id": "insight analyzed"}], **SHORT_DATE_RANGE, },
             team=self.team,
         )
 
@@ -401,13 +401,14 @@ class QuerySuite:
 
     @benchmark_clickhouse
     def track_session_recordings_list(self):
-        filter = SessionRecordingsFilter(data=SESSIONS_DATE_RANGE, team=self.team,)
+        filter = SessionRecordingsFilter(data=SESSIONS_DATE_RANGE, team=self.team, )
 
         SessionRecordingList(filter, self.team).run()
 
     @benchmark_clickhouse
     def track_session_recordings_list_event_filter(self):
-        filter = SessionRecordingsFilter(data={"events": [{"id": "$pageview"}], **SESSIONS_DATE_RANGE}, team=self.team,)
+        filter = SessionRecordingsFilter(data={"events": [{"id": "$pageview"}], **SESSIONS_DATE_RANGE},
+                                         team=self.team, )
 
         SessionRecordingList(filter, self.team).run()
 

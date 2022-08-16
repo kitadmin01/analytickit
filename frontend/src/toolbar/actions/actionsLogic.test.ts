@@ -1,18 +1,18 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { actionsLogic } from '~/toolbar/actions/actionsLogic'
-import { toolbarLogic } from '~/toolbar/toolbarLogic'
-import { ActionType } from '~/types'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {actionsLogic} from '~/toolbar/actions/actionsLogic'
+import {toolbarLogic}from '~/toolbar/toolbarLogic'
+import {ActionType}from '~/types'
 
 const unsortedActions: ActionType[] = [
-    { name: 'zoo', created_at: '', created_by: null, id: 1 },
-    { name: 'middle', created_at: '', created_by: null, id: 2 },
-    { name: 'begin', created_at: '', created_by: null, id: 3 },
+{name: 'zoo', created_at: '', created_by: null, id: 1},
+{name: 'middle', created_at: '', created_by: null, id: 2},
+{name: 'begin', created_at: '', created_by: null, id: 3},
 ]
 const apiJson = { results: unsortedActions }
 
 global.fetch = jest.fn(() =>
-    Promise.resolve({
+Promise.resolve({
         ok: true,
         json: () => Promise.resolve(apiJson),
     } as any as Response)

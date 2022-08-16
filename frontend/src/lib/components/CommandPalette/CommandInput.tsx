@@ -2,7 +2,7 @@ import React from 'react'
 import { SearchOutlined, EditOutlined } from '@ant-design/icons'
 import { useValues, useActions } from 'kea'
 import { commandPaletteLogic } from './commandPaletteLogic'
-import PostHogIcon from 'public/icon-white.svg'
+import analytickitIcon from 'public/icon-white.svg'
 
 export function CommandInput(): JSX.Element {
     const { input, isSqueak, activeFlow } = useValues(commandPaletteLogic)
@@ -11,7 +11,7 @@ export function CommandInput(): JSX.Element {
     return (
         <div className="palette__row">
             {isSqueak ? (
-                <img src={PostHogIcon} className="palette__icon" />
+                <img src={analytickitIcon} className="palette__icon" />
             ) : activeFlow ? (
                 <activeFlow.icon className="palette__icon" /> ?? <EditOutlined className="palette__icon" />
             ) : (

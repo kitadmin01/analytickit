@@ -11,8 +11,8 @@ from rest_framework import status
 
 from ee.api.test.base import APILicensedTest
 from ee.models.license import License
-from posthog.models.organization import Organization
-from posthog.models.team import Team
+from analytickit.models.organization import Organization
+from analytickit.models.team import Team
 
 
 class TestLicenseAPI(APILicensedTest):

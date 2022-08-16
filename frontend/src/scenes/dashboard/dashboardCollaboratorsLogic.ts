@@ -1,23 +1,23 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 import api from 'lib/api'
-import { DashboardPrivilegeLevel, DashboardRestrictionLevel } from 'lib/constants'
-import { teamMembersLogic } from 'scenes/project/Settings/teamMembersLogic'
+import {DashboardPrivilegeLevel, DashboardRestrictionLevel}from 'lib/constants'
+import {teamMembersLogic}from 'scenes/project/Settings/teamMembersLogic'
 import {
-    DashboardType,
-    DashboardCollaboratorType,
-    UserType,
-    FusedDashboardCollaboratorType,
-    UserBasicType,
-} from '~/types'
-import type { dashboardCollaboratorsLogicType } from './dashboardCollaboratorsLogicType'
-import { dashboardLogic } from './dashboardLogic'
+DashboardType,
+DashboardCollaboratorType,
+UserType,
+FusedDashboardCollaboratorType,
+UserBasicType,
+}from '~/types'
+import type {dashboardCollaboratorsLogicType}from './dashboardCollaboratorsLogicType'
+import {dashboardLogic}from './dashboardLogic'
 
 export interface DashboardCollaboratorsLogicProps {
-    dashboardId: DashboardType['id']
+dashboardId: DashboardType['id']
 }
 
 export const dashboardCollaboratorsLogic = kea<dashboardCollaboratorsLogicType>({
-    path: (key) => ['scenes', 'dashboard', 'dashboardCollaboratorsLogic', key],
+path: (key) => ['scenes', 'dashboard', 'dashboardCollaboratorsLogic', key],
     props: {} as DashboardCollaboratorsLogicProps,
     key: (props) => props.dashboardId,
     connect: (props: DashboardCollaboratorsLogicProps) => ({
@@ -61,11 +61,11 @@ export const dashboardCollaboratorsLogic = kea<dashboardCollaboratorsLogicType>(
                                     props.dashboardId,
                                     userUuid,
                                     DashboardPrivilegeLevel.CanEdit
-                                )
-                        )
-                    )
-                    const allCollaborators = [...explicitCollaborators, ...newCollaborators]
-                    allCollaborators.sort((a, b) => a.user.first_name.localeCompare(b.user.first_name))
+)
+)
+)
+const allCollaborators = [...explicitCollaborators, ...newCollaborators]
+allCollaborators.sort((a, b) => a.user.first_name.localeCompare(b.user.first_name))
                     return allCollaborators
                 },
                 deleteExplicitCollaborator: async ({ userUuid }) => {
@@ -91,17 +91,17 @@ export const dashboardCollaboratorsLogic = kea<dashboardCollaboratorsLogicType>(
                             (collaborator) =>
                                 !baseCollaborators.find(
                                     (baseCollaborator) => baseCollaborator.user.uuid === collaborator.user.uuid
-                                )
-                        )
-                        .map((explicitCollaborator) => ({
+)
+)
+.map((explicitCollaborator) => ({
                             ...explicitCollaborator,
                             level:
                                 explicitCollaborator.user.uuid === dashboardCreatorUuid
                                     ? DashboardPrivilegeLevel._Owner
                                     : explicitCollaborator.level,
                         }))
-                )
-                allCollaborators.push(
+)
+allCollaborators.push(
                     ...baseCollaborators.map((baseCollaborator) => ({
                         user: baseCollaborator.user,
                         level:
@@ -109,18 +109,18 @@ export const dashboardCollaboratorsLogic = kea<dashboardCollaboratorsLogicType>(
                                 ? DashboardPrivilegeLevel._Owner
                                 : DashboardPrivilegeLevel._ProjectAdmin,
                     }))
-                )
-                allCollaborators.sort((a, b) =>
+)
+allCollaborators.sort((a, b) =>
                     a.level === b.level ? a.user.first_name.localeCompare(b.user.first_name) : b.level - a.level
-                )
-                return allCollaborators
-            },
-        ],
-        addableMembers: [
-            (s) => [s.allCollaborators, s.plainMembers],
-            (allCollaborators, plainMembers): UserBasicType[] => {
-                const addableMembers: UserBasicType[] = []
-                for (const plainMember of plainMembers) {
+)
+return allCollaborators
+},
+],
+addableMembers: [
+(s) = > [s.allCollaborators, s.plainMembers],
+(allCollaborators, plainMembers): UserBasicType[] = > {
+const addableMembers: UserBasicType[] = []
+for(const plainMember of plainMembers) {
                     if (!allCollaborators.some((collaborator) => collaborator.user.uuid === plainMember.user.uuid)) {
                         addableMembers.push(plainMember.user)
                     }

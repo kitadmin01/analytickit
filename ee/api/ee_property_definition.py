@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from ee.models.property_definition import EnterprisePropertyDefinition
-from posthog.api.shared import UserBasicSerializer
-from posthog.api.tagged_item import TaggedItemSerializerMixin
+from analytickit.api.shared import UserBasicSerializer
+from analytickit.api.tagged_item import TaggedItemSerializerMixin
 
 
 class EnterprisePropertyDefinitionSerializer(TaggedItemSerializerMixin, serializers.ModelSerializer):

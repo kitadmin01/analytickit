@@ -1,6 +1,6 @@
-import { expectLogic } from 'kea-test-utils'
-import { initKeaTests } from '~/test/init'
-import { propertySelectLogic } from './propertyNamesSelectLogic'
+import{expectLogic}from'kea-test-utils'
+import {initKeaTests}from '~/test/init'
+import {propertySelectLogic} from './propertyNamesSelectLogic'
 
 describe('propertyNamesSelectLogic', () => {
     let logic: ReturnType<typeof propertySelectLogic.build>
@@ -51,10 +51,10 @@ describe('propertyNamesSelectLogic', () => {
         it('should have not filtered anything on initial load', () => {
             expect(logic.values.filteredProperties).toEqual(
                 allProperties.map((property) => ({ name: property, highlightedNameParts: [property] }))
-            )
-        })
+)
+})
 
-        it('should substring filter based on query', () => {
+it('should substring filter based on query', () => {
             expectLogic(logic, () => logic.actions.setQuery('erty 1')).toMatchValues({
                 filteredProperties: [
                     {

@@ -1,12 +1,12 @@
 import dataclasses
 from typing import List
 
-from posthog.client import sync_execute
-from posthog.models.action import Action
-from posthog.models.action.util import filter_event, format_action_filter
-from posthog.models.action_step import ActionStep
-from posthog.models.test.test_event_model import filter_by_actions_factory
-from posthog.test.base import BaseTest, ClickhouseTestMixin, _create_event, _create_person
+from analytickit.client import sync_execute
+from analytickit.models.action import Action
+from analytickit.models.action.util import filter_event, format_action_filter
+from analytickit.models.action_step import ActionStep
+from analytickit.models.test.test_event_model import filter_by_actions_factory
+from analytickit.test.base import BaseTest, ClickhouseTestMixin, _create_event, _create_person
 
 
 @dataclasses.dataclass
@@ -34,7 +34,8 @@ EVENT_UUID_QUERY = "SELECT uuid FROM events WHERE {} AND team_id = %(team_id)s"
 
 
 class TestActions(
-    ClickhouseTestMixin, filter_by_actions_factory(_create_event, _create_person, _get_events_for_action)  # type: ignore
+    ClickhouseTestMixin, filter_by_actions_factory(_create_event, _create_person, _get_events_for_action)
+    # type: ignore
 ):
     pass
 
@@ -45,26 +46,27 @@ class TestActionFormat(ClickhouseTestMixin, BaseTest):
             event="$autocapture",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
         )
 
         _create_event(
             event="$pageview",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
         )
 
         _create_event(
             event="$autocapture",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/1234"},
+            properties={"$current_url": "https://analytickit.com/feedback/1234"},
         )
 
         action1 = Action.objects.create(team=self.team, name="action1")
         step1 = ActionStep.objects.create(
-            event="$autocapture", action=action1, url="https://posthog.com/feedback/123", url_matching=ActionStep.EXACT,
+            event="$autocapture", action=action1, url="https://analytickit.com/feedback/123",
+            url_matching=ActionStep.EXACT,
         )
         query, params = filter_event(step1)
 
@@ -73,30 +75,30 @@ class TestActionFormat(ClickhouseTestMixin, BaseTest):
         self.assertEqual(str(result[0][0]), event_target_uuid)
 
     def test_filter_event_contains_url(self):
-
         _create_event(
             event="$autocapture",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
         )
 
         _create_event(
             event="$pageview",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
         )
 
         _create_event(
             event="$autocapture",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/1234"},
+            properties={"$current_url": "https://analytickit.com/feedback/1234"},
         )
 
         action1 = Action.objects.create(team=self.team, name="action1")
-        step1 = ActionStep.objects.create(event="$autocapture", action=action1, url="https://posthog.com/feedback/123",)
+        step1 = ActionStep.objects.create(event="$autocapture", action=action1,
+                                          url="https://analytickit.com/feedback/123", )
         query, params = filter_event(step1)
 
         full_query = EVENT_UUID_QUERY.format(" AND ".join(query))
@@ -104,12 +106,11 @@ class TestActionFormat(ClickhouseTestMixin, BaseTest):
         self.assertEqual(len(result), 2)
 
     def test_filter_event_regex_url(self):
-
         _create_event(
             event="$autocapture",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/123"},
+            properties={"$current_url": "https://analytickit.com/feedback/123"},
         )
 
         _create_event(
@@ -123,7 +124,7 @@ class TestActionFormat(ClickhouseTestMixin, BaseTest):
             event="$autocapture",
             team=self.team,
             distinct_id="whatever",
-            properties={"$current_url": "https://posthog.com/feedback/1234"},
+            properties={"$current_url": "https://analytickit.com/feedback/1234"},
         )
 
         action1 = Action.objects.create(team=self.team, name="action1")

@@ -69,7 +69,7 @@ export function RecentRecordings(): JSX.Element {
                               title: 'There are no recordings for this project',
                               description: 'Make sure you have the javascript snippet setup in your website.',
                               buttonText: 'Learn more',
-                              buttonHref: 'https://posthog.com/docs/user-guides/recordings',
+                              buttonHref: 'https://analytickit.com/docs/user-guides/recordings',
                           }
                         : {
                               title: 'Recordings are not enabled for this project',

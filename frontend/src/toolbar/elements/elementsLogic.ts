@@ -1,27 +1,27 @@
-import { kea } from 'kea'
+import{kea}from'kea'
 
-import { actionsLogic } from '~/toolbar/actions/actionsLogic'
-import { heatmapLogic } from '~/toolbar/elements/heatmapLogic'
-import { elementToActionStep, getAllClickTargets, getElementForStep, getRectForElement } from '~/toolbar/utils'
-import { actionsTabLogic } from '~/toolbar/actions/actionsTabLogic'
-import { toolbarButtonLogic } from '~/toolbar/button/toolbarButtonLogic'
-import type { elementsLogicType } from './elementsLogicType'
-import { ActionElementWithMetadata, ElementWithMetadata } from '~/toolbar/types'
-import { currentPageLogic } from '~/toolbar/stats/currentPageLogic'
-import { toolbarLogic } from '~/toolbar/toolbarLogic'
-import { posthog } from '~/toolbar/posthog'
-import { collectAllElementsDeep } from 'query-selector-shadow-dom'
+import {actionsLogic}from '~/toolbar/actions/actionsLogic'
+import {heatmapLogic}from '~/toolbar/elements/heatmapLogic'
+import {elementToActionStep, getAllClickTargets, getElementForStep, getRectForElement}from '~/toolbar/utils'
+import {actionsTabLogic}from '~/toolbar/actions/actionsTabLogic'
+import { toolbarButtonLogic}from '~/toolbar/button/toolbarButtonLogic'
+import type {elementsLogicType}from './elementsLogicType'
+import {ActionElementWithMetadata, ElementWithMetadata }from '~/toolbar/types'
+import {currentPageLogic}from '~/toolbar/stats/currentPageLogic'
+import {toolbarLogic}from '~/toolbar/toolbarLogic'
+import { analytickit}from '~/toolbar/analytickit'
+import {collectAllElementsDeep}from 'query-selector-shadow-dom'
 
 export type ActionElementMap = Map<HTMLElement, ActionElementWithMetadata[]>
 export type ElementMap = Map<HTMLElement, ElementWithMetadata>
 
 export const elementsLogic = kea<elementsLogicType>({
-    path: ['toolbar', 'elements', 'elementsLogic'],
-    actions: {
-        enableInspect: true,
-        disableInspect: true,
+path: ['toolbar', 'elements', 'elementsLogic'],
+actions: {
+enableInspect: true,
+disableInspect: true,
 
-        selectElement: (element: HTMLElement | null) => ({ element }),
+selectElement:(element: HTMLElement | null) => ({ element }),
         createAction: (element: HTMLElement) => ({ element }),
 
         updateRects: true,
@@ -360,11 +360,11 @@ export const elementsLogic = kea<elementsLogicType>({
 
     listeners: ({ actions, values }) => ({
         enableInspect: () => {
-            posthog.capture('toolbar mode triggered', { mode: 'inspect', enabled: true })
+            analytickit.capture('toolbar mode triggered', { mode: 'inspect', enabled: true })
             actionsLogic.actions.getActions()
         },
         disableInspect: () => {
-            posthog.capture('toolbar mode triggered', { mode: 'inspect', enabled: false })
+            analytickit.capture('toolbar mode triggered', { mode: 'inspect', enabled: false })
         },
         selectElement: ({ element }) => {
             const inpsectForAction =
@@ -393,7 +393,7 @@ export const elementsLogic = kea<elementsLogicType>({
                 }
             }
 
-            posthog.capture('toolbar selected HTML element', {
+            analytickit.capture('toolbar selected HTML element', {
                 element_tag: element?.tagName.toLowerCase(),
                 element_type: (element as HTMLInputElement)?.type,
                 has_href: !!(element as HTMLAnchorElement)?.href,

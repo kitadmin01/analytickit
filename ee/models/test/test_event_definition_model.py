@@ -1,7 +1,7 @@
 import pytest
 
 from ee.models.event_definition import EnterpriseEventDefinition
-from posthog.test.base import BaseTest
+from analytickit.test.base import BaseTest
 
 
 class TestEventDefinition(BaseTest):

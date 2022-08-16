@@ -1,11 +1,11 @@
-import fs from 'fs'
+importfsfrom'fs'
 import path from 'path'
 
 const consoleFile = path.join(process.cwd(), 'tmp', 'test-console.txt')
 
 export const writeToFile = {
-    console: {
-        log: (...args: any[]): void => {
+console: {
+log:(...args: any[]): void => {
             fs.appendFileSync(consoleFile, `${JSON.stringify(args)}\n`)
         },
         reset(): void {

@@ -133,11 +133,3 @@ with one of the team.
 Come help us make analytickit even better. We're growing
 fast, [and would love for you to join us](https://analytickit.com/careers).
 
-## Open-source vs. paid
-
-This repo is entirely [MIT licensed](/LICENSE), with the exception of the `ee` directory (if applicable). Need _
-absolutely 💯% FOSS_? Check out our [analytickit-foss](https://github.com/analytickit/analytickit-foss) repository, which
-is purged of all proprietary code and features.
-
-Premium features (contained in the `ee` directory) require a analytickit license. Contact us at sales@analytickit.com
-for more information, or see our [pricing page](https://analytickit.com/pricing).

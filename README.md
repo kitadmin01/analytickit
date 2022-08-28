@@ -12,7 +12,7 @@
   <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/analytickit/analytickit"/>
 </p>
 
-## analytickit is an open-source product analytics suite, built for engineers
+## analytickit is a product analytics suite, built for engineers
 
 * Automatically track every event on your website or app
 * Understand your users and how to improve your product

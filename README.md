@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="300" alt="analytickitlogo" src="https://user-images.githubusercontent.com/85295485/144591858-cb39e04a-7bf4-4a4d-a1fd-5d05a3ff693f.png">
+  <img width="300" alt="analytickitlogo" src="https://analytickit.com/wp-content/uploads/2022/04/cropped-newlogo-small.png">
 </p>
 <p align="center">
   <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->

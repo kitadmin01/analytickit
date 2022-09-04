@@ -1,4 +1,4 @@
-import { kea } from ' kea'
+import { kea } from 'kea'
 import type { currentPageLogicType } from './currentPageLogicType'
 
 export const currentPageLogic = kea<currentPageLogicType>({

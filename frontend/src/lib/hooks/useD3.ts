@@ -1,4 +1,4 @@
-import{MutableRefObject, useEffect, useRef}from 'react'
+import {MutableRefObject, useEffect, useRef} from 'react'
 import * as d3 from 'd3'
 
 export type D3Selector = d3.Selection<any, any, any, any>

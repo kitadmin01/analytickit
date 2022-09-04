@@ -4,11 +4,11 @@ ActivityLogItem,
 ActivityScope,
 Describer,
 PersonMerge,
-}from 'lib/components/ActivityLog/humanizeActivity'
-import {useMocks }from '~/mocks/jest'
-import {initKeaTests}from '~/test/init'
-import {activityLogLogic}from 'lib/components/ActivityLog/activityLogLogic'
-import { expectLogic}from 'kea-test-utils'
+} from 'lib/components/ActivityLog/humanizeActivity'
+import {useMocks } from '~/mocks/jest'
+import {initKeaTests} from '~/test/init'
+import {activityLogLogic} from 'lib/components/ActivityLog/activityLogLogic'
+import { expectLogic} from 'kea-test-utils'
 
 interface APIMockSetup {
 name: string

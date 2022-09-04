@@ -1,4 +1,4 @@
-import{PluginEvent, PluginMeta, RetryError}from '@analytickit/plugin-scaffold'
+import {PluginEvent, PluginMeta, RetryError} from '@analytickit/plugin-scaffold'
 
 import {
 Hub,

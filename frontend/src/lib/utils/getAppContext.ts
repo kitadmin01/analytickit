@@ -1,4 +1,4 @@
-import{AppContext, PathType}from '~/types'
+import {AppContext, PathType} from '~/types'
 
 declare global {
 export interface Window {

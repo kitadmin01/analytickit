@@ -1,4 +1,4 @@
-import{DependencyList, useEffect, useRef}from 'react'
+import {DependencyList, useEffect, useRef} from 'react'
 
 export type KeyboardEventHandler = (event: KeyboardEvent) => void
 export type EventHandler = (event: Event) => void

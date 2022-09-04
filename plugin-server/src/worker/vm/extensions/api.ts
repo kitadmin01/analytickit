@@ -1,4 +1,4 @@
-importfetch, {Headers, Response}from 'node-fetch'
+import fetch, {Headers, Response} from 'node-fetch'
 
 import {Hub, PluginConfig}from '../../../types'
 

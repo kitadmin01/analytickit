@@ -1,4 +1,4 @@
-import{ProcessedPluginEvent, RetryError}from '@analytickit/plugin-scaffold'
+import {ProcessedPluginEvent, RetryError} from '@analytickit/plugin-scaffold'
 
 import {Hub}from '../../src/types'
 import { UUID}from '../../src/utils/utils'

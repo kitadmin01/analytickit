@@ -1,0 +1,100 @@
+{
+  "name": "@analytickit/simmerjs",
+  "description": "A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.",
+  "version": "0.7.7",
+  "author": "Gidi Meir Morris",
+  "main": "lib/simmer.js",
+  "jsnext:main": "modules/simmer.js",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gmmorris/simmerjs.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/gmmorris/simmerjs/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.17.9",
+    "lodash.difference": "^4.5.0",
+    "lodash.flatmap": "^4.5.0",
+    "lodash.isfunction": "^3.0.8",
+    "lodash.take": "^4.1.1",
+    "lodash.takeright": "^4.1.1",
+    "query-selector-shadow-dom": "^1.0.0"
+  },
+  "scripts": {
+    "test": "yarn run testUnit && yarn run testIntegration",
+    "testw": "jest .test.js  --watch",
+    "testUnit": "jest ./modules",
+    "testIntegration": "jest ./**/integration/*.test.js",
+    "testE2E": "yarn run build && nightwatch --config nightwatch.conf.js",
+    "build": "yarn run buildBrowser && yarn run buildModule",
+    "buildBrowser": "rollup -c",
+    "buildModule": "rm -rf ./lib && babel modules -d lib --ignore .test.js",
+    "lint": "eslint ./modules/**/*.js",
+    "format": "prettier-eslint --write \"modules/**/*.js\"",
+    "formatTests": "prettier-eslint --write \"__tests__/integration/*.js\"",
+    "precommit": "lint-staged",
+    "prepare": "yarn build"
+  },
+  "lint-staged": {
+    "*.js": [
+      "yarn run format",
+      "yarn run lint",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "@ampproject/rollup-plugin-closure-compiler": "^0.26.0",
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/plugin-external-helpers": "^7.16.7",
+    "@babel/plugin-transform-parameters": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@rollup/plugin-babel": "^5.2.1",
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "babel-jest": "^26.3.0",
+    "env2": "^2.2.0",
+    "eslint": "^7.10.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "express": "^4.15.3",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "jest-codemods": "^0.23.0",
+    "jsdom": "^16.4.0",
+    "lint-staged": "^10.4.0",
+    "nightwatch": "^1.4.3",
+    "path": "^0.12.7",
+    "prettier": "^2.1.2",
+    "prettier-eslint-cli": "^5.0.0",
+    "regenerator-runtime": "^0.13.7",
+    "rollup": "^2.28.2",
+    "selenium-download": "^2.0.10",
+    "sinon": "^9.1.0",
+    "standard": "^14.3.4"
+  },
+  "keywords": [
+    "Simmer",
+    "css",
+    "css selector",
+    "sizzle"
+  ],
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(query-selector-shadow-dom)/)"
+    ]
+  }
+}

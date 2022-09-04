@@ -186,7 +186,8 @@ export function NPSPrompt(): JSX.Element | null {
                         <div data-attr="nps-step-2">
                             {Header}
                             <div className="question">
-                                Last one. What type of person or company do you think could benefit most from analytickit?
+                                Last one. What type of person or company do you think could benefit most from
+                                analytickit?
                             </div>
                             <Input.TextArea
                                 autoFocus

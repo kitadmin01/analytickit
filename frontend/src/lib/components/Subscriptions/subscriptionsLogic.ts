@@ -1,17 +1,17 @@
-import{actions, afterMount, BreakPointFunction, kea, key, listeners, path, props, reducers}from 'kea'
-import {SubscriptionType}from '~/types'
+import { actions, afterMount, BreakPointFunction, kea, key, listeners, path, props, reducers } from 'kea'
+import { SubscriptionType } from '~/types'
 
 import api from 'lib/api'
-import {loaders}from 'kea-loaders'
+import { loaders } from 'kea-loaders'
 
-import {deleteWithUndo}from 'lib/utils'
+import { deleteWithUndo } from 'lib/utils'
 
-import type {subscriptionsLogicType}from './subscriptionsLogicType'
-import {getInsightId} from 'scenes/insights/utils'
-import {SubscriptionBaseProps}from './utils'
+import type { subscriptionsLogicType } from './subscriptionsLogicType'
+import { getInsightId } from 'scenes/insights/utils'
+import { SubscriptionBaseProps } from './utils'
 
 export const subscriptionsLogic = kea<subscriptionsLogicType>([
-path(['lib', 'components', 'Subscriptions', 'subscriptionsLogic']),
+    path(['lib', 'components', 'Subscriptions', 'subscriptionsLogic']),
     props({} as SubscriptionBaseProps),
     key(({ insightShortId, dashboardId }) =>
         insightShortId ? `insight-${insightShortId}` : dashboardId ? `dashboard-${dashboardId}` : 'subscriptions'

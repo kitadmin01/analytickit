@@ -1,4 +1,4 @@
-import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
 import {KafkaMessage}from 'kafkajs'
 
 import {ClickhouseEventKafka, IngestionEvent}from '../types'

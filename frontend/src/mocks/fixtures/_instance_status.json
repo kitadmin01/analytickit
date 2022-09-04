@@ -148,7 +148,7 @@
               62
             ],
             [
-              "infi_clickhouse_orm_migrations",
+              "infi.clickhouse_orm_migrations",
               "1.58 KiB",
               46
             ],

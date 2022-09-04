@@ -87,7 +87,7 @@ RUN apk --update --no-cache --virtual .geolite-deps add \
     && \
     mkdir share \
     && \
-    ( curl -L "https://mmdbcdn.analytickit.net/" | brotli --decompress --output=./share/GeoLite2-City.mmdb ) \
+    ( curl -L "https://s3.amazonaws.com/analytickit/GeoLite2-City.mmdb" | brotli --decompress --output=./share/GeoLite2-City.mmdb ) \
     && \
     chmod -R 755 ./share/GeoLite2-City.mmdb \
     && \

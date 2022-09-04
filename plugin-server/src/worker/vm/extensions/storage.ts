@@ -1,7 +1,7 @@
-import{StorageExtension}from'@analytickit/plugin-scaffold'
+import {StorageExtension} from'@analytickit/plugin-scaffold'
 
-import {Hub, PluginConfig}from '../../../types'
-import {postgresGet }from '../utils'
+import {Hub, PluginConfig} from '../../../types'
+import {postgresGet} from '../utils'
 
 export function createStorage(server: Hub, pluginConfig: PluginConfig): StorageExtension {
     const get = async function (key: string, defaultValue: unknown): Promise<unknown> {

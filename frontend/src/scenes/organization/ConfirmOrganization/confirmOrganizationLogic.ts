@@ -1,19 +1,19 @@
-import{actions, kea, path, reducers}from 'kea'
+import { actions, kea, path, reducers } from 'kea'
 
 import api from 'lib/api'
-import {urlToAction}from 'kea-router'
+import { urlToAction } from 'kea-router'
 
-import type {confirmOrganizationLogicType}from './confirmOrganizationLogicType'
-import {forms}from 'kea-forms'
-import {lemonToast}from 'lib/components/lemonToast'
+import type { confirmOrganizationLogicType } from './confirmOrganizationLogicType'
+import { forms } from 'kea-forms'
+import { lemonToast } from 'lib/components/lemonToast'
 
 export interface ConfirmOrganizationFormValues {
-organization_name?: string
-first_name?: string
+    organization_name?: string
+    first_name?: string
 }
 
 export const confirmOrganizationLogic = kea<confirmOrganizationLogicType>([
-path(['scenes', 'organization', 'confirmOrganizationLogic']),
+    path(['scenes', 'organization', 'confirmOrganizationLogic']),
 
     actions({
         setEmail: (email: string) => ({

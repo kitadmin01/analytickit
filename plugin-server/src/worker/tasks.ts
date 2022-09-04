@@ -1,11 +1,11 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold/src/types'
+import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
 
-import {Action, EnqueuedPluginJob, Hub, IngestionEvent, PluginTaskType, Team}from '../types'
-import {convertToProcessedPluginEvent}from '../utils/event'
-import {EventPipelineRunner }from './ingestion/event-pipeline/runner'
-import {runPluginTask, runProcessEvent}from './plugins/run'
-import {loadSchedule, setupPlugins}from './plugins/setup'
-import {teardownPlugins}from './plugins/teardown'
+import {Action, EnqueuedPluginJob, Hub, IngestionEvent, PluginTaskType, Team} from '../types'
+import {convertToProcessedPluginEvent} from '../utils/event'
+import {EventPipelineRunner } from './ingestion/event-pipeline/runner'
+import {runPluginTask, runProcessEvent} from './plugins/run'
+import {loadSchedule, setupPlugins} from './plugins/setup'
+import {teardownPlugins} from './plugins/teardown'
 
 type TaskRunner = (hub: Hub, args: any) => Promise<any> | any
 

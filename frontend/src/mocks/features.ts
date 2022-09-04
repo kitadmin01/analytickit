@@ -1,4 +1,4 @@
-import{AvailableFeature}from'~/types'
+import {AvailableFeature} from '~/types'
 
 let features: AvailableFeature[] = []
 export const useAvailableFeatures = (f: AvailableFeature[]): void => {

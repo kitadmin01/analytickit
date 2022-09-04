@@ -1,38 +1,37 @@
-import{actions, afterMount, kea, key, props, path, selectors, reducers, connect}from 'kea'
-import {AvailableFeature, Breadcrumb, Definition, EventDefinition, PropertyDefinition}from '~/types'
-import {loaders}from 'kea-loaders'
+import { actions, afterMount, kea, key, props, path, selectors, reducers, connect } from 'kea'
+import { AvailableFeature, Breadcrumb, Definition, EventDefinition, PropertyDefinition } from '~/types'
+import { loaders } from 'kea-loaders'
 import api from 'lib/api'
-import { eventDefinitionsModel}from '~/models/eventDefinitionsModel'
-import {propertyDefinitionsModel}from '~/models/propertyDefinitionsModel'
-import {router}from 'kea-router'
-import {urls}from 'scenes/urls'
-import type {definitionLogicType}from './definitionLogicType'
-import {getPropertyLabel} from 'lib/components/PropertyKeyInfo'
-import {userLogic}from 'scenes/userLogic'
+import { eventDefinitionsModel } from '~/models/eventDefinitionsModel'
+import { propertyDefinitionsModel } from '~/models/propertyDefinitionsModel'
+import { router } from 'kea-router'
+import { urls } from 'scenes/urls'
+import type { definitionLogicType } from './definitionLogicType'
+import { getPropertyLabel } from 'lib/components/PropertyKeyInfo'
+import { userLogic } from 'scenes/userLogic'
 
 export enum DefinitionPageMode {
-View = 'view',
-Edit = 'edit',
+    View = 'view',
+    Edit = 'edit',
 }
 
 export const createNewDefinition = (isEvent: boolean): Definition => ({
-id: 'new',
-name: `New ${isEvent ? 'Event' : 'Event property'
-}`,
-volume_30_day: null,
-query_usage_30_day: null,
+    id: 'new',
+    name: `New ${isEvent ? 'Event' : 'Event property'}`,
+    volume_30_day: null,
+    query_usage_30_day: null,
 })
 
 export interface SetDefinitionProps {
-merge?: boolean
+    merge?: boolean
 }
 
 export interface DefinitionLogicProps {
-id?: Definition['id']
+    id?: Definition['id']
 }
 
 export const definitionLogic = kea<definitionLogicType>([
-path(['scenes', 'data-management', 'definition', 'definitionViewLogic']),
+    path(['scenes', 'data-management', 'definition', 'definitionViewLogic']),
     props({} as DefinitionLogicProps),
     key((props) => props.id || 'new'),
     actions({

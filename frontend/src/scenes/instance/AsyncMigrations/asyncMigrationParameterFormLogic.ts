@@ -1,11 +1,11 @@
-import{kea, key, props, path}from 'kea'
-import {forms}from 'kea-forms'
-import {AsyncMigrationModalProps, asyncMigrationsLogic}from 'scenes/instance/AsyncMigrations/asyncMigrationsLogic'
+import { kea, key, props, path } from 'kea'
+import { forms } from 'kea-forms'
+import { AsyncMigrationModalProps, asyncMigrationsLogic } from 'scenes/instance/AsyncMigrations/asyncMigrationsLogic'
 
-import type {asyncMigrationParameterFormLogicType}from './asyncMigrationParameterFormLogicType'
+import type { asyncMigrationParameterFormLogicType } from './asyncMigrationParameterFormLogicType'
 
 export const asyncMigrationParameterFormLogic = kea<asyncMigrationParameterFormLogicType>([
-path(['scenes', 'instance', 'AsyncMigrations', 'asyncMigrationParameterFormLogic']),
+    path(['scenes', 'instance', 'AsyncMigrations', 'asyncMigrationParameterFormLogic']),
     props({} as AsyncMigrationModalProps),
     key((props) => props.migration.id),
 
@@ -21,10 +21,10 @@ path(['scenes', 'instance', 'AsyncMigrations', 'asyncMigrationParameterFormLogic
                     },
                     props.endpoint,
                     props.message
-)
-},
-},
-})),
+                )
+            },
+        },
+    })),
 ])
 
 function defaultParameters(props: AsyncMigrationModalProps): Record<string, number> {

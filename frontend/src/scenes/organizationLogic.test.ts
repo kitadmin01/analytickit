@@ -1,8 +1,8 @@
-import{expectLogic}from'kea-test-utils'
-import {initKeaTests}from '~/test/init'
+import {expectLogic} from 'kea-test-utils'
+import {initKeaTests} from '~/test/init'
 import {MOCK_DEFAULT_ORGANIZATION} from '../lib/api.mock'
-import {AppContext}from '../types'
-import {organizationLogic}from './organizationLogic'
+import {AppContext} from '../types'
+import {organizationLogic} from './organizationLogic'
 
 describe('organizationLogic', () => {
     let logic: ReturnType<typeof organizationLogic.build>

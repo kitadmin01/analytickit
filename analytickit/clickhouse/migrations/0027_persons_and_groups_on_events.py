@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.clickhouse.replication.utils import clickhouse_is_replicated
 from analytickit.client import sync_execute

@@ -1,7 +1,7 @@
-import{QueryResult}from'pg'
+import {QueryResult} from'pg'
 
-import {PluginConfig}from '../../types'
-import {DB}from '../../utils/db/db'
+import {PluginConfig} from '../../types'
+import {DB} from '../../utils/db/db'
 
 // This assumes the value stored at `key` can be cast to a Postgres numeric type
 export const postgresIncrement = async (

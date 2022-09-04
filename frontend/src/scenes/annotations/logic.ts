@@ -1,21 +1,21 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {toParams, deleteWithUndo}from 'lib/utils'
-import {annotationsModel}from '~/models/annotationsModel'
-import type {annotationsTableLogicType}from './logicType'
-import {AnnotationType}from '~/types'
-import {teamLogic}from '../teamLogic'
+import { toParams, deleteWithUndo } from 'lib/utils'
+import { annotationsModel } from '~/models/annotationsModel'
+import type { annotationsTableLogicType } from './logicType'
+import { AnnotationType } from '~/types'
+import { teamLogic } from '../teamLogic'
 
 export const annotationsTableLogic = kea<annotationsTableLogicType>({
-path: ['scenes', 'annotations', 'logic'],
-loaders: ({ actions }) => ({
+    path: ['scenes', 'annotations', 'logic'],
+    loaders: ({ actions }) => ({
         annotations: {
             __default: [],
             loadAnnotations: async () => {
                 const response = await api.get(
                     `api/projects/${teamLogic.values.currentTeamId}/annotations/?${toParams({ order: '-updated_at' })}`
-)
-actions.setNext(response.next)
+                )
+                actions.setNext(response.next)
                 return response.results
             },
         },

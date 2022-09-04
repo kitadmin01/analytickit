@@ -1,20 +1,20 @@
-import{actions, afterMount, connect, kea, listeners, path, reducers, selectors}from 'kea'
+import { actions, afterMount, connect, kea, listeners, path, reducers, selectors } from 'kea'
 import api from 'lib/api'
-import type {userLogicType}from './userLogicType'
-import {AvailableFeature, OrganizationBasicType, UserType}from '~/types'
+import type { userLogicType } from './userLogicType'
+import { AvailableFeature, OrganizationBasicType, UserType } from '~/types'
 import analytickit from 'analytickit-js'
-import {getAppContext}from 'lib/utils/getAppContext'
-import {preflightLogic}from './PreflightCheck/preflightLogic'
-import { lemonToast}from 'lib/components/lemonToast'
-import {loaders}from 'kea-loaders'
-import {forms}from 'kea-forms'
+import { getAppContext } from 'lib/utils/getAppContext'
+import { preflightLogic } from './PreflightCheck/preflightLogic'
+import { lemonToast } from 'lib/components/lemonToast'
+import { loaders } from 'kea-loaders'
+import { forms } from 'kea-forms'
 
 export interface UserDetailsFormType {
-first_name: string
+    first_name: string
 }
 
 export const userLogic = kea<userLogicType>([
-path(['scenes', 'userLogic']),
+    path(['scenes', 'userLogic']),
     connect({
         values: [preflightLogic, ['preflight']],
     }),

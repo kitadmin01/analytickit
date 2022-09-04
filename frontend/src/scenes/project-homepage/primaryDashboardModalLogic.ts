@@ -1,17 +1,17 @@
-import{kea}from'kea'
-import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import {teamLogic} from 'scenes/teamLogic'
-import type { primaryDashboardModalLogicType}from './primaryDashboardModalLogicType'
+import { kea } from 'kea'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { teamLogic } from 'scenes/teamLogic'
+import type { primaryDashboardModalLogicType } from './primaryDashboardModalLogicType'
 
 export const primaryDashboardModalLogic = kea<primaryDashboardModalLogicType>({
-path: ['scenes', 'project-homepage', 'primaryDashboardModalLogic'],
-connect: {
-logic: [eventUsageLogic],
-actions: [teamLogic, ['updateCurrentTeam']],
-values: [teamLogic, ['currentTeam']],
-},
-actions: {
-showPrimaryDashboardModal:() => true,
+    path: ['scenes', 'project-homepage', 'primaryDashboardModalLogic'],
+    connect: {
+        logic: [eventUsageLogic],
+        actions: [teamLogic, ['updateCurrentTeam']],
+        values: [teamLogic, ['currentTeam']],
+    },
+    actions: {
+        showPrimaryDashboardModal: () => true,
         closePrimaryDashboardModal: () => true,
         setPrimaryDashboard: (dashboardId: number) => ({ dashboardId }),
     },

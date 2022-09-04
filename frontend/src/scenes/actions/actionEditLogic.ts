@@ -1,31 +1,31 @@
-import{actions, afterMount, connect, kea, key, listeners, path, props, reducers}from 'kea'
+import { actions, afterMount, connect, kea, key, listeners, path, props, reducers } from 'kea'
 import api from 'lib/api'
-import {deleteWithUndo, uuid}from 'lib/utils'
-import {actionsModel}from '~/models/actionsModel'
-import type {actionEditLogicType }from './actionEditLogicType'
-import { ActionType}from '~/types'
-import {lemonToast}from 'lib/components/lemonToast'
-import {duplicateActionErrorToast}from 'scenes/actions/ActionEdit'
-import {loaders}from 'kea-loaders'
-import {forms}from 'kea-forms'
-import {router}from 'kea-router'
-import {urls}from 'scenes/urls'
-import {eventDefinitionsTableLogic}from 'scenes/data-management/events/eventDefinitionsTableLogic'
-import { actionLogic}from 'scenes/actions/actionLogic'
+import { deleteWithUndo, uuid } from 'lib/utils'
+import { actionsModel } from '~/models/actionsModel'
+import type { actionEditLogicType } from './actionEditLogicType'
+import { ActionType } from '~/types'
+import { lemonToast } from 'lib/components/lemonToast'
+import { duplicateActionErrorToast } from 'scenes/actions/ActionEdit'
+import { loaders } from 'kea-loaders'
+import { forms } from 'kea-forms'
+import { router } from 'kea-router'
+import { urls } from 'scenes/urls'
+import { eventDefinitionsTableLogic } from 'scenes/data-management/events/eventDefinitionsTableLogic'
+import { actionLogic } from 'scenes/actions/actionLogic'
 
 export type NewActionType = Partial<ActionType> &
-Pick <ActionType, 'name' | 'post_to_slack' | 'slack_message_format' | 'steps'>
+    Pick<ActionType, 'name' | 'post_to_slack' | 'slack_message_format' | 'steps'>
 export type ActionEditType = ActionType | NewActionType
 
 export interface SetActionProps {
-merge?: boolean
+    merge?: boolean
 }
 
 export interface ActionEditLogicProps {
-id?: number
-action: ActionEditType
-temporaryToken?: string
-onSave:(action: ActionType) => void
+    id?: number
+    action: ActionEditType
+    temporaryToken?: string
+    onSave: (action: ActionType) => void
 }
 
 export const actionEditLogic = kea<actionEditLogicType>([

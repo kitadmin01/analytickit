@@ -1,21 +1,19 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from '~/lib/api'
-import {PluginLogEntry, PluginLogEntryType} from '~/types'
-import {teamLogic }from '../../teamLogic'
-import type {pluginLogsLogicType}from './pluginLogsLogicType'
-import {CheckboxValueType}from 'antd/lib/checkbox/Group'
+import { PluginLogEntry, PluginLogEntryType } from '~/types'
+import { teamLogic } from '../../teamLogic'
+import type { pluginLogsLogicType } from './pluginLogsLogicType'
+import { CheckboxValueType } from 'antd/lib/checkbox/Group'
 
 export interface PluginLogsProps {
-pluginConfigId: number
+    pluginConfigId: number
 }
 
 export const LOGS_PORTION_LIMIT = 50
 
 export const pluginLogsLogic = kea<pluginLogsLogicType>({
-props: {
-
-}as PluginLogsProps,
-key: ({ pluginConfigId }: PluginLogsProps) => pluginConfigId,
+    props: {} as PluginLogsProps,
+    key: ({ pluginConfigId }: PluginLogsProps) => pluginConfigId,
     path: (key) => ['scenes', 'plugins', 'plugin', 'pluginLogsLogic', key],
     connect: {
         values: [teamLogic, ['currentTeamId']],
@@ -39,8 +37,8 @@ key: ({ pluginConfigId }: PluginLogsProps) => pluginConfigId,
                     values.currentTeamId,
                     values.searchTerm,
                     values.typeFilters
-)
-if (!cache.pollingInterval) {
+                )
+                if (!cache.pollingInterval) {
                     cache.pollingInterval = setInterval(actions.loadPluginLogsBackgroundPoll, 2000)
                 }
                 actions.clearPluginLogsBackground()
@@ -53,9 +51,9 @@ if (!cache.pollingInterval) {
                     values.searchTerm,
                     values.typeFilters,
                     values.trailingEntry
-)
+                )
 
-if (results.length < LOGS_PORTION_LIMIT) {
+                if (results.length < LOGS_PORTION_LIMIT) {
                     actions.markLogsEnd()
                 }
                 return [...values.pluginLogs, ...results]
@@ -80,13 +78,13 @@ if (results.length < LOGS_PORTION_LIMIT) {
                     values.typeFilters,
                     null,
                     values.leadingEntry
-)
+                )
 
-return [...results,...values.pluginLogsBackground]
-},
-},
-}),
-listeners:({ actions }) => ({
+                return [...results, ...values.pluginLogsBackground]
+            },
+        },
+    }),
+    listeners: ({ actions }) => ({
         setPluginLogsTypes: () => {
             actions.loadPluginLogs()
         },

@@ -1,4 +1,4 @@
-import{ReaderModel}from'@maxmind/geoip2-node'
+import {ReaderModel} from'@maxmind/geoip2-node'
 import Piscina from '@analytickit/piscina'
 import * as Sentry from '@sentry/node'
 import { Server}from 'http'

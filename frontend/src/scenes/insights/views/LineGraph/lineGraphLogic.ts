@@ -1,19 +1,19 @@
-import{kea}from'kea'
-import {TooltipItem}from 'chart.js'
-import {GraphDataset}from '~/types'
-import {SeriesDatum}from 'scenes/insights/InsightTooltip/insightTooltipUtils'
-import type {lineGraphLogicType}from './lineGraphLogicType'
+import { kea } from 'kea'
+import { TooltipItem } from 'chart.js'
+import { GraphDataset } from '~/types'
+import { SeriesDatum } from 'scenes/insights/InsightTooltip/insightTooltipUtils'
+import type { lineGraphLogicType } from './lineGraphLogicType'
 
 // TODO: Eventually we should move all state from LineGraph into this logic
 export const lineGraphLogic = kea<lineGraphLogicType>({
-path: ['scenes', 'insights', 'LineGraph', 'lineGraphLogic'],
-selectors: {
-createTooltipData: [
-() => [],
-() =>
-(tooltipDataPoints: TooltipItem < any>[], filterFn: (s: SeriesDatum) => boolean): SeriesDatum[] => {
-return tooltipDataPoints
-?.map((dp, idx) => {
+    path: ['scenes', 'insights', 'LineGraph', 'lineGraphLogic'],
+    selectors: {
+        createTooltipData: [
+            () => [],
+            () =>
+                (tooltipDataPoints: TooltipItem<any>[], filterFn: (s: SeriesDatum) => boolean): SeriesDatum[] => {
+                    return tooltipDataPoints
+                        ?.map((dp, idx) => {
                             const pointDataset = (dp?.dataset ?? {}) as GraphDataset
                             return {
                                 id: idx,
@@ -42,9 +42,9 @@ return tooltipDataPoints
                             return (
                                 b.count - a.count ||
                                 (a.label === undefined || b.label === undefined ? -1 : a.label.localeCompare(b.label))
-)
-})
-?.filter(filterFn)
+                            )
+                        })
+                        ?.filter(filterFn)
                         ?.map((s, id) => ({
                             ...s,
                             id,

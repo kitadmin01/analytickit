@@ -1,14 +1,14 @@
-import{kea}from'kea'
-import {inBounds}from '~/toolbar/utils'
-import {heatmapLogic} from '~/toolbar/elements/heatmapLogic'
-import {elementsLogic}from '~/toolbar/elements/elementsLogic'
-import {actionsTabLogic} from '~/toolbar/actions/actionsTabLogic'
-import type {toolbarButtonLogicType}from './toolbarButtonLogicType'
-import {analytickit}from '~/toolbar/analytickit'
+import { kea } from 'kea'
+import { inBounds } from '~/toolbar/utils'
+import { heatmapLogic } from '~/toolbar/elements/heatmapLogic'
+import { elementsLogic } from '~/toolbar/elements/elementsLogic'
+import { actionsTabLogic } from '~/toolbar/actions/actionsTabLogic'
+import type { toolbarButtonLogicType } from './toolbarButtonLogicType'
+import { analytickit } from '~/toolbar/analytickit'
 
 export const toolbarButtonLogic = kea<toolbarButtonLogicType>({
-path: ['toolbar', 'button', 'toolbarButtonLogic'],
-actions: () => ({
+    path: ['toolbar', 'button', 'toolbarButtonLogic'],
+    actions: () => ({
         showHeatmapInfo: true,
         hideHeatmapInfo: true,
         showActionsInfo: true,
@@ -185,7 +185,7 @@ actions: () => ({
             actions.setDragPosition(
                 x > windowWidth / 2 ? -(windowWidth - x) : x,
                 y > windowHeight / 2 ? -(windowHeight - y) : y
-)
-},
-}),
+            )
+        },
+    }),
 })

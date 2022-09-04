@@ -1,10 +1,10 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {ActionType}from '~/types'
-import type {actionsModelType}from './actionsModelType'
+import { ActionType } from '~/types'
+import type { actionsModelType } from './actionsModelType'
 
 export interface ActionsModelProps {
-params?: string
+    params?: string
 }
 
 export function findActionName(id: number): string | null {

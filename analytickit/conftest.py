@@ -2,7 +2,7 @@ from typing import Any, Tuple
 
 import pytest
 from django.conf import settings
-from infi.clickhouse_orm import Database
+from analytickit.infi.clickhouse_orm import Database
 
 from analytickit.client import sync_execute
 from analytickit.test.base import TestMixin, run_clickhouse_statement_in_parallel

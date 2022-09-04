@@ -9,11 +9,11 @@ jest.mock('node-fetch')
 beforeEach(() => {
     const responsesToUrls = {
         'https://google.com/results.json?query=fetched': { count: 2, query: 'bla', results: [true, true] },
-        'https://mmdbcdn.analytickit.net/': readFileSync(join(__dirname, 'tests', 'assets', 'GeoLite2-City-Test.mmdb.br')),
+        'https://s3.amazonaws.com/analytickit/GeoLite2-City.mmdb': readFileSync(join(__dirname, 'tests', 'assets', 'GeoLite2-City-Test.mmdb.br')),
         'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2': { hello: 'world' },
     }
     const headersToUrls = {
-        'https://mmdbcdn.analytickit.net/': new Map([
+        'https://s3.amazonaws.com/analytickit/GeoLite2-City.mmdb': new Map([
             ['content-type', 'vnd.maxmind.maxmind-db'],
             ['content-disposition', `attachment; filename="GeoLite2-City-${DateTime.local().toISODate()}.mmdb"`],
         ]),

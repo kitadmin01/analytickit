@@ -1,4 +1,4 @@
-importPiscinafrom'@analytickit/piscina'
+import Piscina from '@analytickit/piscina'
 import {TaskList} from 'graphile-worker'
 
 import {EnqueuedBufferJob, EnqueuedPluginJob, Hub, JobQueueConsumerControl}from '../../types'

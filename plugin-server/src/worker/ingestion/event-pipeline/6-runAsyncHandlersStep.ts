@@ -1,9 +1,9 @@
-import{runInstrumentedFunction}from'../../../main/utils'
-import {Action, Element, IngestionEvent}from '../../../types'
+import {runInstrumentedFunction} from'../../../main/utils'
+import {Action, Element, IngestionEvent} from '../../../types'
 import {convertToProcessedPluginEvent} from '../../../utils/event'
-import {runOnEvent, runOnSnapshot}from '../../plugins/run'
-import {LazyPersonContainer}from '../lazy-person-container'
-import {EventPipelineRunner, StepResult}from './runner'
+import {runOnEvent, runOnSnapshot} from '../../plugins/run'
+import {LazyPersonContainer} from '../lazy-person-container'
+import {EventPipelineRunner, StepResult} from './runner'
 
 export async function runAsyncHandlersStep(
     runner: EventPipelineRunner,

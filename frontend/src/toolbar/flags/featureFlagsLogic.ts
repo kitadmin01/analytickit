@@ -1,19 +1,19 @@
-import{kea}from'kea'
-import {CombinedFeatureFlagAndValueType}from '~/types'
-import type {featureFlagsLogicType}from './featureFlagsLogicType'
-import {toolbarFetch} from '~/toolbar/utils'
-import {toolbarLogic}from '~/toolbar/toolbarLogic'
+import { kea } from 'kea'
+import { CombinedFeatureFlagAndValueType } from '~/types'
+import type { featureFlagsLogicType } from './featureFlagsLogicType'
+import { toolbarFetch } from '~/toolbar/utils'
+import { toolbarLogic } from '~/toolbar/toolbarLogic'
 import Fuse from 'fuse.js'
-import type {analytickit}from 'analytickit-js'
-import {analytickit}from '~/toolbar/analytickit'
-import {encodeParams}from 'kea-router'
-import {FEATURE_FLAGS}from 'lib/constants'
+import type { analytickit } from 'analytickit-js'
+import { analytickit } from '~/toolbar/analytickit'
+import { encodeParams } from 'kea-router'
+import { FEATURE_FLAGS } from 'lib/constants'
 
 export const featureFlagsLogic = kea<featureFlagsLogicType>({
-path: ['toolbar', 'flags', 'featureFlagsLogic'],
-actions: {
-getUserFlags: true,
-setOverriddenUserFlag: (flagKey: string, overrideValue: string | boolean) => ({ flagKey, overrideValue }),
+    path: ['toolbar', 'flags', 'featureFlagsLogic'],
+    actions: {
+        getUserFlags: true,
+        setOverriddenUserFlag: (flagKey: string, overrideValue: string | boolean) => ({ flagKey, overrideValue }),
         deleteOverriddenUserFlag: (flagKey: string) => ({ flagKey }),
         setSearchTerm: (searchTerm: string) => ({ searchTerm }),
         checkLocalOverrides: true,
@@ -63,9 +63,9 @@ setOverriddenUserFlag: (flagKey: string, overrideValue: string | boolean) => ({ 
                     }
                     const response = await toolbarFetch(
                         `/api/projects/@current/feature_flags/my_flags${encodeParams(params, '?')}`
-)
+                    )
 
-if(response.status >= 400) {
+                    if (response.status >= 400) {
                         toolbarLogic.actions.tokenExpired()
                         return []
                     }
@@ -117,11 +117,11 @@ if(response.status >= 400) {
             (searchTerm, userFlagsWithOverrideInfo) => {
                 return searchTerm
                     ? new Fuse(userFlagsWithOverrideInfo, {
-                          threshold: 0.3,
-                          keys: ['feature_flag.key', 'feature_flag.name'],
-                      })
-                          .search(searchTerm)
-                          .map(({ item }) => item)
+                        threshold: 0.3,
+                        keys: ['feature_flag.key', 'feature_flag.name'],
+                    })
+                        .search(searchTerm)
+                        .map(({ item }) => item)
                     : userFlagsWithOverrideInfo
             },
         ],

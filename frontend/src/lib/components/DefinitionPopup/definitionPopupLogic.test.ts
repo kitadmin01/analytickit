@@ -1,4 +1,4 @@
-import{definitionPopupLogic, DefinitionPopupState}from 'lib/components/DefinitionPopup/definitionPopupLogic'
+import {definitionPopupLogic, DefinitionPopupState} from 'lib/components/DefinitionPopup/definitionPopupLogic'
 import api from 'lib/api'
 import {
 mockActionDefinition,
@@ -8,16 +8,16 @@ mockEventDefinitions,
 mockEventPropertyDefinition,
 mockGroup,
 mockPersonProperty,
-}from '~/test/mocks'
-import {initKeaTests }from '~/test/init'
-import {TaxonomicDefinitionTypes, TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
-import {expectLogic }from 'kea-test-utils'
+} from '~/test/mocks'
+import {initKeaTests } from '~/test/init'
+import {TaxonomicDefinitionTypes, TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
+import {expectLogic } from 'kea-test-utils'
 import {urls} from 'scenes/urls'
-import {actionsModel }from '~/models/actionsModel'
+import {actionsModel } from '~/models/actionsModel'
 import {ActionType, CohortType, PersonProperty, PropertyDefinition} from '~/types'
-import {eventDefinitionsModel }from '~/models/eventDefinitionsModel'
-import {propertyDefinitionsModel}from '~/models/propertyDefinitionsModel'
-import {cohortsModel}from '~/models/cohortsModel'
+import {eventDefinitionsModel } from '~/models/eventDefinitionsModel'
+import {propertyDefinitionsModel} from '~/models/propertyDefinitionsModel'
+import {cohortsModel} from '~/models/cohortsModel'
 import {useMocks} from '~/mocks/jest'
 
 describe('definitionPopupLogic', () => {

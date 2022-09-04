@@ -1,4 +1,4 @@
-import{IntervalType, SmoothingType}from '~/types'
+import {IntervalType, SmoothingType} from '~/types'
 
 // Lists the valid smoothing intervals value for each interval type. Note that
 // the typing should catch if we update SmoothingType but do not add an explicit

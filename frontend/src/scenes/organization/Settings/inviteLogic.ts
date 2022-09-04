@@ -1,29 +1,29 @@
-import{kea}from'kea'
-import {OrganizationInviteType}from '~/types'
+import { kea } from 'kea'
+import { OrganizationInviteType } from '~/types'
 import api from 'lib/api'
-import {organizationLogic}from 'scenes/organizationLogic'
-import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import type { inviteLogicType}from './inviteLogicType'
-import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
-import {router}from 'kea-router'
-import {lemonToast}from 'lib/components/lemonToast'
+import { organizationLogic } from 'scenes/organizationLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import type { inviteLogicType } from './inviteLogicType'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import { router } from 'kea-router'
+import { lemonToast } from 'lib/components/lemonToast'
 
 /** State of a single invite row (with input data) in bulk invite creation. */
 export interface InviteRowState {
-target_email: string
-first_name: string
-isValid: boolean
-message?: string
+    target_email: string
+    first_name: string
+    isValid: boolean
+    message?: string
 }
 
 const EMPTY_INVITE: InviteRowState = { target_email: '', first_name: '', isValid: true }
 
 export const inviteLogic = kea<inviteLogicType>({
-path: ['scenes', 'organization', 'Settings', 'inviteLogic'],
-actions: {
-showInviteModal: true,
-hideInviteModal: true,
-updateInviteAtIndex: (payload, index: number) => ({ payload, index }),
+    path: ['scenes', 'organization', 'Settings', 'inviteLogic'],
+    actions: {
+        showInviteModal: true,
+        hideInviteModal: true,
+        updateInviteAtIndex: (payload, index: number) => ({ payload, index }),
         deleteInviteAtIndex: (index: number) => ({ index }),
         updateMessage: (message: string) => ({ message }),
         appendInviteRow: true,
@@ -89,8 +89,8 @@ updateInviteAtIndex: (payload, index: number) => ({ payload, index }),
                     eventUsageLogic.actions.reportBulkInviteAttempted(
                         payload.length,
                         payload.filter((invite) => !!invite.first_name).length
-)
-if(values.message) {
+                    )
+                    if (values.message) {
                         payload.forEach((payload) => (payload.message = values.message))
                     }
                     return await api.create('api/organizations/@current/invites/bulk/', payload)

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-importdayjs, {Dayjs as DayjsOriginal}from 'dayjs'
+import dayjs, {Dayjs as DayjsOriginal} from 'dayjs'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'

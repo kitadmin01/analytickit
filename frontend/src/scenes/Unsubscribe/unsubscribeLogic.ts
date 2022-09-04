@@ -1,12 +1,12 @@
-import{api}from'@analytickit/apps-common'
-import {actions, afterMount, kea, path}from 'kea'
-import {loaders}from 'kea-loaders'
-import {router}from 'kea-router'
+import { api } from '@analytickit/apps-common'
+import { actions, afterMount, kea, path } from 'kea'
+import { loaders } from 'kea-loaders'
+import { router } from 'kea-router'
 
-import type {unsubscribeLogicType}from './unsubscribeLogicType'
+import type { unsubscribeLogicType } from './unsubscribeLogicType'
 
 export const unsubscribeLogic = kea<unsubscribeLogicType>([
-path(['scenes', 'Unsubscribe', 'unsubscribeLogic']),
+    path(['scenes', 'Unsubscribe', 'unsubscribeLogic']),
     actions({
         attemptUnsubscribe: (token: string) => ({ token }),
     }),

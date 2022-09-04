@@ -1,4 +1,4 @@
-import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
 
 import {runInSpan}from '../../sentry'
 import {Hub, PluginConfig, PluginTaskType, VMMethods}from '../../types'

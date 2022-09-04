@@ -1,4 +1,4 @@
-importapifrom'lib/api'
+import api from 'lib/api'
 import {kea}from 'kea'
 import {userLogic}from 'scenes/userLogic'
 

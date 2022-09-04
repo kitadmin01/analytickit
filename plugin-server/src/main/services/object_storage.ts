@@ -1,4 +1,4 @@
-import{PluginsServerConfig}from'../../types'
+import {PluginsServerConfig} from'../../types'
 import {status}from '../../utils/status'
 
 const aws = require('aws-sdk')

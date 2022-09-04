@@ -1,4 +1,4 @@
-import{Properties}from'@analytickit/plugin-scaffold'
+import {Properties} from '@analytickit/plugin-scaffold'
 import {captureException} from '@sentry/node'
 import escapeStringRegexp from 'escape-string-regexp'
 import equal from 'fast-deep-equal'
@@ -20,11 +20,11 @@ PropertyFilter,
 PropertyFilterWithOperator,
 PropertyOperator,
 }from '../../types'
-import {DB}from '../../utils/db/db'
-import {extractElements}from '../../utils/db/elements-chain'
-import {stringToBoolean}from '../../utils/env-utils'
-import { stringify}from '../../utils/utils'
-import {ActionManager}from './action-manager'
+import {DB} from '../../utils/db/db'
+import {extractElements} from '../../utils/db/elements-chain'
+import {stringToBoolean} from '../../utils/env-utils'
+import { stringify} from '../../utils/utils'
+import {ActionManager} from './action-manager'
 import {LazyPersonContainer} from './lazy-person-container'
 
 /** These operators can only be matched if the provided filter's value has the right type. */

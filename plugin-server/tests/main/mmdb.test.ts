@@ -1,13 +1,13 @@
-import{ReaderModel}from'@maxmind/geoip2-node'
+import {ReaderModel} from'@maxmind/geoip2-node'
 import {readFileSync} from 'fs'
-import {DateTime}from 'luxon'
+import {DateTime} from 'luxon'
 import * as fetch from 'node-fetch'
-import {join}from 'path'
+import {join} from 'path'
 
-import {ServerInstance, startPluginsServer}from '../../src/main/pluginsServer'
-import {fetchIpLocationInternally}from '../../src/worker/mmdb'
-import {makePiscina}from '../../src/worker/piscina'
-import {resetTestDatabase}from '../helpers/sql'
+import {ServerInstance, startPluginsServer} from '../../src/main/pluginsServer'
+import {fetchIpLocationInternally} from '../../src/worker/mmdb'
+import {makePiscina} from '../../src/worker/piscina'
+import {resetTestDatabase} from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 
@@ -61,7 +61,7 @@ describe('mmdb', () => {
 
         expect(serverInstance.hub.DISABLE_MMDB).toBeFalsy()
 
-        expect(fetch).toHaveBeenCalledWith('https://mmdbcdn.analytickit.net/', { compress: false })
+        expect(fetch).toHaveBeenCalledWith('https://s3.amazonaws.com/analytickit/GeoLite2-City.mmdb', { compress: false })
         expect(serverInstance.mmdb).toBeInstanceOf(ReaderModel)
 
         const cityResultDirect = serverInstance.mmdb!.city('89.160.20.129')

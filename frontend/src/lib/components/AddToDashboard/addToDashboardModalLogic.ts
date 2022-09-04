@@ -1,33 +1,29 @@
-import{kea}from'kea'
-import {dashboardsModel}from '~/models/dashboardsModel'
-import {eventUsageLogic} from 'lib/utils/eventUsageLogic'
-import {newDashboardLogic}from 'scenes/dashboard/newDashboardLogic'
-import {DashboardType, InsightModel, InsightType} from '~/types'
+import { kea } from 'kea'
+import { dashboardsModel } from '~/models/dashboardsModel'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { newDashboardLogic } from 'scenes/dashboard/newDashboardLogic'
+import { DashboardType, InsightModel, InsightType } from '~/types'
 import FuseClass from 'fuse.js'
-import {lemonToast} from 'lib/components/lemonToast'
-import {router}from 'kea-router'
-import { urls}from 'scenes/urls'
-import {insightLogic}from 'scenes/insights/insightLogic'
+import { lemonToast } from 'lib/components/lemonToast'
+import { router } from 'kea-router'
+import { urls } from 'scenes/urls'
+import { insightLogic } from 'scenes/insights/insightLogic'
 
-import type {addToDashboardModalLogicType}from './addToDashboardModalLogicType'
+import type { addToDashboardModalLogicType } from './addToDashboardModalLogicType'
 
 export interface AddToDashboardModalLogicProps {
-insight: Partial < InsightModel>
-fromDashboard?: number
+    insight: Partial<InsightModel>
+    fromDashboard?: number
 }
 
 // Helping kea-typegen navigate the exported default class for Fuse
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Fuse extends FuseClass < any> {
-
-}
+export interface Fuse extends FuseClass<any> {}
 
 export const addToDashboardModalLogic = kea<addToDashboardModalLogicType>({
-path: ['lib', 'components', 'AddToDashboard', 'saveToDashboardModalLogic'],
-props: {
-
-}as AddToDashboardModalLogicProps,
-key: ({ insight }) => {
+    path: ['lib', 'components', 'AddToDashboard', 'saveToDashboardModalLogic'],
+    props: {} as AddToDashboardModalLogicProps,
+    key: ({ insight }) => {
         if (!insight.short_id) {
             throw Error('must provide an insight with a short id')
         }
@@ -149,7 +145,7 @@ key: ({ insight }) => {
                     actions.reportRemovedInsightFromDashboard()
                     lemonToast.success('Insight removed from dashboard')
                 }
-)
-},
-}),
+            )
+        },
+    }),
 })

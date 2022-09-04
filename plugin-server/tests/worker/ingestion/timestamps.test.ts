@@ -1,4 +1,4 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 import {DateTime} from 'luxon'
 
 import {parseDate, parseEventTimestamp}from '../../../src/worker/ingestion/timestamps'

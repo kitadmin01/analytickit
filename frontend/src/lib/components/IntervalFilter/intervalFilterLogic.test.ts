@@ -1,9 +1,9 @@
-import{initKeaTests}from'~/test/init'
-import {expectLogic }from 'kea-test-utils'
+import {initKeaTests} from'~/test/init'
+import {expectLogic } from 'kea-test-utils'
 import {insightLogic} from 'scenes/insights/insightLogic'
-import {InsightShortId}from '~/types'
-import {intervalFilterLogic}from 'lib/components/IntervalFilter/intervalFilterLogic'
-import {useMocks}from '~/mocks/jest'
+import {InsightShortId} from '~/types'
+import {intervalFilterLogic} from 'lib/components/IntervalFilter/intervalFilterLogic'
+import {useMocks} from '~/mocks/jest'
 
 describe('intervalFilterLogic', () => {
     let logic: ReturnType<typeof intervalFilterLogic.build>

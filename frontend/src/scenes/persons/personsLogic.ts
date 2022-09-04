@@ -1,40 +1,38 @@
-import{kea}from'kea'
-import {router}from 'kea-router'
+import { kea } from 'kea'
+import { router } from 'kea-router'
 import api from 'lib/api'
-import type {personsLogicType}from './personsLogicType'
-import {AnyPropertyFilter, Breadcrumb, CohortType, ExporterFormat, PersonsTabType, PersonType}from '~/types'
-import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import {urls }from 'scenes/urls'
-import { teamLogic}from 'scenes/teamLogic'
-import {convertPropertyGroupToProperties, toParams}from 'lib/utils'
-import {asDisplay}from 'scenes/persons/PersonHeader'
-import {isValidPropertyFilter}from 'lib/components/PropertyFilters/utils'
-import {lemonToast}from 'lib/components/lemonToast'
-import {TriggerExportProps}from 'lib/components/ExportButton/exporter'
+import type { personsLogicType } from './personsLogicType'
+import { AnyPropertyFilter, Breadcrumb, CohortType, ExporterFormat, PersonsTabType, PersonType } from '~/types'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { urls } from 'scenes/urls'
+import { teamLogic } from 'scenes/teamLogic'
+import { convertPropertyGroupToProperties, toParams } from 'lib/utils'
+import { asDisplay } from 'scenes/persons/PersonHeader'
+import { isValidPropertyFilter } from 'lib/components/PropertyFilters/utils'
+import { lemonToast } from 'lib/components/lemonToast'
+import { TriggerExportProps } from 'lib/components/ExportButton/exporter'
 
 export interface PersonPaginatedResponse {
-next: string | null
-previous: string | null
-results: PersonType[]
+    next: string | null
+    previous: string | null
+    results: PersonType[]
 }
 
 export interface PersonFilters {
-properties?: AnyPropertyFilter[]
-search?: string
-cohort?: number
+    properties?: AnyPropertyFilter[]
+    search?: string
+    cohort?: number
 }
 
 export interface PersonLogicProps {
-cohort?: number | 'new'
-syncWithUrl?: boolean
-urlId?: string
+    cohort?: number | 'new'
+    syncWithUrl?: boolean
+    urlId?: string
 }
 
 export const personsLogic = kea<personsLogicType>({
-props: {
-
-}as PersonLogicProps,
-key: (props) => {
+    props: {} as PersonLogicProps,
+    key: (props) => {
         if (!props.cohort && !props.syncWithUrl) {
             throw new Error(`personsLogic must be initialized with props.cohort or props.syncWithUrl`)
         }
@@ -68,16 +66,16 @@ key: (props) => {
                     if (newFilters.properties) {
                         newFilters.properties = convertPropertyGroupToProperties(
                             newFilters.properties.filter(isValidPropertyFilter)
-)
-}
-return newFilters
-},
-},
-],
-activeTab: [
-null as PersonsTabType | null,
-{
-navigateToTab: (_, { tab }) => tab,
+                        )
+                    }
+                    return newFilters
+                },
+            },
+        ],
+        activeTab: [
+            null as PersonsTabType | null,
+            {
+                navigateToTab: (_, { tab }) => tab,
             },
         ],
         splitMergeModalShown: [
@@ -208,10 +206,10 @@ navigateToTab: (_, { tab }) => tab,
                     Object.keys(person.properties).length,
                     oldPropertyType,
                     newPropertyType
-)
-}
-},
-deleteProperty: async({ key }) => {
+                )
+            }
+        },
+        deleteProperty: async ({ key }) => {
             const person = values.person
 
             if (person) {

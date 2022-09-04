@@ -10,7 +10,7 @@ from django.utils.text import slugify
 from rest_framework.exceptions import NotFound
 from sentry_sdk import capture_exception
 
-from analytickit.jwt import analytickitJwtAudience, decode_jwt, encode_jwt
+from analytickit.jwt import AnalytickitJwtAudience, decode_jwt, encode_jwt
 from analytickit.models.utils import UUIDT
 from analytickit.settings import DEBUG
 from analytickit.storage import object_storage

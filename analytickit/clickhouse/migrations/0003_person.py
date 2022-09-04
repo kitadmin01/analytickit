@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.models.person.sql import COMMENT_DISTINCT_ID_COLUMN_SQL, PERSONS_DISTINCT_ID_TABLE_SQL, \
     PERSONS_TABLE_SQL

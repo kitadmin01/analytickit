@@ -1,6 +1,6 @@
-import{Pool, PoolClient}from 'pg'
+import {Pool, PoolClient} from 'pg'
 
-import { defaultConfig}from '../../src/config/config'
+import { defaultConfig} from '../../src/config/config'
 import {
 Hub,
 Plugin,
@@ -12,7 +12,7 @@ RawAction,
 RawOrganization,
 Team,
 }from '../../src/types'
-import {UUIDT}from '../../src/utils/utils'
+import {UUIDT} from '../../src/utils/utils'
 import {
 commonOrganizationId,
 commonOrganizationMembershipId,

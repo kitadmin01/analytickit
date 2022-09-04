@@ -1,9 +1,9 @@
-import{DateTime, Settings}from 'luxon'
+import {DateTime, Settings} from 'luxon'
 
-import { DateTimePropertyTypeFormat, Hub, PropertyType}from '../../../src/types'
-import {createHub}from '../../../src/utils/db/hub'
+import { DateTimePropertyTypeFormat, Hub, PropertyType} from '../../../src/types'
+import {createHub} from '../../../src/utils/db/hub'
 import {analytickit} from '../../../src/utils/analytickit'
-import { UUIDT}from '../../../src/utils/utils'
+import { UUIDT} from '../../../src/utils/utils'
 import {
 dateTimePropertyTypeFormatPatterns,
 isNumericString,

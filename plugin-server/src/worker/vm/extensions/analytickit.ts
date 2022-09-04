@@ -1,4 +1,4 @@
-import{Properties}from'@analytickit/plugin-scaffold'
+import {Properties} from '@analytickit/plugin-scaffold'
 import crypto from 'crypto'
 import {DateTime}from 'luxon'
 import {Hub, PluginConfig, RawEventMessage} from 'types'

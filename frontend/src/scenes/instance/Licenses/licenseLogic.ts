@@ -1,4 +1,4 @@
-importapifrom'lib/api'
+import api from 'lib/api'
 import {kea}from 'kea'
 import type {licenseLogicType}from './licenseLogicType'
 import {APIErrorType, LicensePlan, LicenseType}from '~/types'

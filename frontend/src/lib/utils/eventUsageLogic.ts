@@ -1,84 +1,84 @@
-import{kea}from'kea'
-import {isanalytickitProp, keyMappingKeys}from 'lib/components/PropertyKeyInfo'
+import { kea } from 'kea'
+import { isanalytickitProp, keyMappingKeys } from 'lib/components/PropertyKeyInfo'
 import analytickit from 'analytickit-js'
-import {userLogic}from 'scenes/userLogic'
-import type {eventUsageLogicType }from './eventUsageLogicType'
+import { userLogic } from 'scenes/userLogic'
+import type { eventUsageLogicType } from './eventUsageLogicType'
 import {
-AnnotationType,
-FilterType,
-DashboardType,
-PersonType,
-DashboardMode,
-EntityType,
-InsightModel,
-InsightType,
-HelpType,
-SessionPlayerData,
-AvailableFeature,
-SessionRecordingUsageType,
-FunnelCorrelation,
-ItemMode,
-AnyPropertyFilter,
-Experiment,
-PropertyGroupFilter,
-FilterLogicalOperator,
-PropertyFilterValue,
-InsightShortId,
-}from '~/types'
-import type {Dayjs}from 'lib/dayjs'
-import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
-import type {PersonsModalParams }from 'scenes/trends/personsModalLogic'
-import {EventIndex}from '@analytickit/react-rrweb-player'
-import {convertPropertyGroupToProperties}from 'lib/utils'
+    AnnotationType,
+    FilterType,
+    DashboardType,
+    PersonType,
+    DashboardMode,
+    EntityType,
+    InsightModel,
+    InsightType,
+    HelpType,
+    SessionPlayerData,
+    AvailableFeature,
+    SessionRecordingUsageType,
+    FunnelCorrelation,
+    ItemMode,
+    AnyPropertyFilter,
+    Experiment,
+    PropertyGroupFilter,
+    FilterLogicalOperator,
+    PropertyFilterValue,
+    InsightShortId,
+} from '~/types'
+import type { Dayjs } from 'lib/dayjs'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import type { PersonsModalParams } from 'scenes/trends/personsModalLogic'
+import { EventIndex } from '@analytickit/react-rrweb-player'
+import { convertPropertyGroupToProperties } from 'lib/utils'
 
-import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
-import {PlatformType, Framework}from 'scenes/ingestion/types'
-import {now}from 'lib/dayjs'
+import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
+import { PlatformType, Framework } from 'scenes/ingestion/types'
+import { now } from 'lib/dayjs'
 export enum DashboardEventSource {
-LongPress = 'long_press',
-MoreDropdown = 'more_dropdown',
-DashboardHeader = 'dashboard_header',
-Hotkey = 'hotkey',
-InputEnter = 'input_enter',
-Toast = 'toast',
-Browser = 'browser',
-AddDescription = 'add_dashboard_description',
-MainNavigation = 'main_nav',
-DashboardsList = 'dashboards_list',
+    LongPress = 'long_press',
+    MoreDropdown = 'more_dropdown',
+    DashboardHeader = 'dashboard_header',
+    Hotkey = 'hotkey',
+    InputEnter = 'input_enter',
+    Toast = 'toast',
+    Browser = 'browser',
+    AddDescription = 'add_dashboard_description',
+    MainNavigation = 'main_nav',
+    DashboardsList = 'dashboards_list',
 }
 
 export enum InsightEventSource {
-LongPress = 'long_press',
-MoreDropdown = 'more_dropdown',
-InsightHeader = 'insight_header',
-Hotkey = 'hotkey',
-InputEnter = 'input_enter',
-Toast = 'toast',
-Browser = 'browser',
-AddDescription = 'add_insight_description',
+    LongPress = 'long_press',
+    MoreDropdown = 'more_dropdown',
+    InsightHeader = 'insight_header',
+    Hotkey = 'hotkey',
+    InputEnter = 'input_enter',
+    Toast = 'toast',
+    Browser = 'browser',
+    AddDescription = 'add_insight_description',
 }
 
 export enum RecordingWatchedSource {
-Direct = 'direct', // Visiting the URL directly
-Unknown = 'unknown',
-RecordingsList = 'recordings_list',
-ProjectHomepage = 'project_homepage',
+    Direct = 'direct', // Visiting the URL directly
+    Unknown = 'unknown',
+    RecordingsList = 'recordings_list',
+    ProjectHomepage = 'project_homepage',
 }
 
 export enum GraphSeriesAddedSource {
-Default = 'default',
-Duplicate = 'duplicate',
+    Default = 'default',
+    Duplicate = 'duplicate',
 }
 
 export enum SessionRecordingFilterType {
-Duration = 'duration',
-EventAndAction = 'event_and_action',
-PersonAndCohort = 'person_and_cohort',
-DateRange = 'date_range',
+    Duration = 'duration',
+    EventAndAction = 'event_and_action',
+    PersonAndCohort = 'person_and_cohort',
+    DateRange = 'date_range',
 }
 
 interface RecordingViewedProps {
-delay: number // Not reported: Number of delayed **seconds** to report event(useful to measure insights where users don't navigate immediately away)
+    delay: number // Not reported: Number of delayed **seconds** to report event(useful to measure insights where users don't navigate immediately away)
     load_time: number // How much time it took to load the session (backend) (milliseconds)
     duration: number // How long is the total recording (milliseconds)
     start_time?: number // Start timestamp of the session
@@ -791,7 +791,10 @@ export const eventUsageLogic = kea<eventUsageLogicType>({
         },
 
         reportInsightHistoryItemClicked: async ({ itemType, displayLocation }) => {
-            analytickit.capture('insight history item clicked', { item_type: itemType, display_location: displayLocation })
+            analytickit.capture('insight history item clicked', {
+                item_type: itemType,
+                display_location: displayLocation,
+            })
             if (displayLocation === 'project home') {
                 // Special case to help w/ project home reporting.
                 analytickit.capture('project home item clicked', {
@@ -1027,7 +1030,9 @@ export const eventUsageLogic = kea<eventUsageLogicType>({
             analytickit.capture('event definitions page load failed', { load_time: loadTime, error })
         },
         reportDataManagementEventDefinitionsPageNestedPropertiesLoadSucceeded: ({ loadTime }) => {
-            analytickit.capture('event definitions page event nested properties load succeeded', { load_time: loadTime })
+            analytickit.capture('event definitions page event nested properties load succeeded', {
+                load_time: loadTime,
+            })
         },
         reportDataManagementEventDefinitionsPageNestedPropertiesLoadFailed: ({ loadTime, error }) => {
             analytickit.capture('event definitions page event nested properties load failed', {

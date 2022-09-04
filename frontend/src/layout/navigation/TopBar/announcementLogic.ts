@@ -1,19 +1,19 @@
-import{kea}from'kea'
-import {FEATURE_FLAGS, OrganizationMembershipLevel}from 'lib/constants'
-import {featureFlagLogic} from 'lib/logic/featureFlagLogic'
-import {billingLogic}from 'scenes/billing/billingLogic'
-import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
-import {teamLogic}from 'scenes/teamLogic'
-import {userLogic} from 'scenes/userLogic'
-import {navigationLogic }from '../navigationLogic'
+import { kea } from 'kea'
+import { FEATURE_FLAGS, OrganizationMembershipLevel } from 'lib/constants'
+import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { billingLogic } from 'scenes/billing/billingLogic'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import { teamLogic } from 'scenes/teamLogic'
+import { userLogic } from 'scenes/userLogic'
+import { navigationLogic } from '../navigationLogic'
 
-import type {announcementLogicType}from './announcementLogicType'
+import type { announcementLogicType } from './announcementLogicType'
 
 export enum AnnouncementType {
-Demo = 'Demo',
-CloudFlag = 'CloudFlag',
-NewFeature = 'NewFeature',
-AttentionRequired = 'AttentionRequired',
+    Demo = 'Demo',
+    CloudFlag = 'CloudFlag',
+    NewFeature = 'NewFeature',
+    AttentionRequired = 'AttentionRequired',
 }
 
 // Switch to `false` if we're not showing a feature announcement. Hard-coded because the announcement needs to be manually updated anyways.
@@ -21,25 +21,25 @@ const ShowNewFeatureAnnouncement = false
 const ShowAttentionRequiredBanner = false
 
 export const announcementLogic = kea<announcementLogicType>({
-path: ['layout', 'navigation', 'TopBar', 'announcementLogic'],
-connect: {
-values: [
-featureFlagLogic,
-['featureFlags'],
-preflightLogic,
-['preflight'],
-userLogic,
-['user'],
-navigationLogic,
-['asyncMigrationsOk'],
-teamLogic,
-['currentTeam'],
-billingLogic,
-['alertToShow'],
-],
-},
-actions: {
-hideAnnouncement:(type: AnnouncementType | null) => ({ type }),
+    path: ['layout', 'navigation', 'TopBar', 'announcementLogic'],
+    connect: {
+        values: [
+            featureFlagLogic,
+            ['featureFlags'],
+            preflightLogic,
+            ['preflight'],
+            userLogic,
+            ['user'],
+            navigationLogic,
+            ['asyncMigrationsOk'],
+            teamLogic,
+            ['currentTeam'],
+            billingLogic,
+            ['alertToShow'],
+        ],
+    },
+    actions: {
+        hideAnnouncement: (type: AnnouncementType | null) => ({ type }),
     },
     reducers: {
         persistedClosedAnnouncements: [

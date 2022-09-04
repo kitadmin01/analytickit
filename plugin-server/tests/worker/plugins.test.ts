@@ -1,4 +1,4 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold/src/types'
+import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
 
 import {Hub, LogLevel}from '../../src/types'
 import {processError}from '../../src/utils/db/error'

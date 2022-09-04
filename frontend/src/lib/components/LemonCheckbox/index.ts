@@ -1,1 +1,1 @@
-export{LemonCheckbox}from'./LemonCheckbox'
+export {LemonCheckbox} from'./LemonCheckbox'

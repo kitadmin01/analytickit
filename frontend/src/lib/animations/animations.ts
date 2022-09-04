@@ -1,4 +1,4 @@
-importlaptophogfrom'./laptophog.lottie'
+import laptophog from'./laptophog.lottie'
 import musichog from './musichog.lottie'
 import sportshog from './sportshog.lottie'
 

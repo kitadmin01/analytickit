@@ -1,4 +1,4 @@
-importtkfrom'timekeeper'
+import tk from 'timekeeper'
 import {
 areObjectValuesEmpty,
 average,

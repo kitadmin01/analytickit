@@ -1,6 +1,6 @@
-import{toolbarLogic}from'~/toolbar/toolbarLogic'
-import {initKeaTests }from '~/test/init'
-import {expectLogic}from 'kea-test-utils'
+import {toolbarLogic} from'~/toolbar/toolbarLogic'
+import {initKeaTests } from '~/test/init'
+import {expectLogic} from 'kea-test-utils'
 
 global.fetch = jest.fn(() =>
 Promise.resolve({

@@ -1,4 +1,4 @@
-import{randomBytes}from'crypto'
+import {randomBytes} from 'crypto'
 
 import {LogLevel}from '../src/types'
 import { safeClickhouseString}from '../src/utils/db/utils'

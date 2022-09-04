@@ -1,11 +1,11 @@
-import{initKea}from'~/initKea'
-import {testUtilsPlugin}from 'kea-test-utils'
-import {createMemoryHistory}from 'history'
+import {initKea} from'~/initKea'
+import {testUtilsPlugin} from 'kea-test-utils'
+import {createMemoryHistory} from 'history'
 import analytickit from 'analytickit-js'
-import {AppContext}from '~/types'
-import {MOCK_DEFAULT_TEAM}from 'lib/api.mock'
-import {dayjs}from 'lib/dayjs'
-import {organizationLogic}from 'scenes/organizationLogic'
+import {AppContext} from '~/types'
+import {MOCK_DEFAULT_TEAM} from 'lib/api.mock'
+import {dayjs} from 'lib/dayjs'
+import {organizationLogic} from 'scenes/organizationLogic'
 import {teamLogic} from 'scenes/teamLogic'
 
 process.on('unhandledRejection', (err) => {

@@ -1,11 +1,11 @@
-importSimmer, {Simmer as SimmerType}from '@analytickit/simmerjs'
-import {cssEscape}from 'lib/utils/cssEscape'
-import {ActionStepType, ActionStepUrlMatching}from '~/types'
-import {ActionStepForm, BoxColor}from '~/toolbar/types'
-import {querySelectorAllDeep}from 'query-selector-shadow-dom'
-import {toolbarLogic}from '~/toolbar/toolbarLogic'
-import {combineUrl, encodeParams}from 'kea-router'
-import {CLICK_TARGET_SELECTOR, CLICK_TARGETS, escapeRegex, TAGS_TO_IGNORE}from 'lib/actionUtils'
+import Simmer, {Simmer as SimmerType} from '@analytickit/simmerjs'
+import {cssEscape} from 'lib/utils/cssEscape'
+import {ActionStepType, ActionStepUrlMatching} from '~/types'
+import {ActionStepForm, BoxColor} from '~/toolbar/types'
+import {querySelectorAllDeep} from 'query-selector-shadow-dom'
+import {toolbarLogic} from '~/toolbar/toolbarLogic'
+import {combineUrl, encodeParams} from 'kea-router'
+import {CLICK_TARGET_SELECTOR, CLICK_TARGETS, escapeRegex, TAGS_TO_IGNORE} from 'lib/actionUtils'
 
 let simmer: SimmerType
 

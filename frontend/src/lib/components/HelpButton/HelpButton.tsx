@@ -98,7 +98,11 @@ export function HelpButton({
                             Ask us a question
                         </LemonButton>
                     </a>
-                    <a href="https://github.com/analytickit/analytickit/issues/new/choose" rel="noopener" target="_blank">
+                    <a
+                        href="https://github.com/analytickit/analytickit/issues/new/choose"
+                        rel="noopener"
+                        target="_blank"
+                    >
                         <LemonButton
                             icon={<IconGithub />}
                             status="stealth"

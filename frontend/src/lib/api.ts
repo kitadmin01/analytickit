@@ -1,5 +1,5 @@
-importanalytickitfrom'analytickit-js'
-import {parsePeopleParams, PeopleParamType}from 'scenes/trends/personsModalLogic'
+import analytickit from 'analytickit-js'
+import {parsePeopleParams, PeopleParamType} from 'scenes/trends/personsModalLogic'
 import {
 ActionType,
 ActorType,
@@ -23,16 +23,16 @@ SubscriptionType,
 TeamType,
 UserType,
 }from '~/types'
-import {getCurrentTeamId}from './utils/logics'
-import {CheckboxValueType }from 'antd/lib/checkbox/Group'
-import {LOGS_PORTION_LIMIT}from 'scenes/plugins/plugin/pluginLogsLogic'
-import {toParams }from 'lib/utils'
-import { DashboardPrivilegeLevel}from './constants'
-import {EVENT_DEFINITIONS_PER_PAGE}from 'scenes/data-management/events/eventDefinitionsTableLogic'
-import {EVENT_PROPERTY_DEFINITIONS_PER_PAGE}from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
-import {PersonFilters}from 'scenes/persons/personsLogic'
-import {ActivityLogItem, ActivityScope}from 'lib/components/ActivityLog/humanizeActivity'
-import {ActivityLogProps}from 'lib/components/ActivityLog/ActivityLog'
+import {getCurrentTeamId} from './utils/logics'
+import {CheckboxValueType } from 'antd/lib/checkbox/Group'
+import {LOGS_PORTION_LIMIT} from 'scenes/plugins/plugin/pluginLogsLogic'
+import {toParams } from 'lib/utils'
+import { DashboardPrivilegeLevel} from './constants'
+import {EVENT_DEFINITIONS_PER_PAGE } from 'scenes/data-management/events/eventDefinitionsTableLogic'
+import {EVENT_PROPERTY_DEFINITIONS_PER_PAGE} from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
+import {PersonFilters} from 'scenes/persons/personsLogic'
+import {ActivityLogItem, ActivityScope} from 'lib/components/ActivityLog/humanizeActivity'
+import {ActivityLogProps} from 'lib/components/ActivityLog/ActivityLog'
 
 export const ACTIVITY_PAGE_SIZE = 20
 

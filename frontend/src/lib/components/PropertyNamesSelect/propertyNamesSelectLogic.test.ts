@@ -1,5 +1,5 @@
-import{expectLogic}from'kea-test-utils'
-import {initKeaTests}from '~/test/init'
+import {expectLogic} from 'kea-test-utils'
+import {initKeaTests} from '~/test/init'
 import {propertySelectLogic} from './propertyNamesSelectLogic'
 
 describe('propertyNamesSelectLogic', () => {

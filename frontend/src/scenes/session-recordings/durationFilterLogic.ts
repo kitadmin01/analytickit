@@ -1,16 +1,16 @@
-import{kea}from'kea'
-import {convertSecondsToDuration}from 'lib/components/DurationPicker/DurationPicker'
-import { PropertyOperator, RecordingDurationFilter}from '~/types'
-import type {durationFilterLogicType}from './durationFilterLogicType'
+import { kea } from 'kea'
+import { convertSecondsToDuration } from 'lib/components/DurationPicker/DurationPicker'
+import { PropertyOperator, RecordingDurationFilter } from '~/types'
+import type { durationFilterLogicType } from './durationFilterLogicType'
 
 export enum TimeUnit {
-SECONDS = 'seconds',
-MINUTES = 'minutes',
-HOURS = 'hours',
+    SECONDS = 'seconds',
+    MINUTES = 'minutes',
+    HOURS = 'hours',
 }
 
 export interface DurationFilterProps {
-onChange:(value: RecordingDurationFilter) => void
+    onChange: (value: RecordingDurationFilter) => void
     pageKey: string | undefined
     initialFilter: RecordingDurationFilter
 }

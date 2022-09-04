@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.postgres",
     "django.contrib.staticfiles",
-    "analytickit.apps.analytickitConfig",
+    "analytickit.apps.AnalyticKitConfig",
     "rest_framework",
     "loginas",
     "corsheaders",

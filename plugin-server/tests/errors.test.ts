@@ -1,11 +1,11 @@
-import{startPluginsServer}from'../src/main/pluginsServer'
-import {Hub, LogLevel, PluginsServerConfig}from '../src/types'
-import { makePiscina}from '../src/worker/piscina'
+import {startPluginsServer} from'../src/main/pluginsServer'
+import {Hub, LogLevel, PluginsServerConfig} from '../src/types'
+import { makePiscina} from '../src/worker/piscina'
 import {createanalytickit, Dummyanalytickit} from '../src/worker/vm/extensions/analytickit'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse}from './helpers/clickhouse'
-import {resetKafka}from './helpers/kafka'
-import {pluginConfig39}from './helpers/plugins'
-import {getErrorForPluginConfig, resetTestDatabase}from './helpers/sql'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse} from './helpers/clickhouse'
+import {resetKafka} from './helpers/kafka'
+import {pluginConfig39} from './helpers/plugins'
+import {getErrorForPluginConfig, resetTestDatabase} from './helpers/sql'
 
 jest.setTimeout(60000) // 60 sec timeout
 

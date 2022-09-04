@@ -1,7 +1,7 @@
-importPiscinafrom'@analytickit/piscina'
+import Piscina from '@analytickit/piscina'
 import {PluginEvent} from '@analytickit/plugin-scaffold'
 
-import {Hub, TeamId}from '../types'
+import {Hub, TeamId} from '../types'
 import {UUIDT}from './utils'
 
 export class InternalMetrics {

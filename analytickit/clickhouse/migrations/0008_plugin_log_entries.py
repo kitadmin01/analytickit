@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.clickhouse.plugin_log_entries import (
     KAFKA_PLUGIN_LOG_ENTRIES_TABLE_SQL,

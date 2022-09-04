@@ -1,5 +1,5 @@
-import{ActionStepType, ActionType, ElementType}from '~/types'
-import {NamePath, StoreValue}from 'rc-field-form/es/interface'
+import {ActionStepType, ActionType, ElementType} from '~/types'
+import {NamePath, StoreValue} from 'rc-field-form/es/interface'
 
 export type ElementsEventType = {
 count: number

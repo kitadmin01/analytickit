@@ -1,13 +1,13 @@
-import{PluginEvent, Properties}from '@analytickit/plugin-scaffold'
-import {Plugin}from '@analytickit/plugin-scaffold'
+import {PluginEvent, Properties} from '@analytickit/plugin-scaffold'
+import {Plugin} from '@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
-import {DateTime}from 'luxon'
-import {Client}from 'pg'
+import {DateTime} from 'luxon'
+import {Client} from 'pg'
 
-import {ClickHouseEvent, Element, TimestampFormat }from '../../../../types'
-import { DB}from '../../../../utils/db/db'
-import {chainToElements}from '../../../../utils/db/elements-chain'
-import { castTimestampToClickhouseFormat}from '../../../../utils/utils'
+import {ClickHouseEvent, Element, TimestampFormat } from '../../../../types'
+import { DB} from '../../../../utils/db/db'
+import {chainToElements} from '../../../../utils/db/elements-chain'
+import { castTimestampToClickhouseFormat} from '../../../../utils/utils'
 
 export interface RawElement extends Element {
 $el_text?: string

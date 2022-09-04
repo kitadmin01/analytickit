@@ -1,4 +1,4 @@
-importReactfrom'react'
+import React from 'react'
 import * as allKea from 'kea'
 import * as allKeaRouter from 'kea-router'
 import * as allKeaLoaders from 'kea-loaders'

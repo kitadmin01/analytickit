@@ -1,20 +1,18 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import type {actionLogicType}from './actionLogicType'
-import {ActionType, Breadcrumb} from '~/types'
-import {urls }from 'scenes/urls'
-import { featureFlagLogic}from 'lib/logic/featureFlagLogic'
-import {FEATURE_FLAGS}from 'lib/constants'
+import type { actionLogicType } from './actionLogicType'
+import { ActionType, Breadcrumb } from '~/types'
+import { urls } from 'scenes/urls'
+import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { FEATURE_FLAGS } from 'lib/constants'
 
 export interface ActionLogicProps {
-id?: ActionType['id']
+    id?: ActionType['id']
 }
 
 export const actionLogic = kea<actionLogicType>({
-props: {
-
-}as ActionLogicProps,
-key:(props) => props.id || 'new',
+    props: {} as ActionLogicProps,
+    key: (props) => props.id || 'new',
     path: (key) => ['scenes', 'actions', 'actionLogic', key],
 
     actions: () => ({

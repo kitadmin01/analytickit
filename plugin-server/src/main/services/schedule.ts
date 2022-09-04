@@ -1,4 +1,4 @@
-importPiscinafrom'@analytickit/piscina'
+import Piscina from '@analytickit/piscina'
 import * as schedule from 'node-schedule'
 
 import {Hub, PluginConfigId, PluginScheduleControl}from '../../types'

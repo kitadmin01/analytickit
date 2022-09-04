@@ -1,14 +1,14 @@
-import{actions, kea, key, listeners, path, props, propsChanged, reducers, selectors}from 'kea'
+import { actions, kea, key, listeners, path, props, propsChanged, reducers, selectors } from 'kea'
 
-import {PropertyGroupFilter, FilterLogicalOperator}from '~/types'
-import {PropertyGroupFilterLogicProps}from 'lib/components/PropertyFilters/types'
+import { PropertyGroupFilter, FilterLogicalOperator } from '~/types'
+import { PropertyGroupFilterLogicProps } from 'lib/components/PropertyFilters/types'
 
-import type {propertyGroupFilterLogicType}from './propertyGroupFilterLogicType'
-import {convertPropertiesToPropertyGroup, objectsEqual}from 'lib/utils'
-import {eventUsageLogic} from 'lib/utils/eventUsageLogic'
+import type { propertyGroupFilterLogicType } from './propertyGroupFilterLogicType'
+import { convertPropertiesToPropertyGroup, objectsEqual } from 'lib/utils'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
 
 export const propertyGroupFilterLogic = kea<propertyGroupFilterLogicType>([
-path(['lib', 'components', 'PropertyGroupFilters', 'propertyGroupFilterLogic']),
+    path(['lib', 'components', 'PropertyGroupFilters', 'propertyGroupFilterLogic']),
     props({} as PropertyGroupFilterLogicProps),
     key((props) => props.pageKey),
 
@@ -83,10 +83,10 @@ path(['lib', 'components', 'PropertyGroupFilters', 'propertyGroupFilterLogic']),
             eventUsageLogic.actions.reportChangeInnerPropertyGroupFiltersType(
                 type,
                 values.filters.values[index].values.length
-)
-actions.update()
-},
-setOuterPropertyGroupsType:({ type }) => {
+            )
+            actions.update()
+        },
+        setOuterPropertyGroupsType: ({ type }) => {
             eventUsageLogic.actions.reportChangeOuterPropertyGroupFiltersType(type, values.filters.values.length)
             actions.update()
         },

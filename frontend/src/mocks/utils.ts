@@ -1,4 +1,4 @@
-import{rest}from'msw'
+import {rest} from 'msw'
 
 export type MockSignature =
 | ((

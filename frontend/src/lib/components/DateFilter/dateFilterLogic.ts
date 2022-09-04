@@ -1,13 +1,13 @@
-import{actions, props, events, kea, listeners, path, reducers, selectors, key}from 'kea'
-import {dayjs, Dayjs}from 'lib/dayjs'
-import type {dateFilterLogicType}from './dateFilterLogicType'
-import {isDate, dateFilterToText}from 'lib/utils'
-import {dateMappingOption}from '~/types'
+import { actions, props, events, kea, listeners, path, reducers, selectors, key } from 'kea'
+import { dayjs, Dayjs } from 'lib/dayjs'
+import type { dateFilterLogicType } from './dateFilterLogicType'
+import { isDate, dateFilterToText } from 'lib/utils'
+import { dateMappingOption } from '~/types'
 
 export type DateFilterLogicPropsType = {
-key: string
-defaultValue: string
-onChange?:(fromDate: string, toDate: string) => void
+    key: string
+    defaultValue: string
+    onChange?: (fromDate: string, toDate: string) => void
     dateFrom?: Dayjs | string | null
     dateTo?: Dayjs | string | null
     dateOptions?: dateMappingOption[]

@@ -1,11 +1,11 @@
-import{Hub}from'../../../types'
-import {PluginGen}from './common'
+import {Hub} from'../../../types'
+import {PluginGen} from './common'
 
 export const replaceImports: PluginGen =
 (server: Hub, imports: Record < string, any> = {
 
 }) =>
-({types: t}) = > ({
+({types: t}) => ({
 visitor: {
 ImportDeclaration: {
 exit(path: any) {

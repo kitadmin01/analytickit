@@ -1,8 +1,8 @@
-import{expectLogic}from'kea-test-utils'
-import {initKeaTests}from '~/test/init'
+import {expectLogic} from 'kea-test-utils'
+import {initKeaTests} from '~/test/init'
 import {actionsLogic} from '~/toolbar/actions/actionsLogic'
-import {toolbarLogic}from '~/toolbar/toolbarLogic'
-import {ActionType}from '~/types'
+import {toolbarLogic} from '~/toolbar/toolbarLogic'
+import {ActionType} from '~/types'
 
 const unsortedActions: ActionType[] = [
 {name: 'zoo', created_at: '', created_by: null, id: 1},

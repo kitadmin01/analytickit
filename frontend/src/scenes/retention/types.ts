@@ -1,4 +1,4 @@
-import{ActorType, PersonType}from '~/types'
+import {ActorType, PersonType} from '~/types'
 
 export interface RetentionTablePayload {
 date: string

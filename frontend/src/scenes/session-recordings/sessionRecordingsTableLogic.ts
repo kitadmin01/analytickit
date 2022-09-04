@@ -1,42 +1,42 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {toParams}from 'lib/utils'
+import { toParams } from 'lib/utils'
 import {
-AnyPropertyFilter,
-EntityTypes,
-FilterType,
-PropertyOperator,
-RecordingDurationFilter,
-RecordingFilters,
-SessionRecordingId,
-SessionRecordingsResponse,
-}from '~/types'
-import type {sessionRecordingsTableLogicType}from './sessionRecordingsTableLogicType'
-import {router}from 'kea-router'
-import {eventUsageLogic, RecordingWatchedSource}from 'lib/utils/eventUsageLogic'
+    AnyPropertyFilter,
+    EntityTypes,
+    FilterType,
+    PropertyOperator,
+    RecordingDurationFilter,
+    RecordingFilters,
+    SessionRecordingId,
+    SessionRecordingsResponse,
+} from '~/types'
+import type { sessionRecordingsTableLogicType } from './sessionRecordingsTableLogicType'
+import { router } from 'kea-router'
+import { eventUsageLogic, RecordingWatchedSource } from 'lib/utils/eventUsageLogic'
 import equal from 'fast-deep-equal'
-import {teamLogic}from '../teamLogic'
-import {dayjs}from 'lib/dayjs'
-import {SessionRecordingType} from '~/types'
-import {getDefaultEventName }from 'lib/utils/getAppContext'
+import { teamLogic } from '../teamLogic'
+import { dayjs } from 'lib/dayjs'
+import { SessionRecordingType } from '~/types'
+import { getDefaultEventName } from 'lib/utils/getAppContext'
 
 export type PersonUUID = string
 interface Params {
-filters?: RecordingFilters
-source?: RecordingWatchedSource
+    filters?: RecordingFilters
+    source?: RecordingWatchedSource
 }
 
 interface HashParams {
-sessionRecordingId?: SessionRecordingId
+    sessionRecordingId?: SessionRecordingId
 }
 
 const LIMIT = 50
 
 export const DEFAULT_DURATION_FILTER: RecordingDurationFilter = {
-type: 'recording',
-key: 'duration',
-value: 60,
-operator: PropertyOperator.GreaterThan,
+    type: 'recording',
+    key: 'duration',
+    value: 60,
+    operator: PropertyOperator.GreaterThan,
 }
 
 export const DEFAULT_PROPERTY_FILTERS = []
@@ -44,20 +44,20 @@ export const DEFAULT_PROPERTY_FILTERS = []
 const event = getDefaultEventName()
 
 export const DEFAULT_ENTITY_FILTERS = {
-events: [],
-actions: [],
-new_entity: [
-{
-id: event,
-type: EntityTypes.EVENTS,
-order: 0,
-name: event,
-},
-],
+    events: [],
+    actions: [],
+    new_entity: [
+        {
+            id: event,
+            type: EntityTypes.EVENTS,
+            order: 0,
+            name: event,
+        },
+    ],
 }
 
 export const sessionRecordingsTableLogic = kea<sessionRecordingsTableLogicType>({
-path: (key) => ['scenes', 'session-recordings', 'sessionRecordingsTableLogic', key],
+    path: (key) => ['scenes', 'session-recordings', 'sessionRecordingsTableLogic', key],
     key: (props) => props.key || props.personUUID || 'global',
     props: {} as {
         personUUID?: PersonUUID
@@ -229,25 +229,25 @@ path: (key) => ['scenes', 'session-recordings', 'sessionRecordingsTableLogic', k
                     filterEnabled ||
                     entityFilters !== DEFAULT_ENTITY_FILTERS ||
                     propertyFilters !== DEFAULT_PROPERTY_FILTERS
-)
-},
-],
-filterQueryParams: [
-(s) = > [s.entityFilters, s.fromDate, s.toDate, s.offset, s.durationFilter, s.propertyFilters],
-(entityFilters, fromDate, toDate, offset, durationFilter, propertyFilters) => {
-return {
-actions: entityFilters.actions,
-events: entityFilters.events,
-properties: propertyFilters,
-date_from: fromDate,
-date_to: toDate,
-offset: offset,
-session_recording_duration: durationFilter,
-}
-},
-],
-},
-actionToUrl:({ values }) => {
+                )
+            },
+        ],
+        filterQueryParams: [
+            (s) => [s.entityFilters, s.fromDate, s.toDate, s.offset, s.durationFilter, s.propertyFilters],
+            (entityFilters, fromDate, toDate, offset, durationFilter, propertyFilters) => {
+                return {
+                    actions: entityFilters.actions,
+                    events: entityFilters.events,
+                    properties: propertyFilters,
+                    date_from: fromDate,
+                    date_to: toDate,
+                    offset: offset,
+                    session_recording_duration: durationFilter,
+                }
+            },
+        ],
+    },
+    actionToUrl: ({ values }) => {
         const buildURL = (
             overrides: Partial<Params> = {},
             replace: boolean

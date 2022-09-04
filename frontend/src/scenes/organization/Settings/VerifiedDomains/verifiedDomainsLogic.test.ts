@@ -1,9 +1,9 @@
-import{verifiedDomainsLogic}from'./verifiedDomainsLogic'
-import {initKeaTests}from '~/test/init'
-import { useAvailableFeatures}from '~/mocks/features'
-import {AvailableFeature}from '~/types'
-import {useMocks}from '~/mocks/jest'
-import {expectLogic}from 'kea-test-utils'
+import {verifiedDomainsLogic} from'./verifiedDomainsLogic'
+import {initKeaTests} from '~/test/init'
+import {useAvailableFeatures} from '~/mocks/features'
+import {AvailableFeature} from '~/types'
+import {useMocks} from '~/mocks/jest'
+import {expectLogic} from 'kea-test-utils'
 
 describe('verifiedDomainsLogic', () => {
     let logic: ReturnType<typeof verifiedDomainsLogic.build>

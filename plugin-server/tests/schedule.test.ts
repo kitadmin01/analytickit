@@ -1,6 +1,6 @@
-importPiscinafrom'@analytickit/piscina'
+import Piscina from '@analytickit/piscina'
 import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
-import {Redis}from 'ioredis'
+import {Redis} from 'ioredis'
 import * as nodeSchedule from 'node-schedule'
 
 import {

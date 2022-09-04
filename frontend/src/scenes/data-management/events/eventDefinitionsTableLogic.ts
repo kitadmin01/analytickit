@@ -1,38 +1,38 @@
-import{actions, kea, key, listeners, path, props, reducers, selectors}from 'kea'
+import { actions, kea, key, listeners, path, props, reducers, selectors } from 'kea'
 import {
-ActionType,
-AnyPropertyFilter,
-CombinedEvent,
-CombinedEventType,
-EventDefinition,
-PropertyDefinition,
-}from '~/types'
-import type {eventDefinitionsTableLogicType}from './eventDefinitionsTableLogicType'
-import api, {PaginatedResponse}from 'lib/api'
-import {keyMappingKeys}from 'lib/components/PropertyKeyInfo'
-import { actionToUrl, combineUrl, router, urlToAction}from 'kea-router'
-import {convertPropertyGroupToProperties, objectsEqual}from 'lib/utils'
-import {eventUsageLogic} from 'lib/utils/eventUsageLogic'
-import {loaders}from 'kea-loaders'
-import { featureFlagLogic}from 'lib/logic/featureFlagLogic'
-import {FEATURE_FLAGS}from 'lib/constants'
+    ActionType,
+    AnyPropertyFilter,
+    CombinedEvent,
+    CombinedEventType,
+    EventDefinition,
+    PropertyDefinition,
+} from '~/types'
+import type { eventDefinitionsTableLogicType } from './eventDefinitionsTableLogicType'
+import api, { PaginatedResponse } from 'lib/api'
+import { keyMappingKeys } from 'lib/components/PropertyKeyInfo'
+import { actionToUrl, combineUrl, router, urlToAction } from 'kea-router'
+import { convertPropertyGroupToProperties, objectsEqual } from 'lib/utils'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { loaders } from 'kea-loaders'
+import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { FEATURE_FLAGS } from 'lib/constants'
 
-export interface EventDefinitionsPaginatedResponse extends PaginatedResponse < CombinedEvent> {
-current?: string
-count?: number
-page?: number
+export interface EventDefinitionsPaginatedResponse extends PaginatedResponse<CombinedEvent> {
+    current?: string
+    count?: number
+    page?: number
 }
 
-export interface PropertyDefinitionsPaginatedResponse extends PaginatedResponse < PropertyDefinition> {
-current?: string
-count?: number
-page?: number
+export interface PropertyDefinitionsPaginatedResponse extends PaginatedResponse<PropertyDefinition> {
+    current?: string
+    count?: number
+    page?: number
 }
 
 export interface Filters {
-event: string
-properties: AnyPropertyFilter[]
-event_type: CombinedEventType
+    event: string
+    properties: AnyPropertyFilter[]
+    event_type: CombinedEventType
 }
 
 function cleanFilters(filter: Partial<Filters>): Filters {
@@ -230,15 +230,15 @@ export const eventDefinitionsTableLogic = kea<eventDefinitionsTableLogicType>([
                     }
                     actions.setEventDefinitionPropertiesLoading(
                         Array.from([...values.eventDefinitionPropertiesLoading, definition.id])
-)
-cache.propertiesStartTime = performance.now()
-const response = await api.get(url)
-breakpoint()
+                    )
+                    cache.propertiesStartTime = performance.now()
+                    const response = await api.get(url)
+                    breakpoint()
 
-// Fetch one event as example and cache
-let exampleEventProperties: Record < string, string>
-const exampleUrl = api.events.determineListEndpoint({ event: definition.name }, 1)
-if (exampleUrl && exampleUrl in (cache.apiCache ?? {})) {
+                    // Fetch one event as example and cache
+                    let exampleEventProperties: Record<string, string>
+                    const exampleUrl = api.events.determineListEndpoint({ event: definition.name }, 1)
+                    if (exampleUrl && exampleUrl in (cache.apiCache ?? {})) {
                         exampleEventProperties = cache.apiCache[exampleUrl]
                     } else {
                         exampleEventProperties = (await api.get(exampleUrl))?.results?.[0].properties ?? {}
@@ -269,13 +269,13 @@ if (exampleUrl && exampleUrl in (cache.apiCache ?? {})) {
 
                     actions.setEventDefinitionPropertiesLoading(
                         values.eventDefinitionPropertiesLoading.filter((loadingId) => loadingId != definition.id)
-)
-return {
-...values.eventPropertiesCacheMap,
-[definition.id]: cache.apiCache[currentUrl],
-}
-},
-setLocalPropertyDefinition: ({ event, definition }) => {
+                    )
+                    return {
+                        ...values.eventPropertiesCacheMap,
+                        [definition.id]: cache.apiCache[currentUrl],
+                    }
+                },
+                setLocalPropertyDefinition: ({ event, definition }) => {
                     if (!values.eventPropertiesCacheMap?.[event.id]?.current) {
                         return values.eventPropertiesCacheMap
                     }
@@ -317,53 +317,53 @@ setLocalPropertyDefinition: ({ event, definition }) => {
                     shouldSimplifyActions: values.shouldSimplifyActions,
                     eventTypeFilter: values.filters.event_type,
                 })
-)
-},
-loadEventDefinitionsSuccess: () => {
+            )
+        },
+        loadEventDefinitionsSuccess: () => {
             if (cache.eventsStartTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
                     ?.actions.reportDataManagementEventDefinitionsPageLoadSucceeded(
                         performance.now() - cache.eventsStartTime,
                         values.eventDefinitions.results.length
-)
-cache.eventsStartTime = undefined
-}
-},
-loadEventDefinitionsFailure: ({ error }) => {
+                    )
+                cache.eventsStartTime = undefined
+            }
+        },
+        loadEventDefinitionsFailure: ({ error }) => {
             if (cache.eventsStartTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
                     ?.actions.reportDataManagementEventDefinitionsPageLoadFailed(
                         performance.now() - cache.eventsStartTime,
                         error ?? 'There was an unknown error fetching event definitions.'
-)
-cache.eventsStartTime = undefined
-}
-},
-loadPropertiesForEventSuccess: () => {
+                    )
+                cache.eventsStartTime = undefined
+            }
+        },
+        loadPropertiesForEventSuccess: () => {
             if (cache.propertiesStartTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
                     ?.actions.reportDataManagementEventDefinitionsPageNestedPropertiesLoadSucceeded(
                         performance.now() - cache.propertiesStartTime
-)
-cache.propertiesStartTime = undefined
-}
-},
-loadPropertiesForEventFailure: ({ error }) => {
+                    )
+                cache.propertiesStartTime = undefined
+            }
+        },
+        loadPropertiesForEventFailure: ({ error }) => {
             if (cache.propertiesStartTime !== undefined) {
                 eventUsageLogic
                     .findMounted()
                     ?.actions.reportDataManagementEventDefinitionsPageNestedPropertiesLoadFailed(
                         performance.now() - cache.propertiesStartTime,
                         error ?? 'There was an unknown error fetching nested property definitions.'
-)
-cache.propertiesStartTime = undefined
-}
-},
-})),
-urlToAction(({ actions, values }) => ({
+                    )
+                cache.propertiesStartTime = undefined
+            }
+        },
+    })),
+    urlToAction(({ actions, values }) => ({
         '/data-management/events': (_, searchParams) => {
             if (!objectsEqual(cleanFilters(values.filters), cleanFilters(router.values.searchParams))) {
                 actions.setFilters(searchParams as Filters)

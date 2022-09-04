@@ -11,7 +11,7 @@ import{FilterType, InsightLogicProps, InsightType}from '~/types'
 */
 export const keyForInsightLogicProps =
 (defaultKey = 'new') =>
-(props: InsightLogicProps): string | number = > {
+(props: InsightLogicProps): string | number => {
 if(!('dashboardItemId' in props)) {
             throw new Error('Must init with dashboardItemId, even if undefined')
         }

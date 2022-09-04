@@ -1,7 +1,7 @@
-import{ProcessedPluginEvent, RetryError}from '@analytickit/plugin-scaffold'
+import {ProcessedPluginEvent, RetryError} from '@analytickit/plugin-scaffold'
 
-import {Hub, PluginConfig}from '../types'
-import {processError}from '../utils/db/error'
+import {Hub, PluginConfig} from '../types'
+import {processError} from '../utils/db/error'
 
 export function getNextRetryMs(baseMs: number, multiplier: number, attempt: number): number {
     if (attempt < 1) {
@@ -112,8 +112,8 @@ export async function runRetriableFunction(
         event,
         tryFn,
         catchFn,
-        finallyFn: (attempts) => {
-            finallyFn?.(attempts)
+        finallyFn: async (attempts) => {
+            await finallyFn?.(attempts)
             hub.statsd?.timing(`plugin.${tag}`, timer, {
                 plugin: pluginConfig.plugin?.name ?? '?',
                 teamId: event.team_id.toString(),

@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.models.person.sql import (
     KAFKA_PERSON_DISTINCT_ID2_TABLE_SQL,

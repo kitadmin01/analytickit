@@ -1,13 +1,13 @@
-import{KeaPlugin, resetContext}from 'kea'
-import {localStoragePlugin }from 'kea-localstorage'
+import {KeaPlugin, resetContext} from 'kea'
+import {localStoragePlugin } from 'kea-localstorage'
 import {routerPlugin} from 'kea-router'
-import {loadersPlugin}from 'kea-loaders'
-import {windowValuesPlugin}from 'kea-window-values'
-import {identifierToHuman}from 'lib/utils'
-import {waitForPlugin}from 'kea-waitfor'
-import {lemonToast}from 'lib/components/lemonToast'
+import {loadersPlugin} from 'kea-loaders'
+import {windowValuesPlugin} from 'kea-window-values'
+import {identifierToHuman} from 'lib/utils'
+import {waitForPlugin} from 'kea-waitfor'
+import {lemonToast} from 'lib/components/lemonToast'
 import {subscriptionsPlugin} from 'kea-subscriptions'
-import {formsPlugin}from 'kea-forms'
+import {formsPlugin} from 'kea-forms'
 
 /*
 Actions for which we don't want to show error alerts,

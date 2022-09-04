@@ -1,47 +1,47 @@
-import{actions, afterMount, connect, kea, key, listeners, path, props, reducers, selectors}from 'kea'
-import {AvailableFeature, InsightShortId, SharingConfigurationType }from '~/types'
+import { actions, afterMount, connect, kea, key, listeners, path, props, reducers, selectors } from 'kea'
+import { AvailableFeature, InsightShortId, SharingConfigurationType } from '~/types'
 
 import api from 'lib/api'
-import { loaders}from 'kea-loaders'
-import {getInsightId }from 'scenes/insights/utils'
+import { loaders } from 'kea-loaders'
+import { getInsightId } from 'scenes/insights/utils'
 
-import type {sharingLogicType}from './sharingLogicType'
-import {ExportOptions}from '~/exporter/types'
-import {preflightLogic} from 'scenes/PreflightCheck/preflightLogic'
-import {forms}from 'kea-forms'
-import { urls}from 'scenes/urls'
-import {userLogic}from 'scenes/userLogic'
-import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import {dashboardsModel}from '~/models/dashboardsModel'
+import type { sharingLogicType } from './sharingLogicType'
+import { ExportOptions } from '~/exporter/types'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import { forms } from 'kea-forms'
+import { urls } from 'scenes/urls'
+import { userLogic } from 'scenes/userLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { dashboardsModel } from '~/models/dashboardsModel'
 
 export interface SharingLogicProps {
-dashboardId?: number
-insightShortId?: InsightShortId
+    dashboardId?: number
+    insightShortId?: InsightShortId
 }
 
 export interface EmbedConfig extends ExportOptions {
-width: string
-height: string
+    width: string
+    height: string
 }
 
 const defaultEmbedConfig: EmbedConfig = {
-width: '100%',
-height: '400',
-whitelabel: false,
-legend: false,
-noHeader: false,
+    width: '100%',
+    height: '400',
+    whitelabel: false,
+    legend: false,
+    noHeader: false,
 }
 
 const propsToApiParams = async (props: SharingLogicProps): Promise<{ dashboardId?: number; insightId?: number }> => {
-const insightId = props.insightShortId ? await getInsightId(props.insightShortId) : undefined
-return {
-dashboardId: props.dashboardId,
-insightId,
-}
+    const insightId = props.insightShortId ? await getInsightId(props.insightShortId) : undefined
+    return {
+        dashboardId: props.dashboardId,
+        insightId,
+    }
 }
 
 export const sharingLogic = kea<sharingLogicType>([
-path(['lib', 'components', 'Sharing', 'sharingLogic']),
+    path(['lib', 'components', 'Sharing', 'sharingLogic']),
     props({} as SharingLogicProps),
     key(({ insightShortId, dashboardId }) => `sharing-${insightShortId || ''}-${dashboardId || ''}`),
     connect([preflightLogic, userLogic, dashboardsModel]),

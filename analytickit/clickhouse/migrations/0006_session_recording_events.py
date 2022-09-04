@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.models.session_recording_event.sql import (
     DISTRIBUTED_SESSION_RECORDING_EVENTS_TABLE_SQL,

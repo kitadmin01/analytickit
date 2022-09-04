@@ -1,27 +1,27 @@
-import{useActions, useValues}from 'kea'
-import {router }from 'kea-router'
-import {useCallback, useMemo}from 'react'
-import {PaginationAuto, PaginationManual, PaginationState}from './types'
+import { useActions, useValues } from 'kea'
+import { router } from 'kea-router'
+import { useCallback, useMemo } from 'react'
+import { PaginationAuto, PaginationManual, PaginationState } from './types'
 
-export function usePagination < T>(
-dataSource: T[],
-pagination: PaginationAuto | PaginationManual | undefined,
-id?: string
-): PaginationState < T> {
-/** Search param that will be used for storing and syncing the current page */
-const currentPageParam = id ? `${id}_page` : 'page'
+export function usePagination<T>(
+    dataSource: T[],
+    pagination: PaginationAuto | PaginationManual | undefined,
+    id?: string
+): PaginationState<T> {
+    /** Search param that will be used for storing and syncing the current page */
+    const currentPageParam = id ? `${id}_page` : 'page'
 
-const { location, searchParams, hashParams}= useValues(router)
-const {push}= useActions(router)
+    const { location, searchParams, hashParams } = useValues(router)
+    const { push } = useActions(router)
 
-const setCurrentPage = useCallback(
-(newPage: number) = > push(location.pathname, { ...searchParams, [currentPageParam]: newPage }, hashParams),
-[location, searchParams, hashParams, push]
-)
+    const setCurrentPage = useCallback(
+        (newPage: number) => push(location.pathname, { ...searchParams, [currentPageParam]: newPage }, hashParams),
+        [location, searchParams, hashParams, push]
+    )
 
-const entryCount: number | null = pagination?.controlled ? pagination.entryCount || null : dataSource.length
-const pageCount: number | null =
-entryCount &&(pagination ? (pagination.pageSize ? Math.ceil(entryCount / pagination.pageSize) : 1) : null)
+    const entryCount: number | null = pagination?.controlled ? pagination.entryCount || null : dataSource.length
+    const pageCount: number | null =
+        entryCount && (pagination ? (pagination.pageSize ? Math.ceil(entryCount / pagination.pageSize) : 1) : null)
     const currentPage: number | null = pagination?.controlled
         ? pagination.currentPage || null
         : Math.min(parseInt(searchParams[currentPageParam]) || 1, pageCount as number)

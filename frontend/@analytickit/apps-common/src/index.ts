@@ -1,4 +1,4 @@
-import'~/styles'
+import '~/styles'
 import '~/initKea'
 
 export * from 'lib/components/AdHocInsight/AdHocInsight'

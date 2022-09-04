@@ -1,10 +1,10 @@
-import{actions, kea, key, listeners, path, props, reducers}from 'kea'
-import {FilterType }from '~/types'
+import { actions, kea, key, listeners, path, props, reducers } from 'kea'
+import { FilterType } from '~/types'
 
-import type {breakdownTagLogicType}from './breakdownTagLogicType'
+import type { breakdownTagLogicType } from './breakdownTagLogicType'
 
 export interface BreakdownTagLogicProps {
-setFilters?:(filters: Partial<FilterType>) => void
+    setFilters?: (filters: Partial<FilterType>) => void
     logicKey?: string
     filters?: Partial<FilterType>
 }

@@ -1,19 +1,19 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {dayjs, now, OpUnitType} from 'lib/dayjs'
-import {deleteWithUndo, determineDifferenceType, groupBy, toParams}from '~/lib/utils'
-import {annotationsModel} from '~/models/annotationsModel'
-import {getNextKey}from './utils'
-import type {annotationsLogicType}from './annotationsLogicType'
-import {AnnotationScope, AnnotationType}from '~/types'
-import {teamLogic}from 'scenes/teamLogic'
+import { dayjs, now, OpUnitType } from 'lib/dayjs'
+import { deleteWithUndo, determineDifferenceType, groupBy, toParams } from '~/lib/utils'
+import { annotationsModel } from '~/models/annotationsModel'
+import { getNextKey } from './utils'
+import type { annotationsLogicType } from './annotationsLogicType'
+import { AnnotationScope, AnnotationType } from '~/types'
+import { teamLogic } from 'scenes/teamLogic'
 
 export interface AnnotationsLogicProps {
-insightNumericId?: number
+    insightNumericId?: number
 }
 
 export const annotationsLogic = kea<annotationsLogicType>({
-path: (key) => ['lib', 'components', 'Annotations', 'annotationsLogic', key],
+    path: (key) => ['lib', 'components', 'Annotations', 'annotationsLogic', key],
     props: {} as AnnotationsLogicProps,
     key: (props) => String(props.insightNumericId || 'default'),
     connect: {
@@ -47,14 +47,14 @@ path: (key) => ['lib', 'components', 'Annotations', 'annotationsLogic', key],
                 }
                 const response = await api.get(
                     `api/projects/${teamLogic.values.currentTeamId}/annotations/?${toParams(params)}`
-)
-return response.results
-},
-},
-}),
-reducers: {
-annotations: {
-createAnnotation:(state, { content, date_marker, created_at, scope }) => [
+                )
+                return response.results
+            },
+        },
+    }),
+    reducers: {
+        annotations: {
+            createAnnotation: (state, { content, date_marker, created_at, scope }) => [
                 ...state,
                 {
                     id: getNextKey(state).toString(),

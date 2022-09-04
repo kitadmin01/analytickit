@@ -1,4 +1,4 @@
-import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
 
 import {runInSpan}from '../../../sentry'

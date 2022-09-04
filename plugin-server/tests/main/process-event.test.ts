@@ -5,12 +5,12 @@ Rather than add tests here, consider improving event-pipeline-integration test s
 unit tests to appropriate classes/functions.
 */
 
-import{Properties}from'@analytickit/plugin-scaffold'
+import {Properties} from '@analytickit/plugin-scaffold'
 import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
 import * as IORedis from 'ioredis'
-import {DateTime}from 'luxon'
+import {DateTime} from 'luxon'
 
-import {KAFKA_EVENTS_PLUGIN_INGESTION}from '../../src/config/kafka-topics'
+import {KAFKA_EVENTS_PLUGIN_INGESTION} from '../../src/config/kafka-topics'
 import {
 Database,
 Event,
@@ -22,15 +22,15 @@ PropertyType,
 PropertyUpdateOperation,
 Team,
 }from '../../src/types'
-import {createHub}from '../../src/utils/db/hub'
-import {personInitialAndUTMProperties}from '../../src/utils/db/utils'
-import {analytickit}from '../../src/utils/analytickit'
-import {UUIDT}from '../../src/utils/utils'
-import {EventPipelineRunner}from '../../src/worker/ingestion/event-pipeline/runner'
+import {createHub} from '../../src/utils/db/hub'
+import {personInitialAndUTMProperties} from '../../src/utils/db/utils'
+import {analytickit} from '../../src/utils/analytickit'
+import {UUIDT} from '../../src/utils/utils'
+import {EventPipelineRunner} from '../../src/worker/ingestion/event-pipeline/runner'
 import {EventsProcessor} from '../../src/worker/ingestion/process-event'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../helpers/clickhouse'
-import {resetKafka}from '../helpers/kafka'
-import {createUserTeamAndOrganization, getFirstTeam, getTeams, resetTestDatabase}from '../helpers/sql'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse} from '../helpers/clickhouse'
+import {resetKafka} from '../helpers/kafka'
+import {createUserTeamAndOrganization, getFirstTeam, getTeams, resetTestDatabase} from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 jest.setTimeout(600000) // 600 sec timeout.

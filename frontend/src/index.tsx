@@ -7,10 +7,10 @@ import { getContext } from 'kea'
 import { App } from 'scenes/App'
 import { initKea } from './initKea'
 
-import { loadanalytickitJS } from './loadanalytickitJS'
+import { loadAnalyticKitJS } from './loadAnalyticKitJS'
 import { ErrorBoundary } from './layout/ErrorBoundary'
 
-loadanalytickitJS()
+loadAnalyticKitJS()
 initKea()
 
 // Expose `window.getReduxState()` to make snapshots to storybook easy

@@ -1,17 +1,17 @@
-import{Properties}from'@analytickit/plugin-scaffold'
+import {Properties} from '@analytickit/plugin-scaffold'
 import {StatsD} from 'hot-shots'
 import LRU from 'lru-cache'
-import {DateTime}from 'luxon'
+import {DateTime} from 'luxon'
 
-import {ONE_HOUR, ONE_MINUTE}from '../../config/constants'
-import {PluginsServerConfig, PropertyType, Team, TeamId }from '../../types'
-import {DB}from '../../utils/db/db'
-import {timeoutGuard}from '../../utils/db/utils'
-import {analytickit}from '../../utils/analytickit'
-import {status }from '../../utils/status'
+import {ONE_HOUR, ONE_MINUTE} from '../../config/constants'
+import {PluginsServerConfig, PropertyType, Team, TeamId } from '../../types'
+import {DB} from '../../utils/db/db'
+import {timeoutGuard} from '../../utils/db/utils'
+import {analytickit} from '../../utils/analytickit'
+import {status } from '../../utils/status'
 import {getByAge, UUIDT} from '../../utils/utils'
-import {detectPropertyDefinitionTypes}from './property-definitions-auto-discovery'
-import {PropertyDefinitionsCache}from './property-definitions-cache'
+import {detectPropertyDefinitionTypes} from './property-definitions-auto-discovery'
+import {PropertyDefinitionsCache} from './property-definitions-cache'
 
 // for e.g. internal events we don't want to be available for users in the UI
 const EVENTS_WITHOUT_EVENT_DEFINITION = ['$$plugin_metrics']

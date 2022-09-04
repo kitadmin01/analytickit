@@ -1,39 +1,39 @@
-import{kea}from'kea'
-import {router}from 'kea-router'
+import { kea } from 'kea'
+import { router } from 'kea-router'
 import api from 'lib/api'
-import {objectDiffShallow, objectsEqual, toParams}from 'lib/utils'
-import {InsightModel, LayoutView, SavedInsightsTabs}from '~/types'
-import type {savedInsightsLogicType}from './savedInsightsLogicType'
-import {dayjs}from 'lib/dayjs'
-import {insightsModel}from '~/models/insightsModel'
-import {teamLogic }from '../teamLogic'
-import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import {Sorting}from 'lib/components/LemonTable'
-import {urls}from 'scenes/urls'
-import {lemonToast} from 'lib/components/lemonToast'
-import {PaginationManual}from 'lib/components/PaginationControl'
+import { objectDiffShallow, objectsEqual, toParams } from 'lib/utils'
+import { InsightModel, LayoutView, SavedInsightsTabs } from '~/types'
+import type { savedInsightsLogicType } from './savedInsightsLogicType'
+import { dayjs } from 'lib/dayjs'
+import { insightsModel } from '~/models/insightsModel'
+import { teamLogic } from '../teamLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { Sorting } from 'lib/components/LemonTable'
+import { urls } from 'scenes/urls'
+import { lemonToast } from 'lib/components/lemonToast'
+import { PaginationManual } from 'lib/components/PaginationControl'
 
 export const INSIGHTS_PER_PAGE = 30
 
 export interface InsightsResult {
-results: InsightModel[]
-count: number
-previous?: string
-next?: string
-/** not in the API response */
-filters?: SavedInsightFilters | null
+    results: InsightModel[]
+    count: number
+    previous?: string
+    next?: string
+    /** not in the API response */
+    filters?: SavedInsightFilters | null
 }
 
 export interface SavedInsightFilters {
-layoutView: LayoutView
-order: string
-tab: SavedInsightsTabs
-search: string
-insightType: string
-createdBy: number | 'All users'
-dateFrom: string | dayjs.Dayjs | undefined | 'all'
-dateTo: string | dayjs.Dayjs | undefined
-page: number
+    layoutView: LayoutView
+    order: string
+    tab: SavedInsightsTabs
+    search: string
+    insightType: string
+    createdBy: number | 'All users'
+    dateFrom: string | dayjs.Dayjs | undefined | 'all'
+    dateTo: string | dayjs.Dayjs | undefined
+    page: number
 }
 
 function cleanFilters(values: Partial<SavedInsightFilters>): SavedInsightFilters {
@@ -77,26 +77,26 @@ export const savedInsightsLogic = kea<savedInsightsLogicType>({
                 const params = values.paramsFromFilters
                 const response = await api.get(
                     `api/projects/${teamLogic.values.currentTeamId}/insights/?${toParams({ ...params, basic: true })}`
-)
+                )
 
-if (filters.search && String(filters.search).match(/^[0-9]+$/)) {
+                if (filters.search && String(filters.search).match(/^[0-9]+$/)) {
                     try {
                         const insight: InsightModel = await api.get(
                             `api/projects/${teamLogic.values.currentTeamId}/insights/${filters.search}`
-)
-return {
-...response,
-count: response.count + 1,
-results: [insight,...response.results],
-filters,
-}
-}catch (e) {
-// no insight with this ID found, discard
-}
-}
+                        )
+                        return {
+                            ...response,
+                            count: response.count + 1,
+                            results: [insight, ...response.results],
+                            filters,
+                        }
+                    } catch (e) {
+                        // no insight with this ID found, discard
+                    }
+                }
 
-// scroll to top if the page changed, except if changed via back/forward
-if (router.values.lastMethod !== 'POP' && values.insights.filters?.page !== filters.page) {
+                // scroll to top if the page changed, except if changed via back/forward
+                if (router.values.lastMethod !== 'POP' && values.insights.filters?.page !== filters.page) {
                     window.scrollTo(0, 0)
                 }
 
@@ -108,14 +108,16 @@ if (router.values.lastMethod !== 'POP' && values.insights.filters?.page !== filt
                     {
                         favorited,
                     }
-)
-const updatedInsights = values.insights.results.map((i) =>
-i.short_id === insight.short_id ? response : i
-)
-return {
-...values.insights, results: updatedInsights}
-},
-setInsight: (insight: InsightModel) => {
+                )
+                const updatedInsights = values.insights.results.map((i) =>
+                    i.short_id === insight.short_id ? response : i
+                )
+                return {
+                    ...values.insights,
+                    results: updatedInsights,
+                }
+            },
+            setInsight: (insight: InsightModel) => {
                 const results = values.insights.results.map((i) => (i.short_id === insight.short_id ? insight : i))
                 return { ...values.insights, results }
             },
@@ -279,8 +281,8 @@ setInsight: (insight: InsightModel) => {
                 try {
                     const { short_id }: InsightModel = await api.get(
                         `api/projects/${teamLogic.values.currentTeamId}/insights/${insightNumericId}`
-)
-if(!short_id) {
+                    )
+                    if (!short_id) {
                         throw new Error('Could not find short_id')
                     }
                     router.actions.replace(hashParams.edit ? urls.insightEdit(short_id) : urls.insightView(short_id))

@@ -1,4 +1,4 @@
-import{LemonSelectOptions}from'lib/components/LemonSelect'
+import {LemonSelectOptions} from 'lib/components/LemonSelect'
 import {
 AnyCohortCriteriaType,
 BehavioralCohortType,
@@ -7,8 +7,8 @@ BehavioralLifecycleType,
 PropertyFilterValue,
 PropertyOperator,
 }from '~/types'
-import { CohortFieldLogicProps}from 'scenes/cohorts/CohortFilters/cohortFieldLogic'
-import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import { CohortFieldLogicProps} from 'scenes/cohorts/CohortFilters/cohortFieldLogic'
+import {TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
 
 export enum FilterType {
 Behavioral = 'behavioral',

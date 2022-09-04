@@ -1,82 +1,82 @@
-import{kea}from'kea'
-import {router}from 'kea-router'
-import type {commandPaletteLogicType}from './commandPaletteLogicType'
+import { kea } from 'kea'
+import { router } from 'kea-router'
+import type { commandPaletteLogicType } from './commandPaletteLogicType'
 import Fuse from 'fuse.js'
-import {dashboardsModel}from '~/models/dashboardsModel'
-import {Parser} from 'expr-eval'
+import { dashboardsModel } from '~/models/dashboardsModel'
+import { Parser } from 'expr-eval'
 import {
-CommentOutlined,
-FundOutlined,
-RiseOutlined,
-ContainerOutlined,
-AimOutlined,
-SmileOutlined,
-ProjectOutlined,
-CheckOutlined,
-TagOutlined,
-UserOutlined,
-UsergroupAddOutlined,
-FlagOutlined,
-MessageOutlined,
-TeamOutlined,
-LinkOutlined,
-CalculatorOutlined,
-FunnelPlotOutlined,
-GatewayOutlined,
-InteractionOutlined,
-ExclamationCircleOutlined,
-KeyOutlined,
-VideoCameraOutlined,
-SendOutlined,
-LogoutOutlined,
-PlusOutlined,
-LineChartOutlined,
-ApiOutlined,
-DatabaseOutlined,
-HomeOutlined,
-}from '@ant-design/icons'
-import {DashboardType, InsightType }from '~/types'
+    CommentOutlined,
+    FundOutlined,
+    RiseOutlined,
+    ContainerOutlined,
+    AimOutlined,
+    SmileOutlined,
+    ProjectOutlined,
+    CheckOutlined,
+    TagOutlined,
+    UserOutlined,
+    UsergroupAddOutlined,
+    FlagOutlined,
+    MessageOutlined,
+    TeamOutlined,
+    LinkOutlined,
+    CalculatorOutlined,
+    FunnelPlotOutlined,
+    GatewayOutlined,
+    InteractionOutlined,
+    ExclamationCircleOutlined,
+    KeyOutlined,
+    VideoCameraOutlined,
+    SendOutlined,
+    LogoutOutlined,
+    PlusOutlined,
+    LineChartOutlined,
+    ApiOutlined,
+    DatabaseOutlined,
+    HomeOutlined,
+} from '@ant-design/icons'
+import { DashboardType, InsightType } from '~/types'
 import api from 'lib/api'
-import {copyToClipboard, isMobile, isURL, sample, uniqueBy}from 'lib/utils'
-import {userLogic} from 'scenes/userLogic'
-import {personalAPIKeysLogic }from '../PersonalAPIKeys/personalAPIKeysLogic'
-import {teamLogic}from 'scenes/teamLogic'
+import { copyToClipboard, isMobile, isURL, sample, uniqueBy } from 'lib/utils'
+import { userLogic } from 'scenes/userLogic'
+import { personalAPIKeysLogic } from '../PersonalAPIKeys/personalAPIKeysLogic'
+import { teamLogic } from 'scenes/teamLogic'
 import analytickit from 'analytickit-js'
-import {debugCHQueries}from './DebugCHQueries'
-import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
-import {urls}from 'scenes/urls'
-import {newDashboardLogic}from 'scenes/dashboard/newDashboardLogic'
-import {featureFlagLogic }from 'lib/logic/featureFlagLogic'
-import {FEATURE_FLAGS}from 'lib/constants'
+import { debugCHQueries } from './DebugCHQueries'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import { urls } from 'scenes/urls'
+import { newDashboardLogic } from 'scenes/dashboard/newDashboardLogic'
+import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { FEATURE_FLAGS } from 'lib/constants'
 
 // If CommandExecutor returns CommandFlow, flow will be entered
 export type CommandExecutor = () => CommandFlow | void
 
 export interface CommandResultTemplate {
-icon: any // any, because Ant Design icons are some weird ForwardRefExoticComponent type
-display: string
-synonyms?: string[]
-prefixApplied?: string
-executor?: CommandExecutor | true // true means "just clear input"
-guarantee?: boolean // show result always and first, regardless of fuzzy search
+    icon: any // any, because Ant Design icons are some weird ForwardRefExoticComponent type
+    display: string
+    synonyms?: string[]
+    prefixApplied?: string
+    executor?: CommandExecutor | true // true means "just clear input"
+    guarantee?: boolean // show result always and first, regardless of fuzzy search
 }
 
 export interface CommandResult extends CommandResultTemplate {
-source: Command | CommandFlow
+    source: Command | CommandFlow
 }
 
 export interface CommandResultDisplayable extends CommandResult {
-index: number
+    index: number
 }
 
 export type CommandResolver = (
-argument?: string,
-prefixApplied?: string
+    argument?: string,
+    prefixApplied?: string
 ) => CommandResultTemplate[] | CommandResultTemplate | null
 
 export interface Command {
-key: string // Unique command identification key
-prefixes?: string[] // Command prefixes, e.g. "go to".Prefix-less case is dynamic base command (e.g. Dashboard)
+    key: string // Unique command identification key
+    prefixes?: string[] // Command prefixes, e.g. "go to".Prefix-less case is dynamic base command (e.g. Dashboard)
     resolver: CommandResolver | CommandResultTemplate[] | CommandResultTemplate // Resolver based on arguments (prefix excluded)
     scope: string
 }
@@ -618,8 +618,8 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                                 open(url)
                             },
                         })
-)
-if(argument && isURL(argument)) {
+                    )
+                    if (argument && isURL(argument)) {
                         results.push({
                             icon: LinkOutlined,
                             display: `Open ${argument}`,

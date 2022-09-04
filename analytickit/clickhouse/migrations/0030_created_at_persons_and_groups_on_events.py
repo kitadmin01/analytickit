@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.client import sync_execute
 from analytickit.models.event.sql import EVENTS_TABLE_JSON_MV_SQL, KAFKA_EVENTS_TABLE_JSON_SQL

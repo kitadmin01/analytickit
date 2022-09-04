@@ -1,20 +1,20 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import Fuse from 'fuse.js'
-import {dashboardsModel}from '~/models/dashboardsModel'
-import type {dashboardsLogicType} from './dashboardsLogicType'
-import {DashboardType }from '~/types'
-import { uniqueBy}from 'lib/utils'
+import { dashboardsModel } from '~/models/dashboardsModel'
+import type { dashboardsLogicType } from './dashboardsLogicType'
+import { DashboardType } from '~/types'
+import { uniqueBy } from 'lib/utils'
 
 export enum DashboardsTab {
-All = 'all',
-Pinned = 'pinned',
-Shared = 'shared',
+    All = 'all',
+    Pinned = 'pinned',
+    Shared = 'shared',
 }
 
 export const dashboardsLogic = kea<dashboardsLogicType>({
-path: ['scenes', 'dashboard', 'dashboardsLogic'],
-actions: {
-setSearchTerm:(searchTerm: string) => ({ searchTerm }),
+    path: ['scenes', 'dashboard', 'dashboardsLogic'],
+    actions: {
+        setSearchTerm: (searchTerm: string) => ({ searchTerm }),
         setCurrentTab: (tab: DashboardsTab) => ({ tab }),
     },
     reducers: {

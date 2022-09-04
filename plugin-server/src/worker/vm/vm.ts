@@ -1,6 +1,6 @@
-import{RetryError}from'@analytickit/plugin-scaffold'
+import {RetryError} from '@analytickit/plugin-scaffold'
 import {randomBytes} from 'crypto'
-import {VM}from 'vm2'
+import {VM} from 'vm2'
 
 import {Hub, PluginConfig, PluginConfigVMResponse}from '../../types'
 import {createCache}from './extensions/cache'

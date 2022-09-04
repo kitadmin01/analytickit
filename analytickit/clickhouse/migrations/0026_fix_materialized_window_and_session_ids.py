@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.clickhouse.materialized_columns import get_materialized_columns, materialize
 from analytickit.clickhouse.replication.utils import clickhouse_is_replicated

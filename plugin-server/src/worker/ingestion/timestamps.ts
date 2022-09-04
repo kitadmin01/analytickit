@@ -1,9 +1,9 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
-import { StatsD}from 'hot-shots'
-import {DateTime, Duration}from 'luxon'
+import { StatsD} from 'hot-shots'
+import {DateTime, Duration} from 'luxon'
 
-import {status}from '../../utils/status'
+import {status} from '../../utils/status'
 
 export function parseEventTimestamp(data: PluginEvent, statsd?: StatsD | undefined): DateTime {
     const now = DateTime.fromISO(data['now']).toUTC()

@@ -47,8 +47,8 @@ const generateInside = ({
 }
 
 const protect =
-(t: typeof types, timeout: number) = >
-(path: any): void = > {
+(t: typeof types, timeout: number) =>
+(path: any): void => {
 if(!path.node.loc) {
             // I don't really know _how_ we get into this state, but https://jsbin.com/mipesawapi/1/ triggers it,
             // and the node, I'm guessing after translation, doesn't have a line in the code, so this blows up.

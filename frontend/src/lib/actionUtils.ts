@@ -1,5 +1,5 @@
-import{ElementType}from'~/types'
-import {cssEscape}from 'lib/utils/cssEscape'
+import {ElementType} from'~/types'
+import {cssEscape} from 'lib/utils/cssEscape'
 
 // these plus any element with cursor:pointer will be click targets
 export const CLICK_TARGETS = ['a', 'button', 'input', 'select', 'textarea', 'label']

@@ -1,12 +1,12 @@
-import{expectLogic}from'kea-test-utils'
-import {initKeaTests}from '~/test/init'
-import {inAppPromptLogic, PromptSequence}from './inAppPromptLogic'
-import {featureFlagLogic}from 'lib/logic/featureFlagLogic'
-import {router}from 'kea-router'
-import {urls}from 'scenes/urls'
-import {useMocks}from '~/mocks/jest'
+import {expectLogic} from 'kea-test-utils'
+import {initKeaTests} from '~/test/init'
+import {inAppPromptLogic, PromptSequence} from './inAppPromptLogic'
+import {featureFlagLogic} from 'lib/logic/featureFlagLogic'
+import {router} from 'kea-router'
+import {urls} from 'scenes/urls'
+import {useMocks} from '~/mocks/jest'
 import api from 'lib/api'
-import {inAppPromptEventCaptureLogic}from './inAppPromptEventCaptureLogic'
+import {inAppPromptEventCaptureLogic} from './inAppPromptEventCaptureLogic'
 
 const config = {
 sequences: [

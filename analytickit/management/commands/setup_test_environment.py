@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.test.runner import DiscoverRunner as TestRunner
-from infi.clickhouse_orm import Database
+from analytickit.infi.clickhouse_orm import Database
 
 from analytickit.clickhouse.schema import (
     CREATE_DISTRIBUTED_TABLE_QUERIES,

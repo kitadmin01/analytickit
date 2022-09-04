@@ -19,7 +19,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from sentry_sdk import capture_exception
 
-from analytickit.jwt import analytickitJwtAudience, decode_jwt, encode_jwt
+from analytickit.jwt import AnalytickitJwtAudience, decode_jwt, encode_jwt
 from analytickit.utils import absolute_uri
 
 # Copied from rrule as it is not exported

@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.models.event.sql import DISTRIBUTED_EVENTS_TABLE_SQL, WRITABLE_EVENTS_TABLE_SQL
 from analytickit.models.person.sql import (

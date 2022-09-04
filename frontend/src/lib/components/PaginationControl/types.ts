@@ -1,4 +1,4 @@
-exportinterfacePaginationBase {
+export interface PaginationBase {
     /** By default pagination is only shown when there are multiple pages, but will always be if this is `false`. */
     hideOnSinglePage?: boolean
 }

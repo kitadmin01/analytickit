@@ -1,7 +1,7 @@
-importLRUfrom'lru-cache'
+import LRU from 'lru-cache'
 
-import {ONE_HOUR}from '../../config/constants'
-import {PluginsServerConfig}from '../../types'
+import {ONE_HOUR} from '../../config/constants'
+import {PluginsServerConfig} from '../../types'
 import {DB} from '../../utils/db/db'
 
 export class PersonManager {

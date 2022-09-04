@@ -1,4 +1,4 @@
-from infi.clickhouse_orm import migrations
+from analytickit.infi.clickhouse_orm import migrations
 
 from analytickit.client import sync_execute
 from analytickit.models.session_recording_event.sql import SESSION_RECORDING_EVENTS_MATERIALIZED_COLUMN_COMMENTS_SQL

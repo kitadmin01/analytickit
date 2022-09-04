@@ -1,19 +1,19 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {EventDefinition}from '~/types'
-import type {eventDefinitionsModelType}from './eventDefinitionsModelType'
-import {propertyDefinitionsModel}from './propertyDefinitionsModel'
-import {teamLogic} from 'scenes/teamLogic'
+import { EventDefinition } from '~/types'
+import type { eventDefinitionsModelType } from './eventDefinitionsModelType'
+import { propertyDefinitionsModel } from './propertyDefinitionsModel'
+import { teamLogic } from 'scenes/teamLogic'
 
 export interface EventDefinitionStorage {
-count: number
-next: null | string
-results: EventDefinition[]
+    count: number
+    next: null | string
+    results: EventDefinition[]
 }
 
 export const eventDefinitionsModel = kea<eventDefinitionsModelType>({
-path: ['models', 'eventDefinitionsModel'],
-actions:() => ({
+    path: ['models', 'eventDefinitionsModel'],
+    actions: () => ({
         updateDescription: (id: string, description: string | null, type: string) => ({ id, description, type }),
         updateEventDefinition: (eventDefinition: EventDefinition) => ({ eventDefinition }),
     }),

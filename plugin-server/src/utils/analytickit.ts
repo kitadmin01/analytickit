@@ -1,4 +1,4 @@
-importanalytickitfrom'analytickit-node'
+import analytickit from 'analytickit-node'
 
 export const analytickit = new analytickit('sTMFPsFhdP1Ssg', {
 host: 'https://app.analytickit.com',

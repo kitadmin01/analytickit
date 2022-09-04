@@ -12,9 +12,9 @@ SubscriptionType,
 TimeUnitType,
 UserBasicType,
 }from '~/types'
-import {PROPERTY_MATCH_TYPE}from 'lib/constants'
-import {BehavioralFilterKey}from 'scenes/cohorts/CohortFilters/types'
-import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import {PROPERTY_MATCH_TYPE} from 'lib/constants'
+import {BehavioralFilterKey} from 'scenes/cohorts/CohortFilters/types'
+import {TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
 
 export const mockBasicUser: UserBasicType = {
 id: 0,

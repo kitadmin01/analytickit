@@ -1,8 +1,8 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 
-import {Hub, IngestionPersonData, JobName, TeamId}from '../../../types'
-import {LazyPersonContainer}from '../lazy-person-container'
-import {EventPipelineRunner, StepResult}from './runner'
+import {Hub, IngestionPersonData, JobName, TeamId} from '../../../types'
+import {LazyPersonContainer} from '../lazy-person-container'
+import {EventPipelineRunner, StepResult} from './runner'
 
 export async function emitToBufferStep(
     runner: EventPipelineRunner,

@@ -1,18 +1,18 @@
-import{lemonToast}from'@analytickit/lemon-ui'
-import {kea, path, listeners, selectors, connect, afterMount, actions}from 'kea'
-import {loaders }from 'kea-loaders'
-import {router, urlToAction}from 'kea-router'
+import { lemonToast } from '@analytickit/lemon-ui'
+import { kea, path, listeners, selectors, connect, afterMount, actions } from 'kea'
+import { loaders } from 'kea-loaders'
+import { router, urlToAction } from 'kea-router'
 import api from 'lib/api'
-import {preflightLogic} from 'scenes/PreflightCheck/preflightLogic'
-import {urls}from 'scenes/urls'
-import {IntegrationType, SlackChannelType}from '~/types'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import { urls } from 'scenes/urls'
+import { IntegrationType, SlackChannelType } from '~/types'
 
-import type {integrationsLogicType}from './integrationsLogicType'
+import type { integrationsLogicType } from './integrationsLogicType'
 
 // NOTE: Slack enforces HTTPS urls so to aid local dev we change to https so the redirect works.
 // Just means we have to change it back to http once redirected.
 export const getSlackRedirectUri = (next: string = ''): string =>
-`${window.location.origin.replace('http://', 'https://')}/integrations/slack/redirect${
+    `${window.location.origin.replace('http://', 'https://')}/integrations/slack/redirect${
         next ? '?next=' + encodeURIComponent(next) : ''
     }`
 

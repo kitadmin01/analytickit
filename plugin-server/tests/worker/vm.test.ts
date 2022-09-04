@@ -1,17 +1,17 @@
-import{PluginEvent, ProcessedPluginEvent}from '@analytickit/plugin-scaffold'
+import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
 import * as fetch from 'node-fetch'
 
-import {KAFKA_EVENTS_PLUGIN_INGESTION, KAFKA_PLUGIN_LOG_ENTRIES}from '../../src/config/kafka-topics'
-import {JobQueueManager}from '../../src/main/job-queues/job-queue-manager'
+import {KAFKA_EVENTS_PLUGIN_INGESTION, KAFKA_PLUGIN_LOG_ENTRIES} from '../../src/config/kafka-topics'
+import {JobQueueManager} from '../../src/main/job-queues/job-queue-manager'
 import {Hub, PluginLogEntrySource, PluginLogEntryType} from '../../src/types'
-import {PluginConfig, PluginConfigVMResponse}from '../../src/types'
-import {createHub}from '../../src/utils/db/hub'
-import {delay}from '../../src/utils/utils'
-import {MAXIMUM_RETRIES}from '../../src/worker/vm/upgrades/export-events'
-import {createPluginConfigVM}from '../../src/worker/vm/vm'
+import {PluginConfig, PluginConfigVMResponse} from '../../src/types'
+import {createHub} from '../../src/utils/db/hub'
+import {delay} from '../../src/utils/utils'
+import {MAXIMUM_RETRIES} from '../../src/worker/vm/upgrades/export-events'
+import {createPluginConfigVM} from '../../src/worker/vm/vm'
 import {pluginConfig39} from '../helpers/plugins'
-import {plugin60}from '../helpers/plugins'
-import {resetTestDatabase}from '../helpers/sql'
+import {plugin60} from '../helpers/plugins'
+import {resetTestDatabase} from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 jest.mock('../../src/utils/db/kafka-producer-wrapper')

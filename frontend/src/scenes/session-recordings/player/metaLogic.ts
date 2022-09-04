@@ -1,15 +1,15 @@
-import{kea}from'kea'
-import type {metaLogicType}from './metaLogicType'
-import {sessionRecordingLogic}from 'scenes/session-recordings/sessionRecordingLogic'
-import { sessionRecordingPlayerLogic}from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
-import {eventWithTime}from 'rrweb/typings/types'
-import {PersonType, RecordingEventType}from '~/types'
-import {findLastIndex}from 'lib/utils'
-import {getEpochTimeFromPlayerPosition}from './playerUtils'
-import {eventsListLogic}from 'scenes/session-recordings/player/eventsListLogic'
+import { kea } from 'kea'
+import type { metaLogicType } from './metaLogicType'
+import { sessionRecordingLogic } from 'scenes/session-recordings/sessionRecordingLogic'
+import { sessionRecordingPlayerLogic } from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
+import { eventWithTime } from 'rrweb/typings/types'
+import { PersonType, RecordingEventType } from '~/types'
+import { findLastIndex } from 'lib/utils'
+import { getEpochTimeFromPlayerPosition } from './playerUtils'
+import { eventsListLogic } from 'scenes/session-recordings/player/eventsListLogic'
 
 const getPersonProperties = (person: Partial<PersonType>, keys: string[]): string | null => {
-if (keys.some((k) => !person?.properties?.[k])) {
+    if (keys.some((k) => !person?.properties?.[k])) {
         return null
     }
     return keys.map((k) => person?.properties?.[k]).join(', ')
@@ -78,8 +78,8 @@ export const metaLogic = kea<metaLogicType>({
                 const currIndex = findLastIndex(
                     snapshots,
                     (s: eventWithTime) => s.timestamp < currentEpochTime && 'width' in s.data
-)
-if (currIndex === -1) {
+                )
+                if (currIndex === -1) {
                     return null
                 }
                 const snapshot = snapshots[currIndex]
@@ -100,13 +100,13 @@ if (currIndex === -1) {
             (sessionPlayerData, currentPlayerPosition) => {
                 return Object.keys(sessionPlayerData?.metadata?.startAndEndTimesByWindowId).findIndex(
                     (windowId) => windowId === currentPlayerPosition?.windowId ?? -1
-)
-},
-],
-currentUrl: [
-(selectors) = > [selectors.eventsToShow, selectors.currentEventStartIndex],
-(events, startIndex) = > {
-if(startIndex === -1 || !events?.length) {
+                )
+            },
+        ],
+        currentUrl: [
+            (selectors) => [selectors.eventsToShow, selectors.currentEventStartIndex],
+            (events, startIndex) => {
+                if (startIndex === -1 || !events?.length) {
                     return ''
                 }
                 const nextUrl = getEventProperties(events[startIndex], ['$current_url']) ?? ''

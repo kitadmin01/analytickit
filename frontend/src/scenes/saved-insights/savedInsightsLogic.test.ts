@@ -1,11 +1,11 @@
-import{expectLogic, partial}from 'kea-test-utils'
-import {initKeaTests }from '~/test/init'
-import {InsightsResult, savedInsightsLogic}from './savedInsightsLogic'
-import {InsightModel, InsightType}from '~/types'
-import {combineUrl, router}from 'kea-router'
-import {urls }from 'scenes/urls'
-import { cleanFilters}from 'scenes/insights/utils/cleanFilters'
-import {useMocks}from '~/mocks/jest'
+import {expectLogic, partial} from 'kea-test-utils'
+import {initKeaTests } from '~/test/init'
+import {InsightsResult, savedInsightsLogic} from './savedInsightsLogic'
+import {InsightModel, InsightType} from '~/types'
+import {combineUrl, router} from 'kea-router'
+import {urls } from 'scenes/urls'
+import { cleanFilters} from 'scenes/insights/utils/cleanFilters'
+import {useMocks} from '~/mocks/jest'
 
 const createInsight = (id: number, string = 'hi'): InsightModel =>
 ({

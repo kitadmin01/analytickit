@@ -1,6 +1,6 @@
 {
-    "name": "analytickit",
-    "short_name": "analytickit",
+    "name": "AnalyticKit",
+    "short_name": "AnalyticKit",
     "icons": [
         {
             "src": "/static/icons/android-chrome-192x192.png?v=2021-04-28",

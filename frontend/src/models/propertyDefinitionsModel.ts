@@ -1,39 +1,39 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {BreakdownKeyType, PropertyDefinition, PropertyFilterValue, PropertyType, SelectOption}from '~/types'
-import type {propertyDefinitionsModelType}from './propertyDefinitionsModelType'
-import {dayjs}from 'lib/dayjs'
-import {TaxonomicFilterValue}from 'lib/components/TaxonomicFilter/types'
-import {colonDelimitedDuration}from 'lib/utils'
+import { BreakdownKeyType, PropertyDefinition, PropertyFilterValue, PropertyType, SelectOption } from '~/types'
+import type { propertyDefinitionsModelType } from './propertyDefinitionsModelType'
+import { dayjs } from 'lib/dayjs'
+import { TaxonomicFilterValue } from 'lib/components/TaxonomicFilter/types'
+import { colonDelimitedDuration } from 'lib/utils'
 
 export interface PropertySelectOption extends SelectOption {
-is_numerical?: boolean
+    is_numerical?: boolean
 }
 
 export interface PropertyDefinitionStorage {
-count: number
-next: null | string
-results: PropertyDefinition[]
+    count: number
+    next: null | string
+    results: PropertyDefinition[]
 }
 
 // List of property definitions that are calculated on the backend. These
 // are valid properties that do not exist on events.
 const localPropertyDefinitions: PropertyDefinition[] = [
-{
-id: '$session_duration',
-name: '$session_duration',
-description: 'Duration of the session',
-is_numerical: true,
-is_event_property: false,
-property_type: PropertyType.Duration,
-},
+    {
+        id: '$session_duration',
+        name: '$session_duration',
+        description: 'Duration of the session',
+        is_numerical: true,
+        is_event_property: false,
+        property_type: PropertyType.Duration,
+    },
 ]
 
 const normaliseToArray = (
-valueToFormat: Exclude < PropertyFilterValue, null>
+    valueToFormat: Exclude<PropertyFilterValue, null>
 ): {
-valueWasReceivedAsArray: boolean
-arrayOfPropertyValues:(string | number)[]
+    valueWasReceivedAsArray: boolean
+    arrayOfPropertyValues: (string | number)[]
 } => {
     if (Array.isArray(valueToFormat)) {
         return { arrayOfPropertyValues: valueToFormat, valueWasReceivedAsArray: true }

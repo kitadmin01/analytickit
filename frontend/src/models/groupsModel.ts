@@ -1,17 +1,17 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {GroupType}from '~/types'
-import {teamLogic}from 'scenes/teamLogic'
-import type {groupsModelType}from './groupsModelType'
-import {TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
-import {groupsAccessLogic, GroupsAccessStatus}from 'lib/introductions/groupsAccessLogic'
+import { GroupType } from '~/types'
+import { teamLogic } from 'scenes/teamLogic'
+import type { groupsModelType } from './groupsModelType'
+import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
+import { groupsAccessLogic, GroupsAccessStatus } from 'lib/introductions/groupsAccessLogic'
 
 export const groupsModel = kea<groupsModelType>({
-path: ['models', 'groupsModel'],
-connect: {
-values: [teamLogic, ['currentTeamId'], groupsAccessLogic, ['groupsEnabled', 'groupsAccessStatus']],
-},
-loaders: ({ values }) => ({
+    path: ['models', 'groupsModel'],
+    connect: {
+        values: [teamLogic, ['currentTeamId'], groupsAccessLogic, ['groupsEnabled', 'groupsAccessStatus']],
+    },
+    loaders: ({ values }) => ({
         groupTypes: [
             [] as Array<GroupType>,
             {
@@ -26,41 +26,41 @@ loaders: ({ values }) => ({
                         return await api.update(
                             `/api/projects/${teamLogic.values.currentTeamId}/groups_types/update_metadata`,
                             payload
-)
-}
-return []
-},
-},
-],
-}),
-selectors: {
-showGroupsOptions: [
-(s) => [s.groupsAccessStatus, s.groupsEnabled, s.groupTypes],
-(status, enabled, groupTypes) => status !== GroupsAccessStatus.Hidden || (enabled && groupTypes.length > 0),
-],
-groupsTaxonomicTypes: [
-(s) = > [s.groupTypes],
-(groupTypes): TaxonomicFilterGroupType[] = > {
-return groupTypes.map(
+                        )
+                    }
+                    return []
+                },
+            },
+        ],
+    }),
+    selectors: {
+        showGroupsOptions: [
+            (s) => [s.groupsAccessStatus, s.groupsEnabled, s.groupTypes],
+            (status, enabled, groupTypes) => status !== GroupsAccessStatus.Hidden || (enabled && groupTypes.length > 0),
+        ],
+        groupsTaxonomicTypes: [
+            (s) => [s.groupTypes],
+            (groupTypes): TaxonomicFilterGroupType[] => {
+                return groupTypes.map(
                     (groupType: GroupType) =>
                         `${TaxonomicFilterGroupType.GroupsPrefix}_${groupType.group_type_index}` as unknown as TaxonomicFilterGroupType
-)
-},
-],
-groupNamesTaxonomicTypes: [
-(s) = > [s.groupTypes],
-(groupTypes): TaxonomicFilterGroupType[] = > {
-return groupTypes.map(
+                )
+            },
+        ],
+        groupNamesTaxonomicTypes: [
+            (s) => [s.groupTypes],
+            (groupTypes): TaxonomicFilterGroupType[] => {
+                return groupTypes.map(
                     (groupType: GroupType) =>
                         `${TaxonomicFilterGroupType.GroupNamesPrefix}_${groupType.group_type_index}` as unknown as TaxonomicFilterGroupType
-)
-},
-],
-aggregationLabel: [
-(s) = > [s.groupTypes],
-(groupTypes) =>
-(groupTypeIndex: number | null | undefined, deferToUserWording: boolean = false) => {
-if(groupTypeIndex != undefined && groupTypes.length > 0 && groupTypes[groupTypeIndex]) {
+                )
+            },
+        ],
+        aggregationLabel: [
+            (s) => [s.groupTypes],
+            (groupTypes) =>
+                (groupTypeIndex: number | null | undefined, deferToUserWording: boolean = false) => {
+                    if (groupTypeIndex != undefined && groupTypes.length > 0 && groupTypes[groupTypeIndex]) {
                         const groupType = groupTypes[groupTypeIndex]
                         return {
                             singular: groupType.name_plural || groupType.group_type,

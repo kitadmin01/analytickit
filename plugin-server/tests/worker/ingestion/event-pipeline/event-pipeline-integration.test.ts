@@ -1,14 +1,14 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import{PluginEvent} from '@analytickit/plugin-scaffold'
 import fetch from 'node-fetch'
 
 import {Hook, Hub} from '../../../../src/types'
-import {createHub}from '../../../../src/utils/db/hub'
+import {createHub} from '../../../../src/utils/db/hub'
 import {UUIDT} from '../../../../src/utils/utils'
-import {EventPipelineRunner}from '../../../../src/worker/ingestion/event-pipeline/runner'
-import {setupPlugins}from '../../../../src/worker/plugins/setup'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../../../helpers/clickhouse'
-import {commonUserId}from '../../../helpers/plugins'
-import {insertRow, resetTestDatabase}from '../../../helpers/sql'
+import {EventPipelineRunner} from '../../../../src/worker/ingestion/event-pipeline/runner'
+import {setupPlugins} from '../../../../src/worker/plugins/setup'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse} from '../../../helpers/clickhouse'
+import {commonUserId} from '../../../helpers/plugins'
+import {insertRow, resetTestDatabase} from '../../../helpers/sql'
 
 jest.mock('../../../../src/utils/status')
 

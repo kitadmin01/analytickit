@@ -1,10 +1,10 @@
-importanalytickitfrom'analytickit-js-lite'
+import AnalyticKit from 'analytickit-js-lite'
 
-const runningOnanalytickit = !!window.analytickit_APP_CONTEXT
-const apiKey = runningOnanalytickit ? window.JS_analytickit_API_KEY : 'sTMFPsFhdP1Ssg'
-const apiHost = runningOnanalytickit ? window.JS_analytickit_HOST : 'https://app.analytickit.com'
+const runningOnAnalyticKit = !!window.analytickit_APP_CONTEXT
+const apiKey = runningOnAnalyticKit ? window.JS_analytickit_API_KEY : 'sTMFPsFhdP1Ssg'
+const apiHost = runningOnAnalyticKit ? window.JS_analytickit_HOST : 'https://app.analytickit.com'
 
-export const analytickit = new analytickit(apiKey, {
+export const analytickit = new AnalyticKit(apiKey, {
 host: apiHost,
 enable: false, // must call.optIn() before any events are sent
     persistence: 'memory', // We don't want to persist anything, all events are in-memory

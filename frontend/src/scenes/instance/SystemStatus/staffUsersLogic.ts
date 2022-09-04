@@ -1,19 +1,19 @@
-import{kea}from'kea'
-import {router}from 'kea-router'
+import { kea } from 'kea'
+import { router } from 'kea-router'
 import api from 'lib/api'
-import {urls}from 'scenes/urls'
-import {userLogic}from 'scenes/userLogic'
-import {UserType}from '~/types'
-import type {staffUsersLogicType}from './staffUsersLogicType'
+import { urls } from 'scenes/urls'
+import { userLogic } from 'scenes/userLogic'
+import { UserType } from '~/types'
+import type { staffUsersLogicType } from './staffUsersLogicType'
 
 export const staffUsersLogic = kea<staffUsersLogicType>({
-path: ['scenes', 'instance', 'SystemStatus', 'staffUsersLogic'],
-connect: {
-values: [userLogic, ['user']],
-actions: [userLogic, ['loadUser']],
-},
-actions: {
-setStaffUsersToBeAdded: (userUuids: string[]) => ({ userUuids }),
+    path: ['scenes', 'instance', 'SystemStatus', 'staffUsersLogic'],
+    connect: {
+        values: [userLogic, ['user']],
+        actions: [userLogic, ['loadUser']],
+    },
+    actions: {
+        setStaffUsersToBeAdded: (userUuids: string[]) => ({ userUuids }),
         addStaffUsers: true,
         deleteStaffUser: (userUuid: string) => ({ userUuid }),
     },
@@ -39,10 +39,10 @@ setStaffUsersToBeAdded: (userUuids: string[]) => ({ userUuids }),
                         staffUsersToBeAdded.map(
                             async (userUuid) =>
                                 (await api.update(`api/users/${userUuid}`, { is_staff: true })) as UserType
-)
-)
-const updatedAllUsers: UserType[] = [
-...allUsers.filter(({ uuid }) => !staffUsersToBeAdded.includes(uuid)),
+                        )
+                    )
+                    const updatedAllUsers: UserType[] = [
+                        ...allUsers.filter(({ uuid }) => !staffUsersToBeAdded.includes(uuid)),
                         ...newStaffUsers,
                     ]
                     updatedAllUsers.sort((a, b) => a.first_name.localeCompare(b.first_name))

@@ -1,57 +1,55 @@
-import{dayjs}from'lib/dayjs'
-import {kea}from 'kea'
+import { dayjs } from 'lib/dayjs'
+import { kea } from 'kea'
 import api from 'lib/api'
-import {RETENTION_FIRST_TIME, RETENTION_RECURRING}from 'lib/constants'
-import {toParams} from 'lib/utils'
-import {insightLogic }from 'scenes/insights/insightLogic'
-import {keyForInsightLogicProps}from 'scenes/insights/sharedUtils'
-import {cleanFilters}from 'scenes/insights/utils/cleanFilters'
+import { RETENTION_FIRST_TIME, RETENTION_RECURRING } from 'lib/constants'
+import { toParams } from 'lib/utils'
+import { insightLogic } from 'scenes/insights/insightLogic'
+import { keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
+import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
 import {
-RetentionTablePayload,
-RetentionTablePeoplePayload,
-RetentionTrendPayload,
-RetentionTrendPeoplePayload,
-}from 'scenes/retention/types'
-import {actionsModel}from '~/models/actionsModel'
-import {groupsModel}from '~/models/groupsModel'
-import {ActionType, FilterType, InsightLogicProps, InsightType}from '~/types'
-import type {retentionTableLogicType}from './retentionTableLogicType'
+    RetentionTablePayload,
+    RetentionTablePeoplePayload,
+    RetentionTrendPayload,
+    RetentionTrendPeoplePayload,
+} from 'scenes/retention/types'
+import { actionsModel } from '~/models/actionsModel'
+import { groupsModel } from '~/models/groupsModel'
+import { ActionType, FilterType, InsightLogicProps, InsightType } from '~/types'
+import type { retentionTableLogicType } from './retentionTableLogicType'
 
 export const dateOptions = ['Hour', 'Day', 'Week', 'Month']
 
 // https://day.js.org/docs/en/durations/creating#list-of-all-available-units
 const dateOptionToTimeIntervalMap = {
-Hour: 'h',
-Day: 'd',
-Week: 'w',
-Month: 'M',
+    Hour: 'h',
+    Day: 'd',
+    Week: 'w',
+    Month: 'M',
 }
 
 export const dateOptionPlurals = {
-Hour: 'hours',
-Day: 'days',
-Week: 'weeks',
-Month: 'months',
+    Hour: 'hours',
+    Day: 'days',
+    Week: 'weeks',
+    Month: 'months',
 }
 
 export const retentionOptions = {
-[RETENTION_FIRST_TIME]: 'for the first time',
-[RETENTION_RECURRING]: 'recurringly',
+    [RETENTION_FIRST_TIME]: 'for the first time',
+    [RETENTION_RECURRING]: 'recurringly',
 }
 
 export const retentionOptionDescriptions = {
-[`${RETENTION_RECURRING}`]: 'A user will belong to any cohort where they have performed the event in its Period 0.',
-[`${RETENTION_FIRST_TIME}`]:
-'A user will only belong to the cohort for which they performed the event for the first time.',
+    [`${RETENTION_RECURRING}`]: 'A user will belong to any cohort where they have performed the event in its Period 0.',
+    [`${RETENTION_FIRST_TIME}`]:
+        'A user will only belong to the cohort for which they performed the event for the first time.',
 }
 
 const DEFAULT_RETENTION_LOGIC_KEY = 'default_retention_key'
 
 export const retentionTableLogic = kea<retentionTableLogicType>({
-props: {
-
-}as InsightLogicProps,
-key: keyForInsightLogicProps(DEFAULT_RETENTION_LOGIC_KEY),
+    props: {} as InsightLogicProps,
+    key: keyForInsightLogicProps(DEFAULT_RETENTION_LOGIC_KEY),
     path: (key) => ['scenes', 'retention', 'retentionTableLogic', key],
     connect: (props: InsightLogicProps) => ({
         values: [
@@ -202,9 +200,9 @@ key: keyForInsightLogicProps(DEFAULT_RETENTION_LOGIC_KEY),
                 const startDate = dayjs().startOf(interval)
                 const startIndex = trendSeries[0].days.findIndex(
                     (_, i) => dayjs(filters?.date_to).add(i - numUnits, interval) >= startDate
-)
+                )
 
-if(startIndex !== undefined && startIndex !== -1) {
+                if (startIndex !== undefined && startIndex !== -1) {
                     return startIndex - trendSeries[0].days.length
                 } else {
                     return 0

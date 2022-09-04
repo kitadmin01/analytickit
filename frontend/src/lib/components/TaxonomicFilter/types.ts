@@ -1,5 +1,5 @@
-import{LogicWrapper}from'kea'
-import {ActionType, CohortType, EventDefinition, PersonProperty, PropertyDefinition}from '~/types'
+import {LogicWrapper} from'kea'
+import {ActionType, CohortType, EventDefinition, PersonProperty, PropertyDefinition} from '~/types'
 import Fuse from 'fuse.js'
 
 export interface SimpleOption {

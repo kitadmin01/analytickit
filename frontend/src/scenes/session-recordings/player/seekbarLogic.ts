@@ -1,34 +1,34 @@
-import{MutableRefObject}from'react'
-import {kea}from 'kea'
-import type {seekbarLogicType}from './seekbarLogicType'
-import {sessionRecordingPlayerLogic}from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
-import {sessionRecordingLogic}from 'scenes/session-recordings/sessionRecordingLogic'
-import {clamp}from 'lib/utils'
-import {PlayerPosition}from '~/types'
+import { MutableRefObject } from 'react'
+import { kea } from 'kea'
+import type { seekbarLogicType } from './seekbarLogicType'
+import { sessionRecordingPlayerLogic } from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
+import { sessionRecordingLogic } from 'scenes/session-recordings/sessionRecordingLogic'
+import { clamp } from 'lib/utils'
+import { PlayerPosition } from '~/types'
 
 import {
-convertPlayerPositionToX,
-convertXToPlayerPosition,
-getPlayerTimeFromPlayerPosition,
-getXPos,
-InteractEvent,
-ReactInteractEvent,
-THUMB_OFFSET,
-THUMB_SIZE,
-}from './playerUtils'
+    convertPlayerPositionToX,
+    convertXToPlayerPosition,
+    getPlayerTimeFromPlayerPosition,
+    getXPos,
+    InteractEvent,
+    ReactInteractEvent,
+    THUMB_OFFSET,
+    THUMB_SIZE,
+} from './playerUtils'
 export const seekbarLogic = kea<seekbarLogicType>({
-path: ['scenes', 'session-recordings', 'player', 'seekbarLogic'],
-connect: {
-values: [
-sessionRecordingPlayerLogic,
-['sessionPlayerData', 'currentPlayerPosition'],
-sessionRecordingLogic,
-['eventsToShow'],
-],
-actions: [sessionRecordingPlayerLogic, ['seek', 'startScrub', 'endScrub', 'setCurrentPlayerPosition']],
-},
-actions: {
-setThumbLeftPos: (thumbLeftPos: number, shouldSeek: boolean) => ({ thumbLeftPos, shouldSeek }),
+    path: ['scenes', 'session-recordings', 'player', 'seekbarLogic'],
+    connect: {
+        values: [
+            sessionRecordingPlayerLogic,
+            ['sessionPlayerData', 'currentPlayerPosition'],
+            sessionRecordingLogic,
+            ['eventsToShow'],
+        ],
+        actions: [sessionRecordingPlayerLogic, ['seek', 'startScrub', 'endScrub', 'setCurrentPlayerPosition']],
+    },
+    actions: {
+        setThumbLeftPos: (thumbLeftPos: number, shouldSeek: boolean) => ({ thumbLeftPos, shouldSeek }),
         setCursorDiff: (cursorDiff: number) => ({ cursorDiff }),
         handleSeek: (newX: number, shouldSeek: boolean = true) => ({ newX, shouldSeek }),
         handleMove: (event: InteractEvent) => ({ event }),
@@ -107,13 +107,13 @@ setThumbLeftPos: (thumbLeftPos: number, shouldSeek: boolean) => ({ thumbLeftPos,
                     return (
                         ((thumbLeftPos + THUMB_OFFSET) / slider.offsetWidth) *
                         sessionPlayerData.metadata.recordingDurationMs
-)
-}
-return 0
-},
-],
-},
-listeners: ({ values, actions }) => ({
+                    )
+                }
+                return 0
+            },
+        ],
+    },
+    listeners: ({ values, actions }) => ({
         setCurrentPlayerPosition: async () => {
             if (!values.slider) {
                 return
@@ -131,10 +131,10 @@ listeners: ({ values, actions }) => ({
                           values.slider.offsetWidth,
                           values.sessionPlayerData.metadata.segments,
                           values.sessionPlayerData.metadata.recordingDurationMs
-)
-: 0
+                      )
+                    : 0
 
-actions.setThumbLeftPos(xValue - THUMB_OFFSET, false)
+                actions.setThumbLeftPos(xValue - THUMB_OFFSET, false)
             }
         },
 
@@ -148,8 +148,8 @@ actions.setThumbLeftPos(xValue - THUMB_OFFSET, false)
                     values.slider.offsetWidth,
                     values.sessionPlayerData.metadata.segments,
                     values.sessionPlayerData.metadata.recordingDurationMs
-)
-actions.seek(playerPosition)
+                )
+                actions.seek(playerPosition)
             }
         },
         handleSeek: async ({ newX, shouldSeek }) => {
@@ -205,12 +205,12 @@ actions.seek(playerPosition)
                         values.slider.offsetWidth,
                         values.sessionPlayerData.metadata.segments,
                         values.sessionPlayerData.metadata.recordingDurationMs
-)
-)
-}
-},
-}),
-events:({ actions, values, cache }) => ({
+                    )
+                )
+            }
+        },
+    }),
+    events: ({ actions, values, cache }) => ({
         afterMount: () => {
             cache.setCurrentPlayerPosition = () => {
                 actions.setCurrentPlayerPosition(values.currentPlayerPosition)

@@ -1,10 +1,10 @@
-import{breadcrumbsLogic}from'./breadcrumbsLogic'
-import {initKeaTests}from '~/test/init'
-import { expectLogic}from 'kea-test-utils'
-import {router }from 'kea-router'
+import {breadcrumbsLogic} from'./breadcrumbsLogic'
+import {initKeaTests} from '~/test/init'
+import { expectLogic} from 'kea-test-utils'
+import {router } from 'kea-router'
 import {urls} from 'scenes/urls'
-import {sceneLogic }from 'scenes/sceneLogic'
-import { Scene}from 'scenes/sceneTypes'
+import {sceneLogic } from 'scenes/sceneLogic'
+import { Scene} from 'scenes/sceneTypes'
 
 const blankScene = (): any => ({ scene: { component: () => null, logic: null } })
 const scenes: any = { [Scene.Annotations]: blankScene, [Scene.Dashboards]: blankScene }

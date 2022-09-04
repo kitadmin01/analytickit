@@ -1,6 +1,6 @@
-import{PropertyGroupFilter, AnyPropertyFilter, EventDefinition, PropertyFilter, PropertyOperator}from '~/types'
-import {TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
-import {flattenPropertyGroup, isPropertyGroup}from 'lib/utils'
+import {PropertyGroupFilter, AnyPropertyFilter, EventDefinition, PropertyFilter, PropertyOperator} from '~/types'
+import {TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
+import {flattenPropertyGroup, isPropertyGroup} from 'lib/utils'
 
 export function parseProperties(
     input: AnyPropertyFilter[] | PropertyGroupFilter | Record<string, string> | null | undefined

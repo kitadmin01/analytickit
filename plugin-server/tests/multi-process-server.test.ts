@@ -1,12 +1,12 @@
-import{ServerInstance, startPluginsServer}from '../src/main/pluginsServer'
+import {ServerInstance, startPluginsServer} from '../src/main/pluginsServer'
 import {delay, UUIDT} from '../src/utils/utils'
-import {makePiscina}from '../src/worker/piscina'
-import { createanalytickit, Dummyanalytickit}from '../src/worker/vm/extensions/analytickit'
-import {writeToFile}from '../src/worker/vm/extensions/test-utils'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse}from './helpers/clickhouse'
-import {resetKafka}from './helpers/kafka'
-import { pluginConfig39}from './helpers/plugins'
-import {resetTestDatabase}from './helpers/sql'
+import {makePiscina} from '../src/worker/piscina'
+import { createanalytickit, Dummyanalytickit} from '../src/worker/vm/extensions/analytickit'
+import {writeToFile} from '../src/worker/vm/extensions/test-utils'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse} from './helpers/clickhouse'
+import {resetKafka} from './helpers/kafka'
+import { pluginConfig39} from './helpers/plugins'
+import {resetTestDatabase} from './helpers/sql'
 
 const {console: testConsole} = writeToFile
 

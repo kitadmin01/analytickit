@@ -38,8 +38,8 @@ export async function createWorker(config: PluginsServerConfig, threadId: number
 }
 
 export const createTaskRunner =
-(hub: Hub): PiscinaTaskWorker = >
-({ task, args}) = >
+(hub: Hub): PiscinaTaskWorker =>
+({ task, args}) =>
 runInTransaction(
             {
                 op: 'piscina task',

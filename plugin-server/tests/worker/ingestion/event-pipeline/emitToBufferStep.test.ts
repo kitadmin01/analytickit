@@ -1,13 +1,13 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 import {DateTime} from 'luxon'
 
-import {JobName, Person}from '../../../../src/types'
-import {UUIDT}from '../../../../src/utils/utils'
+import {JobName, Person} from '../../../../src/types'
+import {UUIDT} from '../../../../src/utils/utils'
 import {
 emitToBufferStep,
 shouldSendEventToBuffer,
 }from '../../../../src/worker/ingestion/event-pipeline/1-emitToBufferStep'
-import {LazyPersonContainer}from '../../../../src/worker/ingestion/lazy-person-container'
+import {LazyPersonContainer} from '../../../../src/worker/ingestion/lazy-person-container'
 
 const now = DateTime.fromISO('2020-01-01T12:00:05.200Z')
 

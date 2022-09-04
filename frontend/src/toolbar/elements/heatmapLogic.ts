@@ -1,22 +1,22 @@
-import{kea}from'kea'
-import {encodeParams}from 'kea-router'
-import {currentPageLogic}from '~/toolbar/stats/currentPageLogic'
-import {elementToActionStep, toolbarFetch, trimElement}from '~/toolbar/utils'
-import {toolbarLogic}from '~/toolbar/toolbarLogic'
-import type { heatmapLogicType}from './heatmapLogicType'
-import {CountedHTMLElement, ElementsEventType}from '~/toolbar/types'
-import {analytickit}from '~/toolbar/analytickit'
-import {collectAllElementsDeep, querySelectorAllDeep}from 'query-selector-shadow-dom'
-import { elementToSelector, escapeRegex}from 'lib/actionUtils'
-import {FilterType, PropertyOperator}from '~/types'
+import { kea } from 'kea'
+import { encodeParams } from 'kea-router'
+import { currentPageLogic } from '~/toolbar/stats/currentPageLogic'
+import { elementToActionStep, toolbarFetch, trimElement } from '~/toolbar/utils'
+import { toolbarLogic } from '~/toolbar/toolbarLogic'
+import type { heatmapLogicType } from './heatmapLogicType'
+import { CountedHTMLElement, ElementsEventType } from '~/toolbar/types'
+import { analytickit } from '~/toolbar/analytickit'
+import { collectAllElementsDeep, querySelectorAllDeep } from 'query-selector-shadow-dom'
+import { elementToSelector, escapeRegex } from 'lib/actionUtils'
+import { FilterType, PropertyOperator } from '~/types'
 
 export const heatmapLogic = kea<heatmapLogicType>({
-path: ['toolbar', 'elements', 'heatmapLogic'],
-actions: {
-getEvents: true,
-enableHeatmap: true,
-disableHeatmap: true,
-setShowHeatmapTooltip:(showHeatmapTooltip: boolean) => ({ showHeatmapTooltip }),
+    path: ['toolbar', 'elements', 'heatmapLogic'],
+    actions: {
+        getEvents: true,
+        enableHeatmap: true,
+        disableHeatmap: true,
+        setShowHeatmapTooltip: (showHeatmapTooltip: boolean) => ({ showHeatmapTooltip }),
         setHeatmapFilter: (filter: Partial<FilterType>) => ({ filter }),
     },
 

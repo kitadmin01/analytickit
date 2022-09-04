@@ -136,7 +136,7 @@ export const dashboardsModel = kea<dashboardsModelType>({
             },
         ],
         rawDashboards: {
-            // NB! Kea-TypeGen assignes the type of the reducer to the abcSuccess actions.
+            // NB! kea-typegen assignes the type of the reducer to the abcSuccess actions.
             // This means we must get rid of the `| null` manually until it's fixed:
             // https://github.com/keajs/kea-typegen/issues/10
             addDashboardSuccess: (state, { dashboard }) => ({ ...state, [dashboard.id]: dashboard }),

@@ -1,178 +1,178 @@
-importClickHousefrom'@analytickit/clickhouse'
-import {CacheOptions, Properties}from '@analytickit/plugin-scaffold'
-import {captureException}from '@sentry/node'
-import {Pool as GenericPool}from 'generic-pool'
-import {StatsD}from 'hot-shots'
+import ClickHouse from '@analytickit/clickhouse'
+import { CacheOptions, Properties } from '@analytickit/plugin-scaffold'
+import { captureException } from '@sentry/node'
+import { Pool as GenericPool } from 'generic-pool'
+import { StatsD } from 'hot-shots'
 import Redis from 'ioredis'
-import {ProducerRecord}from 'kafkajs'
-import { DateTime}from 'luxon'
-import {Pool, PoolClient, QueryResult, QueryResultRow}from 'pg'
+import { ProducerRecord } from 'kafkajs'
+import { DateTime } from 'luxon'
+import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg'
 
-import {CELERY_DEFAULT_QUEUE}from '../../config/constants'
+import { CELERY_DEFAULT_QUEUE } from '../../config/constants'
 import {
-KAFKA_GROUPS,
-KAFKA_PERSON_DISTINCT_ID,
-KAFKA_PERSON_UNIQUE_ID,
-KAFKA_PLUGIN_LOG_ENTRIES,
-}from '../../config/kafka-topics'
+    KAFKA_GROUPS,
+    KAFKA_PERSON_DISTINCT_ID,
+    KAFKA_PERSON_UNIQUE_ID,
+    KAFKA_PLUGIN_LOG_ENTRIES,
+} from '../../config/kafka-topics'
 import {
-Action,
-ActionStep,
-ClickHouseEvent,
-ClickhouseGroup,
-ClickHousePerson,
-ClickHousePersonDistinctId,
-ClickHousePersonDistinctId2,
-Cohort,
-CohortPeople,
-Database,
-DeadLetterQueueEvent,
-Element,
-Event,
-EventDefinitionType,
-EventPropertyType,
-Group,
-GroupTypeIndex,
-GroupTypeToColumnIndex,
-Hook,
-IngestionPersonData,
-OrganizationMembershipLevel,
-Person,
-PersonDistinctId,
-Plugin,
-PluginConfig,
-PluginLogEntry,
-PluginLogEntrySource,
-PluginLogEntryType,
-PluginLogLevel,
-PluginSourceFileStatus,
-PostgresSessionRecordingEvent,
-PropertiesLastOperation,
-PropertiesLastUpdatedAt,
-PropertyDefinitionType,
-RawAction,
-RawGroup,
-RawOrganization,
-RawPerson,
-SessionRecordingEvent,
-Team,
-TeamId,
-TimestampFormat,
-}from '../../types'
-import {instrumentQuery}from '../metrics'
+    Action,
+    ActionStep,
+    ClickHouseEvent,
+    ClickhouseGroup,
+    ClickHousePerson,
+    ClickHousePersonDistinctId,
+    ClickHousePersonDistinctId2,
+    Cohort,
+    CohortPeople,
+    Database,
+    DeadLetterQueueEvent,
+    Element,
+    Event,
+    EventDefinitionType,
+    EventPropertyType,
+    Group,
+    GroupTypeIndex,
+    GroupTypeToColumnIndex,
+    Hook,
+    IngestionPersonData,
+    OrganizationMembershipLevel,
+    Person,
+    PersonDistinctId,
+    Plugin,
+    PluginConfig,
+    PluginLogEntry,
+    PluginLogEntrySource,
+    PluginLogEntryType,
+    PluginLogLevel,
+    PluginSourceFileStatus,
+    PostgresSessionRecordingEvent,
+    PropertiesLastOperation,
+    PropertiesLastUpdatedAt,
+    PropertyDefinitionType,
+    RawAction,
+    RawGroup,
+    RawOrganization,
+    RawPerson,
+    SessionRecordingEvent,
+    Team,
+    TeamId,
+    TimestampFormat,
+} from '../../types'
+import { instrumentQuery } from '../metrics'
 import {
-castTimestampOrNow,
-clickHouseTimestampToISO,
-escapeClickHouseString,
-NoRowsUpdatedError,
-RaceConditionError,
-sanitizeSqlIdentifier,
-tryTwice,
-UUID,
-UUIDT,
-}from '../utils'
-import {OrganizationPluginsAccessLevel}from './../../types'
-import {PromiseManager}from './../../worker/vm/promise-manager'
-import {chainToElements}from './elements-chain'
-import {KafkaProducerWrapper}from './kafka-producer-wrapper'
+    castTimestampOrNow,
+    clickHouseTimestampToISO,
+    escapeClickHouseString,
+    NoRowsUpdatedError,
+    RaceConditionError,
+    sanitizeSqlIdentifier,
+    tryTwice,
+    UUID,
+    UUIDT,
+} from '../utils'
+import { OrganizationPluginsAccessLevel } from './../../types'
+import { PromiseManager } from './../../worker/vm/promise-manager'
+import { chainToElements } from './elements-chain'
+import { KafkaProducerWrapper } from './kafka-producer-wrapper'
 import {
-generateKafkaPersonUpdateMessage,
-getFinalPostgresQuery,
-safeClickhouseString,
-shouldStoreLog,
-timeoutGuard,
-unparsePersonPartial,
-}from './utils'
+    generateKafkaPersonUpdateMessage,
+    getFinalPostgresQuery,
+    safeClickhouseString,
+    shouldStoreLog,
+    timeoutGuard,
+    unparsePersonPartial,
+} from './utils'
 
 export interface LogEntryPayload {
-pluginConfig: PluginConfig
-source: PluginLogEntrySource
-type: PluginLogEntryType
-message: string
-instanceId: UUID
-timestamp?: string | null
+    pluginConfig: PluginConfig
+    source: PluginLogEntrySource
+    type: PluginLogEntryType
+    message: string
+    instanceId: UUID
+    timestamp?: string | null
 }
 
 export interface ParsedLogEntry {
-id: string
-team_id: number
-plugin_id: number
-plugin_config_id: number
-timestamp: string
-source: PluginLogEntrySource
-type: PluginLogEntryType
-message: string
-instance_id: string
+    id: string
+    team_id: number
+    plugin_id: number
+    plugin_config_id: number
+    timestamp: string
+    source: PluginLogEntrySource
+    type: PluginLogEntryType
+    message: string
+    instance_id: string
 }
 
 export interface CreateUserPayload {
-uuid: UUIDT
-password: string
-first_name: string
-last_name: string
-email: string
-distinct_id: string
-is_staff: boolean
-is_active: boolean
-date_joined: Date
-events_column_config: Record < string, string> | null
-organization_id?: RawOrganization['id']
-organizationMembershipLevel?: number
+    uuid: UUIDT
+    password: string
+    first_name: string
+    last_name: string
+    email: string
+    distinct_id: string
+    is_staff: boolean
+    is_active: boolean
+    date_joined: Date
+    events_column_config: Record<string, string> | null
+    organization_id?: RawOrganization['id']
+    organizationMembershipLevel?: number
 }
 
 export interface CreatePersonalApiKeyPayload {
-id: string
-user_id: number
-label: string
-value: string
-created_at: Date
+    id: string
+    user_id: number
+    label: string
+    value: string
+    created_at: Date
 }
 
 export type GroupIdentifier = {
-index: number
-key: string
+    index: number
+    key: string
 }
 
 type GroupCacheData = {
-identifier: GroupIdentifier
-data: {
-properties: Properties
-created_at: DateTime
-}| null
-cached?: boolean
+    identifier: GroupIdentifier
+    data: {
+        properties: Properties
+        created_at: DateTime
+    } | null
+    cached?: boolean
 }
 
 /** The recommended way of accessing the database. */
 export class DB {
-/** Postgres connection pool for primary database access. */
-postgres: Pool
-/** Redis used for various caches. */
-redisPool: GenericPool < Redis.Redis>
+    /** Postgres connection pool for primary database access. */
+    postgres: Pool
+    /** Redis used for various caches. */
+    redisPool: GenericPool<Redis.Redis>
 
-/** Kafka producer used for syncing Postgres and ClickHouse person data. */
-kafkaProducer: KafkaProducerWrapper
-/** ClickHouse used for syncing Postgres and ClickHouse person data. */
-clickhouse: ClickHouse
+    /** Kafka producer used for syncing Postgres and ClickHouse person data. */
+    kafkaProducer: KafkaProducerWrapper
+    /** ClickHouse used for syncing Postgres and ClickHouse person data. */
+    clickhouse: ClickHouse
 
-/** StatsD instance used to do instrumentation */
-statsd: StatsD | undefined
+    /** StatsD instance used to do instrumentation */
+    statsd: StatsD | undefined
 
-/** How many unique group types to allow per team */
-MAX_GROUP_TYPES_PER_TEAM = 5
+    /** How many unique group types to allow per team */
+    MAX_GROUP_TYPES_PER_TEAM = 5
 
-/** Whether to write to clickhouse_person_unique_id topic */
-writeToPersonUniqueId?: boolean
+    /** Whether to write to clickhouse_person_unique_id topic */
+    writeToPersonUniqueId?: boolean
 
-/** How many seconds to keep person info in Redis cache */
-PERSONS_AND_GROUPS_CACHE_TTL: number
+    /** How many seconds to keep person info in Redis cache */
+    PERSONS_AND_GROUPS_CACHE_TTL: number
 
-/** Which teams is person info caching enabled on */
-personAndGroupsCachingEnabledTeams: Set < number>
+    /** Which teams is person info caching enabled on */
+    personAndGroupsCachingEnabledTeams: Set<number>
 
-/** PromiseManager instance to keep track of voided promises */
-promiseManager: PromiseManager
+    /** PromiseManager instance to keep track of voided promises */
+    promiseManager: PromiseManager
 
-constructor(
+    constructor(
         postgres: Pool,
         redisPool: GenericPool<Redis.Redis>,
         kafkaProducer: KafkaProducerWrapper,
@@ -204,7 +204,7 @@ constructor(
             let fullQuery = ''
             try {
                 fullQuery = getFinalPostgresQuery(queryString, values as any[])
-            } catch {}
+            } catch { }
             const timeout = timeoutGuard('Postgres slow query warning after 30 sec', {
                 queryString,
                 values,
@@ -271,12 +271,12 @@ constructor(
             values.flat(),
             tag,
             client
-)
-}
+        )
+    }
 
-// ClickHouse
+    // ClickHouse
 
-public clickhouseQuery(
+    public clickhouseQuery(
         query: string,
         options?: ClickHouse.QueryOptions
     ): Promise<ClickHouse.QueryResult<Record<string, any>>> {
@@ -302,8 +302,8 @@ public clickhouseQuery(
                 const value = await tryTwice(
                     async () => await client.get(key),
                     `Waited 5 sec to get redis key: ${key}, retrying once!`
-)
-if (typeof value === 'undefined' || value === null) {
+                )
+                if (typeof value === 'undefined' || value === null) {
                     return defaultValue
                 }
                 return value ? (jsonSerialize ? JSON.parse(value) : value) : null
@@ -569,11 +569,11 @@ if (typeof value === 'undefined' || value === null) {
                 this.getPersonIdCacheKey(teamId, distinctId),
                 personId,
                 this.PERSONS_AND_GROUPS_CACHE_TTL
-)
-}
-}
+            )
+        }
+    }
 
-private async updatePersonUuidCache(teamId: number, personId: number, uuid: string): Promise<void> {
+    private async updatePersonUuidCache(teamId: number, personId: number, uuid: string): Promise<void> {
         if (this.personAndGroupsCachingEnabledTeams.has(teamId)) {
             await this.redisSet(this.getPersonUuidCacheKey(teamId, personId), uuid, this.PERSONS_AND_GROUPS_CACHE_TTL)
         }
@@ -585,11 +585,11 @@ private async updatePersonUuidCache(teamId: number, personId: number, uuid: stri
                 this.getPersonCreatedAtCacheKey(teamId, personId),
                 createdAtIso,
                 this.PERSONS_AND_GROUPS_CACHE_TTL
-)
-}
-}
+            )
+        }
+    }
 
-private async updatePersonCreatedAtCache(teamId: number, personId: number, createdAt: DateTime): Promise<void> {
+    private async updatePersonCreatedAtCache(teamId: number, personId: number, createdAt: DateTime): Promise<void> {
         await this.updatePersonCreatedAtIsoCache(teamId, personId, createdAt.toISO())
     }
 
@@ -599,20 +599,20 @@ private async updatePersonCreatedAtCache(teamId: number, personId: number, creat
                 this.getPersonPropertiesCacheKey(teamId, personId),
                 properties,
                 this.PERSONS_AND_GROUPS_CACHE_TTL
-)
-}
-}
+            )
+        }
+    }
 
-// Exported for tests only
-public async updateGroupDataCache(teamId: number, groupsCacheData: GroupCacheData[]): Promise<void> {
+    // Exported for tests only
+    public async updateGroupDataCache(teamId: number, groupsCacheData: GroupCacheData[]): Promise<void> {
         if (this.personAndGroupsCachingEnabledTeams.has(teamId)) {
             const kv: Array<[string, any]> = groupsCacheData.map((group) => {
                 const key = this.getGroupDataCacheKey(teamId, group.identifier.index, group.identifier.key)
                 const value = group.data
                     ? {
-                          properties: group.data.properties,
-                          created_at: group.data.created_at.toISO(),
-                      }
+                        properties: group.data.properties,
+                        created_at: group.data.created_at.toISO(),
+                    }
                     : null
                 return [key, value]
             })
@@ -635,8 +635,8 @@ public async updateGroupDataCache(teamId: number, groupsCacheData: GroupCacheDat
             'SELECT person_id FROM analytickit_persondistinctid WHERE team_id=$1 AND distinct_id=$2 LIMIT 1',
             [teamId, distinctId],
             'fetchPersonId'
-)
-if (result.rows.length > 0) {
+        )
+        if (result.rows.length > 0) {
             const personId = Number(result.rows[0].person_id)
             await this.updatePersonIdCache(teamId, distinctId, personId)
             return personId
@@ -670,8 +670,8 @@ if (result.rows.length > 0) {
             'SELECT uuid, created_at, properties FROM analytickit_person WHERE team_id=$1 AND id=$2 LIMIT 1',
             [teamId, personId],
             'fetchPersonProperties'
-)
-if (result.rows.length !== 0) {
+        )
+        if (result.rows.length !== 0) {
             const personUuid = String(result.rows[0].uuid)
             const personCreatedAtIso = String(result.rows[0].created_at)
             const personProperties: Properties = result.rows[0].properties
@@ -702,9 +702,9 @@ if (result.rows.length !== 0) {
         const data = await this.redisGet<{ properties: Properties; created_at: string } | null | 'missing'>(
             this.getGroupDataCacheKey(teamId, groupIdentifier.index, groupIdentifier.key),
             'missing'
-)
+        )
 
-if (data === 'missing' || !data) {
+        if (data === 'missing' || !data) {
             return { identifier: groupIdentifier, data: null, cached: !data }
         }
         return {
@@ -745,20 +745,20 @@ if (data === 'missing' || !data) {
             ),
             args,
             'getGroupProperties'
-)
+        )
 
-const result: GroupCacheData[] = groupIdentifiers.map((identifier) => {
-const row = queryResult.rows.filter(
-(row) = > row.group_key === identifier.key && row.group_type_index == identifier.index
-)[0]
+        const result: GroupCacheData[] = groupIdentifiers.map((identifier) => {
+            const row = queryResult.rows.filter(
+                (row) => row.group_key === identifier.key && row.group_type_index == identifier.index
+            )[0]
 
-return {
-identifier,
-data: row
-? {
-properties: row.group_properties,
-created_at: DateTime.fromISO(row.created_at).toUTC(),
-                      }
+            return {
+                identifier,
+                data: row
+                    ? {
+                        properties: row.group_properties,
+                        created_at: DateTime.fromISO(row.created_at).toUTC(),
+                    }
                     : null,
             }
         })
@@ -775,11 +775,11 @@ created_at: DateTime.fromISO(row.created_at).toUTC(),
 
         const cachedResults = await Promise.all(
             groups.map((groupIdentifier) => this.getGroupDataCache(teamId, groupIdentifier))
-)
+        )
 
-let columns: Record < string, string> = this.groupCacheDataToColumns(cachedResults)
-const groupsWithoutCachedData = cachedResults
-.filter((groupData) => !groupData.cached)
+        let columns: Record<string, string> = this.groupCacheDataToColumns(cachedResults)
+        const groupsWithoutCachedData = cachedResults
+            .filter((groupData) => !groupData.cached)
             .map((groupData) => groupData.identifier)
 
         if (groupsWithoutCachedData.length > 0) {
@@ -797,13 +797,13 @@ const groupsWithoutCachedData = cachedResults
                 result[`group${group.identifier.index}_created_at`] = castTimestampOrNow(
                     group.data.created_at,
                     TimestampFormat.ClickHouse
-)
-}
-}
-return result
-}
+                )
+            }
+        }
+        return result
+    }
 
-public async fetchPersons(database?: Database.Postgres): Promise<Person[]>
+    public async fetchPersons(database?: Database.Postgres): Promise<Person[]>
     public async fetchPersons(database: Database.ClickHouse): Promise<ClickHousePerson[]>
     public async fetchPersons(database: Database = Database.Postgres): Promise<Person[] | ClickHousePerson[]> {
         if (database === Database.ClickHouse) {
@@ -824,7 +824,7 @@ public async fetchPersons(database?: Database.Postgres): Promise<Person[]>
                 HAVING max(is_deleted)=0
 )
 `
-return (await this.clickhouseQuery(query)).data.map((row) => {
+            return (await this.clickhouseQuery(query)).data.map((row) => {
                 const { 'person_max._timestamp': _discard1, 'person_max.id': _discard2, ...rest } = row
                 return rest
             }) as ClickHousePerson[]
@@ -834,14 +834,14 @@ return (await this.clickhouseQuery(query)).data.map((row) => {
                     .rows as RawPerson[]
             ).map(
                 (rawPerson: RawPerson) =>
-                    ({
-                        ...rawPerson,
-                        created_at: DateTime.fromISO(rawPerson.created_at).toUTC(),
-                        version: Number(rawPerson.version || 0),
-                    } as Person)
-)
-}else {
-throw new Error(`Can't fetch persons for database: ${database}`)
+                ({
+                    ...rawPerson,
+                    created_at: DateTime.fromISO(rawPerson.created_at).toUTC(),
+                    version: Number(rawPerson.version || 0),
+                } as Person)
+            )
+        } else {
+            throw new Error(`Can't fetch persons for database: ${database}`)
         }
     }
 
@@ -879,9 +879,9 @@ throw new Error(`Can't fetch persons for database: ${database}`)
             values,
             'fetchPerson',
             client
-)
+        )
 
-if (selectResult.rows.length > 0) {
+        if (selectResult.rows.length > 0) {
             const rawPerson = selectResult.rows[0]
             return {
                 ...rawPerson,
@@ -920,19 +920,19 @@ if (selectResult.rows.length > 0) {
                 ],
                 'insertPerson',
                 client
-)
-const personCreated = insertResult.rows[0] as RawPerson
-const person = {
-...personCreated,
-created_at: DateTime.fromISO(personCreated.created_at).toUTC(),
+            )
+            const personCreated = insertResult.rows[0] as RawPerson
+            const person = {
+                ...personCreated,
+                created_at: DateTime.fromISO(personCreated.created_at).toUTC(),
                 version: Number(personCreated.version || 0),
             } as Person
 
             kafkaMessages.push(
                 generateKafkaPersonUpdateMessage(createdAt, properties, teamId, isIdentified, uuid, person.version)
-)
+            )
 
-for (const distinctId of distinctIds || []) {
+            for (const distinctId of distinctIds || []) {
                 const messages = await this.addDistinctIdPooled(person, distinctId, client)
                 kafkaMessages.push(...messages)
             }
@@ -951,13 +951,13 @@ for (const distinctId of distinctIds || []) {
                     this.updatePersonCreatedAtCache(teamId, person.id, person.created_at),
                     this.updatePersonPropertiesCache(teamId, person.id, properties),
                 ])
-)
+        )
 
-return person
-}
+        return person
+    }
 
-// Currently in use, but there are various problems with this function
-public async updatePersonDeprecated(
+    // Currently in use, but there are various problems with this function
+    public async updatePersonDeprecated(
         person: Person,
         update: Partial<Person>,
         client?: PoolClient
@@ -974,21 +974,20 @@ public async updatePersonDeprecated(
         // Potentially overriding values badly if there was an update to the person after computing updateValues above
         const queryString = `UPDATE analytickit_person SET version = COALESCE(version, 0)::numeric + 1, ${Object.keys(
             update
-        ).map((field, index) => `"${sanitizeSqlIdentifier(field)}" = $${index + 1}`)} WHERE id = $${
-            Object.values(update).length + 1
-        }
+        ).map((field, index) => `"${sanitizeSqlIdentifier(field)}" = $${index + 1}`)} WHERE id = $${Object.values(update).length + 1
+            }
         RETURNING *`
 
         const updateResult: QueryResult = await this.postgresQuery(queryString, values, 'updatePerson', client)
         if (updateResult.rows.length == 0) {
             throw new NoRowsUpdatedError(
                 `Person with team_id="${person.team_id}" and uuid="${person.uuid} couldn't be updated`
-)
-}
-const updatedPersonRaw = updateResult.rows[0] as RawPerson
-const updatedPerson = {
-...updatedPersonRaw,
-created_at: DateTime.fromISO(updatedPersonRaw.created_at).toUTC(),
+            )
+        }
+        const updatedPersonRaw = updateResult.rows[0] as RawPerson
+        const updatedPerson = {
+            ...updatedPersonRaw,
+            created_at: DateTime.fromISO(updatedPersonRaw.created_at).toUTC(),
             version: Number(updatedPersonRaw.version || 0),
         } as Person
 
@@ -1007,8 +1006,8 @@ created_at: DateTime.fromISO(updatedPersonRaw.created_at).toUTC(),
             updatedPerson.is_identified,
             updatedPerson.uuid,
             updatedPerson.version
-)
-if (client) {
+        )
+        if (client) {
             kafkaMessages.push(message)
         } else {
             await this.kafkaProducer.queueMessage(message)
@@ -1027,11 +1026,11 @@ if (client) {
             [person.team_id, person.id],
             'deletePerson',
             client
-)
+        )
 
-let kafkaMessages: ProducerRecord[] = []
+        let kafkaMessages: ProducerRecord[] = []
 
-if (result.rows.length > 0) {
+        if (result.rows.length > 0) {
             kafkaMessages = [
                 generateKafkaPersonUpdateMessage(
                     person.created_at,
@@ -1073,17 +1072,17 @@ if (result.rows.length > 0) {
                           AND team_id='${person.team_id}'
                           AND is_deleted=0
                         ORDER BY _offset`
-)
-).data as ClickHousePersonDistinctId[]
-} else if (database === Database.Postgres) {
-const result = await this.postgresQuery(
-'SELECT * FROM analytickit_persondistinctid WHERE person_id= $1 AND team_id=$2 ORDER BY id',
-[person.id, person.team_id],
-'fetchDistinctIds'
-)
-return result.rows as PersonDistinctId[]
-}else {
-throw new Error(`Can't fetch persons for database: ${database}`)
+                )
+            ).data as ClickHousePersonDistinctId[]
+        } else if (database === Database.Postgres) {
+            const result = await this.postgresQuery(
+                'SELECT * FROM analytickit_persondistinctid WHERE person_id= $1 AND team_id=$2 ORDER BY id',
+                [person.id, person.team_id],
+                'fetchDistinctIds'
+            )
+            return result.rows as PersonDistinctId[]
+        } else {
+            throw new Error(`Can't fetch persons for database: ${database}`)
         }
     }
 
@@ -1111,16 +1110,16 @@ throw new Error(`Can't fetch persons for database: ${database}`)
             [distinctId, person.id, person.team_id],
             'addDistinctIdPooled',
             client
-)
+        )
 
-const {id, version: versionStr,...personDistinctIdCreated}= insertResult.rows[0] as PersonDistinctId
-const version = Number(versionStr || 0)
-const messages = [
-{
-topic: KAFKA_PERSON_DISTINCT_ID,
-messages: [
-{
-value: JSON.stringify({
+        const { id, version: versionStr, ...personDistinctIdCreated } = insertResult.rows[0] as PersonDistinctId
+        const version = Number(versionStr || 0)
+        const messages = [
+            {
+                topic: KAFKA_PERSON_DISTINCT_ID,
+                messages: [
+                    {
+                        value: JSON.stringify({
                             ...personDistinctIdCreated,
                             version,
                             person_id: person.uuid,
@@ -1163,33 +1162,33 @@ value: JSON.stringify({
                 [target.id, source.id, target.team_id],
                 'updateDistinctIdPerson',
                 client
-)
-}catch (error) {
-if (
+            )
+        } catch (error) {
+            if (
                 (error as Error).message.includes(
                     'insert or update on table "analytickit_persondistinctid" violates foreign key constraint'
-)
-) {
-// this is caused by a race condition where the _target_ person was deleted after fetching but
-// before the update query ran and will trigger a retry with updated persons
-throw new RaceConditionError(
+                )
+            ) {
+                // this is caused by a race condition where the _target_ person was deleted after fetching but
+                // before the update query ran and will trigger a retry with updated persons
+                throw new RaceConditionError(
                     'Failed trying to move distinct IDs because target person no longer exists.'
-)
-}
+                )
+            }
 
-throw error
-}
+            throw error
+        }
 
-// this is caused by a race condition where the _source_ person was deleted after fetching but
-// before the update query ran and will trigger a retry with updated persons
-if (movedDistinctIdResult.rows.length === 0) {
+        // this is caused by a race condition where the _source_ person was deleted after fetching but
+        // before the update query ran and will trigger a retry with updated persons
+        if (movedDistinctIdResult.rows.length === 0) {
             throw new RaceConditionError(
                 `Failed trying to move distinct IDs because the source person no longer exists.`
-)
-}
+            )
+        }
 
-const kafkaMessages = []
-for (const row of movedDistinctIdResult.rows) {
+        const kafkaMessages = []
+        for (const row of movedDistinctIdResult.rows) {
             const { id, version: versionStr, ...usefulColumns } = row as PersonDistinctId
             const version = Number(versionStr || 0)
             kafkaMessages.push({
@@ -1241,11 +1240,11 @@ for (const row of movedDistinctIdResult.rows) {
                 cohort.pending_version ?? cohort.version ?? 0,
             ],
             'createCohort'
-)
-return insertResult.rows[0]
-}
+        )
+        return insertResult.rows[0]
+    }
 
-public async doesPersonBelongToCohort(
+    public async doesPersonBelongToCohort(
         cohortId: number,
         person: IngestionPersonData,
         teamId: Team['id']
@@ -1257,9 +1256,9 @@ public async doesPersonBelongToCohort(
                 AND cohort_id = ${cohortId}
                 AND person_id = '${escapeClickHouseString(person.uuid)}'
             LIMIT 1`
-)
+        )
 
-if (chResult.rows > 0) {
+        if (chResult.rows > 0) {
             // Cohort is static and our person belongs to it
             return true
         }
@@ -1268,21 +1267,21 @@ if (chResult.rows > 0) {
             `SELECT EXISTS (SELECT 1 FROM analytickit_cohortpeople WHERE cohort_id = $1 AND person_id = $2)`,
             [cohortId, person.id],
             'doesPersonBelongToCohort'
-)
-return psqlResult.rows[0].exists
-}
+        )
+        return psqlResult.rows[0].exists
+    }
 
-public async addPersonToCohort(cohortId: number, personId: Person['id'], version: number): Promise<CohortPeople> {
+    public async addPersonToCohort(cohortId: number, personId: Person['id'], version: number): Promise<CohortPeople> {
         const insertResult = await this.postgresQuery(
             `INSERT INTO analytickit_cohortpeople (cohort_id, person_id, version) VALUES ($1, $2, $3) RETURNING *;`,
             [cohortId, personId, version],
             'addPersonToCohort'
-)
-return insertResult.rows[0]
-}
+        )
+        return insertResult.rows[0]
+    }
 
-// Feature Flag Hash Key overrides
-public async addFeatureFlagHashKeysForMergedPerson(
+    // Feature Flag Hash Key overrides
+    public async addFeatureFlagHashKeysForMergedPerson(
         teamID: Team['id'],
         sourcePersonID: Person['id'],
         targetPersonID: Person['id']
@@ -1306,47 +1305,47 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
             `,
             [teamID, sourcePersonID, targetPersonID],
             'addFeatureFlagHashKeysForMergedPerson'
-)
-}
+        )
+    }
 
-// Event
+    // Event
 
-public async fetchEvents(): Promise<ClickHouseEvent[]> {
+    public async fetchEvents(): Promise<ClickHouseEvent[]> {
         const events = (await this.clickhouseQuery(`SELECT * FROM events ORDER BY timestamp ASC`))
             .data as ClickHouseEvent[]
         return (
             events?.map(
                 (event) =>
-                    ({
-                        ...event,
-                        ...(typeof event['properties'] === 'string'
-                            ? { properties: JSON.parse(event.properties) }
-                            : {}),
-                        ...(!!event['person_properties'] && typeof event['person_properties'] === 'string'
-                            ? { person_properties: JSON.parse(event.person_properties) }
-                            : {}),
-                        ...(!!event['group0_properties'] && typeof event['group0_properties'] === 'string'
-                            ? { group0_properties: JSON.parse(event.group0_properties) }
-                            : {}),
-                        ...(!!event['group1_properties'] && typeof event['group1_properties'] === 'string'
-                            ? { group1_properties: JSON.parse(event.group1_properties) }
-                            : {}),
-                        ...(!!event['group2_properties'] && typeof event['group2_properties'] === 'string'
-                            ? { group2_properties: JSON.parse(event.group2_properties) }
-                            : {}),
-                        ...(!!event['group3_properties'] && typeof event['group3_properties'] === 'string'
-                            ? { group3_properties: JSON.parse(event.group3_properties) }
-                            : {}),
-                        ...(!!event['group4_properties'] && typeof event['group4_properties'] === 'string'
-                            ? { group4_properties: JSON.parse(event.group4_properties) }
-                            : {}),
-                        timestamp: clickHouseTimestampToISO(event.timestamp),
-                    } as ClickHouseEvent)
+                ({
+                    ...event,
+                    ...(typeof event['properties'] === 'string'
+                        ? { properties: JSON.parse(event.properties) }
+                        : {}),
+                    ...(!!event['person_properties'] && typeof event['person_properties'] === 'string'
+                        ? { person_properties: JSON.parse(event.person_properties) }
+                        : {}),
+                    ...(!!event['group0_properties'] && typeof event['group0_properties'] === 'string'
+                        ? { group0_properties: JSON.parse(event.group0_properties) }
+                        : {}),
+                    ...(!!event['group1_properties'] && typeof event['group1_properties'] === 'string'
+                        ? { group1_properties: JSON.parse(event.group1_properties) }
+                        : {}),
+                    ...(!!event['group2_properties'] && typeof event['group2_properties'] === 'string'
+                        ? { group2_properties: JSON.parse(event.group2_properties) }
+                        : {}),
+                    ...(!!event['group3_properties'] && typeof event['group3_properties'] === 'string'
+                        ? { group3_properties: JSON.parse(event.group3_properties) }
+                        : {}),
+                    ...(!!event['group4_properties'] && typeof event['group4_properties'] === 'string'
+                        ? { group4_properties: JSON.parse(event.group4_properties) }
+                        : {}),
+                    timestamp: clickHouseTimestampToISO(event.timestamp),
+                } as ClickHouseEvent)
             ) || []
-)
-}
+        )
+    }
 
-public async fetchDeadLetterQueueEvents(): Promise<DeadLetterQueueEvent[]> {
+    public async fetchDeadLetterQueueEvents(): Promise<DeadLetterQueueEvent[]> {
         const result = await this.clickhouseQuery(`SELECT * FROM events_dead_letter_queue ORDER BY _timestamp ASC`)
         const events = result.data as DeadLetterQueueEvent[]
         return events
@@ -1372,10 +1371,10 @@ public async fetchDeadLetterQueueEvents(): Promise<DeadLetterQueueEvent[]> {
         const events = (
             await this.clickhouseQuery(
                 `SELECT elements_chain FROM events WHERE uuid='${escapeClickHouseString((event as any).uuid)}'`
-)
-).data as ClickHouseEvent[]
-const chain = events?.[0]?.elements_chain
-return chain ? chainToElements(chain) : []
+            )
+        ).data as ClickHouseEvent[]
+        const chain = events?.[0]?.elements_chain
+        return chain ? chainToElements(chain) : []
     }
 
     // PluginLogEntry (NOTE: not a Django model anymore, stored in ClickHouse table `plugin_log_entries`)
@@ -1469,11 +1468,11 @@ return chain ? chainToElements(chain) : []
             `,
                 [restHookActionIds],
                 'fetchActions'
-)
-).rows
+            )
+        ).rows
 
-const pluginIds: number[] = rawActions.map(({ id }) => id)
-const actionSteps: (ActionStep & { team_id: Team['id'] })[] = (
+        const pluginIds: number[] = rawActions.map(({ id }) => id)
+        const actionSteps: (ActionStep & { team_id: Team['id'] })[] = (
             await this.postgresQuery(
                 `
                     SELECT analytickit_actionstep.*, analytickit_action.team_id
@@ -1482,10 +1481,10 @@ const actionSteps: (ActionStep & { team_id: Team['id'] })[] = (
                 `,
                 [pluginIds],
                 'fetchActionSteps'
-)
-).rows
-const actions: Record < Team['id'], Record<Action['id'], Action>> = {}
-for (const rawAction of rawActions) {
+            )
+        ).rows
+        const actions: Record<Team['id'], Record<Action['id'], Action>> = {}
+        for (const rawAction of rawActions) {
             if (!actions[rawAction.team_id]) {
                 actions[rawAction.team_id] = {}
             }
@@ -1515,9 +1514,9 @@ for (const rawAction of rawActions) {
                 `SELECT * FROM analytickit_action WHERE id = $1 AND deleted = FALSE`,
                 [id],
                 'fetchActions'
-)
-).rows
-if (!rawActions.length) {
+            )
+        ).rows
+        if (!rawActions.length) {
             return null
         }
 
@@ -1541,13 +1540,13 @@ if (!rawActions.length) {
             `SELECT * FROM analytickit_organization WHERE id = $1`,
             [organizationId],
             'fetchOrganization'
-)
-return selectResult.rows[0]
-}
+        )
+        return selectResult.rows[0]
+    }
 
-// Team
+    // Team
 
-public async fetchTeam(teamId: Team['id']): Promise<Team> {
+    public async fetchTeam(teamId: Team['id']): Promise<Team> {
         const selectResult = await this.postgresQuery<Team>(
             `
             SELECT
@@ -1565,11 +1564,11 @@ public async fetchTeam(teamId: Team['id']): Promise<Team> {
             `,
             [teamId],
             'fetchTeam'
-)
-return selectResult.rows[0]
-}
+        )
+        return selectResult.rows[0]
+    }
 
-public async fetchAsyncMigrationComplete(migrationName: string): Promise<boolean> {
+    public async fetchAsyncMigrationComplete(migrationName: string): Promise<boolean> {
         const { rows } = await this.postgresQuery(
             `
             SELECT name
@@ -1578,11 +1577,11 @@ public async fetchAsyncMigrationComplete(migrationName: string): Promise<boolean
             `,
             [migrationName],
             'fetchAsyncMigrationComplete'
-)
-return rows.length > 0
-}
+        )
+        return rows.length > 0
+    }
 
-public async fetchWriteToPersonUniqueId(): Promise<boolean> {
+    public async fetchWriteToPersonUniqueId(): Promise<boolean> {
         if (this.writeToPersonUniqueId === undefined) {
             this.writeToPersonUniqueId = !(await this.fetchAsyncMigrationComplete('0003_fill_person_distinct_id2'))
         }
@@ -1599,14 +1598,14 @@ public async fetchWriteToPersonUniqueId(): Promise<boolean> {
             WHERE for_internal_metrics`,
             undefined,
             'fetchInternalMetricsTeam'
-)
+        )
 
-return rows[0]?.team_id || null
-}
+        return rows[0]?.team_id || null
+    }
 
-// Hook (EE)
+    // Hook (EE)
 
-private async fetchActionRestHooks(actionId?: Hook['resource_id']): Promise<Hook[]> {
+    private async fetchActionRestHooks(actionId?: Hook['resource_id']): Promise<Hook[]> {
         try {
             const { rows } = await this.postgresQuery<Hook>(
                 `
@@ -1617,11 +1616,11 @@ private async fetchActionRestHooks(actionId?: Hook['resource_id']): Promise<Hook
                 `,
                 actionId !== undefined ? [actionId] : [],
                 'fetchActionRestHooks'
-)
-return rows
-}catch (err) {
-// On FOSS this table does not exist - ignore errors
-if (err.message.includes('relation "ee_hook" does not exist')) {
+            )
+            return rows
+        } catch (err) {
+            // On FOSS this table does not exist - ignore errors
+            if (err.message.includes('relation "ee_hook" does not exist')) {
                 return []
             }
 
@@ -1665,9 +1664,9 @@ if (err.message.includes('relation "ee_hook" does not exist')) {
                 organization_id,
             ],
             'createUser'
-)
+        )
 
-if (organization_id) {
+        if (organization_id) {
             const now = new Date().toISOString()
             await this.postgresQuery(
                 `INSERT INTO analytickit_organizationmembership (id, organization_id, user_id, level, joined_at, updated_at)
@@ -1681,13 +1680,13 @@ if (organization_id) {
                     now,
                 ],
                 'createOrganizationMembership'
-)
-}
+            )
+        }
 
-return createUserResult
-}
+        return createUserResult
+    }
 
-public async createPersonalApiKey({
+    public async createPersonalApiKey({
         id,
         user_id,
         label,
@@ -1700,19 +1699,19 @@ public async createPersonalApiKey({
             RETURNING value`,
             [id, user_id, label, value, created_at.toISOString()],
             'createPersonalApiKey'
-)
-}
+        )
+    }
 
-public async fetchGroupTypes(teamId: TeamId): Promise<GroupTypeToColumnIndex> {
+    public async fetchGroupTypes(teamId: TeamId): Promise<GroupTypeToColumnIndex> {
         const { rows } = await this.postgresQuery(
             `SELECT * FROM analytickit_grouptypemapping WHERE team_id = $1`,
             [teamId],
             'fetchGroupTypes'
-)
+        )
 
-const result: GroupTypeToColumnIndex = {}
+        const result: GroupTypeToColumnIndex = {}
 
-for (const row of rows) {
+        for (const row of rows) {
             result[row.group_type] = row.group_type_index
         }
 
@@ -1724,9 +1723,9 @@ for (const row of rows) {
             `SELECT raw_value FROM analytickit_instancesetting WHERE key = $1`,
             [key],
             'fetchInstanceSetting'
-)
+        )
 
-if (result.rows.length > 0) {
+        if (result.rows.length > 0) {
             const value = JSON.parse(result.rows[0].raw_value)
             return value
         } else {
@@ -1743,10 +1742,10 @@ if (result.rows.length > 0) {
             `,
             [key, JSON.stringify(value)],
             'upsertInstanceSetting'
-)
-}
+        )
+    }
 
-public async insertGroupType(
+    public async insertGroupType(
         teamId: TeamId,
         groupType: string,
         index: number
@@ -1767,11 +1766,11 @@ SELECT group_type_index, 1 AS is_insert  FROM insert_result
 UNION
 SELECT group_type_index, 0 AS is_insert FROM analytickit_grouptypemapping WHERE team_id = $1 AND group_type = $2;
 `,
-[teamId, groupType, index],
-'insertGroupType'
-)
+            [teamId, groupType, index],
+            'insertGroupType'
+        )
 
-if (insertGroupTypeResult.rows.length == 0) {
+        if (insertGroupTypeResult.rows.length == 0) {
             return await this.insertGroupType(teamId, groupType, index + 1)
         }
 
@@ -1798,9 +1797,9 @@ if (insertGroupTypeResult.rows.length == 0) {
             [teamId, groupTypeIndex, groupKey],
             'fetchGroup',
             client
-)
+        )
 
-if (selectResult.rows.length > 0) {
+        if (selectResult.rows.length > 0) {
             const rawGroup: RawGroup = selectResult.rows[0]
             return {
                 ...rawGroup,
@@ -1841,9 +1840,9 @@ if (selectResult.rows.length > 0) {
             ],
             'upsertGroup',
             client
-)
+        )
 
-if (result.rows.length === 0) {
+        if (result.rows.length === 0) {
             throw new RaceConditionError('Parallel analytickit_group inserts, retry')
         }
 
@@ -1856,11 +1855,11 @@ if (result.rows.length === 0) {
                         data: { properties: groupProperties, created_at: createdAt },
                     },
                 ])
-)
-}
-}
+            )
+        }
+    }
 
-public async updateGroup(
+    public async updateGroup(
         teamId: TeamId,
         groupTypeIndex: GroupTypeIndex,
         groupKey: string,
@@ -1893,19 +1892,19 @@ public async updateGroup(
             ],
             'upsertGroup',
             client
-)
-// group identify event doesn't need groups properties attached so we don't need to await
-this.promiseManager.trackPromise(
+        )
+        // group identify event doesn't need groups properties attached so we don't need to await
+        this.promiseManager.trackPromise(
             this.updateGroupDataCache(teamId, [
                 {
                     identifier: { index: groupTypeIndex, key: groupKey },
                     data: { properties: groupProperties, created_at: createdAt },
                 },
             ])
-)
-}
+        )
+    }
 
-public async upsertGroupClickhouse(
+    public async upsertGroupClickhouse(
         teamId: TeamId,
         groupTypeIndex: GroupTypeIndex,
         groupKey: string,
@@ -1944,11 +1943,11 @@ public async upsertGroupClickhouse(
                 'SELECT * from analytickit_team WHERE organization_id = (SELECT id from analytickit_organization WHERE plugins_access_level = $1)',
                 [OrganizationPluginsAccessLevel.ROOT],
                 'getTeamsInOrganizationsWithRootPluginAccess'
-)
-).rows as Team[]
-}
+            )
+        ).rows as Team[]
+    }
 
-public async addOrUpdatePublicJob(
+    public async addOrUpdatePublicJob(
         pluginId: number,
         jobName: string,
         jobPayloadJson: Record<string, any>
@@ -1960,10 +1959,10 @@ public async addOrUpdatePublicJob(
                     [pluginId],
                     'selectPluginPublicJobsForUpdate',
                     client
-)
-).rows[0]?.public_jobs
+                )
+            ).rows[0]?.public_jobs
 
-if (
+            if (
                 !publicJobs ||
                 !(jobName in publicJobs) ||
                 JSON.stringify(publicJobs[jobName]) !== JSON.stringify(jobPayloadJson)
@@ -1975,48 +1974,48 @@ if (
                     [JSON.stringify(publicJobs), pluginId],
                     'updatePublicJob',
                     client
-)
-}
-})
-}
+                )
+            }
+        })
+    }
 
-public async getPluginSource(pluginId: Plugin['id'], filename: string): Promise<string | null> {
+    public async getPluginSource(pluginId: Plugin['id'], filename: string): Promise<string | null> {
         const { rows }: { rows: { source: string }[] } = await this.postgresQuery(
             `SELECT source FROM analytickit_pluginsourcefile WHERE plugin_id = $1 AND filename = $2`,
             [pluginId, filename],
             'getPluginSource'
-)
-return rows[0]?.source ?? null
-}
+        )
+        return rows[0]?.source ?? null
+    }
 
-public async setPluginTranspiled(pluginId: Plugin['id'], filename: string, transpiled: string): Promise<void> {
+    public async setPluginTranspiled(pluginId: Plugin['id'], filename: string, transpiled: string): Promise<void> {
         await this.postgresQuery(
             `INSERT INTO analytickit_pluginsourcefile (id, plugin_id, filename, status, transpiled) VALUES($1, $2, $3, $4, $5)
                 ON CONFLICT ON CONSTRAINT unique_filename_for_plugin
                 DO UPDATE SET status = $4, transpiled = $5, error = NULL`,
             [new UUIDT().toString(), pluginId, filename, PluginSourceFileStatus.Transpiled, transpiled],
             'setPluginTranspiled'
-)
-}
+        )
+    }
 
-public async setPluginTranspiledError(pluginId: Plugin['id'], filename: string, error: string): Promise<void> {
+    public async setPluginTranspiledError(pluginId: Plugin['id'], filename: string, error: string): Promise<void> {
         await this.postgresQuery(
             `INSERT INTO analytickit_pluginsourcefile (id, plugin_id, filename, status, error) VALUES($1, $2, $3, $4, $5)
                 ON CONFLICT ON CONSTRAINT unique_filename_for_plugin
                 DO UPDATE SET status = $4, error = $5, transpiled = NULL`,
             [new UUIDT().toString(), pluginId, filename, PluginSourceFileStatus.Error, error],
             'setPluginTranspiledError'
-)
-}
+        )
+    }
 
-public async getPluginTranspilationLock(pluginId: Plugin['id'], filename: string): Promise<boolean> {
+    public async getPluginTranspilationLock(pluginId: Plugin['id'], filename: string): Promise<boolean> {
         const response = await this.postgresQuery(
             `INSERT INTO analytickit_pluginsourcefile (id, plugin_id, filename, status, transpiled) VALUES($1, $2, $3, $4, NULL)
                 ON CONFLICT ON CONSTRAINT unique_filename_for_plugin
                 DO UPDATE SET status = $4 WHERE (analytickit_pluginsourcefile.status IS NULL OR analytickit_pluginsourcefile.status = $5) RETURNING status`,
             [new UUIDT().toString(), pluginId, filename, PluginSourceFileStatus.Locked, ''],
             'getPluginTranspilationLock'
-)
-return response.rowCount > 0
-}
+        )
+        return response.rowCount > 0
+    }
 }

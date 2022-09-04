@@ -4,7 +4,7 @@ import {TaxonomicFilterGroup, TaxonomicFilterGroupType}from 'lib/components/Taxo
 const taxonomicGroupFor = (
 type: TaxonomicFilterGroupType,
 groupTypeIndex: number | undefined = undefined
-): TaxonomicFilterGroup = > ({
+): TaxonomicFilterGroup => ({
 type: type,
 groupTypeIndex: groupTypeIndex,
 name: 'unused in these tests',

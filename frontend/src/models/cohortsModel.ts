@@ -1,16 +1,16 @@
-import{kea}from'kea'
+import { kea } from 'kea'
 import api from 'lib/api'
-import type {cohortsModelType}from './cohortsModelType'
-import {CohortType, ExporterFormat} from '~/types'
-import {personsLogic }from 'scenes/persons/personsLogic'
-import {deleteWithUndo, processCohort}from 'lib/utils'
-import {triggerExport}from 'lib/components/ExportButton/exporter'
+import type { cohortsModelType } from './cohortsModelType'
+import { CohortType, ExporterFormat } from '~/types'
+import { personsLogic } from 'scenes/persons/personsLogic'
+import { deleteWithUndo, processCohort } from 'lib/utils'
+import { triggerExport } from 'lib/components/ExportButton/exporter'
 
 const POLL_TIMEOUT = 5000
 
 export const cohortsModel = kea<cohortsModelType>({
-path: ['models', 'cohortsModel'],
-actions:() => ({
+    path: ['models', 'cohortsModel'],
+    actions: () => ({
         setPollTimeout: (pollTimeout: number | null) => ({ pollTimeout }),
         updateCohort: (cohort: CohortType) => ({ cohort }),
         deleteCohort: (cohort: Partial<CohortType>) => ({ cohort }),

@@ -1,11 +1,11 @@
-import{PropertyGroupFilter, AnyPropertyFilter, FilterLogicalOperator, PropertyFilter}from '~/types'
+import {PropertyGroupFilter, AnyPropertyFilter, FilterLogicalOperator, PropertyFilter} from '~/types'
 import {
 TaxonomicFilterGroup,
 TaxonomicFilterGroupType,
 TaxonomicFilterValue,
-}from 'lib/components/TaxonomicFilter/types'
-import {SelectGradientOverflowProps}from 'lib/components/SelectGradientOverflow'
-import {propertyFilterLogic}from 'lib/components/PropertyFilters/propertyFilterLogic'
+} from 'lib/components/TaxonomicFilter/types'
+import {SelectGradientOverflowProps} from 'lib/components/SelectGradientOverflow'
+import {propertyFilterLogic} from 'lib/components/PropertyFilters/propertyFilterLogic'
 
 export interface PropertyFilterBaseProps {
 pageKey: string

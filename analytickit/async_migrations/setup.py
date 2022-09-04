@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from django.core.exceptions import ImproperlyConfigured
-from infi.clickhouse_orm.utils import import_submodules
+from analytickit.infi.clickhouse_orm.utils import import_submodules
 from semantic_version.base import Version
 
 from analytickit.async_migrations.definition import AsyncMigrationDefinition

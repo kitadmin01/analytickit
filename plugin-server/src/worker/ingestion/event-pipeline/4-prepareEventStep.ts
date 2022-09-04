@@ -1,4 +1,4 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 
 import {IngestionEvent }from '../../../types'
 import {LazyPersonContainer}from '../lazy-person-container'

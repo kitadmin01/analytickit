@@ -1,9 +1,9 @@
-import{GroupTypeIndex, GroupTypeToColumnIndex, Team, TeamId}from '../../types'
-import {DB }from '../../utils/db/db'
+import {GroupTypeIndex, GroupTypeToColumnIndex, Team, TeamId} from '../../types'
+import {DB } from '../../utils/db/db'
 import {timeoutGuard} from '../../utils/db/utils'
-import {analytickit}from '../../utils/analytickit'
-import {getByAge}from '../../utils/utils'
-import {TeamManager}from './team-manager'
+import {analytickit} from '../../utils/analytickit'
+import {getByAge} from '../../utils/utils'
+import {TeamManager} from './team-manager'
 
 export class GroupTypeManager {
 db: DB

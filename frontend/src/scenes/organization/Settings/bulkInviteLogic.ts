@@ -1,25 +1,25 @@
-import{kea}from'kea'
-import type {bulkInviteLogicType}from './bulkInviteLogicType'
-import {OrganizationInviteType}from '~/types'
+import { kea } from 'kea'
+import type { bulkInviteLogicType } from './bulkInviteLogicType'
+import { OrganizationInviteType } from '~/types'
 import api from 'lib/api'
-import {organizationLogic}from 'scenes/organizationLogic'
-import {eventUsageLogic} from 'lib/utils/eventUsageLogic'
-import {invitesLogic}from './invitesLogic'
-import {lemonToast}from 'lib/components/lemonToast'
+import { organizationLogic } from 'scenes/organizationLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { invitesLogic } from './invitesLogic'
+import { lemonToast } from 'lib/components/lemonToast'
 
 /** State of a single invite row (with input data) in bulk invite creation. */
 export interface InviteRowState {
-target_email: string
-first_name: string
-isValid: boolean
+    target_email: string
+    first_name: string
+    isValid: boolean
 }
 
 const EMPTY_INVITE: InviteRowState = { target_email: '', first_name: '', isValid: true }
 
 export const bulkInviteLogic = kea<bulkInviteLogicType>({
-path: ['scenes', 'organization', 'Settings', 'bulkInviteLogic'],
-actions: {
-updateInviteAtIndex: (payload, index: number) => ({ payload, index }),
+    path: ['scenes', 'organization', 'Settings', 'bulkInviteLogic'],
+    actions: {
+        updateInviteAtIndex: (payload, index: number) => ({ payload, index }),
         deleteInviteAtIndex: (index: number) => ({ index }),
         appendInviteRow: true,
         resetInviteRows: true,
@@ -65,9 +65,9 @@ updateInviteAtIndex: (payload, index: number) => ({ payload, index }),
                     eventUsageLogic.actions.reportBulkInviteAttempted(
                         payload.length,
                         payload.filter((invite) => !!invite.first_name).length
-)
+                    )
 
-return await api.create('api/organizations/@current/invites/bulk/', payload)
+                    return await api.create('api/organizations/@current/invites/bulk/', payload)
                 },
             },
         ],

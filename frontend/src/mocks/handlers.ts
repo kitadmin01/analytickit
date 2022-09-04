@@ -1,4 +1,4 @@
-import{mocksToHandlers}from'./utils'
+import {mocksToHandlers} from'./utils'
 import {
 MOCK_DEFAULT_LICENSE,
 MOCK_DEFAULT_ORGANIZATION,

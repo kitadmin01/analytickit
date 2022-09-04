@@ -1,4 +1,4 @@
-importapifrom'lib/api'
+import api from'lib/api'
 
 interface InternalMetricsPayload {
 method: 'incr' | 'timing'

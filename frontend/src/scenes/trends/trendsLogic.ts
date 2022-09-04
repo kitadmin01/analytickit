@@ -1,19 +1,18 @@
-import{kea}from'kea'
-import {dayjs}from 'lib/dayjs'
+import { kea } from 'kea'
+import { dayjs } from 'lib/dayjs'
 import api from 'lib/api'
-import {insightLogic}from '../insights/insightLogic'
-import {InsightLogicProps, FilterType, InsightType, TrendResult, ActionFilter, ChartDisplayType }from '~/types'
-import type {trendsLogicType}from './trendsLogicType'
-import {IndexedTrendResult}from 'scenes/trends/types'
-import {isTrendsInsight, keyForInsightLogicProps}from 'scenes/insights/sharedUtils'
-import { personsModalLogic}from './personsModalLogic'
-import {groupsModel}from '~/models/groupsModel'
+import { insightLogic } from '../insights/insightLogic'
+import { InsightLogicProps, FilterType, InsightType, TrendResult, ActionFilter, ChartDisplayType } from '~/types'
+import type { trendsLogicType } from './trendsLogicType'
+import { IndexedTrendResult } from 'scenes/trends/types'
+import { isTrendsInsight, keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
+import { personsModalLogic } from './personsModalLogic'
+import { groupsModel } from '~/models/groupsModel'
 
 export const trendsLogic = kea<trendsLogicType>({
-props: {
+    props: {} as InsightLogicProps,
 
-}as InsightLogicProps,
-key: keyForInsightLogicProps('all_trends'),
+    key: keyForInsightLogicProps('all_trends'),
     path: (key) => ['scenes', 'trends', 'trendsLogic', key],
 
     connect: (props: InsightLogicProps) => ({
@@ -108,19 +107,19 @@ key: keyForInsightLogicProps('all_trends'),
                     (filters.events || []).every(isNotAggregatingByGroup) &&
                     (filters.actions || []).every(isNotAggregatingByGroup) &&
                     filters.breakdown_type !== 'group'
-)
-},
-],
-aggregationTargetLabel: [
-(s) = > [s.aggregationLabel, s.targetAction],
-(
-aggregationLabel,
-targetAction
-): {
-singular: string
-plural: string
-}=> {
-return aggregationLabel(targetAction.math_group_type_index)
+                )
+            },
+        ],
+        aggregationTargetLabel: [
+            (s) => [s.aggregationLabel, s.targetAction],
+            (
+                aggregationLabel,
+                targetAction
+            ): {
+                singular: string
+                plural: string
+            } => {
+                return aggregationLabel(targetAction.math_group_type_index)
             },
         ],
         incompletenessOffsetFromEnd: [

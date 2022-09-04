@@ -1,4 +1,4 @@
-importClickHousefrom'@analytickit/clickhouse'
+import ClickHouse from '@analytickit/clickhouse'
 import {
 Element,
 Meta,
@@ -14,7 +14,7 @@ import {StatsD}from 'hot-shots'
 import {Redis}from 'ioredis'
 import {Kafka}from 'kafkajs'
 import {DateTime}from 'luxon'
-import { JobQueueManager}from 'main/job-queues/job-queue-manager'
+import { JobQueueManager} from 'main/job-queues/job-queue-manager'
 import {Job}from 'node-schedule'
 import {Pool}from 'pg'
 import {VM}from 'vm2'

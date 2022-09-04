@@ -1,5 +1,5 @@
-import{mswDecorator}from'~/mocks/browser'
-import {mockActionDefinition }from '~/test/mocks'
+import {mswDecorator} from'~/mocks/browser'
+import {mockActionDefinition } from '~/test/mocks'
 
 export const taxonomicFilterMocksDecorator = mswDecorator({
 get: {

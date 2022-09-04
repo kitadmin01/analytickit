@@ -1,9 +1,9 @@
-import{appEditorUrl, authorizedUrlsLogic, validateProposedURL}from 'scenes/toolbar-launch/authorizedUrlsLogic'
-import {initKeaTests}from '~/test/init'
+import {appEditorUrl, authorizedUrlsLogic, validateProposedURL} from 'scenes/toolbar-launch/authorizedUrlsLogic'
+import {initKeaTests} from '~/test/init'
 import {router} from 'kea-router'
-import {expectLogic}from 'kea-test-utils'
-import {useMocks}from '~/mocks/jest'
-import {urls }from 'scenes/urls'
+import {expectLogic} from 'kea-test-utils'
+import {useMocks} from '~/mocks/jest'
+import {urls} from 'scenes/urls'
 
 describe('the authorized urls logic', () => {
     let logic: ReturnType<typeof authorizedUrlsLogic.build>

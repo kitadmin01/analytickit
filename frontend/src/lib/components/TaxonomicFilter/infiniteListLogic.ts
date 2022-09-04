@@ -1,20 +1,20 @@
-import{kea}from'kea'
-import {combineUrl}from 'kea-router'
+import { kea } from 'kea'
+import { combineUrl } from 'kea-router'
 import api from 'lib/api'
-import {RenderedRows}from 'react-virtualized/dist/es/List'
-import type {infiniteListLogicType }from './infiniteListLogicType'
-import { CohortType, EventDefinition}from '~/types'
+import { RenderedRows } from 'react-virtualized/dist/es/List'
+import type { infiniteListLogicType } from './infiniteListLogicType'
+import { CohortType, EventDefinition } from '~/types'
 import Fuse from 'fuse.js'
 import {
-InfiniteListLogicProps,
-ListFuse,
-ListStorage,
-LoaderOptions,
-TaxonomicDefinitionTypes,
-TaxonomicFilterGroup,
-}from 'lib/components/TaxonomicFilter/types'
-import {taxonomicFilterLogic}from 'lib/components/TaxonomicFilter/taxonomicFilterLogic'
-import {featureFlagsLogic}from 'scenes/feature-flags/featureFlagsLogic'
+    InfiniteListLogicProps,
+    ListFuse,
+    ListStorage,
+    LoaderOptions,
+    TaxonomicDefinitionTypes,
+    TaxonomicFilterGroup,
+} from 'lib/components/TaxonomicFilter/types'
+import { taxonomicFilterLogic } from 'lib/components/TaxonomicFilter/taxonomicFilterLogic'
+import { featureFlagsLogic } from 'scenes/feature-flags/featureFlagsLogic'
 
 /*
 by default the pop-up starts open for the first item in the list
@@ -22,8 +22,8 @@ this can be used with actions.setIndex to allow a caller to override that
 */
 export const NO_ITEM_SELECTED = -1
 
-function appendAtIndex < T>(array: T[], items: any[], startIndex?: number): T[] {
-if(startIndex === undefined) {
+function appendAtIndex<T>(array: T[], items: any[], startIndex?: number): T[] {
+    if (startIndex === undefined) {
         return [...array, ...items]
     }
     const arrayCopy = [...array]

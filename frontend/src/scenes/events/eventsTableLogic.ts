@@ -1,22 +1,22 @@
-import{kea}from'kea'
-import {convertPropertyGroupToProperties, toParams}from 'lib/utils'
-import {router} from 'kea-router'
+import { kea } from 'kea'
+import { convertPropertyGroupToProperties, toParams } from 'lib/utils'
+import { router } from 'kea-router'
 import api from 'lib/api'
-import type {eventsTableLogicType}from './eventsTableLogicType'
-import {FixedFilters} from 'scenes/events/EventsTable'
+import type { eventsTableLogicType } from './eventsTableLogicType'
+import { FixedFilters } from 'scenes/events/EventsTable'
 import {
-AnyPropertyFilter,
-EventsTableRowItem,
-EventType,
-ExporterFormat,
-PropertyFilter,
-PropertyGroupFilter,
-}from '~/types'
-import {teamLogic}from '../teamLogic'
-import {dayjs, now}from 'lib/dayjs'
-import {lemonToast}from 'lib/components/lemonToast'
-import { featureFlagLogic}from 'lib/logic/featureFlagLogic'
-import {triggerExport}from 'lib/components/ExportButton/exporter'
+    AnyPropertyFilter,
+    EventsTableRowItem,
+    EventType,
+    ExporterFormat,
+    PropertyFilter,
+    PropertyGroupFilter,
+} from '~/types'
+import { teamLogic } from '../teamLogic'
+import { dayjs, now } from 'lib/dayjs'
+import { lemonToast } from 'lib/components/lemonToast'
+import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { triggerExport } from 'lib/components/ExportButton/exporter'
 
 const DAYS_FIRST_FETCH = 5
 const DAYS_SECOND_FETCH = 365
@@ -24,12 +24,12 @@ const DAYS_SECOND_FETCH = 365
 const POLL_TIMEOUT = 5000
 
 const formatEvents = (events: EventType[], newEvents: EventType[]): EventsTableRowItem[] => {
-let eventsFormatted: EventsTableRowItem[] = []
+    let eventsFormatted: EventsTableRowItem[] = []
 
-eventsFormatted = events.map((item) => ({
-event: item,
-}))
-eventsFormatted.forEach((event, index) => {
+    eventsFormatted = events.map((item) => ({
+        event: item,
+    }))
+    eventsFormatted.forEach((event, index) => {
         const previous = eventsFormatted[index - 1]
         if (
             index > 0 &&

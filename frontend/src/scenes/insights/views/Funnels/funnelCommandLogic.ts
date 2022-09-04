@@ -1,17 +1,17 @@
-import{kea}from'kea'
-import {Command, commandPaletteLogic, CommandResultTemplate }from 'lib/components/CommandPalette/commandPaletteLogic'
-import {funnelLogic}from 'scenes/funnels/funnelLogic'
-import {FunnelPlotOutlined}from '@ant-design/icons'
+import { kea } from 'kea'
+import { Command, commandPaletteLogic, CommandResultTemplate } from 'lib/components/CommandPalette/commandPaletteLogic'
+import { funnelLogic } from 'scenes/funnels/funnelLogic'
+import { FunnelPlotOutlined } from '@ant-design/icons'
 
-import type {funnelCommandLogicType}from './funnelCommandLogicType'
+import type { funnelCommandLogicType } from './funnelCommandLogicType'
 
 const FUNNEL_COMMAND_SCOPE = 'funnels'
 
 export const funnelCommandLogic = kea<funnelCommandLogicType>({
-path: ['scenes', 'insights', 'InsightTabs', 'FunnelTab', 'funnelCommandLogic'],
-connect: [commandPaletteLogic],
-events: {
-afterMount:() => {
+    path: ['scenes', 'insights', 'InsightTabs', 'FunnelTab', 'funnelCommandLogic'],
+    connect: [commandPaletteLogic],
+    events: {
+        afterMount: () => {
             const results: CommandResultTemplate[] = [
                 {
                     icon: FunnelPlotOutlined,

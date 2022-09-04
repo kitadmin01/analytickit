@@ -1,24 +1,24 @@
-import{SystemStatusRow}from'./../../../types'
+import { SystemStatusRow } from './../../../types'
 import api from 'lib/api'
-import {actions, afterMount, kea, listeners, path, reducers, selectors}from 'kea'
-import {userLogic}from 'scenes/userLogic'
+import { actions, afterMount, kea, listeners, path, reducers, selectors } from 'kea'
+import { userLogic } from 'scenes/userLogic'
 
-import type {deadLetterQueueLogicType }from './deadLetterQueueLogicType'
-import { loaders}from 'kea-loaders'
+import type { deadLetterQueueLogicType } from './deadLetterQueueLogicType'
+import { loaders } from 'kea-loaders'
 export type TabName = 'overview' | 'internal_metrics'
 
 export enum DeadLetterQueueTab {
-Metrics = 'metrics',
-Management = 'management',
-Settings = 'settings',
+    Metrics = 'metrics',
+    Management = 'management',
+    Settings = 'settings',
 }
 
 export interface DeadLetterQueueMetricRow extends SystemStatusRow {
-key: string
+    key: string
 }
 
 export const deadLetterQueueLogic = kea<deadLetterQueueLogicType>([
-path(['scenes', 'instance', 'DeadLetterQueue', 'deadLetterQueueLogic']),
+    path(['scenes', 'instance', 'DeadLetterQueue', 'deadLetterQueueLogic']),
 
     actions({
         setActiveTab: (tabKey: DeadLetterQueueTab) => ({ tabKey }),

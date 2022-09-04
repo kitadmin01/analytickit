@@ -1,5 +1,5 @@
 import pytest
-from infi.clickhouse_orm.utils import import_submodules
+from analytickit.infi.clickhouse_orm.utils import import_submodules
 
 from analytickit.async_migrations.definition import AsyncMigrationDefinition, AsyncMigrationOperation
 from analytickit.async_migrations.setup import (

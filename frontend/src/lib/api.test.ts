@@ -1,5 +1,5 @@
-importapifrom'lib/api'
-import {PropertyOperator}from '~/types'
+import api from 'lib/api'
+import {PropertyOperator} from '~/types'
 
 describe('API helper', () => {
     let fakeFetch: jest.Mock<any, any>

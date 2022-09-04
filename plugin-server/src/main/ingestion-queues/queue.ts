@@ -1,4 +1,4 @@
-importPiscinafrom'@analytickit/piscina'
+import Piscina from '@analytickit/piscina'
 import {PluginEvent} from '@analytickit/plugin-scaffold'
 
 import {Hub, IngestionEvent, WorkerMethods}from '../../types'

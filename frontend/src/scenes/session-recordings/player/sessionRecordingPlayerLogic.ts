@@ -1,28 +1,28 @@
-import{KeyboardEvent}from'react'
-import {actions, connect, events, kea, listeners, path, reducers, selectors }from 'kea'
-import {windowValues} from 'kea-window-values'
-import type {sessionRecordingPlayerLogicType} from './sessionRecordingPlayerLogicType'
-import {Replayer }from 'rrweb'
-import {eventUsageLogic} from 'lib/utils/eventUsageLogic'
-import {PlayerPosition, RecordingSegment, SessionPlayerState}from '~/types'
-import {getBreakpoint}from 'lib/utils/responsiveUtils'
-import {sessionRecordingLogic }from 'scenes/session-recordings/sessionRecordingLogic'
+import { KeyboardEvent } from 'react'
+import { actions, connect, events, kea, listeners, path, reducers, selectors } from 'kea'
+import { windowValues } from 'kea-window-values'
+import type { sessionRecordingPlayerLogicType } from './sessionRecordingPlayerLogicType'
+import { Replayer } from 'rrweb'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { PlayerPosition, RecordingSegment, SessionPlayerState } from '~/types'
+import { getBreakpoint } from 'lib/utils/responsiveUtils'
+import { sessionRecordingLogic } from 'scenes/session-recordings/sessionRecordingLogic'
 import {
-comparePlayerPositions,
-getPlayerPositionFromPlayerTime,
-getPlayerTimeFromPlayerPosition,
-getSegmentFromPlayerPosition,
-}from './playerUtils'
+    comparePlayerPositions,
+    getPlayerPositionFromPlayerTime,
+    getPlayerTimeFromPlayerPosition,
+    getSegmentFromPlayerPosition,
+} from './playerUtils'
 
 export const PLAYBACK_SPEEDS = [0.5, 1, 2, 4, 8, 16]
 
 export interface Player {
-replayer: Replayer
-windowId: string
+    replayer: Replayer
+    windowId: string
 }
 
 export const sessionRecordingPlayerLogic = kea<sessionRecordingPlayerLogicType>([
-path(['scenes', 'session-recordings', 'player', 'sessionRecordingPlayerLogic']),
+    path(['scenes', 'session-recordings', 'player', 'sessionRecordingPlayerLogic']),
     connect({
         logic: [eventUsageLogic],
         values: [sessionRecordingLogic, ['sessionRecordingId', 'sessionPlayerData', 'tab']],
@@ -262,12 +262,12 @@ path(['scenes', 'session-recordings', 'player', 'sessionRecordingPlayerLogic']),
                 eventsToAdd.push(
                     ...(values.sessionPlayerData.snapshotsByWindowId[values.currentSegment?.windowId] ?? []).slice(
                         currentEvents.length
-)
-)
-}
+                    )
+                )
+            }
 
-// If replayer isn't initialized, it will be initialized with the already loaded snapshots
-if (!!values.player?.replayer) {
+            // If replayer isn't initialized, it will be initialized with the already loaded snapshots
+            if (!!values.player?.replayer) {
                 for (const event of eventsToAdd) {
                     await values.player?.replayer?.addEvent(event)
                 }
@@ -353,14 +353,14 @@ if (!!values.player?.replayer) {
                 const currentPlayerTime = getPlayerTimeFromPlayerPosition(
                     values.currentPlayerPosition,
                     values.sessionPlayerData.metadata.segments
-)
-if (currentPlayerTime !== null) {
+                )
+                if (currentPlayerTime !== null) {
                     const nextPlayerTime = currentPlayerTime + values.jumpTimeMs
                     let nextPlayerPosition = getPlayerPositionFromPlayerTime(
                         nextPlayerTime,
                         values.sessionPlayerData.metadata.segments
-)
-if (!nextPlayerPosition) {
+                    )
+                    if (!nextPlayerPosition) {
                         // At the end of the recording. Pause the player and reset the playerPosition
                         actions.setPause()
                         nextPlayerPosition = values.sessionPlayerData.metadata.segments[0].startPlayerPosition
@@ -374,14 +374,14 @@ if (!nextPlayerPosition) {
                 const currentPlayerTime = getPlayerTimeFromPlayerPosition(
                     values.currentPlayerPosition,
                     values.sessionPlayerData.metadata.segments
-)
-if (currentPlayerTime !== null) {
+                )
+                if (currentPlayerTime !== null) {
                     const nextPlayerTime = Math.max(currentPlayerTime - values.jumpTimeMs, 0)
                     const nextPlayerPosition = getPlayerPositionFromPlayerTime(
                         nextPlayerTime,
                         values.sessionPlayerData.metadata.segments
-)
-actions.seek(nextPlayerPosition)
+                    )
+                    actions.seek(nextPlayerPosition)
                 }
             }
         },

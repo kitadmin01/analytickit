@@ -1,19 +1,19 @@
-import{kea}from'kea'
-import type {toolbarLogicType}from './toolbarLogicType'
-import {ToolbarProps}from '~/types'
-import {clearSessionToolbarToken} from '~/toolbar/utils'
-import {analytickit}from '~/toolbar/analytickit'
-import {actionsTabLogic}from '~/toolbar/actions/actionsTabLogic'
-import {toolbarButtonLogic }from '~/toolbar/button/toolbarButtonLogic'
-import type {analytickit}from 'analytickit-js'
+import { kea } from 'kea'
+import type { toolbarLogicType } from './toolbarLogicType'
+import { ToolbarProps } from '~/types'
+import { clearSessionToolbarToken } from '~/toolbar/utils'
+import { analytickit } from '~/toolbar/analytickit'
+import { actionsTabLogic } from '~/toolbar/actions/actionsTabLogic'
+import { toolbarButtonLogic } from '~/toolbar/button/toolbarButtonLogic'
+import type { analytickit } from 'analytickit-js'
 
 export const toolbarLogic = kea<toolbarLogicType>({
-path: ['toolbar', 'toolbarLogic'],
-props: {
+    path: ['toolbar', 'toolbarLogic'],
+    props: {
 
-}as ToolbarProps,
+    } as ToolbarProps,
 
-actions:() => ({
+    actions: () => ({
         authenticate: true,
         logout: true,
         tokenExpired: true,

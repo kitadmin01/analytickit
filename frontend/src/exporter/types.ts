@@ -1,4 +1,4 @@
-import{DashboardType, InsightModel, TeamType}from '~/types'
+import {DashboardType, InsightModel, TeamType} from '~/types'
 
 export enum ExportType {
 Image = 'image',

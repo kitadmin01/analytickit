@@ -1,4 +1,4 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 import {EachBatchPayload, KafkaMessage}from 'kafkajs'
 
 import { Hub, WorkerMethods}from '../../../types'

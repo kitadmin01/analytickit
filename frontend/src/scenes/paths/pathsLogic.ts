@@ -1,43 +1,43 @@
-import{kea}from'kea'
-import {router}from 'kea-router'
-import {insightLogic}from 'scenes/insights/insightLogic'
-import type {pathsLogicType} from './pathsLogicType'
-import {InsightLogicProps, FilterType, PathType, PropertyFilter, InsightType}from '~/types'
-import {personsModalLogic} from 'scenes/trends/personsModalLogic'
-import {keyForInsightLogicProps}from 'scenes/insights/sharedUtils'
-import {cleanFilters}from 'scenes/insights/utils/cleanFilters'
-import {urls }from 'scenes/urls'
-import { TaxonomicFilterGroupType}from 'lib/components/TaxonomicFilter/types'
+import { kea } from 'kea'
+import { router } from 'kea-router'
+import { insightLogic } from 'scenes/insights/insightLogic'
+import type { pathsLogicType } from './pathsLogicType'
+import { InsightLogicProps, FilterType, PathType, PropertyFilter, InsightType } from '~/types'
+import { personsModalLogic } from 'scenes/trends/personsModalLogic'
+import { keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
+import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
+import { urls } from 'scenes/urls'
+import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
 
 export const DEFAULT_STEP_LIMIT = 5
 
 export const pathOptionsToLabels = {
-[PathType.PageView]: 'Page views (Web)',
-[PathType.Screen]: 'Screen views (Mobile)',
-[PathType.CustomEvent]: 'Custom events',
+    [PathType.PageView]: 'Page views (Web)',
+    [PathType.Screen]: 'Screen views (Mobile)',
+    [PathType.CustomEvent]: 'Custom events',
 }
 
 export const pathOptionsToProperty = {
-[PathType.PageView]: '$current_url',
-[PathType.Screen]: '$screen_name',
-[PathType.CustomEvent]: 'custom_event',
+    [PathType.PageView]: '$current_url',
+    [PathType.Screen]: '$screen_name',
+    [PathType.CustomEvent]: 'custom_event',
 }
 
 const DEFAULT_PATH_LOGIC_KEY = 'default_path_key'
 export interface PathResult {
-paths: PathNode[]
-filter: Partial < FilterType>
-error?: boolean
+    paths: PathNode[]
+    filter: Partial<FilterType>
+    error?: boolean
 }
 
 export interface PathNode {
-target: string
-source: string
-value: number
+    target: string
+    source: string
+    value: number
 }
 
 export const pathsLogic = kea<pathsLogicType>({
-path: (key) => ['scenes', 'paths', 'pathsLogic', key],
+    path: (key) => ['scenes', 'paths', 'pathsLogic', key],
     props: {} as InsightLogicProps,
     key: keyForInsightLogicProps(DEFAULT_PATH_LOGIC_KEY),
 
@@ -120,23 +120,19 @@ path: (key) => ['scenes', 'paths', 'pathsLogic', key],
                     events,
                     date_from: values.filter.date_from,
                 })
-)
-},
-}),
-selectors: {
-loadedFilters: [
-(s) = > [s.insight],
-({filters}): Partial < FilterType> => (filters?.insight === InsightType.PATHS ? filters ?? {
-
-}: {
-
-}),
-],
-results: [
-(s) = > [s.insight],
-({filters, result}): PathNode[] = > (filters?.insight === InsightType.PATHS ? result || [] : []),
-],
-resultsLoading: [(s) => [s.insightLoading], (insightLoading) => insightLoading],
+            )
+        },
+    }),
+    selectors: {
+        loadedFilters: [
+            (s) => [s.insight],
+            ({ filters }): Partial<FilterType> => (filters?.insight === InsightType.PATHS ? filters ?? {} : {}),
+        ],
+        results: [
+            (s) => [s.insight],
+            ({ filters, result }): PathNode[] => (filters?.insight === InsightType.PATHS ? result || [] : []),
+        ],
+        resultsLoading: [(s) => [s.insightLoading], (insightLoading) => insightLoading],
         paths: [
             (s) => [s.results],
             (results) => {

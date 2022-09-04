@@ -1,9 +1,9 @@
-import{kea}from'kea'
-import {objectsEqual}from 'lib/utils'
-import type {chartFilterLogicType}from './chartFilterLogicType'
-import {ChartDisplayType, FunnelVizType, InsightLogicProps}from '~/types'
-import {keyForInsightLogicProps}from 'scenes/insights/sharedUtils'
-import {insightLogic}from 'scenes/insights/insightLogic'
+import { kea } from 'kea'
+import { objectsEqual } from 'lib/utils'
+import type { chartFilterLogicType } from './chartFilterLogicType'
+import { ChartDisplayType, FunnelVizType, InsightLogicProps } from '~/types'
+import { keyForInsightLogicProps } from 'scenes/insights/sharedUtils'
+import { insightLogic } from 'scenes/insights/insightLogic'
 
 function isFunnelVizType(filter: FunnelVizType | ChartDisplayType): filter is FunnelVizType {
     return Object.values(FunnelVizType).includes(filter as FunnelVizType)

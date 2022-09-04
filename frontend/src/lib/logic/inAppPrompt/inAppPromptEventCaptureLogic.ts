@@ -1,10 +1,10 @@
-import{kea, path, actions, listeners}from 'kea'
-import type {inAppPromptEventCaptureLogicType}from './inAppPromptEventCaptureLogicType'
+import { kea, path, actions, listeners } from 'kea'
+import type { inAppPromptEventCaptureLogicType } from './inAppPromptEventCaptureLogicType'
 import analytickit from 'analytickit-js'
-import {PromptType}from './inAppPromptLogic'
+import { PromptType } from './inAppPromptLogic'
 
 const inAppPromptEventCaptureLogic = kea<inAppPromptEventCaptureLogicType>([
-path(['lib', 'logic', 'inAppPrompt', 'eventCapture']),
+    path(['lib', 'logic', 'inAppPrompt', 'eventCapture']),
     actions({
         reportPromptShown: (type: PromptType, sequence: string, step: number, totalSteps: number) => ({
             type,

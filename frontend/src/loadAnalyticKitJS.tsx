@@ -1,8 +1,8 @@
-import analytickit, { analytickitConfig } from 'analytickit-js'
+import analytickit, { AnalyticKitConfig } from 'analytickit-js'
 import * as Sentry from '@sentry/react'
 import { Integration } from '@sentry/types'
 
-const configWithSentry = (config: Partial<analytickitConfig>): Partial<analytickitConfig> => {
+const configWithSentry = (config: Partial<AnalyticKitConfig>): Partial<AnalyticKitConfig> => {
     if ((window as any).SENTRY_DSN) {
         config.on_xhr_error = (failedRequest: XMLHttpRequest) => {
             const status = failedRequest.status
@@ -16,15 +16,15 @@ const configWithSentry = (config: Partial<analytickitConfig>): Partial<analytick
     return config
 }
 
-export function loadanalytickitJS(): void {
-    if (window.JS_analytickit_API_KEY) {
+export function loadAnalyticKitJS(): void {
+    if (window.JS_ANALYTICKIT_API_KEY) {
         analytickit.init(
-            window.JS_analytickit_API_KEY,
+            window.JS_ANALYTICKIT_API_KEY,
             configWithSentry({
-                api_host: window.JS_analytickit_HOST,
+                api_host: window.JS_ANALYTICKIT_HOST,
                 _capture_metrics: true,
                 rageclick: true,
-                debug: window.JS_analytickit_SELF_CAPTURE,
+                debug: window.JS_ANALYTICKIT_SELF_CAPTURE,
                 persistence: 'localStorage+cookie',
                 _capture_performance: true,
                 enable_recording_console_log: true,

@@ -1,25 +1,25 @@
-import{connect, kea, key, listeners, path, props} from 'kea'
-import {SubscriptionType}from '~/types'
+import { connect, kea, key, listeners, path, props } from 'kea'
+import { SubscriptionType } from '~/types'
 
 import api from 'lib/api'
-import {loaders} from 'kea-loaders'
-import {forms}from 'kea-forms'
+import { loaders } from 'kea-loaders'
+import { forms } from 'kea-forms'
 
-import {isEmail, isURL }from 'lib/utils'
-import { dayjs}from 'lib/dayjs'
-import {lemonToast}from '../lemonToast'
-import {beforeUnload, router, urlToAction}from 'kea-router'
-import {subscriptionsLogic}from './subscriptionsLogic'
+import { isEmail, isURL } from 'lib/utils'
+import { dayjs } from 'lib/dayjs'
+import { lemonToast } from '../lemonToast'
+import { beforeUnload, router, urlToAction } from 'kea-router'
+import { subscriptionsLogic } from './subscriptionsLogic'
 
-import type {subscriptionLogicType }from './subscriptionLogicType'
-import { getInsightId}from 'scenes/insights/utils'
-import {SubscriptionBaseProps, urlForSubscription}from './utils'
-import {integrationsLogic}from 'scenes/project/Settings/integrationsLogic'
+import type { subscriptionLogicType } from './subscriptionLogicType'
+import { getInsightId } from 'scenes/insights/utils'
+import { SubscriptionBaseProps, urlForSubscription } from './utils'
+import { integrationsLogic } from 'scenes/project/Settings/integrationsLogic'
 
-const NEW_SUBSCRIPTION: Partial < SubscriptionType> = {
-frequency: 'weekly',
-interval: 1,
-start_date: dayjs().hour(9).minute(0).second(0).toISOString(),
+const NEW_SUBSCRIPTION: Partial<SubscriptionType> = {
+    frequency: 'weekly',
+    interval: 1,
+    start_date: dayjs().hour(9).minute(0).second(0).toISOString(),
     target_type: 'email',
     byweekday: ['monday'],
     bysetpos: 1,

@@ -1,6 +1,6 @@
-import{DashboardType, FilterType, InsightShortId}from '~/types'
-import {combineUrl}from 'kea-router'
-import {ExportOptions}from '~/exporter/types'
+import {DashboardType, FilterType, InsightShortId} from '~/types'
+import {combineUrl} from 'kea-router'
+import {ExportOptions} from '~/exporter/types'
 
 /**
 * To add a new URL to the front end:

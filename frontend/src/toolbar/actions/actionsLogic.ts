@@ -1,14 +1,14 @@
-import{kea}from'kea'
-import {toolbarLogic}from '~/toolbar/toolbarLogic'
-import type {actionsLogicType }from './actionsLogicType'
-import { ActionType}from '~/types'
+import { kea } from 'kea'
+import { toolbarLogic } from '~/toolbar/toolbarLogic'
+import type { actionsLogicType } from './actionsLogicType'
+import { ActionType } from '~/types'
 import Fuse from 'fuse.js'
-import { toolbarFetch}from '~/toolbar/utils'
+import { toolbarFetch } from '~/toolbar/utils'
 
 export const actionsLogic = kea<actionsLogicType>({
-path: ['toolbar', 'actions', 'actionsLogic'],
-actions: {
-setSearchTerm:(searchTerm: string) => ({ searchTerm }),
+    path: ['toolbar', 'actions', 'actionsLogic'],
+    actions: {
+        setSearchTerm: (searchTerm: string) => ({ searchTerm }),
     },
     reducers: {
         searchTerm: [

@@ -1,28 +1,28 @@
-import{actions, connect, kea, listeners, path, reducers, selectors}from 'kea'
-import {Framework, PlatformType}from 'scenes/ingestion/types'
+import { actions, connect, kea, listeners, path, reducers, selectors } from 'kea'
+import { Framework, PlatformType } from 'scenes/ingestion/types'
 import {
-API,
-MOBILE,
-BACKEND,
-WEB,
-BOOKMARKLET,
-thirdPartySources,
-THIRD_PARTY,
-ThirdPartySource,
+    API,
+    MOBILE,
+    BACKEND,
+    WEB,
+    BOOKMARKLET,
+    thirdPartySources,
+    THIRD_PARTY,
+    ThirdPartySource,
 } from 'scenes/ingestion/constants'
-import type {ingestionLogicType} from './ingestionLogicType'
-import {featureFlagLogic }from 'lib/logic/featureFlagLogic'
-import {teamLogic}from 'scenes/teamLogic'
-import {PluginTypeWithConfig}from 'scenes/plugins/types'
-import {pluginsLogic}from 'scenes/plugins/pluginsLogic'
-import {eventUsageLogic }from 'lib/utils/eventUsageLogic'
-import {urls}from 'scenes/urls'
-import {actionToUrl, router, urlToAction}from 'kea-router'
-import {getBreakpoint}from 'lib/utils/responsiveUtils'
-import {windowValues }from 'kea-window-values'
+import type { ingestionLogicType } from './ingestionLogicType'
+import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { teamLogic } from 'scenes/teamLogic'
+import { PluginTypeWithConfig } from 'scenes/plugins/types'
+import { pluginsLogic } from 'scenes/plugins/pluginsLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { urls } from 'scenes/urls'
+import { actionToUrl, router, urlToAction } from 'kea-router'
+import { getBreakpoint } from 'lib/utils/responsiveUtils'
+import { windowValues } from 'kea-window-values'
 
 export const ingestionLogic = kea<ingestionLogicType>([
-path(['scenes', 'ingestion', 'ingestionLogic']),
+    path(['scenes', 'ingestion', 'ingestionLogic']),
     connect({
         values: [featureFlagLogic, ['featureFlags']],
         actions: [teamLogic, ['updateCurrentTeamSuccess']],
@@ -180,17 +180,17 @@ path(['scenes', 'ingestion', 'ingestionLogic']),
                     : null,
                 framework,
                 true
-)
-},
-'/ingestion/api': (_: any, { platform }) => {
-actions.setState(
+            )
+        },
+        '/ingestion/api': (_: any, { platform }) => {
+            actions.setState(
                 platform === 'mobile' ? MOBILE : platform === 'web' ? WEB : platform === 'backend' ? BACKEND : null,
                 API,
                 false
-)
-},
-'/ingestion(/:platform)(/:framework)': ({ platform, framework }) => {
-actions.setState(
+            )
+        },
+        '/ingestion(/:platform)(/:framework)': ({ platform, framework }) => {
+            actions.setState(
                 platform === 'mobile'
                     ? MOBILE
                     : platform === 'web'
@@ -204,10 +204,10 @@ actions.setState(
                     : null,
                 framework as Framework,
                 false
-)
-},
-})),
-listeners(() => ({
+            )
+        },
+    })),
+    listeners(() => ({
         completeOnboarding: () => {
             teamLogic.actions.updateCurrentTeam({
                 completed_snippet_onboarding: true,

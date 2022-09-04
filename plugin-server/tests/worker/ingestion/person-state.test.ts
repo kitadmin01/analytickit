@@ -1,13 +1,13 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import {PluginEvent} from '@analytickit/plugin-scaffold'
 import {DateTime} from 'luxon'
 
-import {Hub, Person}from '../../../src/types'
-import { createHub}from '../../../src/utils/db/hub'
-import {UUIDT}from '../../../src/utils/utils'
-import {LazyPersonContainer}from '../../../src/worker/ingestion/lazy-person-container'
-import { PersonState}from '../../../src/worker/ingestion/person-state'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../../helpers/clickhouse'
-import {insertRow, resetTestDatabase}from '../../helpers/sql'
+import {Hub, Person} from '../../../src/types'
+import { createHub} from '../../../src/utils/db/hub'
+import {UUIDT} from '../../../src/utils/utils'
+import {LazyPersonContainer} from '../../../src/worker/ingestion/lazy-person-container'
+import { PersonState} from '../../../src/worker/ingestion/person-state'
+import {delayUntilEventIngested, resetTestDatabaseClickhouse} from '../../helpers/clickhouse'
+import {insertRow, resetTestDatabase} from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 jest.setTimeout(60000) // 60 sec timeout

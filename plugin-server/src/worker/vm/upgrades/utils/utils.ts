@@ -1,49 +1,49 @@
-import {PluginEvent, Properties} from '@analytickit/plugin-scaffold'
-import {Plugin} from '@analytickit/plugin-scaffold'
+import { PluginEvent, Properties } from '@analytickit/plugin-scaffold'
+import { Plugin } from '@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
-import {DateTime} from 'luxon'
-import {Client} from 'pg'
+import { DateTime } from 'luxon'
+import { Client } from 'pg'
 
-import {ClickHouseEvent, Element, TimestampFormat } from '../../../../types'
-import { DB} from '../../../../utils/db/db'
-import {chainToElements} from '../../../../utils/db/elements-chain'
-import { castTimestampToClickhouseFormat} from '../../../../utils/utils'
+import { ClickHouseEvent, Element, TimestampFormat } from '../../../../types'
+import { DB } from '../../../../utils/db/db'
+import { chainToElements } from '../../../../utils/db/elements-chain'
+import { castTimestampToClickhouseFormat } from '../../../../utils/utils'
 
 export interface RawElement extends Element {
-$el_text?: string
+    $el_text?: string
 }
 export interface TimestampBoundaries {
-min: Date | null
-max: Date | null
+    min: Date | null
+    max: Date | null
 }
 
-export interface ExportEventsJobPayload extends Record <string, any> {
-// The lower bound of the timestamp interval to be processed
-timestampCursor?: number
+export interface ExportEventsJobPayload extends Record<string, any> {
+    // The lower bound of the timestamp interval to be processed
+    timestampCursor?: number
 
-// The offset *within* a given timestamp interval
-intraIntervalOffset?: number
+    // The offset *within* a given timestamp interval
+    intraIntervalOffset?: number
 
-// how many retries a payload has had (max = 15)
-retriesPerformedSoFar: number
+    // how many retries a payload has had (max = 15)
+    retriesPerformedSoFar: number
 
-// tells us we're ready to pick up a new interval
-incrementTimestampCursor: boolean
+    // tells us we're ready to pick up a new interval
+    incrementTimestampCursor: boolean
 
-// used for ensuring only one "export task" is running if the server restarts
-batchId: number
+    // used for ensuring only one "export task" is running if the server restarts
+    batchId: number
 }
 
 export interface HistoricalExportEvent extends PluginEvent {
-properties: Properties // can't be undefined
+    properties: Properties // can't be undefined
 }
 
 export type ExportHistoricalEventsUpgrade = Plugin<{
-global: {
-pgClient: Client
-eventsToIgnore: Set < string>
-sanitizedTableName: string
-exportHistoricalEvents: (payload: ExportEventsJobPayload) => Promise<void>
+    global: {
+        pgClient: Client
+        eventsToIgnore: Set<string>
+        sanitizedTableName: string
+        exportHistoricalEvents: (payload: ExportEventsJobPayload) => Promise<void>
         initTimestampsAndCursor: (payload: Record<string, any> | undefined) => Promise<void>
         setTimestampBoundaries: () => Promise<void>
         updateProgressBar: (incrementedCursor: number) => void
@@ -99,13 +99,13 @@ export const fetchEventsForInterval = async (
     const chTimestampLower = castTimestampToClickhouseFormat(
         DateTime.fromISO(timestampLowerBound.toISOString()),
         TimestampFormat.ClickHouseSecondPrecision
-)
-const chTimestampHigher = castTimestampToClickhouseFormat(
-DateTime.fromISO(timestampUpperBound.toISOString()),
+    )
+    const chTimestampHigher = castTimestampToClickhouseFormat(
+        DateTime.fromISO(timestampUpperBound.toISOString()),
         TimestampFormat.ClickHouseSecondPrecision
-)
+    )
 
-const fetchEventsQuery = `
+    const fetchEventsQuery = `
 SELECT
 event,
 uuid,
@@ -123,19 +123,19 @@ ORDER BY timestamp
 LIMIT ${eventsPerRun}
 OFFSET ${offset}`
 
-const clickhouseFetchEventsResult = await db.clickhouseQuery(fetchEventsQuery)
+    const clickhouseFetchEventsResult = await db.clickhouseQuery(fetchEventsQuery)
 
-return clickhouseFetchEventsResult.data.map((event) =>
+    return clickhouseFetchEventsResult.data.map((event) =>
         convertClickhouseEventToPluginEvent({
             ...(event as ClickHouseEvent),
             properties: JSON.parse(event.properties || '{}'),
         })
-)
+    )
 }
 
 export const convertClickhouseEventToPluginEvent = (event: ClickHouseEvent): HistoricalExportEvent => {
-const {event: eventName, properties, timestamp, team_id, distinct_id, created_at, uuid, elements_chain}= event
-if(eventName === '$autocapture' && elements_chain) {
+    const { event: eventName, properties, timestamp, team_id, distinct_id, created_at, uuid, elements_chain } = event
+    if (eventName === '$autocapture' && elements_chain) {
         properties['$elements'] = convertDatabaseElementsToRawElements(chainToElements(elements_chain))
     }
     properties['$$historical_export_source_db'] = 'clickhouse'

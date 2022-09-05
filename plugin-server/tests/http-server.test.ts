@@ -1,9 +1,9 @@
 importhttpfrom'http'
 
-import {startPluginsServer}from '../src/main/pluginsServer'
-import {HTTP_SERVER_PORT}from '../src/main/services/http-server'
-import { makePiscina}from '../src/worker/piscina'
-import {resetTestDatabase}from './helpers/sql'
+import { startPluginsServer } from '../src/main/pluginsServer'
+import { HTTP_SERVER_PORT } from '../src/main/services/http-server'
+import { makePiscina } from '../src/worker/piscina'
+import { resetTestDatabase } from './helpers/sql'
 
 jest.mock('../src/utils/status')
 jest.mock('../src/utils/db/sql')
@@ -38,9 +38,9 @@ describe('http server', () => {
                 },
                 makePiscina,
                 { http: true }
-)
+            )
 
-http.get(`http://localhost:${HTTP_SERVER_PORT}/_health`, (res) => {
+            http.get(`http://localhost:${HTTP_SERVER_PORT}/_health`, (res) => {
                 const { statusCode } = res
                 expect(statusCode).toEqual(200)
             })
@@ -63,9 +63,9 @@ http.get(`http://localhost:${HTTP_SERVER_PORT}/_health`, (res) => {
                 },
                 makePiscina,
                 { http: true, ingestion: true }
-)
+            )
 
-http.get(`http://localhost:${HTTP_SERVER_PORT}/_ready`, (res) => {
+            http.get(`http://localhost:${HTTP_SERVER_PORT}/_ready`, (res) => {
                 const { statusCode } = res
                 expect(statusCode).toEqual(200)
             })

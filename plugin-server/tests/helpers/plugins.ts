@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
 
-import {Plugin, PluginAttachmentDB, PluginConfig} from '../../src/types'
+import { Plugin, PluginAttachmentDB, PluginConfig } from '../../src/types'
 
 export const commonUserId = 1001
 export const commonOrganizationMembershipId = '0177364a-fc7b-0000-511c-137090b9e4e1'
@@ -10,23 +10,23 @@ export const commonOrganizationId = 'ca30f2ec-e9a4-4001-bf27-3ef194086068'
 export const commonUserUuid = '797757a4-baed-4fa8-b73b-2b6cf0300299'
 
 export const plugin60: Plugin = {
-id: 60,
-organization_id: commonOrganizationId,
-plugin_type: 'custom',
-name: 'test-maxmind-plugin',
-description: 'Ingest GeoIP data via MaxMind',
-url: 'https://www.npmjs.com/package/analytickit-maxmind-plugin',
-config_schema: {
+    id: 60,
+    organization_id: commonOrganizationId,
+    plugin_type: 'custom',
+    name: 'test-maxmind-plugin',
+    description: 'Ingest GeoIP data via MaxMind',
+    url: 'https://www.npmjs.com/package/analytickit-maxmind-plugin',
+    config_schema: {
 
-},
-tag: '0.0.2',
-error: undefined,
-from_json: false,
-from_web: false,
-is_global: false,
-is_preinstalled: false,
-is_stateless: false,
-created_at: new Date().toISOString(),
+    },
+    tag: '0.0.2',
+    error: undefined,
+    from_json: false,
+    from_web: false,
+    is_global: false,
+    is_preinstalled: false,
+    is_stateless: false,
+    created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     capabilities: {}, // inferred on setup
     metrics: {},
@@ -104,20 +104,20 @@ export function mockPluginTempFolder(indexJs: string, pluginJson?: string): [Plu
     fs.writeFileSync(
         path.join(folder, 'plugin.json'),
         pluginJson ||
-            JSON.stringify({
-                name: 'analytickit-maxmind-plugin',
-                description: 'just for testing',
-                url: 'http://example.com/plugin',
-                config: {},
-                main: 'index.js',
-            })
-)
-return [
-{
-...plugin60, plugin_type: 'local', url: `file:${folder}`
-},
-() => {
-fs.rmSync(folder, { recursive: true })
+        JSON.stringify({
+            name: 'analytickit-maxmind-plugin',
+            description: 'just for testing',
+            url: 'http://example.com/plugin',
+            config: {},
+            main: 'index.js',
+        })
+    )
+    return [
+        {
+            ...plugin60, plugin_type: 'local', url: `file:${folder}`
+        },
+        () => {
+            fs.rmSync(folder, { recursive: true })
         },
     ]
 }

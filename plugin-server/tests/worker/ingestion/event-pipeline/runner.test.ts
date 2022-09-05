@@ -1,21 +1,21 @@
-import{ PluginEvent} from '@analytickit/plugin-scaffold'
-import {DateTime} from 'luxon'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
+import { DateTime } from 'luxon'
 
-import {Person, PreIngestionEvent} from '../../../../src/types'
-import {emitToBufferStep} from '../../../../src/worker/ingestion/event-pipeline/1-emitToBufferStep'
-import {pluginsProcessEventStep} from '../../../../src/worker/ingestion/event-pipeline/2-pluginsProcessEventStep'
-import {processPersonsStep} from '../../../../src/worker/ingestion/event-pipeline/3-processPersonsStep'
-import { prepareEventStep} from '../../../../src/worker/ingestion/event-pipeline/4-prepareEventStep'
-import {createEventStep } from '../../../../src/worker/ingestion/event-pipeline/5-createEventStep'
-import {runAsyncHandlersStep} from '../../../../src/worker/ingestion/event-pipeline/6-runAsyncHandlersStep'
+import { Person, PreIngestionEvent } from '../../../../src/types'
+import { emitToBufferStep } from '../../../../src/worker/ingestion/event-pipeline/1-emitToBufferStep'
+import { pluginsProcessEventStep } from '../../../../src/worker/ingestion/event-pipeline/2-pluginsProcessEventStep'
+import { processPersonsStep } from '../../../../src/worker/ingestion/event-pipeline/3-processPersonsStep'
+import { prepareEventStep } from '../../../../src/worker/ingestion/event-pipeline/4-prepareEventStep'
+import { createEventStep } from '../../../../src/worker/ingestion/event-pipeline/5-createEventStep'
+import { runAsyncHandlersStep } from '../../../../src/worker/ingestion/event-pipeline/6-runAsyncHandlersStep'
 import {
-EventPipelineRunner,
-EventPipelineStepsType,
-StepParameters,
-StepResult,
-StepType,
-}from '../../../../src/worker/ingestion/event-pipeline/runner'
-import {generateEventDeadLetterQueueMessage} from '../../../../src/worker/ingestion/utils'
+    EventPipelineRunner,
+    EventPipelineStepsType,
+    StepParameters,
+    StepResult,
+    StepType,
+} from '../../../../src/worker/ingestion/event-pipeline/runner'
+import { generateEventDeadLetterQueueMessage } from '../../../../src/worker/ingestion/utils'
 
 jest.mock('../../../../src/utils/status')
 jest.mock('../../../../src/worker/ingestion/event-pipeline/1-emitToBufferStep')

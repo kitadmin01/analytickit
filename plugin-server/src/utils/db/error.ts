@@ -1,8 +1,8 @@
-import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
-import {captureException} from '@sentry/minimal'
+import { PluginEvent, ProcessedPluginEvent } from '@analytickit/plugin-scaffold'
+import { captureException } from '@sentry/minimal'
 
-import {Hub, PluginConfig, PluginError } from '../../types'
-import {setError} from './sql'
+import { Hub, PluginConfig, PluginError } from '../../types'
+import { setError } from './sql'
 
 export async function processError(
     server: Hub,
@@ -17,16 +17,16 @@ export async function processError(
     const errorJson: PluginError =
         typeof error === 'string'
             ? {
-                  message: error,
-                  time: new Date().toISOString(),
-              }
+                message: error,
+                time: new Date().toISOString(),
+            }
             : {
-                  message: error.message,
-                  time: new Date().toISOString(),
-                  name: error.name,
-                  stack: cleanErrorStackTrace(error.stack),
-                  event: event,
-              }
+                message: error.message,
+                time: new Date().toISOString(),
+                name: error.name,
+                stack: cleanErrorStackTrace(error.stack),
+                event: event,
+            }
 
     await setError(server, errorJson, pluginConfig)
 }

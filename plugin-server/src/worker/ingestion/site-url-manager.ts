@@ -1,11 +1,11 @@
-import{DB}from'../../utils/db/db'
+import { DB } from '../../utils/db/db'
 
 export class SiteUrlManager {
-private db: DB
-private envSiteUrl: string | null
-private fetchPromise?: Promise < string | null>
+    private db: DB
+    private envSiteUrl: string | null
+    private fetchPromise?: Promise<string | null>
 
-constructor(db: DB, envSiteUrl: string | null) {
+    constructor(db: DB, envSiteUrl: string | null) {
         this.db = db
         this.envSiteUrl = envSiteUrl
     }

@@ -1,7 +1,7 @@
-import* as Sentry from '@sentry/node'
+import * as Sentry from '@sentry/node'
 
-import {Element}from '../../types'
-import {escapeQuotes} from './utils'
+import { Element } from '../../types'
+import { escapeQuotes } from './utils'
 
 export function elementsToString(elements: Element[]): string {
     const ret = elements.map((element) => {
@@ -27,10 +27,10 @@ export function elementsToString(elements: Element[]): string {
             Object.entries(attributes)
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([key, value]) => [escapeQuotes(key.toString()), escapeQuotes(value.toString())])
-)
-el_string += ':'
-el_string += Object.entries(attributes)
-.map(([key, value]) => `${key}="${value}"`)
+        )
+        el_string += ':'
+        el_string += Object.entries(attributes)
+            .map(([key, value]) => `${key}="${value}"`)
             .join('')
         return el_string
     })

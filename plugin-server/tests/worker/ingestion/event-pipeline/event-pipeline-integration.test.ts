@@ -1,14 +1,14 @@
-import{PluginEvent} from '@analytickit/plugin-scaffold'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
 import fetch from 'node-fetch'
 
-import {Hook, Hub} from '../../../../src/types'
-import {createHub} from '../../../../src/utils/db/hub'
-import {UUIDT} from '../../../../src/utils/utils'
-import {EventPipelineRunner} from '../../../../src/worker/ingestion/event-pipeline/runner'
-import {setupPlugins} from '../../../../src/worker/plugins/setup'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse} from '../../../helpers/clickhouse'
-import {commonUserId} from '../../../helpers/plugins'
-import {insertRow, resetTestDatabase} from '../../../helpers/sql'
+import { Hook, Hub } from '../../../../src/types'
+import { createHub } from '../../../../src/utils/db/hub'
+import { UUIDT } from '../../../../src/utils/utils'
+import { EventPipelineRunner } from '../../../../src/worker/ingestion/event-pipeline/runner'
+import { setupPlugins } from '../../../../src/worker/plugins/setup'
+import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../../../helpers/clickhouse'
+import { commonUserId } from '../../../helpers/plugins'
+import { insertRow, resetTestDatabase } from '../../../helpers/sql'
 
 jest.mock('../../../../src/utils/status')
 
@@ -21,7 +21,7 @@ describe('Event Pipeline integration test', () => {
     beforeEach(async () => {
         await resetTestDatabase()
         await resetTestDatabaseClickhouse()
-        ;[hub, closeServer] = await createHub()
+            ;[hub, closeServer] = await createHub()
 
         jest.spyOn(hub.db, 'fetchPerson')
     })
@@ -86,9 +86,9 @@ describe('Event Pipeline integration test', () => {
                     },
                 }),
             })
-)
+        )
 
-expect(persons.length).toEqual(1)
+        expect(persons.length).toEqual(1)
         expect(persons[0].version).toEqual(0)
         expect(persons[0].properties).toEqual({
             $initial_browser: 'Chrome',
@@ -102,12 +102,12 @@ expect(persons.length).toEqual(1)
             `UPDATE analytickit_team SET slack_incoming_webhook = 'https://webhook.example.com/'`,
             [],
             'testTag'
-)
+        )
 
-const event: PluginEvent = {
-event: 'xyz',
-properties: {foo: 'bar' },
-timestamp: new Date().toISOString(),
+        const event: PluginEvent = {
+            event: 'xyz',
+            properties: { foo: 'bar' },
+            timestamp: new Date().toISOString(),
             now: new Date().toISOString(),
             team_id: 2,
             distinct_id: 'abc',

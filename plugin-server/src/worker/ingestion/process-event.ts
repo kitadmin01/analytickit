@@ -1,38 +1,38 @@
-importClickHousefrom'@analytickit/clickhouse'
-import {PluginEvent, Properties}from '@analytickit/plugin-scaffold'
-import {DateTime}from 'luxon'
+import ClickHouse from'@analytickit/clickhouse'
+import { PluginEvent, Properties } from '@analytickit/plugin-scaffold'
+import { DateTime } from 'luxon'
 
-import {KAFKA_SESSION_RECORDING_EVENTS}from '../../config/kafka-topics'
+import { KAFKA_SESSION_RECORDING_EVENTS } from '../../config/kafka-topics'
 import {
-Element,
-Hub,
-IngestionEvent,
-IngestionPersonData,
-PreIngestionEvent,
-SessionRecordingEvent,
-Team,
-TimestampFormat,
-}from '../../types'
-import {DB, GroupIdentifier}from '../../utils/db/db'
-import {elementsToString, extractElements}from '../../utils/db/elements-chain'
-import { KafkaProducerWrapper}from '../../utils/db/kafka-producer-wrapper'
-import {safeClickhouseString, sanitizeEventName, timeoutGuard}from '../../utils/db/utils'
-import {castTimestampOrNow, UUID}from '../../utils/utils'
-import {GroupTypeManager}from './group-type-manager'
-import {addGroupProperties}from './groups'
-import {LazyPersonContainer}from './lazy-person-container'
-import {upsertGroup}from './properties-updater'
-import {TeamManager}from './team-manager'
+    Element,
+    Hub,
+    IngestionEvent,
+    IngestionPersonData,
+    PreIngestionEvent,
+    SessionRecordingEvent,
+    Team,
+    TimestampFormat,
+} from '../../types'
+import { DB, GroupIdentifier } from '../../utils/db/db'
+import { elementsToString, extractElements } from '../../utils/db/elements-chain'
+import { KafkaProducerWrapper } from '../../utils/db/kafka-producer-wrapper'
+import { safeClickhouseString, sanitizeEventName, timeoutGuard } from '../../utils/db/utils'
+import { castTimestampOrNow, UUID } from '../../utils/utils'
+import { GroupTypeManager } from './group-type-manager'
+import { addGroupProperties } from './groups'
+import { LazyPersonContainer } from './lazy-person-container'
+import { upsertGroup } from './properties-updater'
+import { TeamManager } from './team-manager'
 
 export class EventsProcessor {
-pluginsServer: Hub
-db: DB
-clickhouse: ClickHouse
-kafkaProducer: KafkaProducerWrapper
-teamManager: TeamManager
-groupTypeManager: GroupTypeManager
+    pluginsServer: Hub
+    db: DB
+    clickhouse: ClickHouse
+    kafkaProducer: KafkaProducerWrapper
+    teamManager: TeamManager
+    groupTypeManager: GroupTypeManager
 
-constructor(pluginsServer: Hub) {
+    constructor(pluginsServer: Hub) {
         this.pluginsServer = pluginsServer
         this.db = pluginsServer.db
         this.clickhouse = pluginsServer.clickhouse
@@ -72,20 +72,20 @@ constructor(pluginsServer: Hub) {
                     const timeout2 = timeoutGuard(
                         'Still running "createSessionRecordingEvent". Timeout warning after 30 sec!',
                         { eventUuid }
-)
-try {
-result = await this.createSessionRecordingEvent(
-eventUuid,
-teamId,
-distinctId,
-properties['$session_id'],
-properties['$window_id'],
-timestamp,
-properties['$snapshot_data'],
-properties,
-ip
-)
-this.pluginsServer.statsd?.timing('kafka_queue.single_save.snapshot', singleSaveTimer, {
+                    )
+                    try {
+                        result = await this.createSessionRecordingEvent(
+                            eventUuid,
+                            teamId,
+                            distinctId,
+                            properties['$session_id'],
+                            properties['$window_id'],
+                            timestamp,
+                            properties['$snapshot_data'],
+                            properties,
+                            ip
+                        )
+                        this.pluginsServer.statsd?.timing('kafka_queue.single_save.snapshot', singleSaveTimer, {
                             team_id: teamId.toString(),
                         })
                         // No return value in case of snapshot events as we don't do action matching on them
@@ -253,15 +253,15 @@ this.pluginsServer.statsd?.timing('kafka_queue.single_save.snapshot', singleSave
         const timestampString = castTimestampOrNow(
             timestamp,
             this.kafkaProducer ? TimestampFormat.ClickHouse : TimestampFormat.ISO
-)
+        )
 
-const data: SessionRecordingEvent = {
-uuid,
-team_id: team_id,
-distinct_id: distinct_id,
-session_id: session_id,
-window_id: window_id,
-snapshot_data: JSON.stringify(snapshot_data),
+        const data: SessionRecordingEvent = {
+            uuid,
+            team_id: team_id,
+            distinct_id: distinct_id,
+            session_id: session_id,
+            window_id: window_id,
+            snapshot_data: JSON.stringify(snapshot_data),
             timestamp: timestampString,
             created_at: timestampString,
         }
@@ -296,7 +296,7 @@ snapshot_data: JSON.stringify(snapshot_data),
                 groupKey.toString(),
                 groupPropertiesToSet || {},
                 timestamp
-)
-}
-}
+            )
+        }
+    }
 }

@@ -1,11 +1,11 @@
-import {PluginAttachment} from '@analytickit/plugin-scaffold'
+import { PluginAttachment } from '@analytickit/plugin-scaffold'
 
-import {Hub, Plugin, PluginConfig, PluginConfigId, PluginId, StatelessVmMap, TeamId}from '../../types'
-import {getPluginAttachmentRows, getPluginConfigRows, getPluginRows}from '../../utils/db/sql'
-import {status }from '../../utils/status'
-import {LazyPluginVM}from '../vm/lazy'
-import { loadPlugin}from './loadPlugin'
-import {teardownPlugins}from './teardown'
+import { Hub, Plugin, PluginConfig, PluginConfigId, PluginId, StatelessVmMap, TeamId } from '../../types'
+import { getPluginAttachmentRows, getPluginConfigRows, getPluginRows } from '../../utils/db/sql'
+import { status } from '../../utils/status'
+import { LazyPluginVM } from '../vm/lazy'
+import { loadPlugin } from './loadPlugin'
+import { teardownPlugins } from './teardown'
 
 export async function setupPlugins(server: Hub): Promise<void> {
     const { plugins, pluginConfigs, pluginConfigsPerTeam } = await loadPluginsFromDB(server)

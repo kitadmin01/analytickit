@@ -1,17 +1,17 @@
-import* as Sentry from '@sentry/node'
-import {TaskList}from 'graphile-worker'
+import * as Sentry from '@sentry/node'
+import { TaskList } from 'graphile-worker'
 
-import {EnqueuedJob, Hub, JobQueue, JobQueueType} from '../../types'
-import {status}from '../../utils/status'
-import { logOrThrowJobQueueError}from '../../utils/utils'
-import {jobQueueMap}from './job-queues'
+import { EnqueuedJob, Hub, JobQueue, JobQueueType } from '../../types'
+import { status } from '../../utils/status'
+import { logOrThrowJobQueueError } from '../../utils/utils'
+import { jobQueueMap } from './job-queues'
 
 export class JobQueueManager implements JobQueue {
-pluginsServer: Hub
-jobQueues: JobQueue[]
-jobQueueTypes: JobQueueType[]
+    pluginsServer: Hub
+    jobQueues: JobQueue[]
+    jobQueueTypes: JobQueueType[]
 
-constructor(pluginsServer: Hub) {
+    constructor(pluginsServer: Hub) {
         this.pluginsServer = pluginsServer
 
         this.jobQueueTypes = pluginsServer.JOB_QUEUES.split(',')
@@ -41,11 +41,11 @@ constructor(pluginsServer: Hub) {
                         this.pluginsServer,
                         error,
                         `Cannot start job queue producer "${jobQueueType}": ${error.message}`
-)
-}
-})
-)
-if(toRemove.size > 0) {
+                    )
+                }
+            })
+        )
+        if (toRemove.size > 0) {
             this.jobQueues = this.jobQueues.filter((jobQueue) => !toRemove.has(jobQueue))
         }
     }

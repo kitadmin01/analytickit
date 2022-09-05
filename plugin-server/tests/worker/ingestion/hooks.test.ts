@@ -1,20 +1,20 @@
-import{DateTime}from'luxon'
+import { DateTime } from 'luxon'
 import * as fetch from 'node-fetch'
 
-import {Action, Person, PreIngestionEvent }from '../../../src/types'
-import {UUIDT }from '../../../src/utils/utils'
+import { Action, Person, PreIngestionEvent } from '../../../src/types'
+import { UUIDT } from '../../../src/utils/utils'
 import {
-determineWebhookType,
-getActionDetails,
-getFormattedMessage,
-getTokens,
-getUserDetails,
-getValueOfToken,
-HookCommander,
-WebhookType,
-}from '../../../src/worker/ingestion/hooks'
-import {LazyPersonContainer}from '../../../src/worker/ingestion/lazy-person-container'
-import {Hook}from './../../../src/types'
+    determineWebhookType,
+    getActionDetails,
+    getFormattedMessage,
+    getTokens,
+    getUserDetails,
+    getValueOfToken,
+    HookCommander,
+    WebhookType,
+} from '../../../src/worker/ingestion/hooks'
+import { LazyPersonContainer } from '../../../src/worker/ingestion/lazy-person-container'
+import { Hook } from './../../../src/types'
 
 describe('hooks', () => {
     describe('determineWebhookType', () => {
@@ -47,9 +47,9 @@ describe('hooks', () => {
                 person,
                 'http://localhost:8000',
                 WebhookType.Slack
-)
+            )
 
-expect(userDetails).toBe('test@analytickit.com')
+            expect(userDetails).toBe('test@analytickit.com')
             expect(userDetailsMarkdown).toBe('<http://localhost:8000/person/WALL-E|test@analytickit.com>')
         })
 
@@ -59,9 +59,9 @@ expect(userDetails).toBe('test@analytickit.com')
                 person,
                 'http://localhost:8000',
                 WebhookType.Teams
-)
+            )
 
-expect(userDetails).toBe('test@analytickit.com')
+            expect(userDetails).toBe('test@analytickit.com')
             expect(userDetailsMarkdown).toBe('[test@analytickit.com](http://localhost:8000/person/WALL-E)')
         })
     })
@@ -74,9 +74,9 @@ expect(userDetails).toBe('test@analytickit.com')
                 action,
                 'http://localhost:8000',
                 WebhookType.Slack
-)
+            )
 
-expect(actionDetails).toBe('action1')
+            expect(actionDetails).toBe('action1')
             expect(actionDetailsMarkdown).toBe('<http://localhost:8000/action/1|action1>')
         })
 
@@ -85,9 +85,9 @@ expect(actionDetails).toBe('action1')
                 action,
                 'http://localhost:8000',
                 WebhookType.Teams
-)
+            )
 
-expect(actionDetails).toBe('action1')
+            expect(actionDetails).toBe('action1')
             expect(actionDetailsMarkdown).toBe('[action1](http://localhost:8000/action/1)')
         })
     })
@@ -125,9 +125,9 @@ expect(actionDetails).toBe('action1')
                 'http://localhost:8000',
                 WebhookType.Teams,
                 tokenUserName
-)
+            )
 
-expect(text).toBe('WALL-E')
+            expect(text).toBe('WALL-E')
             expect(markdown).toBe('[WALL-E](http://localhost:8000/person/WALL-E)')
             expect(personContainer.get).toBeCalledTimes(1)
         })
@@ -148,9 +148,9 @@ expect(text).toBe('WALL-E')
                 'http://localhost:8000',
                 WebhookType.Teams,
                 tokenUserName
-)
+            )
 
-expect(text).toBe('wall-e@buynlarge.com')
+            expect(text).toBe('wall-e@buynlarge.com')
             expect(markdown).toBe('[wall-e@buynlarge.com](http://localhost:8000/person/WALL-E)')
             expect(personContainer.get).toBeCalledTimes(1)
         })
@@ -165,9 +165,9 @@ expect(text).toBe('wall-e@buynlarge.com')
                 'http://localhost:8000',
                 WebhookType.Teams,
                 tokenUserPropString
-)
+            )
 
-expect(text).toBe('false')
+            expect(text).toBe('false')
             expect(markdown).toBe('false')
             expect(personContainer.get).toBeCalledTimes(1)
         })
@@ -182,9 +182,9 @@ expect(text).toBe('false')
                 'http://localhost:8000',
                 WebhookType.Teams,
                 tokenUserName
-)
+            )
 
-expect(text).toBe('WALL-E')
+            expect(text).toBe('WALL-E')
             expect(markdown).toBe('[WALL-E](http://localhost:8000/person/WALL-E)')
             expect(personContainer.get).toBeCalledTimes(1)
         })
@@ -199,9 +199,9 @@ expect(text).toBe('WALL-E')
                 'http://localhost:8000',
                 WebhookType.Teams,
                 tokenUserPropString
-)
+            )
 
-expect(text).toBe('Chrome')
+            expect(text).toBe('Chrome')
             expect(markdown).toBe('Chrome')
             expect(personContainer.get).toBeCalledTimes(0)
         })
@@ -216,9 +216,9 @@ expect(text).toBe('Chrome')
                 'http://localhost:8000',
                 WebhookType.Teams,
                 tokenUserPropMissing
-)
+            )
 
-expect(text).toBe('undefined')
+            expect(text).toBe('undefined')
             expect(markdown).toBe('undefined')
             expect(personContainer.get).toBeCalledTimes(0)
         })
@@ -252,8 +252,8 @@ expect(text).toBe('undefined')
                 personContainer,
                 'https://localhost:8000',
                 WebhookType.Slack
-)
-expect(text).toBe('2 from Chrome on Pricing page with undefined')
+            )
+            expect(text).toBe('2 from Chrome on Pricing page with undefined')
             expect(markdown).toBe('<https://localhost:8000/person/2|2> from Chrome on Pricing page with undefined')
             expect(personContainer.get).toBeCalledTimes(1)
         })
@@ -267,12 +267,12 @@ expect(text).toBe('2 from Chrome on Pricing page with undefined')
                 personContainer,
                 'https://localhost:8000',
                 WebhookType.Slack
-)
-expect(text).toBe('action1 was triggered by 2')
+            )
+            expect(text).toBe('action1 was triggered by 2')
             expect(markdown).toBe(
                 '<https://localhost:8000/action/1|action1> was triggered by <https://localhost:8000/person/2|2>'
-)
-expect(personContainer.get).toBeCalledTimes(1)
+            )
+            expect(personContainer.get).toBeCalledTimes(1)
         })
 
         test('not quite correct format', async () => {
@@ -288,8 +288,8 @@ expect(personContainer.get).toBeCalledTimes(1)
                 personContainer,
                 'https://localhost:8000',
                 WebhookType.Slack
-)
-expect(text).toBe('2 did thing from browser undefined')
+            )
+            expect(text).toBe('2 did thing from browser undefined')
             expect(markdown).toBe('<https://localhost:8000/person/2|2> did thing from browser undefined')
             expect(personContainer.get).toBeCalledTimes(1)
         })

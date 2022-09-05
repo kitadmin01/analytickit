@@ -1,4 +1,4 @@
-import{getDefaultConfig, overrideWithEnv}from '../src/config/config'
+import { getDefaultConfig, overrideWithEnv } from '../src/config/config'
 
 describe('config', () => {
     test('overrideWithEnv 1', () => {

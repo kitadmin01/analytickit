@@ -1,10 +1,10 @@
-importClickHousefrom'@analytickit/clickhouse'
-import {performance} from 'perf_hooks'
+import ClickHouse from '@analytickit/clickhouse'
+import { performance } from 'perf_hooks'
 
-import {defaultConfig} from '../../src/config/config'
-import {PluginsServerConfig}from '../../src/types'
-import {isDevEnv}from '../../src/utils/env-utils'
-import {delay}from '../../src/utils/utils'
+import { defaultConfig } from '../../src/config/config'
+import { PluginsServerConfig } from '../../src/types'
+import { isDevEnv } from '../../src/utils/env-utils'
+import { delay } from '../../src/utils/utils'
 
 export async function resetTestDatabaseClickhouse(extraServerConfig?: Partial<PluginsServerConfig>): Promise<void> {
     const config = { ...defaultConfig, ...extraServerConfig }
@@ -44,12 +44,11 @@ export async function delayUntilEventIngested<T extends any[] | number>(
         dataLength = typeof data === 'number' ? data : data.length
         if (isDevEnv()) {
             console.log(
-                `Waiting. ${Math.round((performance.now() - timer) / 100) / 10}s since the start. ${dataLength} event${
-                    dataLength !== 1 ? 's' : ''
+                `Waiting. ${Math.round((performance.now() - timer) / 100) / 10}s since the start. ${dataLength} event${dataLength !== 1 ? 's' : ''
                 }.`
-)
-}
-if(dataLength >= minLength) {
+            )
+        }
+        if (dataLength >= minLength) {
             return data
         }
         await delay(delayMs)

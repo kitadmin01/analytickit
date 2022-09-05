@@ -1,6 +1,6 @@
 // Keep this in sync with analytickit/kafka_client/topics.py
 
-import{isTestEnv}from'../utils/env-utils'
+import { isTestEnv } from '../utils/env-utils'
 
 const suffix = isTestEnv() ? '_test' : ''
 export const prefix = process.env.KAFKA_PREFIX || ''

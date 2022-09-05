@@ -1,17 +1,17 @@
-import{StatsD}from'hot-shots'
-import {Consumer}from 'kafkajs'
+import { StatsD } from 'hot-shots'
+import { Consumer } from 'kafkajs'
 
-import {Hub}from '../../types'
+import { Hub } from '../../types'
 
 type PartitionAssignment = {
-readonly topic: string
-readonly partitions: readonly number[]
+    readonly topic: string
+    readonly partitions: readonly number[]
 }
 
 type MemberAssignment = {
-readonly version: number
-readonly partitionAssignments: readonly PartitionAssignment[]
-readonly userData: Buffer
+    readonly version: number
+    readonly partitionAssignments: readonly PartitionAssignment[]
+    readonly userData: Buffer
 }
 
 let latestRequestQueueSize = 0
@@ -69,10 +69,10 @@ export async function emitConsumerGroupMetrics(
 
         const consumerDescription = descriptionWithAssignment.find(
             (assignment) => assignment.memberId === consumerGroupMemberId
-)
+        )
 
-let isLive = false
-if(consumerDescription) {
+        let isLive = false
+        if (consumerDescription) {
             consumerDescription.assignment.partitionAssignments.forEach(({ topic, partitions }) => {
                 isLive = isLive || partitions.length > 0
                 pluginsServer.statsd?.gauge('kafka_consumer_group_assigned_partitions', partitions.length, {

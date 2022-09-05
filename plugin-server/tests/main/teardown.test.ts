@@ -1,11 +1,11 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
 
-import {startPluginsServer }from '../../src/main/pluginsServer'
-import {LogLevel} from '../../src/types'
-import {delay}from '../../src/utils/utils'
-import {makePiscina}from '../../src/worker/piscina'
-import {pluginConfig39}from '../helpers/plugins'
-import {getErrorForPluginConfig, resetTestDatabase }from '../helpers/sql'
+import { startPluginsServer } from '../../src/main/pluginsServer'
+import { LogLevel } from '../../src/types'
+import { delay } from '../../src/utils/utils'
+import { makePiscina } from '../../src/worker/piscina'
+import { pluginConfig39 } from '../helpers/plugins'
+import { getErrorForPluginConfig, resetTestDatabase } from '../helpers/sql'
 
 jest.mock('@graphile/logger')
 jest.mock('../../src/utils/status')
@@ -45,10 +45,10 @@ describe('teardown', () => {
                 LOG_LEVEL: LogLevel.Log,
             },
             makePiscina
-)
+        )
 
-const error1 = await getErrorForPluginConfig(pluginConfig39.id)
-expect(error1).toBe(null)
+        const error1 = await getErrorForPluginConfig(pluginConfig39.id)
+        expect(error1).toBe(null)
 
         await processEvent(piscina, defaultEvent)
 
@@ -76,10 +76,10 @@ expect(error1).toBe(null)
                 LOG_LEVEL: LogLevel.Log,
             },
             makePiscina
-)
+        )
 
-const error1 = await getErrorForPluginConfig(pluginConfig39.id)
-expect(error1).toBe(null)
+        const error1 = await getErrorForPluginConfig(pluginConfig39.id)
+        expect(error1).toBe(null)
 
         await stop()
 
@@ -105,10 +105,10 @@ expect(error1).toBe(null)
                 LOG_LEVEL: LogLevel.Log,
             },
             makePiscina
-)
+        )
 
-const error1 = await getErrorForPluginConfig(pluginConfig39.id)
-expect(error1).toBe(null)
+        const error1 = await getErrorForPluginConfig(pluginConfig39.id)
+        expect(error1).toBe(null)
 
         await delay(100)
 
@@ -116,9 +116,9 @@ expect(error1).toBe(null)
             'update analytickit_pluginconfig set updated_at = now() where id = $1',
             [pluginConfig39.id],
             'testTag'
-)
-const event1 = await processEvent(piscina, defaultEvent)
-expect(event1.properties.storage).toBe('nope')
+        )
+        const event1 = await processEvent(piscina, defaultEvent)
+        expect(event1.properties.storage).toBe('nope')
 
         await piscina!.broadcastTask({ task: 'reloadPlugins' })
         await delay(10000)

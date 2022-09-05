@@ -1,9 +1,9 @@
-import os from'os'
+import os from 'os'
 
-import {LogLevel, PluginsServerConfig} from '../types'
-import { isDevEnv, isTestEnv, stringToBoolean}from '../utils/env-utils'
-import {KAFKAJS_LOG_LEVEL_MAPPING} from './constants'
-import {KAFKA_EVENTS_JSON, KAFKA_EVENTS_PLUGIN_INGESTION}from './kafka-topics'
+import { LogLevel, PluginsServerConfig } from '../types'
+import { isDevEnv, isTestEnv, stringToBoolean } from '../utils/env-utils'
+import { KAFKAJS_LOG_LEVEL_MAPPING } from './constants'
+import { KAFKA_EVENTS_JSON, KAFKA_EVENTS_PLUGIN_INGESTION } from './kafka-topics'
 
 export const defaultConfig = overrideWithEnv(getDefaultConfig())
 export const configHelp = getConfigHelp()
@@ -15,8 +15,8 @@ export function getDefaultConfig(): PluginsServerConfig {
         DATABASE_URL: isTestEnv()
             ? 'postgres://analytickit:analytickit@localhost:5432/test_analytickit'
             : isDevEnv()
-            ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
-            : null,
+                ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
+                : null,
         analytickit_DB_NAME: null,
         analytickit_DB_USER: 'postgres',
         analytickit_DB_PASSWORD: '',
@@ -216,7 +216,7 @@ export function overrideWithEnv(
             `Invalid KAFKAJS_LOG_LEVEL ${newConfig.KAFKAJS_LOG_LEVEL}. Valid: ${Object.keys(
                 KAFKAJS_LOG_LEVEL_MAPPING
             ).join(', ')}`
-)
-}
-return newConfig
+        )
+    }
+    return newConfig
 }

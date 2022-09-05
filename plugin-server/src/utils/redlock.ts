@@ -1,14 +1,14 @@
-import* as Sentry from '@sentry/node'
+import * as Sentry from '@sentry/node'
 import Redlock from 'redlock'
 
-import { Hub}from '../types'
-import {status}from './status'
-import {createRedis}from './utils'
+import { Hub } from '../types'
+import { status } from './status'
+import { createRedis } from './utils'
 
 type RedlockOptions = {
-server: Hub
-resource: string
-onLock:() => Promise<void> | void
+    server: Hub
+    resource: string
+    onLock: () => Promise<void> | void
     onUnlock: () => Promise<void> | void
     ttl: number
 }

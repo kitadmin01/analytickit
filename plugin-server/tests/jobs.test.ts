@@ -1,20 +1,20 @@
-import {gzipSync} from'zlib'
+import { gzipSync } from 'zlib'
 
-import {defaultConfig} from '../src/config/config'
-import {ServerInstance, startPluginsServer} from '../src/main/pluginsServer'
-import { EnqueuedJob, Hub, JobName, LogLevel, PluginsServerConfig} from '../src/types'
-import {createHub} from '../src/utils/db/hub'
-import { killProcess} from '../src/utils/kill'
-import {delay} from '../src/utils/utils'
-import {makePiscina} from '../src/worker/piscina'
-import {createanalytickit, Dummyanalytickit} from '../src/worker/vm/extensions/analytickit'
-import { writeToFile} from '../src/worker/vm/extensions/test-utils'
-import { resetGraphileSchema} from './helpers/graphile'
-import {pluginConfig39} from './helpers/plugins'
-import {resetTestDatabase} from './helpers/sql'
+import { defaultConfig } from '../src/config/config'
+import { ServerInstance, startPluginsServer } from '../src/main/pluginsServer'
+import { EnqueuedJob, Hub, JobName, LogLevel, PluginsServerConfig } from '../src/types'
+import { createHub } from '../src/utils/db/hub'
+import { killProcess } from '../src/utils/kill'
+import { delay } from '../src/utils/utils'
+import { makePiscina } from '../src/worker/piscina'
+import { createanalytickit, Dummyanalytickit } from '../src/worker/vm/extensions/analytickit'
+import { writeToFile } from '../src/worker/vm/extensions/test-utils'
+import { resetGraphileSchema } from './helpers/graphile'
+import { pluginConfig39 } from './helpers/plugins'
+import { resetTestDatabase } from './helpers/sql'
 
 const mS3WrapperInstance = {
-upload: jest.fn(),
+    upload: jest.fn(),
     getObject: jest.fn(),
     deleteObject: jest.fn(),
     listObjectsV2: jest.fn(),
@@ -189,9 +189,9 @@ describe.skip('job queues', () => {
                             CRASH_IF_NO_PERSISTENT_JOB_QUEUE: true,
                         },
                         false
-)
-server = await startPluginsServer(config, makePiscina)
-await delay(5000)
+                    )
+                    server = await startPluginsServer(config, makePiscina)
+                    await delay(5000)
                     expect(killProcess).toHaveBeenCalled()
                 })
 
@@ -203,10 +203,10 @@ await delay(5000)
                             CRASH_IF_NO_PERSISTENT_JOB_QUEUE: false,
                         },
                         false
-)
-server = await startPluginsServer(config, makePiscina)
-analytickit = createanalytickit(server.hub, pluginConfig39)
-await analytickit.capture('my event', { type: 'runIn' })
+                    )
+                    server = await startPluginsServer(config, makePiscina)
+                    analytickit = createanalytickit(server.hub, pluginConfig39)
+                    await analytickit.capture('my event', { type: 'runIn' })
                     await waitForLogEntries(1)
                     expect(testConsole.read()).toEqual([['processEvent']])
                 })
@@ -220,20 +220,20 @@ await analytickit.capture('my event', { type: 'runIn' })
 
         beforeEach(async () => {
             mS3WrapperInstance.getObject.mockReturnValueOnce({ Body: 'test' })
-            ;[hub, closeHub] = await createHub(
-                createConfig({
-                    CRASH_IF_NO_PERSISTENT_JOB_QUEUE: true,
-                    JOB_QUEUES: 's3',
-                    JOB_QUEUE_S3_PREFIX: 'prefix/',
-                    JOB_QUEUE_S3_BUCKET_NAME: 'bucket-name',
-                    JOB_QUEUE_S3_AWS_SECRET_ACCESS_KEY: 'secret key',
-                    JOB_QUEUE_S3_AWS_ACCESS_KEY: 'access key',
-                    JOB_QUEUE_S3_AWS_REGION: 'region',
-                })
-)
-})
+                ;[hub, closeHub] = await createHub(
+                    createConfig({
+                        CRASH_IF_NO_PERSISTENT_JOB_QUEUE: true,
+                        JOB_QUEUES: 's3',
+                        JOB_QUEUE_S3_PREFIX: 'prefix/',
+                        JOB_QUEUE_S3_BUCKET_NAME: 'bucket-name',
+                        JOB_QUEUE_S3_AWS_SECRET_ACCESS_KEY: 'secret key',
+                        JOB_QUEUE_S3_AWS_ACCESS_KEY: 'access key',
+                        JOB_QUEUE_S3_AWS_REGION: 'region',
+                    })
+                )
+        })
 
-afterEach(async () => closeHub?.())
+        afterEach(async () => closeHub?.())
 
         test('calls a few functions', async () => {
             // calls a few functions to test the connection on init

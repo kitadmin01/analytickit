@@ -1,15 +1,15 @@
-import{Hub, Person}from '../../types'
+import { Hub, Person } from '../../types'
 
 export class LazyPersonContainer {
-teamId: number
-distinctId: string
+    teamId: number
+    distinctId: string
 
-loaded: boolean
+    loaded: boolean
 
-private hub: Hub
-private promise: Promise < Person | undefined> | null
+    private hub: Hub
+    private promise: Promise<Person | undefined> | null
 
-constructor(teamId: number, distinctId: string, hub: Hub, person: Person | undefined = undefined) {
+    constructor(teamId: number, distinctId: string, hub: Hub, person: Person | undefined = undefined) {
         this.teamId = teamId
         this.distinctId = distinctId
         this.hub = hub

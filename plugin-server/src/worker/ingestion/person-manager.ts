@@ -1,13 +1,13 @@
 import LRU from 'lru-cache'
 
-import {ONE_HOUR} from '../../config/constants'
-import {PluginsServerConfig} from '../../types'
-import {DB} from '../../utils/db/db'
+import { ONE_HOUR } from '../../config/constants'
+import { PluginsServerConfig } from '../../types'
+import { DB } from '../../utils/db/db'
 
 export class PersonManager {
-personSeen: LRU < string, boolean>
+    personSeen: LRU<string, boolean>
 
-constructor(serverConfig: PluginsServerConfig) {
+    constructor(serverConfig: PluginsServerConfig) {
         this.personSeen = new LRU({
             max: serverConfig.DISTINCT_ID_LRU_SIZE,
             maxAge: 4 * ONE_HOUR,
@@ -26,7 +26,7 @@ constructor(serverConfig: PluginsServerConfig) {
             'SELECT COUNT(*) AS pdicount FROM analytickit_persondistinctid WHERE team_id = $1 AND distinct_id = $2',
             [teamId, distinctId],
             'pdicount'
-)
-return parseInt(pdiSelectResult.rows[0].pdicount) === 0
+        )
+        return parseInt(pdiSelectResult.rows[0].pdicount) === 0
     }
 }

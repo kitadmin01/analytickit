@@ -1,17 +1,17 @@
-import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
+import { PluginEvent, ProcessedPluginEvent } from '@analytickit/plugin-scaffold'
 import * as fetch from 'node-fetch'
 
-import {KAFKA_EVENTS_PLUGIN_INGESTION, KAFKA_PLUGIN_LOG_ENTRIES} from '../../src/config/kafka-topics'
-import {JobQueueManager} from '../../src/main/job-queues/job-queue-manager'
-import {Hub, PluginLogEntrySource, PluginLogEntryType} from '../../src/types'
-import {PluginConfig, PluginConfigVMResponse} from '../../src/types'
-import {createHub} from '../../src/utils/db/hub'
-import {delay} from '../../src/utils/utils'
-import {MAXIMUM_RETRIES} from '../../src/worker/vm/upgrades/export-events'
-import {createPluginConfigVM} from '../../src/worker/vm/vm'
-import {pluginConfig39} from '../helpers/plugins'
-import {plugin60} from '../helpers/plugins'
-import {resetTestDatabase} from '../helpers/sql'
+import { KAFKA_EVENTS_PLUGIN_INGESTION, KAFKA_PLUGIN_LOG_ENTRIES } from '../../src/config/kafka-topics'
+import { JobQueueManager } from '../../src/main/job-queues/job-queue-manager'
+import { Hub, PluginLogEntrySource, PluginLogEntryType } from '../../src/types'
+import { PluginConfig, PluginConfigVMResponse } from '../../src/types'
+import { createHub } from '../../src/utils/db/hub'
+import { delay } from '../../src/utils/utils'
+import { MAXIMUM_RETRIES } from '../../src/worker/vm/upgrades/export-events'
+import { createPluginConfigVM } from '../../src/worker/vm/vm'
+import { pluginConfig39 } from '../helpers/plugins'
+import { plugin60 } from '../helpers/plugins'
+import { resetTestDatabase } from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 jest.mock('../../src/utils/db/kafka-producer-wrapper')
@@ -847,8 +847,8 @@ describe('vm tests', () => {
             ],
             [
                 'https://app.analytickit.com/api/projects/' +
-                    pluginConfig39.team_id +
-                    '/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                pluginConfig39.team_id +
+                '/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'GET',
@@ -878,13 +878,13 @@ describe('vm tests', () => {
                 attachments,
             },
             indexJs
-)
-const event: PluginEvent = {
-...defaultEvent,
-event: 'attachments',
-}
+        )
+        const event: PluginEvent = {
+            ...defaultEvent,
+            event: 'attachments',
+        }
 
-await vm.methods.processEvent!(event)
+        await vm.methods.processEvent!(event)
 
         expect(event.properties).toEqual(attachments)
     })
@@ -1073,8 +1073,8 @@ await vm.methods.processEvent!(event)
                     },
                 },
                 indexJs
-)
-await vm.methods.onEvent!(defaultEvent)
+            )
+            await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!({ ...defaultEvent, event: 'otherEvent' })
             await vm.methods.onEvent!({ ...defaultEvent, event: 'otherEvent2' })
             await vm.methods.onEvent!({ ...defaultEvent, event: 'otherEvent3' })
@@ -1115,14 +1115,14 @@ await vm.methods.onEvent!(defaultEvent)
                     },
                 },
                 indexJs
-)
-const event: ProcessedPluginEvent = {
-...defaultEvent,
-event: 'exported',
-}
+            )
+            const event: ProcessedPluginEvent = {
+                ...defaultEvent,
+                event: 'exported',
+            }
 
-// first ones will fail and be retried
-await vm.methods.onEvent!(event)
+            // first ones will fail and be retried
+            await vm.methods.onEvent!(event)
             await vm.methods.onEvent!(event)
             await vm.methods.onEvent!(event)
             await delay(1010)
@@ -1183,9 +1183,9 @@ await vm.methods.onEvent!(event)
                     },
                 },
                 indexJs
-)
+            )
 
-await vm.methods.onEvent!(defaultEvent)
+            await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!(defaultEvent)
             await delay(1010)
@@ -1224,12 +1224,12 @@ await vm.methods.onEvent!(defaultEvent)
                     },
                 },
                 indexJs
-)
-const event: ProcessedPluginEvent = {
-...defaultEvent,
-event: 'exported',
-}
-await vm.methods.onEvent!(event)
+            )
+            const event: ProcessedPluginEvent = {
+                ...defaultEvent,
+                event: 'exported',
+            }
+            await vm.methods.onEvent!(event)
             await vm.methods.onEvent!(defaultEvent)
             await vm.methods.onEvent!(event)
             await delay(1010)
@@ -1258,12 +1258,12 @@ await vm.methods.onEvent!(event)
                     },
                 },
                 indexJs
-)
-const event: ProcessedPluginEvent = {
-distinct_id: 'my_id',
-ip: '127.0.0.1',
-team_id: 3,
-timestamp: new Date().toISOString(),
+            )
+            const event: ProcessedPluginEvent = {
+                distinct_id: 'my_id',
+                ip: '127.0.0.1',
+                team_id: 3,
+                timestamp: new Date().toISOString(),
                 event: 'exported',
                 properties: {},
             }
@@ -1312,12 +1312,12 @@ timestamp: new Date().toISOString(),
                     },
                 },
                 indexJs
-)
-const event: ProcessedPluginEvent = {
-distinct_id: 'my_id',
-ip: '127.0.0.1',
-team_id: 3,
-timestamp: new Date().toISOString(),
+            )
+            const event: ProcessedPluginEvent = {
+                distinct_id: 'my_id',
+                ip: '127.0.0.1',
+                team_id: 3,
+                timestamp: new Date().toISOString(),
                 event: 'exported',
                 properties: {},
             }
@@ -1329,10 +1329,10 @@ timestamp: new Date().toISOString(),
             expect(fetch).toHaveBeenCalledTimes(100)
             expect((fetch as any).mock.calls).toEqual(
                 Array.from(Array(100)).map(() => ['https://export.com/?length=128&count=1'])
-)
-})
+            )
+        })
 
-test('flushes on teardown', async () => {
+        test('flushes on teardown', async () => {
             const indexJs = `
                 async function exportEvents (events, meta) {
                     await fetch('https://export.com/results.json?query=' + events[0].event + '&events=' + events.length)
@@ -1351,8 +1351,8 @@ test('flushes on teardown', async () => {
                     },
                 },
                 indexJs
-)
-await vm.methods.onEvent!(defaultEvent)
+            )
+            await vm.methods.onEvent!(defaultEvent)
             expect(fetch).not.toHaveBeenCalledWith('https://export.com/results.json?query=default event&events=1')
 
             await vm.methods.teardownPlugin!()

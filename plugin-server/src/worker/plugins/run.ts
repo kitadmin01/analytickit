@@ -1,10 +1,10 @@
-import {PluginEvent, ProcessedPluginEvent} from '@analytickit/plugin-scaffold'
+import { PluginEvent, ProcessedPluginEvent } from '@analytickit/plugin-scaffold'
 
-import {runInSpan}from '../../sentry'
-import {Hub, PluginConfig, PluginTaskType, VMMethods}from '../../types'
-import {processError }from '../../utils/db/error'
-import {IllegalOperationError} from '../../utils/utils'
-import {runRetriableFunction}from '../retries'
+import { runInSpan } from '../../sentry'
+import { Hub, PluginConfig, PluginTaskType, VMMethods } from '../../types'
+import { processError } from '../../utils/db/error'
+import { IllegalOperationError } from '../../utils/utils'
+import { runRetriableFunction } from '../retries'
 
 export async function runOnEvent(hub: Hub, event: ProcessedPluginEvent): Promise<void> {
     const pluginMethodsToRun = await getPluginMethodsForTeam(hub, event.team_id, 'onEvent')
@@ -23,9 +23,9 @@ export async function runOnEvent(hub: Hub, event: ProcessedPluginEvent): Promise
                             tryFn: async () => await onEvent!(event),
                             event,
                         })
-)
-)
-)
+                )
+            )
+    )
 }
 
 export async function runOnSnapshot(hub: Hub, event: ProcessedPluginEvent): Promise<void> {
@@ -45,9 +45,9 @@ export async function runOnSnapshot(hub: Hub, event: ProcessedPluginEvent): Prom
                             tryFn: async () => await onSnapshot!(event),
                             event,
                         })
-)
-)
-)
+                )
+            )
+    )
 }
 
 export async function runProcessEvent(hub: Hub, event: PluginEvent): Promise<PluginEvent | null> {
@@ -129,21 +129,21 @@ export async function runPluginTask(
         if (!task) {
             throw new Error(
                 `Task "${taskName}" not found for plugin "${pluginConfig?.plugin?.name}" with config id ${pluginConfig}`
-)
-}
-response = await runInSpan(
-{
-op: 'plugin.runTask',
-description: pluginConfig?.plugin?.name || '?',
-data: {
-taskName,
-taskType,
-},
-},
-() => (payload ? task?.exec(payload) : task?.exec())
-)
-}catch (error) {
-await processError(hub, pluginConfig || null, error)
+            )
+        }
+        response = await runInSpan(
+            {
+                op: 'plugin.runTask',
+                description: pluginConfig?.plugin?.name || '?',
+                data: {
+                    taskName,
+                    taskType,
+                },
+            },
+            () => (payload ? task?.exec(payload) : task?.exec())
+        )
+    } catch (error) {
+        await processError(hub, pluginConfig || null, error)
 
         hub.statsd?.increment(`plugin.task.ERROR`, {
             taskType: taskType,
@@ -170,6 +170,6 @@ async function getPluginMethodsForTeam<M extends keyof VMMethods>(
     }
     const methodsObtained = await Promise.all(
         pluginConfigs.map(async (pluginConfig) => [pluginConfig, await pluginConfig?.vm?.getVmMethod(method)])
-)
-return methodsObtained as [PluginConfig, VMMethods[M]][]
+    )
+    return methodsObtained as [PluginConfig, VMMethods[M]][]
 }

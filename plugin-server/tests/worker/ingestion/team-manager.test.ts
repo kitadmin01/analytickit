@@ -1,16 +1,16 @@
-import {DateTime, Settings} from 'luxon'
+import { DateTime, Settings } from 'luxon'
 
-import { DateTimePropertyTypeFormat, Hub, PropertyType} from '../../../src/types'
-import {createHub} from '../../../src/utils/db/hub'
-import {analytickit} from '../../../src/utils/analytickit'
-import { UUIDT} from '../../../src/utils/utils'
+import { DateTimePropertyTypeFormat, Hub, PropertyType } from '../../../src/types'
+import { analytickit } from '../../../src/utils/analytickit'
+import { createHub } from '../../../src/utils/db/hub'
+import { UUIDT } from '../../../src/utils/utils'
 import {
-dateTimePropertyTypeFormatPatterns,
-isNumericString,
+    dateTimePropertyTypeFormatPatterns,
+    isNumericString,
 } from '../../../src/worker/ingestion/property-definitions-auto-discovery'
-import {NULL_AFTER_PROPERTY_TYPE_DETECTION }from '../../../src/worker/ingestion/property-definitions-cache'
-import {TeamManager}from '../../../src/worker/ingestion/team-manager'
-import {resetTestDatabase}from '../../helpers/sql'
+import { NULL_AFTER_PROPERTY_TYPE_DETECTION } from '../../../src/worker/ingestion/property-definitions-cache'
+import { TeamManager } from '../../../src/worker/ingestion/team-manager'
+import { resetTestDatabase } from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 jest.mock('../../../src/utils/analytickit', () => ({
@@ -83,30 +83,30 @@ describe('TeamManager()', () => {
                     `INSERT INTO analytickit_eventdefinition (id, name, volume_30_day, query_usage_30_day, team_id, created_at) VALUES ($1, $2, $3, $4, $5, NOW())`,
                     [new UUIDT().toString(), '$pageview', 3, 2, 2],
                     'testTag'
-)
-await hub.db.postgresQuery(
+                )
+                await hub.db.postgresQuery(
                     `INSERT INTO analytickit_eventdefinition (id, name, team_id, created_at, last_seen_at) VALUES ($1, $2, $3, NOW(), $4)`,
                     [new UUIDT().toString(), 'another_test_event', 2, '2014-03-23T23:23:23Z'],
                     'testTag'
-)
-await hub.db.postgresQuery(
+                )
+                await hub.db.postgresQuery(
                     `INSERT INTO analytickit_propertydefinition (id, name, is_numerical, volume_30_day, query_usage_30_day, team_id) VALUES ($1, $2, $3, $4, $5, $6)`,
                     [new UUIDT().toString(), 'property_name', false, null, null, 2],
                     'testTag'
-)
-await hub.db.postgresQuery(
+                )
+                await hub.db.postgresQuery(
                     `INSERT INTO analytickit_propertydefinition (id, name, is_numerical, volume_30_day, query_usage_30_day, team_id) VALUES ($1, $2, $3, $4, $5, $6)`,
                     [new UUIDT().toString(), 'numeric_prop', true, null, null, 2],
                     'testTag'
-)
-await hub.db.postgresQuery(
+                )
+                await hub.db.postgresQuery(
                     `INSERT INTO analytickit_eventproperty (event, property, team_id) VALUES ($1, $2, $3)`,
                     ['new-event', 'numeric_prop', 2],
                     'testTag'
-)
-})
+                )
+            })
 
-it('updates event properties', async () => {
+            it('updates event properties', async () => {
                 jest.spyOn(global.Date, 'now').mockImplementation(() => new Date('2020-02-27T11:00:36.000Z').getTime())
 
                 await teamManager.updateEventNamesAndProperties(2, 'new-event', {
@@ -236,11 +236,11 @@ it('updates event properties', async () => {
                     'UPDATE analytickit_eventdefinition SET last_seen_at=$1 WHERE team_id=$2 AND name=$3',
                     [DateTime.now(), 2, 'another_test_event'],
                     'updateEventLastSeenAt'
-)
+                )
 
-// Re-ingest, should add no queries
-postgresQuery.mockClear()
-await teamManager.updateEventNamesAndProperties(2, 'another_test_event', {})
+                // Re-ingest, should add no queries
+                postgresQuery.mockClear()
+                await teamManager.updateEventNamesAndProperties(2, 'another_test_event', {})
                 expect(postgresQuery).not.toHaveBeenCalled()
 
                 expect(teamManager.eventLastSeenCache.length).toEqual(1)
@@ -260,9 +260,9 @@ await teamManager.updateEventNamesAndProperties(2, 'another_test_event', {})
                     `INSERT INTO analytickit_eventdefinition (id, name, volume_30_day, query_usage_30_day, team_id) VALUES ($1, $2, NULL, NULL, $3) ON CONFLICT DO NOTHING`,
                     [new UUIDT().toString(), '$foobar', 2],
                     'insertEventDefinition'
-)
+                )
 
-jest.spyOn(teamManager, 'fetchTeam')
+                jest.spyOn(teamManager, 'fetchTeam')
                 jest.spyOn(hub.db, 'postgresQuery')
 
                 // Scenario: Different request comes in, team gets reloaded in the background with no updates
@@ -324,9 +324,9 @@ jest.spyOn(teamManager, 'fetchTeam')
 
                 expect(teamManager.propertyDefinitionsCache.get(teamId)?.peek('anObjectProperty')).toEqual(
                     NULL_AFTER_PROPERTY_TYPE_DETECTION
-)
+                )
 
-expect(await hub.db.fetchPropertyDefinitions()).toEqual([
+                expect(await hub.db.fetchPropertyDefinitions()).toEqual([
                     expect.objectContaining({
                         id: expect.any(String),
                         team_id: teamId,
@@ -643,9 +643,9 @@ expect(await hub.db.fetchPropertyDefinitions()).toEqual([
                     'INSERT INTO analytickit_propertydefinition (id, name, is_numerical, volume_30_day, query_usage_30_day, team_id, property_type) VALUES ($1, $2, $3, NULL, NULL, $4, $5)',
                     [new UUIDT().toString(), 'a_timestamp', false, teamId, null],
                     'testTag'
-)
+                )
 
-await teamManager.updateEventNamesAndProperties(teamId, 'a_test_event', {
+                await teamManager.updateEventNamesAndProperties(teamId, 'a_test_event', {
                     a_timestamp: 1234567890,
                 })
 
@@ -656,8 +656,8 @@ await teamManager.updateEventNamesAndProperties(teamId, 'a_test_event', {
                 `,
                     ['a_timestamp'],
                     'queryForProperty'
-)
-expect(results.rows[0]).toEqual({ property_type: 'DateTime' })
+                )
+                expect(results.rows[0]).toEqual({ property_type: 'DateTime' })
             })
 
             it('does not replace property type if the property was previously saved with a different type', async () => {
@@ -665,9 +665,9 @@ expect(results.rows[0]).toEqual({ property_type: 'DateTime' })
                     'INSERT INTO analytickit_propertydefinition (id, name, is_numerical, volume_30_day, query_usage_30_day, team_id, property_type) VALUES ($1, $2, $3, NULL, NULL, $4, $5)',
                     [new UUIDT().toString(), 'a_prop_with_type', false, teamId, PropertyType.DateTime],
                     'testTag'
-)
+                )
 
-await teamManager.updateEventNamesAndProperties(teamId, 'a_test_event', {
+                await teamManager.updateEventNamesAndProperties(teamId, 'a_test_event', {
                     a_prop_with_type: 1234567890,
                 })
 
@@ -678,8 +678,8 @@ await teamManager.updateEventNamesAndProperties(teamId, 'a_test_event', {
                 `,
                     ['a_prop_with_type'],
                     'queryForProperty'
-)
-expect(results.rows[0]).toEqual({
+                )
+                expect(results.rows[0]).toEqual({
                     property_type: PropertyType.DateTime,
                 })
             })

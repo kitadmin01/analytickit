@@ -1,9 +1,9 @@
-import {PluginEvent} from '@analytickit/plugin-scaffold'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
 
-import {IngestionEvent }from '../../../types'
-import {LazyPersonContainer}from '../lazy-person-container'
-import {parseEventTimestamp }from '../timestamps'
-import {EventPipelineRunner, StepResult}from './runner'
+import { IngestionEvent } from '../../../types'
+import { LazyPersonContainer } from '../lazy-person-container'
+import { parseEventTimestamp } from '../timestamps'
+import { EventPipelineRunner, StepResult } from './runner'
 
 export async function prepareEventStep(
     runner: EventPipelineRunner,
@@ -18,9 +18,9 @@ export async function prepareEventStep(
         team_id,
         parseEventTimestamp(event, runner.hub.statsd),
         uuid! // it will throw if it's undefined,
-)
+    )
 
-await runner.hub.siteUrlManager.updateIngestionSiteUrl(site_url)
+    await runner.hub.siteUrlManager.updateIngestionSiteUrl(site_url)
 
     if (preIngestionEvent && preIngestionEvent.event !== '$snapshot') {
         return runner.nextStep('createEventStep', preIngestionEvent, personContainer)

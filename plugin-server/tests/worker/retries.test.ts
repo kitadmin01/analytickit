@@ -1,10 +1,10 @@
-import {ProcessedPluginEvent, RetryError} from '@analytickit/plugin-scaffold'
+import { ProcessedPluginEvent, RetryError } from '@analytickit/plugin-scaffold'
 
-import {Hub}from '../../src/types'
-import { UUID}from '../../src/utils/utils'
-import {getNextRetryMs, runRetriableFunction}from '../../src/worker/retries'
-import { PromiseManager}from '../../src/worker/vm/promise-manager'
-import {pluginConfig39}from '../helpers/plugins'
+import { Hub } from '../../src/types'
+import { UUID } from '../../src/utils/utils'
+import { getNextRetryMs, runRetriableFunction } from '../../src/worker/retries'
+import { PromiseManager } from '../../src/worker/vm/promise-manager'
+import { pluginConfig39 } from '../helpers/plugins'
 
 jest.useFakeTimers()
 jest.spyOn(global, 'setTimeout')

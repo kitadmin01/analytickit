@@ -1,6 +1,6 @@
-import {PreIngestionEvent} from'../../../types'
-import {LazyPersonContainer} from '../lazy-person-container'
-import {EventPipelineRunner, StepResult} from './runner'
+import { PreIngestionEvent } from '../../../types'
+import { LazyPersonContainer } from '../lazy-person-container'
+import { EventPipelineRunner, StepResult } from './runner'
 
 export async function createEventStep(
     runner: EventPipelineRunner,

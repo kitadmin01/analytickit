@@ -1,40 +1,40 @@
-import {PluginEvent, Properties} from '@analytickit/plugin-scaffold'
+import { PluginEvent, Properties } from '@analytickit/plugin-scaffold'
 import * as Sentry from '@sentry/node'
 import equal from 'fast-deep-equal'
-import {StatsD} from 'hot-shots'
-import { ProducerRecord} from 'kafkajs'
-import {DateTime } from 'luxon'
-import {DatabaseError, PoolClient} from 'pg'
+import { StatsD } from 'hot-shots'
+import { ProducerRecord } from 'kafkajs'
+import { DateTime } from 'luxon'
+import { DatabaseError, PoolClient } from 'pg'
 
-import { Person, PropertyUpdateOperation} from '../../types'
-import {DB} from '../../utils/db/db'
-import {timeoutGuard} from '../../utils/db/utils'
-import {status} from '../../utils/status'
-import {NoRowsUpdatedError, UUIDT} from '../../utils/utils'
-import {LazyPersonContainer} from './lazy-person-container'
-import {PersonManager} from './person-manager'
+import { Person, PropertyUpdateOperation } from '../../types'
+import { DB } from '../../utils/db/db'
+import { timeoutGuard } from '../../utils/db/utils'
+import { status } from '../../utils/status'
+import { NoRowsUpdatedError, UUIDT } from '../../utils/utils'
+import { LazyPersonContainer } from './lazy-person-container'
+import { PersonManager } from './person-manager'
 
 const MAX_FAILED_PERSON_MERGE_ATTEMPTS = 3
 
 // used to prevent identify from being used with generic IDs
 // that we can safely assume stem from a bug or mistake
 const CASE_INSENSITIVE_ILLEGAL_IDS = new Set([
-'anonymous',
-'guest',
-'distinctid',
-'distinct_id',
-'id',
-'not_authenticated',
-'email',
-'undefined',
-'true',
-'false',
+    'anonymous',
+    'guest',
+    'distinctid',
+    'distinct_id',
+    'id',
+    'not_authenticated',
+    'email',
+    'undefined',
+    'true',
+    'false',
 ])
 
 const CASE_SENSITIVE_ILLEGAL_IDS = new Set(['[object Object]', 'NaN', 'None', 'none', 'null', '0'])
 
 const isDistinctIdIllegal = (id: string): boolean => {
-return id.trim() === '' || CASE_INSENSITIVE_ILLEGAL_IDS.has(id.toLowerCase()) || CASE_SENSITIVE_ILLEGAL_IDS.has(id)
+    return id.trim() === '' || CASE_INSENSITIVE_ILLEGAL_IDS.has(id.toLowerCase()) || CASE_SENSITIVE_ILLEGAL_IDS.has(id)
 }
 
 // This class is responsible for creating/updating a single person through the process-event pipeline
@@ -129,12 +129,12 @@ export class PersonState {
                     this.updateIsIdentified,
                     this.newUuid,
                     [this.distinctId]
-)
-// :TRICKY: Avoid subsequent queries re-fetching person
-this.personContainer = this.personContainer.with(person)
-return true
-}catch (error) {
-if (!error.message || !error.message.includes('duplicate key value violates unique constraint')) {
+                )
+                // :TRICKY: Avoid subsequent queries re-fetching person
+                this.personContainer = this.personContainer.with(person)
+                return true
+            } catch (error) {
+                if (!error.message || !error.message.includes('duplicate key value violates unique constraint')) {
                     Sentry.captureException(error, {
                         extra: {
                             teamId: this.teamId,
@@ -185,10 +185,10 @@ if (!error.message || !error.message.includes('duplicate key value violates uniq
             isIdentified,
             uuid,
             distinctIds
-)
-}
+        )
+    }
 
-private async updatePersonProperties(): Promise<Person | null> {
+    private async updatePersonProperties(): Promise<Person | null> {
         try {
             return await this.tryUpdatePerson()
         } catch (error) {
@@ -210,15 +210,15 @@ private async updatePersonProperties(): Promise<Person | null> {
             this.statsd?.increment('person_not_found', { teamId: String(this.teamId), key: 'update' })
             throw new Error(
                 `Could not find person with distinct id "${this.distinctId}" in team "${this.teamId}" to update properties`
-)
-}
+            )
+        }
 
-const update: Partial < Person> = {
+        const update: Partial<Person> = {
 
-}
-const updatedProperties = this.updatedPersonProperties(personFound.properties || {})
+        }
+        const updatedProperties = this.updatedPersonProperties(personFound.properties || {})
 
-if (!equal(personFound.properties, updatedProperties)) {
+        if (!equal(personFound.properties, updatedProperties)) {
             update.properties = updatedProperties
         }
         if (this.updateIsIdentified && !personFound.is_identified) {
@@ -278,10 +278,10 @@ if (!equal(personFound.properties, updatedProperties)) {
                     this.teamId,
                     this.timestamp,
                     true
-)
-}
-}catch (e) {
-console.error('handleIdentifyOrAlias failed', e, this.event)
+                )
+            }
+        } catch (e) {
+            console.error('handleIdentifyOrAlias failed', e, this.event)
         } finally {
             clearTimeout(timeout)
         }
@@ -336,12 +336,12 @@ console.error('handleIdentifyOrAlias failed', e, this.event)
                         timestamp,
                         shouldIdentifyPerson,
                         false
-)
-}
-}
-}else if (!oldPerson && newPerson) {
-try {
-await this.db.addDistinctId(newPerson, previousDistinctId)
+                    )
+                }
+            }
+        } else if (!oldPerson && newPerson) {
+            try {
+                await this.db.addDistinctId(newPerson, previousDistinctId)
                 this.updateIsIdentified = shouldIdentifyPerson
                 // Catch race case when somebody already added this distinct_id between .get and .addDistinctId
             } catch {
@@ -355,29 +355,29 @@ await this.db.addDistinctId(newPerson, previousDistinctId)
                         timestamp,
                         shouldIdentifyPerson,
                         false
-)
-}
-}
-}else if (!oldPerson && !newPerson) {
-try {
-const person = await this.createPerson(
-timestamp,
-this.eventProperties['$set'] || {},
-this.eventProperties['$set_once'] || {
+                    )
+                }
+            }
+        } else if (!oldPerson && !newPerson) {
+            try {
+                const person = await this.createPerson(
+                    timestamp,
+                    this.eventProperties['$set'] || {},
+                    this.eventProperties['$set_once'] || {
 
-},
-teamId,
-null,
-shouldIdentifyPerson,
-this.newUuid,
-[distinctId, previousDistinctId]
-)
-// :KLUDGE: Avoid unneeded fetches in updateProperties()
-this.personContainer = this.personContainer.with(person)
-}catch {
-// Catch race condition where in between getting and creating,
-// another request already created this person
-if (retryIfFailed) {
+                    },
+                    teamId,
+                    null,
+                    shouldIdentifyPerson,
+                    this.newUuid,
+                    [distinctId, previousDistinctId]
+                )
+                // :KLUDGE: Avoid unneeded fetches in updateProperties()
+                this.personContainer = this.personContainer.with(person)
+            } catch {
+                // Catch race condition where in between getting and creating,
+                // another request already created this person
+                if (retryIfFailed) {
                     // Try once more, probably one of the two persons exists now
                     await this.aliasDeprecated(
                         previousDistinctId,
@@ -386,15 +386,15 @@ if (retryIfFailed) {
                         timestamp,
                         shouldIdentifyPerson,
                         false
-)
-}
-}
-}else if (oldPerson && newPerson && oldPerson.id !== newPerson.id) {
-// $create_alias is an explicit call to merge 2 users, so we'll merge anything
-// for $identify, we'll not merge a user who's already identified into anyone else
-const isIdentifyCallToMergeAnIdentifiedUser = shouldIdentifyPerson && oldPerson.is_identified
+                    )
+                }
+            }
+        } else if (oldPerson && newPerson && oldPerson.id !== newPerson.id) {
+            // $create_alias is an explicit call to merge 2 users, so we'll merge anything
+            // for $identify, we'll not merge a user who's already identified into anyone else
+            const isIdentifyCallToMergeAnIdentifiedUser = shouldIdentifyPerson && oldPerson.is_identified
 
-if (isIdentifyCallToMergeAnIdentifiedUser) {
+            if (isIdentifyCallToMergeAnIdentifiedUser) {
                 status.warn('🤔', 'refused to merge an already identified user via an $identify call')
                 this.updateIsIdentified = shouldIdentifyPerson
             } else {
@@ -465,13 +465,13 @@ if (isIdentifyCallToMergeAnIdentifiedUser) {
                         is_identified: mergeInto.is_identified || otherPerson.is_identified || shouldIdentifyPerson,
                     },
                     client
-)
+                )
 
-// :KLUDGE: Avoid unneeded fetches in updateProperties()
-this.personContainer = this.personContainer.with(person)
+                // :KLUDGE: Avoid unneeded fetches in updateProperties()
+                this.personContainer = this.personContainer.with(person)
 
-// Merge the distinct IDs
-await this.handleTablesDependingOnPersonID(otherPerson, mergeInto, client)
+                // Merge the distinct IDs
+                await this.handleTablesDependingOnPersonID(otherPerson, mergeInto, client)
 
                 const distinctIdMessages = await this.db.moveDistinctIds(otherPerson, mergeInto, client)
 
@@ -496,11 +496,11 @@ await this.handleTablesDependingOnPersonID(otherPerson, mergeInto, client)
                     shouldIdentifyPerson,
                     false,
                     failedAttempts
-)
-}
-})
+                )
+            }
+        })
 
-await this.db.kafkaProducer.queueMessages(kafkaMessages)
+        await this.db.kafkaProducer.queueMessages(kafkaMessages)
     }
 
     private async handleTablesDependingOnPersonID(
@@ -516,10 +516,10 @@ await this.db.kafkaProducer.queueMessages(kafkaMessages)
             [targetPerson.id, sourcePerson.id],
             'updateCohortPeople',
             client
-)
+        )
 
-// For FeatureFlagHashKeyOverrides
-await this.db.addFeatureFlagHashKeysForMergedPerson(sourcePerson.team_id, sourcePerson.id, targetPerson.id)
+        // For FeatureFlagHashKeyOverrides
+        await this.db.addFeatureFlagHashKeysForMergedPerson(sourcePerson.team_id, sourcePerson.id, targetPerson.id)
     }
 }
 

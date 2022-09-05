@@ -1,8 +1,8 @@
-import{Hub, PluginConfig, PluginConfigVMResponse}from '../../src/types'
-import {createHub }from '../../src/utils/db/hub'
-import { createPluginConfigVM, TimeoutError}from '../../src/worker/vm/vm'
-import {pluginConfig39}from '../helpers/plugins'
-import {resetTestDatabase}from '../helpers/sql'
+import { Hub, PluginConfig, PluginConfigVMResponse } from '../../src/types'
+import { createHub } from '../../src/utils/db/hub'
+import { createPluginConfigVM, TimeoutError } from '../../src/worker/vm/vm'
+import { pluginConfig39 } from '../helpers/plugins'
+import { resetTestDatabase } from '../helpers/sql'
 
 jest.mock('../../src/utils/status')
 
@@ -250,8 +250,8 @@ describe('vm timeout tests', () => {
         expect(new Date().valueOf() - date.valueOf()).toBeLessThan(4000)
         expect(errorMessage!).toEqual(
             expect.stringContaining('Script execution timed out after promise waited for 1 second')
-)
-expect(caller).toEqual('processEvent')
+        )
+        expect(caller).toEqual('processEvent')
     })
 
     test('small promises and overriding async guard', async () => {
@@ -285,10 +285,10 @@ expect(caller).toEqual('processEvent')
         expect(new Date().valueOf() - date.valueOf()).toBeLessThan(4000)
         expect(errorMessage!).toEqual(
             expect.stringContaining('Script execution timed out after promise waited for 1 second')
-)
-})
+        )
+    })
 
-test('long promise', async () => {
+    test('long promise', async () => {
         const indexJs = `
             async function processEvent (event, meta) {
                 await new Promise(resolve => __jestSetTimeout(() => resolve(), 4000))
@@ -306,6 +306,6 @@ test('long promise', async () => {
         }
         expect(errorMessage!).toEqual(
             expect.stringContaining('Script execution timed out after promise waited for 1 second')
-)
-})
+        )
+    })
 })

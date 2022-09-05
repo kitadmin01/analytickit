@@ -1,21 +1,21 @@
 import Piscina from '@analytickit/piscina'
-import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
-import {Redis} from 'ioredis'
+import { PluginEvent } from '@analytickit/plugin-scaffold/src/types'
+import { Redis } from 'ioredis'
 import * as nodeSchedule from 'node-schedule'
 
 import {
-loadPluginSchedule,
-LOCKED_RESOURCE,
-runScheduleDebounced,
-startPluginSchedules,
-waitForTasksToFinish,
+    loadPluginSchedule,
+    LOCKED_RESOURCE,
+    runScheduleDebounced,
+    startPluginSchedules,
+    waitForTasksToFinish,
 } from '../src/main/services/schedule'
-import {Hub, LogLevel, PluginScheduleControl }from '../src/types'
-import {createHub}from '../src/utils/db/hub'
-import {delay, UUIDT}from '../src/utils/utils'
-import {createPromise }from './helpers/promises'
-import {resetTestDatabase}from './helpers/sql'
-import {setupPiscina}from './helpers/worker'
+import { Hub, LogLevel, PluginScheduleControl } from '../src/types'
+import { createHub } from '../src/utils/db/hub'
+import { delay, UUIDT } from '../src/utils/utils'
+import { createPromise } from './helpers/promises'
+import { resetTestDatabase } from './helpers/sql'
+import { setupPiscina } from './helpers/worker'
 
 jest.mock('../src/utils/db/sql')
 jest.mock('../src/utils/status')
@@ -114,7 +114,7 @@ describe('schedule', () => {
             await delay(1000)
             await piscina.destroy()
             await closeHub()
-        } catch {}
+        } catch { }
     })
 
     describe('startPluginSchedules', () => {
@@ -132,7 +132,7 @@ describe('schedule', () => {
         `
             await resetTestDatabase(testCode)
             piscina = setupPiscina(workerThreads, 10)
-            ;[hub, closeHub] = await createHub({ LOG_LEVEL: LogLevel.Log, SCHEDULE_LOCK_TTL: 3 })
+                ;[hub, closeHub] = await createHub({ LOG_LEVEL: LogLevel.Log, SCHEDULE_LOCK_TTL: 3 })
 
             redis = await hub.redisPool.acquire()
             await redis.del(LOCKED_RESOURCE)

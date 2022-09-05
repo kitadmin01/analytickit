@@ -1,4 +1,4 @@
-import{addGroupProperties}from'../../../src/worker/ingestion/groups'
+import { addGroupProperties } from '../../../src/worker/ingestion/groups'
 
 describe('addGroupProperties()', () => {
     let mockGroupTypeManager: any

@@ -1,20 +1,20 @@
-import* as Sentry from '@sentry/node'
-import {makeWorkerUtils, run, Runner, WorkerUtils} from 'graphile-worker'
-import {Pool}from 'pg'
+import * as Sentry from '@sentry/node'
+import { makeWorkerUtils, run, Runner, WorkerUtils } from 'graphile-worker'
+import { Pool } from 'pg'
 
-import {EnqueuedJob, PluginsServerConfig }from '../../../types'
-import {status}from '../../../utils/status'
-import {createPostgresPool}from '../../../utils/utils'
-import {JobQueueBase}from '../job-queue-base'
+import { EnqueuedJob, PluginsServerConfig } from '../../../types'
+import { status } from '../../../utils/status'
+import { createPostgresPool } from '../../../utils/utils'
+import { JobQueueBase } from '../job-queue-base'
 
 export class GraphileQueue extends JobQueueBase {
-serverConfig: PluginsServerConfig
-runner: Runner | null
-consumerPool: Pool | null
-producerPool: Pool | null
-workerUtilsPromise: Promise < WorkerUtils> | null
+    serverConfig: PluginsServerConfig
+    runner: Runner | null
+    consumerPool: Pool | null
+    producerPool: Pool | null
+    workerUtilsPromise: Promise<WorkerUtils> | null
 
-constructor(serverConfig: PluginsServerConfig) {
+    constructor(serverConfig: PluginsServerConfig) {
         super()
         this.serverConfig = serverConfig
         this.runner = null

@@ -1,14 +1,14 @@
 import {
     Hub,
-Plugin,
-PluginAttachmentDB,
-PluginCapabilities,
-PluginConfig,
-PluginConfigId,
-PluginError,
-PluginLogEntrySource,
-PluginLogEntryType,
-}from '../../types'
+    Plugin,
+    PluginAttachmentDB,
+    PluginCapabilities,
+    PluginConfig,
+    PluginConfigId,
+    PluginError,
+    PluginLogEntrySource,
+    PluginLogEntryType,
+} from '../../types'
 
 function pluginConfigsInForceQuery(specificField?: keyof PluginConfig): string {
     const fields = specificField
@@ -72,9 +72,9 @@ export async function getPluginRows(hub: Hub): Promise<Plugin[]> {
         GROUP BY analytickit_pluginconfig.plugin_id)`,
         undefined,
         'getPluginRows'
-)
+    )
 
-return rows
+    return rows
 }
 
 export async function getPluginAttachmentRows(hub: Hub): Promise<PluginAttachmentDB[]> {
@@ -83,8 +83,8 @@ export async function getPluginAttachmentRows(hub: Hub): Promise<PluginAttachmen
             WHERE plugin_config_id IN (${pluginConfigsInForceQuery('id')})`,
         undefined,
         'getPluginAttachmentRows'
-)
-return rows
+    )
+    return rows
 }
 
 export async function getPluginConfigRows(hub: Hub): Promise<PluginConfig[]> {
@@ -92,8 +92,8 @@ export async function getPluginConfigRows(hub: Hub): Promise<PluginConfig[]> {
         pluginConfigsInForceQuery(),
         undefined,
         'getPluginConfigRows'
-)
-return rows
+    )
+    return rows
 }
 
 export async function setPluginCapabilities(
@@ -105,7 +105,7 @@ export async function setPluginCapabilities(
         'UPDATE analytickit_plugin SET capabilities = ($1) WHERE id = $2',
         [capabilities, pluginConfig.plugin_id],
         'setPluginCapabilities'
-)
+    )
 }
 
 export async function setError(hub: Hub, pluginError: PluginError | null, pluginConfig: PluginConfig): Promise<void> {
@@ -113,8 +113,8 @@ export async function setError(hub: Hub, pluginError: PluginError | null, plugin
         'UPDATE analytickit_pluginconfig SET error = $1 WHERE id = $2',
         [pluginError, typeof pluginConfig === 'object' ? pluginConfig?.id : pluginConfig],
         'updatePluginConfigError'
-)
-if (pluginError) {
+    )
+    if (pluginError) {
         await hub.db.queuePluginLogEntry({
             pluginConfig,
             source: PluginLogEntrySource.Plugin,
@@ -131,6 +131,6 @@ export async function disablePlugin(hub: Hub, pluginConfigId: PluginConfigId): P
         `UPDATE analytickit_pluginconfig SET enabled='f' WHERE id=$1 AND enabled='t'`,
         [pluginConfigId],
         'disablePlugin'
-)
-await hub.db.redisPublish(hub.PLUGINS_RELOAD_PUBSUB_CHANNEL, 'reload!')
+    )
+    await hub.db.redisPublish(hub.PLUGINS_RELOAD_PUBSUB_CHANNEL, 'reload!')
 }

@@ -1,8 +1,8 @@
 // This module wraps node-fetch with a sentry tracing-aware extension
 
-importfetch, {Request, Response}from 'node-fetch'
+import fetch, { Request, Response } from 'node-fetch'
 
-import {runInSpan}from '../sentry'
+import { runInSpan } from '../sentry'
 
 function fetchWrapper(...args: Parameters<typeof fetch>): Promise<Response> {
     const request = new Request(...args)
@@ -12,7 +12,7 @@ function fetchWrapper(...args: Parameters<typeof fetch>): Promise<Response> {
             description: `${request.method} ${request.url}`,
         },
         () => fetch(...args)
-)
+    )
 }
 
 fetchWrapper.isRedirect = fetch.isRedirect

@@ -1,4 +1,4 @@
-import AnalyticKit from 'analytickit-js-lite'
+import AnalyticKit from 'analytickit-js-lite/analytickit-web'
 
 const runningOnAnalytickit = !!window.analytickit_APP_CONTEXT
 const apiKey = runningOnAnalytickit ? window.JS_ANALYTICKIT_API_KEY : 'sTMFPsFhdP1Ssg'

@@ -1,34 +1,34 @@
-import* as Sentry from '@sentry/node'
-import {Consumer, ConsumerSubscribeTopics, EachBatchPayload, Kafka} from 'kafkajs'
+import * as Sentry from '@sentry/node'
+import { Consumer, ConsumerSubscribeTopics, EachBatchPayload, Kafka } from 'kafkajs'
 
-import {Hub, WorkerMethods}from '../../types'
-import {timeoutGuard}from '../../utils/db/utils'
-import {status}from '../../utils/status'
-import {killGracefully}from '../../utils/utils'
-import {KAFKA_EVENTS_JSON, prefix as KAFKA_PREFIX}from './../../config/kafka-topics'
-import {eachBatchAsyncHandlers}from './batch-processing/each-batch-async-handlers'
-import {eachBatchIngestion}from './batch-processing/each-batch-ingestion'
-import {addMetricsEventListeners, emitConsumerGroupMetrics }from './kafka-metrics'
+import { Hub, WorkerMethods } from '../../types'
+import { timeoutGuard } from '../../utils/db/utils'
+import { status } from '../../utils/status'
+import { killGracefully } from '../../utils/utils'
+import { KAFKA_EVENTS_JSON, prefix as KAFKA_PREFIX } from './../../config/kafka-topics'
+import { eachBatchAsyncHandlers } from './batch-processing/each-batch-async-handlers'
+import { eachBatchIngestion } from './batch-processing/each-batch-ingestion'
+import { addMetricsEventListeners, emitConsumerGroupMetrics } from './kafka-metrics'
 
 type ConsumerManagementPayload = {
-topic: string
-partitions?: number[] | undefined
+    topic: string
+    partitions?: number[] | undefined
 }
 
 type EachBatchFunction = (payload: EachBatchPayload, queue: KafkaQueue) => Promise<void>
 export class KafkaQueue {
-public pluginsServer: Hub
-public workerMethods: WorkerMethods
-public consumerReady: boolean
-private kafka: Kafka
-private consumer: Consumer
-private consumerGroupMemberId: string | null
-private wasConsumerRan: boolean
-private ingestionTopic: string
-private eventsTopic: string
-private eachBatch: Record< string, EachBatchFunction>
+    public pluginsServer: Hub
+    public workerMethods: WorkerMethods
+    public consumerReady: boolean
+    private kafka: Kafka
+    private consumer: Consumer
+    private consumerGroupMemberId: string | null
+    private wasConsumerRan: boolean
+    private ingestionTopic: string
+    private eventsTopic: string
+    private eachBatch: Record<string, EachBatchFunction>
 
-constructor(pluginsServer: Hub, workerMethods: WorkerMethods) {
+    constructor(pluginsServer: Hub, workerMethods: WorkerMethods) {
         this.pluginsServer = pluginsServer
         this.kafka = pluginsServer.kafka!
         this.consumer = KafkaQueue.buildConsumer(this.kafka, this.consumerGroupId())
@@ -76,10 +76,10 @@ constructor(pluginsServer: Hub, workerMethods: WorkerMethods) {
                 topics: this.topics(),
             },
             60000
-)
+        )
 
-const startPromise = new Promise<void>(async (resolve, reject) => {
-addMetricsEventListeners(this.consumer, this.pluginsServer.statsd)
+        const startPromise = new Promise<void>(async (resolve, reject) => {
+            addMetricsEventListeners(this.consumer, this.pluginsServer.statsd)
 
             this.consumer.on(this.consumer.events.GROUP_JOIN, ({ payload }) => {
                 status.info('ℹ️', 'Kafka joined consumer group', JSON.stringify(payload))
@@ -115,9 +115,9 @@ addMetricsEventListeners(this.consumer, this.pluginsServer.statsd)
                             status.info(
                                 '💀',
                                 "Probably the batch took longer than the session and we couldn't commit the offset"
-)
-}
-if(error.message) {
+                            )
+                        }
+                        if (error.message) {
                             let logToSentry = true
                             const messagesToIgnore = {
                                 'The group is rebalancing, so a rejoin is needed': 'group_rebalancing',
@@ -190,7 +190,7 @@ if(error.message) {
         }
         try {
             await this.consumer.disconnect()
-        } catch {}
+        } catch { }
 
         this.consumerReady = false
     }

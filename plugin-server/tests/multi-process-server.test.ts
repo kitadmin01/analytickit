@@ -1,14 +1,14 @@
-import {ServerInstance, startPluginsServer} from '../src/main/pluginsServer'
-import {delay, UUIDT} from '../src/utils/utils'
-import {makePiscina} from '../src/worker/piscina'
-import { createanalytickit, Dummyanalytickit} from '../src/worker/vm/extensions/analytickit'
-import {writeToFile} from '../src/worker/vm/extensions/test-utils'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse} from './helpers/clickhouse'
-import {resetKafka} from './helpers/kafka'
-import { pluginConfig39} from './helpers/plugins'
-import {resetTestDatabase} from './helpers/sql'
+import { ServerInstance, startPluginsServer } from '../src/main/pluginsServer'
+import { delay, UUIDT } from '../src/utils/utils'
+import { makePiscina } from '../src/worker/piscina'
+import { createanalytickit, Dummyanalytickit } from '../src/worker/vm/extensions/analytickit'
+import { writeToFile } from '../src/worker/vm/extensions/test-utils'
+import { delayUntilEventIngested, resetTestDatabaseClickhouse } from './helpers/clickhouse'
+import { resetKafka } from './helpers/kafka'
+import { pluginConfig39 } from './helpers/plugins'
+import { resetTestDatabase } from './helpers/sql'
 
-const {console: testConsole} = writeToFile
+const { console: testConsole } = writeToFile
 
 jest.mock('../src/utils/status')
 jest.setTimeout(60000) // 60 sec timeout
@@ -67,8 +67,8 @@ describe('multi-process plugin server', () => {
                 name: 'haha',
                 processed: 'hell yes',
             })
-)
-expect(events[0].properties.processed).toEqual('hell yes')
+        )
+        expect(events[0].properties.processed).toEqual('hell yes')
 
         expect(testConsole.read()).toEqual([['processEvent'], ['onEvent', 'custom event', 'hell yes']])
     })

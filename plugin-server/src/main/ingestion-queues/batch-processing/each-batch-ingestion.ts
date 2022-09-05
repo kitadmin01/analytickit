@@ -1,11 +1,11 @@
-import {PluginEvent} from '@analytickit/plugin-scaffold'
-import {EachBatchPayload, KafkaMessage}from 'kafkajs'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
+import { EachBatchPayload, KafkaMessage } from 'kafkajs'
 
-import { Hub, WorkerMethods}from '../../../types'
-import { formPluginEvent}from '../../../utils/event'
-import { status}from '../../../utils/status'
-import { KafkaQueue}from '../kafka-queue'
-import {eachBatch}from './each-batch'
+import { Hub, WorkerMethods } from '../../../types'
+import { formPluginEvent } from '../../../utils/event'
+import { status } from '../../../utils/status'
+import { KafkaQueue } from '../kafka-queue'
+import { eachBatch } from './each-batch'
 
 export async function eachMessageIngestion(message: KafkaMessage, queue: KafkaQueue): Promise<void> {
     await ingestEvent(queue.pluginsServer, queue.workerMethods, formPluginEvent(message))
@@ -66,11 +66,10 @@ function countAndLogEvents(): void {
     if (now - messageLogDate > 10000) {
         status.info(
             '🕒',
-            `Processed ${messageCounter} events${
-                messageLogDate === 0 ? '' : ` in ${Math.round((now - messageLogDate) / 10) / 100}s`
+            `Processed ${messageCounter} events${messageLogDate === 0 ? '' : ` in ${Math.round((now - messageLogDate) / 10) / 100}s`
             }`
-)
-messageCounter = 0
-messageLogDate = now
-}
+        )
+        messageCounter = 0
+        messageLogDate = now
+    }
 }

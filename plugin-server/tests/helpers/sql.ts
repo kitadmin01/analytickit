@@ -1,30 +1,30 @@
-import {Pool, PoolClient} from 'pg'
+import { Pool, PoolClient } from 'pg'
 
-import { defaultConfig} from '../../src/config/config'
+import { defaultConfig } from '../../src/config/config'
 import {
-Hub,
-Plugin,
-PluginAttachmentDB,
-PluginConfig,
-PluginsServerConfig,
-PropertyOperator,
-RawAction,
-RawOrganization,
-Team,
-}from '../../src/types'
-import {UUIDT} from '../../src/utils/utils'
+    Hub,
+    Plugin,
+    PluginAttachmentDB,
+    PluginConfig,
+    PluginsServerConfig,
+    PropertyOperator,
+    RawAction,
+    RawOrganization,
+    Team,
+} from '../../src/types'
+import { UUIDT } from '../../src/utils/utils'
 import {
-commonOrganizationId,
-commonOrganizationMembershipId,
-commonUserId,
-commonUserUuid,
-makePluginObjects,
-}from './plugins'
+    commonOrganizationId,
+    commonOrganizationMembershipId,
+    commonUserId,
+    commonUserUuid,
+    makePluginObjects,
+} from './plugins'
 
 export interface ExtraDatabaseRows {
-plugins?: Omit < Plugin, 'id'>[]
-pluginConfigs?: Omit < PluginConfig, 'id'>[]
-pluginAttachments?: Omit < PluginAttachmentDB, 'id'>[]
+    plugins?: Omit<Plugin, 'id'>[]
+    pluginConfigs?: Omit<PluginConfig, 'id'>[]
+    pluginAttachments?: Omit<PluginAttachmentDB, 'id'>[]
 }
 
 export const POSTGRES_TRUNCATE_TABLES_QUERY = `
@@ -71,7 +71,7 @@ export async function resetTestDatabase(
     const db = new Pool({ connectionString: config.DATABASE_URL! })
     try {
         await db.query('TRUNCATE TABLE ee_hook CASCADE')
-    } catch {}
+    } catch { }
 
     await db.query(POSTGRES_TRUNCATE_TABLES_QUERY)
     const mocks = makePluginObjects(code)
@@ -151,9 +151,9 @@ export async function insertRow(db: Pool, table: string, objectProvided: Record<
                     error: null,
                     transpiled: null,
                 })
-)
-}
-if (source__index_ts) {
+            )
+        }
+        if (source__index_ts) {
             dependentQueries.push(
                 insertRow(db, 'analytickit_pluginsourcefile', {
                     id: new UUIDT().toString(),
@@ -163,9 +163,9 @@ if (source__index_ts) {
                     error: null,
                     transpiled: null,
                 })
-)
-}
-if (source__frontend_tsx) {
+            )
+        }
+        if (source__frontend_tsx) {
             dependentQueries.push(
                 insertRow(db, 'analytickit_pluginsourcefile', {
                     id: new UUIDT().toString(),
@@ -175,9 +175,9 @@ if (source__frontend_tsx) {
                     error: null,
                     transpiled: null,
                 })
-)
-}
-await Promise.all(dependentQueries)
+            )
+        }
+        await Promise.all(dependentQueries)
     } catch (error) {
         console.error(`Error on table ${table} when inserting object:\n`, object, '\n', error)
         throw error
@@ -297,7 +297,7 @@ export async function getErrorForPluginConfig(id: number): Promise<any> {
     try {
         const response = await db.query('SELECT * FROM analytickit_pluginconfig WHERE id = $1', [id])
         error = response.rows[0]['error']
-    } catch {}
+    } catch { }
 
     await db.end()
     return error

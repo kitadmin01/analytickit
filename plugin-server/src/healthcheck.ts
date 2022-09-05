@@ -1,13 +1,13 @@
-import {defaultConfig} from'./config/config'
-import {connectObjectStorage }from './main/services/object_storage'
-import {status}from './utils/status'
-import {createRedis}from './utils/utils'
+import { defaultConfig } from './config/config'
+import { connectObjectStorage } from './main/services/object_storage'
+import { status } from './utils/status'
+import { createRedis } from './utils/utils'
 
 const redisHealthcheck = async (): Promise<boolean> => {
-const redis = await createRedis(defaultConfig)
-try {
-const ping = await redis.get('@analytickit-plugin-server/ping')
-if(ping) {
+    const redis = await createRedis(defaultConfig)
+    try {
+        const ping = await redis.get('@analytickit-plugin-server/ping')
+        if (ping) {
             status.info('💚', `Redis key @analytickit-plugin-server/ping found with value ${ping}`)
             return true
         } else {

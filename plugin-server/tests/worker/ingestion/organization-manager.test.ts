@@ -1,9 +1,9 @@
-import{Hub}from'../../../src/types'
-import {createHub}from '../../../src/utils/db/hub'
-import { UUIDT}from '../../../src/utils/utils'
-import {OrganizationManager}from '../../../src/worker/ingestion/organization-manager'
-import {commonOrganizationId}from '../../helpers/plugins'
-import {resetTestDatabase}from '../../helpers/sql'
+import { Hub } from '../../../src/types'
+import { createHub } from '../../../src/utils/db/hub'
+import { UUIDT } from '../../../src/utils/utils'
+import { OrganizationManager } from '../../../src/worker/ingestion/organization-manager'
+import { commonOrganizationId } from '../../helpers/plugins'
+import { resetTestDatabase } from '../../helpers/sql'
 
 describe('OrganizationManager()', () => {
     let hub: Hub

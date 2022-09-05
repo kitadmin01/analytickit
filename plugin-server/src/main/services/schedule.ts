@@ -1,12 +1,12 @@
 import Piscina from '@analytickit/piscina'
 import * as schedule from 'node-schedule'
 
-import {Hub, PluginConfigId, PluginScheduleControl}from '../../types'
-import {processError}from '../../utils/db/error'
-import {cancelAllScheduledJobs}from '../../utils/node-schedule'
-import {startRedlock}from '../../utils/redlock'
-import { status}from '../../utils/status'
-import {delay}from '../../utils/utils'
+import { Hub, PluginConfigId, PluginScheduleControl } from '../../types'
+import { processError } from '../../utils/db/error'
+import { cancelAllScheduledJobs } from '../../utils/node-schedule'
+import { startRedlock } from '../../utils/redlock'
+import { status } from '../../utils/status'
+import { delay } from '../../utils/utils'
 
 export const LOCKED_RESOURCE = 'plugin-server:locks:schedule'
 

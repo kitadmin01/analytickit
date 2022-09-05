@@ -1,7 +1,7 @@
-import{EachBatchPayload, KafkaMessage}from 'kafkajs'
+import { EachBatchPayload, KafkaMessage } from 'kafkajs'
 
-import { status}from '../../../utils/status'
-import { KafkaQueue}from '../kafka-queue'
+import { status } from '../../../utils/status'
+import { KafkaQueue } from '../kafka-queue'
 
 export async function eachBatch(
     { batch, resolveOffset, heartbeat, commitOffsetsIfNecessary, isRunning, isStale }: EachBatchPayload,
@@ -17,8 +17,8 @@ export async function eachBatch(
         const messageBatches = groupIntoBatches(
             batch.messages,
             queue.pluginsServer.WORKER_CONCURRENCY * queue.pluginsServer.TASKS_PER_WORKER
-)
-queue.pluginsServer.statsd?.histogram('ingest_event_batching.input_length', batch.messages.length, { key: key })
+        )
+        queue.pluginsServer.statsd?.histogram('ingest_event_batching.input_length', batch.messages.length, { key: key })
         queue.pluginsServer.statsd?.histogram('ingest_event_batching.batch_count', messageBatches.length, { key: key })
 
         for (const messageBatch of messageBatches) {
@@ -44,11 +44,10 @@ queue.pluginsServer.statsd?.histogram('ingest_event_batching.input_length', batc
 
         status.info(
             '🧩',
-            `Kafka batch of ${batch.messages.length} events completed in ${
-                new Date().valueOf() - batchStartTimer.valueOf()
+            `Kafka batch of ${batch.messages.length} events completed in ${new Date().valueOf() - batchStartTimer.valueOf()
             }ms (${loggingKey})`
-)
-}finally {
-queue.pluginsServer.statsd?.timing(`kafka_queue.${loggingKey}`, batchStartTimer)
+        )
+    } finally {
+        queue.pluginsServer.statsd?.timing(`kafka_queue.${loggingKey}`, batchStartTimer)
     }
 }

@@ -1,7 +1,7 @@
-import {StorageExtension} from'@analytickit/plugin-scaffold'
+import { StorageExtension } from '@analytickit/plugin-scaffold'
 
-import {Hub, PluginConfig} from '../../../types'
-import {postgresGet} from '../utils'
+import { Hub, PluginConfig } from '../../../types'
+import { postgresGet } from '../utils'
 
 export function createStorage(server: Hub, pluginConfig: PluginConfig): StorageExtension {
     const get = async function (key: string, defaultValue: unknown): Promise<unknown> {
@@ -27,10 +27,10 @@ export function createStorage(server: Hub, pluginConfig: PluginConfig): StorageE
                 `,
                 [pluginConfig.id, key, JSON.stringify(value)],
                 'storageSet'
-)
-}
+            )
+        }
 
-server.statsd?.increment('vm_extension_storage_set', {
+        server.statsd?.increment('vm_extension_storage_set', {
             plugin: pluginConfig.plugin?.name ?? '?',
             team_id: pluginConfig.team_id.toString(),
         })
@@ -45,12 +45,12 @@ server.statsd?.increment('vm_extension_storage_set', {
             'DELETE FROM analytickit_pluginstorage WHERE "plugin_config_id"=$1 AND "key"=$2',
             [pluginConfig.id, key],
             'storageDelete'
-)
-}
+        )
+    }
 
-return {
-get,
-set,
-del,
-}
+    return {
+        get,
+        set,
+        del,
+    }
 }

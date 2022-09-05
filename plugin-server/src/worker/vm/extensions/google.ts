@@ -1,13 +1,13 @@
-import* as BigQuery from '@google-cloud/bigquery'
+import * as BigQuery from '@google-cloud/bigquery'
 import * as PubSub from '@google-cloud/pubsub'
 
 type DummyCloud = {
-bigquery: typeof BigQuery
-pubsub: typeof PubSub
+    bigquery: typeof BigQuery
+    pubsub: typeof PubSub
 }
 
 type DummyGoogle = {
-cloud: DummyCloud
+    cloud: DummyCloud
 }
 
 export function createGoogle(): DummyGoogle {

@@ -1,40 +1,40 @@
 import ClickHouse from '@analytickit/clickhouse'
 import * as Sentry from '@sentry/node'
 import * as fs from 'fs'
-import {createPool } from 'generic-pool'
-import {StatsD} from 'hot-shots'
+import { createPool } from 'generic-pool'
+import { StatsD } from 'hot-shots'
 import Redis from 'ioredis'
-import {Kafka, Partitioners, SASLOptions} from 'kafkajs'
-import {DateTime} from 'luxon'
+import { Kafka, Partitioners, SASLOptions } from 'kafkajs'
+import { DateTime } from 'luxon'
 import * as path from 'path'
-import {types as pgTypes}from 'pg'
-import {ConnectionOptions}from 'tls'
+import { types as pgTypes } from 'pg'
+import { ConnectionOptions } from 'tls'
 
-import {getPluginServerCapabilities}from '../../capabilities'
-import {defaultConfig}from '../../config/config'
-import {KAFKAJS_LOG_LEVEL_MAPPING} from '../../config/constants'
-import {JobQueueManager}from '../../main/job-queues/job-queue-manager'
-import {connectObjectStorage}from '../../main/services/object_storage'
-import {Hub, KafkaSecurityProtocol, PluginServerCapabilities, PluginsServerConfig }from '../../types'
-import {ActionManager}from '../../worker/ingestion/action-manager'
-import {ActionMatcher}from '../../worker/ingestion/action-matcher'
-import {HookCommander}from '../../worker/ingestion/hooks'
-import {OrganizationManager}from '../../worker/ingestion/organization-manager'
-import { PersonManager}from '../../worker/ingestion/person-manager'
-import {EventsProcessor }from '../../worker/ingestion/process-event'
-import {SiteUrlManager} from '../../worker/ingestion/site-url-manager'
-import {TeamManager}from '../../worker/ingestion/team-manager'
-import {InternalMetrics}from '../internal-metrics'
-import {killProcess} from '../kill'
-import { status}from '../status'
-import {createPostgresPool, createRedis, logOrThrowJobQueueError, UUIDT} from '../utils'
-import { PluginsApiKeyManager}from './../../worker/vm/extensions/helpers/api-key-manager'
-import {RootAccessManager}from './../../worker/vm/extensions/helpers/root-acess-manager'
-import { PromiseManager}from './../../worker/vm/promise-manager'
-import {DB}from './db'
-import {KafkaProducerWrapper}from './kafka-producer-wrapper'
+import { getPluginServerCapabilities } from '../../capabilities'
+import { defaultConfig } from '../../config/config'
+import { KAFKAJS_LOG_LEVEL_MAPPING } from '../../config/constants'
+import { JobQueueManager } from '../../main/job-queues/job-queue-manager'
+import { connectObjectStorage } from '../../main/services/object_storage'
+import { Hub, KafkaSecurityProtocol, PluginServerCapabilities, PluginsServerConfig } from '../../types'
+import { ActionManager } from '../../worker/ingestion/action-manager'
+import { ActionMatcher } from '../../worker/ingestion/action-matcher'
+import { HookCommander } from '../../worker/ingestion/hooks'
+import { OrganizationManager } from '../../worker/ingestion/organization-manager'
+import { PersonManager } from '../../worker/ingestion/person-manager'
+import { EventsProcessor } from '../../worker/ingestion/process-event'
+import { SiteUrlManager } from '../../worker/ingestion/site-url-manager'
+import { TeamManager } from '../../worker/ingestion/team-manager'
+import { InternalMetrics } from '../internal-metrics'
+import { killProcess } from '../kill'
+import { status } from '../status'
+import { createPostgresPool, createRedis, logOrThrowJobQueueError, UUIDT } from '../utils'
+import { PluginsApiKeyManager } from './../../worker/vm/extensions/helpers/api-key-manager'
+import { RootAccessManager } from './../../worker/vm/extensions/helpers/root-acess-manager'
+import { PromiseManager } from './../../worker/vm/promise-manager'
+import { DB } from './db'
+import { KafkaProducerWrapper } from './kafka-producer-wrapper'
 
-const {version}= require('../../../package.json')
+const { version } = require('../../../package.json')
 
 // `node-postgres` would return dates as plain JS Date objects, which would use the local timezone.
 // This converts all date fields to a proper luxon UTC DateTime and then casts them to a string
@@ -70,9 +70,9 @@ export async function createHub(
 
     const conversionBufferEnabledTeams = new Set(
         serverConfig.CONVERSION_BUFFER_ENABLED_TEAMS.split(',').filter(String).map(Number)
-)
+    )
 
-if (serverConfig.STATSD_HOST) {
+    if (serverConfig.STATSD_HOST) {
         status.info('🤔', `Connecting to StatsD...`)
         statsd = new StatsD({
             port: serverConfig.STATSD_PORT,
@@ -94,9 +94,9 @@ if (serverConfig.STATSD_HOST) {
             status.info(
                 '🪵',
                 `Sending metrics to StatsD at ${serverConfig.STATSD_HOST}:${serverConfig.STATSD_PORT}, prefix: "${serverConfig.STATSD_PREFIX}"`
-)
-}
-status.info('👍', `StatsD ready`)
+            )
+        }
+        status.info('👍', `StatsD ready`)
     }
 
     let kafkaSsl: ConnectionOptions | boolean | undefined
@@ -188,8 +188,8 @@ status.info('👍', `StatsD ready`)
             max: serverConfig.REDIS_POOL_MAX_SIZE,
             autostart: true,
         }
-)
-status.info('👍', `Redis ready`)
+    )
+    status.info('👍', `Redis ready`)
 
     status.info('🤔', `Connecting to object storage...`)
     try {
@@ -210,28 +210,28 @@ status.info('👍', `Redis ready`)
         promiseManager,
         serverConfig.PERSON_INFO_CACHE_TTL,
         new Set(serverConfig.PERSON_INFO_TO_REDIS_TEAMS.split(',').filter(String).map(Number))
-)
-const teamManager = new TeamManager(db, serverConfig, statsd)
-const organizationManager = new OrganizationManager(db)
-const pluginsApiKeyManager = new PluginsApiKeyManager(db)
-const rootAccessManager = new RootAccessManager(db)
-const siteUrlManager = new SiteUrlManager(db, serverConfig.SITE_URL)
-const actionManager = new ActionManager(db, capabilities)
-await actionManager.prepare()
+    )
+    const teamManager = new TeamManager(db, serverConfig, statsd)
+    const organizationManager = new OrganizationManager(db)
+    const pluginsApiKeyManager = new PluginsApiKeyManager(db)
+    const rootAccessManager = new RootAccessManager(db)
+    const siteUrlManager = new SiteUrlManager(db, serverConfig.SITE_URL)
+    const actionManager = new ActionManager(db, capabilities)
+    await actionManager.prepare()
 
-const hub: Partial < Hub> = {
-...serverConfig,
-instanceId,
-capabilities,
-db,
-postgres,
-redisPool,
-clickhouse,
-kafka,
-kafkaProducer,
-statsd,
+    const hub: Partial<Hub> = {
+        ...serverConfig,
+        instanceId,
+        capabilities,
+        db,
+        postgres,
+        redisPool,
+        clickhouse,
+        kafka,
+        kafkaProducer,
+        statsd,
 
-plugins: new Map(),
+        plugins: new Map(),
         pluginConfigs: new Map(),
         pluginConfigsPerTeam: new Map(),
         pluginConfigSecrets: new Map(),

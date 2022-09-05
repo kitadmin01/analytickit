@@ -1,13 +1,13 @@
-import {Properties} from '@analytickit/plugin-scaffold'
-import {DateTime} from 'luxon'
+import { Properties } from '@analytickit/plugin-scaffold'
+import { DateTime } from 'luxon'
 
-import {Group, Hub, Team} from '../../../src/types'
-import {DB} from '../../../src/utils/db/db'
-import {createHub} from '../../../src/utils/db/hub'
-import {UUIDT} from '../../../src/utils/utils'
-import {upsertGroup} from '../../../src/worker/ingestion/properties-updater'
-import {createPromise} from '../../helpers/promises'
-import {getFirstTeam, resetTestDatabase} from '../../helpers/sql'
+import { Group, Hub, Team } from '../../../src/types'
+import { DB } from '../../../src/utils/db/db'
+import { createHub } from '../../../src/utils/db/hub'
+import { UUIDT } from '../../../src/utils/utils'
+import { upsertGroup } from '../../../src/worker/ingestion/properties-updater'
+import { createPromise } from '../../helpers/promises'
+import { getFirstTeam, resetTestDatabase } from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 

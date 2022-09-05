@@ -1,4 +1,4 @@
-import{personInitialAndUTMProperties}from'../../../src/utils/db/utils'
+import { personInitialAndUTMProperties } from '../../../src/utils/db/utils'
 
 describe('personInitialAndUTMProperties()', () => {
     it('adds initial and utm properties', () => {

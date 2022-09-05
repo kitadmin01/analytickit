@@ -1,9 +1,9 @@
-import{StatsD}from'hot-shots'
+import { StatsD } from 'hot-shots'
 import LRU from 'lru-cache'
 import LRUCache from 'lru-cache'
 
-import { ONE_HOUR}from '../../config/constants'
-import {PluginsServerConfig, PropertyType, TeamId}from '../../types'
+import { ONE_HOUR } from '../../config/constants'
+import { PluginsServerConfig, PropertyType, TeamId } from '../../types'
 
 export const NULL_IN_DATABASE = Symbol('NULL_IN_DATABASE')
 export const NULL_AFTER_PROPERTY_TYPE_DETECTION = Symbol('NULL_AFTER_PROPERTY_TYPE_DETECTION')
@@ -24,11 +24,11 @@ type PropertyDefinitionsCacheValue = PropertyType | typeof NULL_IN_DATABASE | ty
 * - it is in the cache and has been confirmed as having no property type -> it never needs to be updated ('NULL_AFTER_PROPERTY_TYPE_DETECTION')
 */
 export class PropertyDefinitionsCache {
-private readonly propertyDefinitionsCache: Map <TeamId, LRU<string, PropertyDefinitionsCacheValue>>
-private readonly statsd?: StatsD
-private readonly lruCacheSize: number
+    private readonly propertyDefinitionsCache: Map<TeamId, LRU<string, PropertyDefinitionsCacheValue>>
+    private readonly statsd?: StatsD
+    private readonly lruCacheSize: number
 
-constructor(serverConfig: PluginsServerConfig, statsd?: StatsD) {
+    constructor(serverConfig: PluginsServerConfig, statsd?: StatsD) {
         this.lruCacheSize = serverConfig.EVENT_PROPERTY_LRU_SIZE
         this.statsd = statsd
         this.propertyDefinitionsCache = new Map()

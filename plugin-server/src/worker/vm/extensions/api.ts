@@ -1,19 +1,19 @@
-import fetch, {Headers, Response} from 'node-fetch'
+import fetch, { Headers, Response } from 'node-fetch'
 
-import {Hub, PluginConfig}from '../../../types'
+import { Hub, PluginConfig } from '../../../types'
 
 const DEFAULT_API_HOST = 'https://app.analytickit.com'
 
 interface ApiMethodOptions {
-headers?: Headers
-data?: Record < string, any>
-host?: string
-projectApiKey?: string
-personalApiKey?: string
+    headers?: Headers
+    data?: Record<string, any>
+    host?: string
+    projectApiKey?: string
+    personalApiKey?: string
 }
 
 export interface ApiExtension {
-get(path: string, options?: ApiMethodOptions): Promise<Response>
+    get(path: string, options?: ApiMethodOptions): Promise<Response>
     post(path: string, options?: ApiMethodOptions): Promise<Response>
     put(path: string, options?: ApiMethodOptions): Promise<Response>
     delete(path: string, options?: ApiMethodOptions): Promise<Response>
@@ -64,10 +64,9 @@ export function createApi(server: Hub, pluginConfig: PluginConfig): ApiExtension
             method === (ApiMethod.Get || ApiMethod.Delete) && options && options.data
                 ? { ...options.data, ...tokenParam }
                 : tokenParam
-)
-const url = `${host}/${path.replace('@current', pluginConfig.team_id.toString())}${
-path.includes('?') ? '&' : '?'
-        }${urlParams.toString()}`
+        )
+        const url = `${host}/${path.replace('@current', pluginConfig.team_id.toString())}${path.includes('?') ? '&' : '?'
+            }${urlParams.toString()}`
         const headers = {
             Authorization: `Bearer ${apiKey}`,
             ...(method === ApiMethod.Post ? { 'Content-Type': 'application/json' } : {}),

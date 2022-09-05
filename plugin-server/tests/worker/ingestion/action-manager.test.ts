@@ -1,7 +1,7 @@
-import{Hub, PropertyOperator}from '../../../src/types'
-import { createHub}from '../../../src/utils/db/hub'
-import {ActionManager}from '../../../src/worker/ingestion/action-manager'
-import {resetTestDatabase} from '../../helpers/sql'
+import { Hub, PropertyOperator } from '../../../src/types'
+import { createHub } from '../../../src/utils/db/hub'
+import { ActionManager } from '../../../src/worker/ingestion/action-manager'
+import { resetTestDatabase } from '../../helpers/sql'
 
 describe('ActionManager', () => {
     let hub: Hub
@@ -55,10 +55,10 @@ describe('ActionManager', () => {
             `UPDATE analytickit_actionstep SET properties = jsonb_set(properties, '{0,key}', '"baz"') WHERE id = $1`,
             [ACTION_STEP_ID],
             'testKey'
-)
+        )
 
-// This is normally dispatched by Django and broadcasted by Piscina
-await actionManager.reloadAction(TEAM_ID, ACTION_ID)
+        // This is normally dispatched by Django and broadcasted by Piscina
+        await actionManager.reloadAction(TEAM_ID, ACTION_ID)
 
         const reloadedAction = actionManager.getTeamActions(TEAM_ID)
 

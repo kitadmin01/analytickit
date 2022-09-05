@@ -1,20 +1,20 @@
-import{Kafka, logLevel}from 'kafkajs'
+import { Kafka, logLevel } from 'kafkajs'
 
-import { defaultConfig, overrideWithEnv}from '../../src/config/config'
+import { defaultConfig, overrideWithEnv } from '../../src/config/config'
 import {
-KAFKA_BUFFER,
-KAFKA_EVENTS_JSON,
-KAFKA_EVENTS_PLUGIN_INGESTION,
-KAFKA_GROUPS,
-KAFKA_PERSON,
-KAFKA_PERSON_DISTINCT_ID,
-KAFKA_PERSON_UNIQUE_ID,
-KAFKA_PLUGIN_LOG_ENTRIES,
-KAFKA_SESSION_RECORDING_EVENTS,
+    KAFKA_BUFFER,
+    KAFKA_EVENTS_JSON,
+    KAFKA_EVENTS_PLUGIN_INGESTION,
+    KAFKA_GROUPS,
+    KAFKA_PERSON,
+    KAFKA_PERSON_DISTINCT_ID,
+    KAFKA_PERSON_UNIQUE_ID,
+    KAFKA_PLUGIN_LOG_ENTRIES,
+    KAFKA_SESSION_RECORDING_EVENTS,
 } from '../../src/config/kafka-topics'
-import {PluginsServerConfig}from '../../src/types'
-import {UUIDT}from '../../src/utils/utils'
-import {KAFKA_EVENTS_DEAD_LETTER_QUEUE}from './../../src/config/kafka-topics'
+import { PluginsServerConfig } from '../../src/types'
+import { UUIDT } from '../../src/utils/utils'
+import { KAFKA_EVENTS_DEAD_LETTER_QUEUE } from './../../src/config/kafka-topics'
 
 /** Clear the Kafka queue and return Kafka object */
 export async function resetKafka(extraServerConfig?: Partial<PluginsServerConfig>): Promise<Kafka> {

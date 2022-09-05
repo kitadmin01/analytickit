@@ -1,14 +1,14 @@
-import{Hub, PluginError}from '../src/types'
-import {createHub}from '../src/utils/db/hub'
+import { Hub, PluginError } from '../src/types'
+import { createHub } from '../src/utils/db/hub'
 import {
-disablePlugin,
-getPluginAttachmentRows,
-getPluginConfigRows,
-getPluginRows,
-setError,
-}from '../src/utils/db/sql'
-import {commonOrganizationId, pluginConfig39}from './helpers/plugins'
-import {resetTestDatabase }from './helpers/sql'
+    disablePlugin,
+    getPluginAttachmentRows,
+    getPluginConfigRows,
+    getPluginRows,
+    setError,
+} from '../src/utils/db/sql'
+import { commonOrganizationId, pluginConfig39 } from './helpers/plugins'
+import { resetTestDatabase } from './helpers/sql'
 
 jest.setTimeout(20_000)
 jest.mock('../src/utils/status')
@@ -117,18 +117,18 @@ describe('sql', () => {
             'UPDATE analytickit_pluginconfig SET error = $1 WHERE id = $2',
             [null, pluginConfig39.id],
             'updatePluginConfigError'
-)
+        )
 
-const pluginError: PluginError = { message: 'error happened', time: 'now' }
-await setError(hub, pluginError, pluginConfig39)
+        const pluginError: PluginError = { message: 'error happened', time: 'now' }
+        await setError(hub, pluginError, pluginConfig39)
         expect(hub.db.postgresQuery).toHaveBeenCalledWith(
             'UPDATE analytickit_pluginconfig SET error = $1 WHERE id = $2',
             [pluginError, pluginConfig39.id],
             'updatePluginConfigError'
-)
-})
+        )
+    })
 
-describe('disablePlugin', () => {
+    describe('disablePlugin', () => {
         test('disablePlugin query builds correctly', async () => {
             hub.db.postgresQuery = jest.fn() as any
 
@@ -137,10 +137,10 @@ describe('disablePlugin', () => {
                 `UPDATE analytickit_pluginconfig SET enabled='f' WHERE id=$1 AND enabled='t'`,
                 [39],
                 'disablePlugin'
-)
-})
+            )
+        })
 
-test('disablePlugin disables a plugin', async () => {
+        test('disablePlugin disables a plugin', async () => {
             const redis = await hub.db.redisPool.acquire()
             const rowsBefore = await getPluginConfigRows(hub)
             expect(rowsBefore[0].plugin_id).toEqual(60)

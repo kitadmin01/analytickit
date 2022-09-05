@@ -1,5 +1,5 @@
-import{PropertyType}from'../../../src/types'
-import {detectPropertyDefinitionTypes}from '../../../src/worker/ingestion/property-definitions-auto-discovery'
+import { PropertyType } from '../../../src/types'
+import { detectPropertyDefinitionTypes } from '../../../src/worker/ingestion/property-definitions-auto-discovery'
 
 describe('property definitions auto discovery', () => {
     describe('can detect numbers', () => {

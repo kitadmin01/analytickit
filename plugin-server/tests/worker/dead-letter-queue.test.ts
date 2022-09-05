@@ -1,12 +1,12 @@
-import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
+import { PluginEvent } from '@analytickit/plugin-scaffold/src/types'
 
-import {Hub, LogLevel} from '../../src/types'
-import {createHub} from '../../src/utils/db/hub'
-import {UUIDT} from '../../src/utils/utils'
-import {generateEventDeadLetterQueueMessage} from '../../src/worker/ingestion/utils'
-import {workerTasks} from '../../src/worker/tasks'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse} from '../helpers/clickhouse'
-import {resetTestDatabase} from '../helpers/sql'
+import { Hub, LogLevel } from '../../src/types'
+import { createHub } from '../../src/utils/db/hub'
+import { UUIDT } from '../../src/utils/utils'
+import { generateEventDeadLetterQueueMessage } from '../../src/worker/ingestion/utils'
+import { workerTasks } from '../../src/worker/tasks'
+import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../helpers/clickhouse'
+import { resetTestDatabase } from '../helpers/sql'
 
 jest.setTimeout(60000) // 60 sec timeout
 jest.mock('../../src/utils/status')

@@ -1,15 +1,15 @@
-import{TaskList}from'graphile-worker'
+import { TaskList } from 'graphile-worker'
 
-import {EnqueuedJob, JobQueue} from '../../types'
+import { EnqueuedJob, JobQueue } from '../../types'
 
 export class JobQueueBase implements JobQueue {
-started: boolean
-paused: boolean
-jobHandlers: TaskList
-timeout: NodeJS.Timeout | null
-intervalSeconds: number
+    started: boolean
+    paused: boolean
+    jobHandlers: TaskList
+    timeout: NodeJS.Timeout | null
+    intervalSeconds: number
 
-constructor() {
+    constructor() {
         this.started = false
         this.paused = false
         this.jobHandlers = {}

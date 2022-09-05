@@ -1,12 +1,12 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
-import {DateTime} from 'luxon'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
+import { DateTime } from 'luxon'
 
-import {Hub, Person}from '../../../../src/types'
-import {createHub}from '../../../../src/utils/db/hub'
-import { UUIDT}from '../../../../src/utils/utils'
-import {prepareEventStep}from '../../../../src/worker/ingestion/event-pipeline/4-prepareEventStep'
-import {LazyPersonContainer}from '../../../../src/worker/ingestion/lazy-person-container'
-import {resetTestDatabase}from '../../../helpers/sql'
+import { Hub, Person } from '../../../../src/types'
+import { createHub } from '../../../../src/utils/db/hub'
+import { UUIDT } from '../../../../src/utils/utils'
+import { prepareEventStep } from '../../../../src/worker/ingestion/event-pipeline/4-prepareEventStep'
+import { LazyPersonContainer } from '../../../../src/worker/ingestion/lazy-person-container'
+import { resetTestDatabase } from '../../../helpers/sql'
 
 jest.mock('../../../../src/utils/status')
 
@@ -43,7 +43,7 @@ describe('prepareEventStep()', () => {
 
     beforeEach(async () => {
         await resetTestDatabase()
-        ;[hub, closeHub] = await createHub()
+            ;[hub, closeHub] = await createHub()
 
         // :KLUDGE: We test below whether kafka messages are produced, so make sure the person exists beforehand.
         await hub.db.createPerson(person.created_at, {}, {}, {}, pluginEvent.team_id, null, false, person.uuid, [

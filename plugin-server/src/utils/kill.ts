@@ -1,4 +1,4 @@
-exportfunctionkillProcess(): void {
+export function killProcess(): void {
     // In tests, only call SIGTERM once to avoid leaky tests.
     // In production, kill two more times if the first one fails.
     setTimeout(() => process.kill(process.pid, 'SIGTERM'), 100)

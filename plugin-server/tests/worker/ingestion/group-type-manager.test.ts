@@ -1,8 +1,8 @@
-import {Hub} from'../../../src/types'
-import {createHub} from '../../../src/utils/db/hub'
-import { analytickit} from '../../../src/utils/analytickit'
-import {GroupTypeManager} from '../../../src/worker/ingestion/group-type-manager'
-import {resetTestDatabase} from '../../helpers/sql'
+import { Hub } from '../../../src/types'
+import { analytickit } from '../../../src/utils/analytickit'
+import { createHub } from '../../../src/utils/db/hub'
+import { GroupTypeManager } from '../../../src/worker/ingestion/group-type-manager'
+import { resetTestDatabase } from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 jest.mock('../../../src/utils/analytickit', () => ({

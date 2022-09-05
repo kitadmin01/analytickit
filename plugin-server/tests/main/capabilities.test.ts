@@ -1,10 +1,10 @@
-importPiscinafrom'@analytickit/piscina'
+import Piscina from '@analytickit/piscina'
 
-import {KafkaQueue }from '../../src/main/ingestion-queues/kafka-queue'
-import { startQueues}from '../../src/main/ingestion-queues/queue'
-import {startJobQueueConsumer}from '../../src/main/job-queues/job-queue-consumer'
-import {Hub, LogLevel}from '../../src/types'
-import {createHub}from '../../src/utils/db/hub'
+import { KafkaQueue } from '../../src/main/ingestion-queues/kafka-queue'
+import { startQueues } from '../../src/main/ingestion-queues/queue'
+import { startJobQueueConsumer } from '../../src/main/job-queues/job-queue-consumer'
+import { Hub, LogLevel } from '../../src/types'
+import { createHub } from '../../src/utils/db/hub'
 
 jest.mock('../../src/main/ingestion-queues/kafka-queue')
 

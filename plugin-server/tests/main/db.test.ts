@@ -1,13 +1,13 @@
-import{DateTime}from'luxon'
+import { DateTime } from 'luxon'
 
-import {Hub, Person, PropertyOperator, PropertyUpdateOperation, Team, TimestampFormat}from '../../src/types'
-import {DB}from '../../src/utils/db/db'
-import {createHub}from '../../src/utils/db/hub'
-import {generateKafkaPersonUpdateMessage}from '../../src/utils/db/utils'
-import {castTimestampOrNow, RaceConditionError, UUIDT}from '../../src/utils/utils'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse}from '../helpers/clickhouse'
-import {getFirstTeam, insertRow, resetTestDatabase }from '../helpers/sql'
-import {plugin60}from './../helpers/plugins'
+import { Hub, Person, PropertyOperator, PropertyUpdateOperation, Team, TimestampFormat } from '../../src/types'
+import { DB } from '../../src/utils/db/db'
+import { createHub } from '../../src/utils/db/hub'
+import { generateKafkaPersonUpdateMessage } from '../../src/utils/db/utils'
+import { castTimestampOrNow, RaceConditionError, UUIDT } from '../../src/utils/utils'
+import { delayUntilEventIngested, resetTestDatabaseClickhouse } from '../helpers/clickhouse'
+import { getFirstTeam, insertRow, resetTestDatabase } from '../helpers/sql'
+import { plugin60 } from './../helpers/plugins'
 
 jest.mock('../../src/utils/status')
 
@@ -246,12 +246,12 @@ describe('DB', () => {
             `SELECT * FROM analytickit_person WHERE team_id = $1 AND id = $2`,
             [teamId, personId],
             'fetchPersonByPersonId'
-)
+        )
 
-return selectResult.rows[0]
-}
+        return selectResult.rows[0]
+    }
 
-describe('createPerson', () => {
+    describe('createPerson', () => {
         let team: Team
         const uuid = new UUIDT().toString()
         const distinctId = 'distinct_id1'
@@ -294,9 +294,9 @@ describe('createPerson', () => {
                 false,
                 uuid,
                 [distinctId]
-)
-const fetched_person = await fetchPersonByPersonId(team.id, person.id)
-expect(fetched_person!.is_identified).toEqual(false)
+            )
+            const fetched_person = await fetchPersonByPersonId(team.id, person.id)
+            expect(fetched_person!.is_identified).toEqual(false)
             expect(fetched_person!.properties).toEqual({ a: 123, b: false, c: 'bbb' })
             expect(fetched_person!.properties_last_operation).toEqual({
                 a: PropertyUpdateOperation.Set,
@@ -347,8 +347,8 @@ expect(fetched_person!.is_identified).toEqual(false)
                 personDbBefore.is_identified,
                 personDbBefore.uuid,
                 1
-)
-expect(db.kafkaProducer!.queueMessage).toHaveBeenLastCalledWith(expected_message)
+            )
+            expect(db.kafkaProducer!.queueMessage).toHaveBeenLastCalledWith(expected_message)
         })
     })
 
@@ -420,10 +420,10 @@ expect(db.kafkaProducer!.queueMessage).toHaveBeenLastCalledWith(expected_message
                             version: 101,
                         }),
                     ])
-)
+                )
 
-const personsFinal = await fetchPersonsRows({ final: true })
-expect(personsFinal).toEqual(
+                const personsFinal = await fetchPersonsRows({ final: true })
+                expect(personsFinal).toEqual(
                     expect.arrayContaining([
                         expect.objectContaining({
                             id: uuid,
@@ -431,12 +431,12 @@ expect(personsFinal).toEqual(
                             version: 101,
                         }),
                     ])
-)
-})
-})
-})
+                )
+            })
+        })
+    })
 
-describe('fetchPerson()', () => {
+    describe('fetchPerson()', () => {
         it('returns undefined if person does not exist', async () => {
             const team = await getFirstTeam(hub)
             const person = await hub.db.fetchPerson(team.id, 'some_id')
@@ -463,11 +463,11 @@ describe('fetchPerson()', () => {
                     created_at: TIMESTAMP,
                     version: 0,
                 })
-)
-})
-})
+            )
+        })
+    })
 
-describe('fetchGroupTypes() and insertGroupType()', () => {
+    describe('fetchGroupTypes() and insertGroupType()', () => {
         it('fetches group types that have been inserted', async () => {
             expect(await db.fetchGroupTypes(2)).toEqual({})
             expect(await db.insertGroupType(2, 'g0', 0)).toEqual([0, true])
@@ -509,9 +509,9 @@ describe('fetchGroupTypes() and insertGroupType()', () => {
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-)
+            )
 
-expect(await db.fetchGroup(3, 0, 'group_key')).toEqual(undefined)
+            expect(await db.fetchGroup(3, 0, 'group_key')).toEqual(undefined)
             expect(await db.fetchGroup(2, 1, 'group_key')).toEqual(undefined)
             expect(await db.fetchGroup(2, 1, 'group_key2')).toEqual(undefined)
         })
@@ -526,9 +526,9 @@ expect(await db.fetchGroup(3, 0, 'group_key')).toEqual(undefined)
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-)
+            )
 
-expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
+            expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
                 id: expect.any(Number),
                 team_id: 2,
                 group_type_index: 0,
@@ -551,9 +551,9 @@ expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-)
+            )
 
-await expect(
+            await expect(
                 db.insertGroup(
                     2,
                     0,
@@ -563,8 +563,8 @@ await expect(
                     { prop: TIMESTAMP.toISO() },
                     { prop: PropertyUpdateOperation.Set },
                     1
-)
-).rejects.toEqual(new RaceConditionError('Parallel analytickit_group inserts, retry'))
+                )
+            ).rejects.toEqual(new RaceConditionError('Parallel analytickit_group inserts, retry'))
         })
 
         it('handles updates', async () => {
@@ -577,12 +577,12 @@ await expect(
                 { prop: TIMESTAMP.toISO() },
                 { prop: PropertyUpdateOperation.Set },
                 1
-)
+            )
 
-const originalGroup = await db.fetchGroup(2, 0, 'group_key')
+            const originalGroup = await db.fetchGroup(2, 0, 'group_key')
 
-const timestamp2 = DateTime.fromISO('2000-10-14T12:42:06.502Z').toUTC()
-await db.updateGroup(
+            const timestamp2 = DateTime.fromISO('2000-10-14T12:42:06.502Z').toUTC()
+            await db.updateGroup(
                 2,
                 0,
                 'group_key',
@@ -591,9 +591,9 @@ await db.updateGroup(
                 { prop: timestamp2.toISO(), prop2: timestamp2.toISO() },
                 { prop: PropertyUpdateOperation.Set, prop2: PropertyUpdateOperation.Set },
                 2
-)
+            )
 
-expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
+            expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
                 id: originalGroup!.id,
                 team_id: 2,
                 group_type_index: 0,
@@ -662,9 +662,9 @@ expect(await db.fetchGroup(2, 0, 'group_key')).toEqual({
                 false,
                 uuid,
                 [distinctId]
-)
-const res = await db.getPersonData(2, distinctId)
-expect(res?.uuid).toEqual(uuid)
+            )
+            const res = await db.getPersonData(2, distinctId)
+            expect(res?.uuid).toEqual(uuid)
             expect(res?.created_at.toISO()).toEqual(TIMESTAMP.toUTC().toISO())
             expect(res?.properties).toEqual({ a: 12345, b: false, c: 'bbb' })
         })
@@ -683,8 +683,8 @@ expect(res?.uuid).toEqual(uuid)
                 false,
                 uuid,
                 [distinctId]
-)
-db.personAndGroupsCachingEnabledTeams.add(2)
+            )
+            db.personAndGroupsCachingEnabledTeams.add(2)
             const res = await db.getPersonData(2, distinctId)
             expect(res?.uuid).toEqual(uuid)
             expect(res?.created_at.toISO()).toEqual(TIMESTAMP.toUTC().toISO())
@@ -706,8 +706,8 @@ db.personAndGroupsCachingEnabledTeams.add(2)
                 false,
                 uuid,
                 [distinctId]
-)
-await db.postgresQuery(
+            )
+            await db.postgresQuery(
                 // not cached
                 `
             UPDATE analytickit_person SET properties = $3
@@ -715,9 +715,9 @@ await db.postgresQuery(
             `,
                 [2, uuid, JSON.stringify({ prop: 'val-that-isnt-cached' })],
                 'testGroupPropertiesOnEvents'
-)
-const res = await db.getPersonData(2, distinctId)
-expect(res?.properties).toEqual({ a: 333, b: false, c: 'bbb' })
+            )
+            const res = await db.getPersonData(2, distinctId)
+            expect(res?.properties).toEqual({ a: 333, b: false, c: 'bbb' })
         })
 
         describe('getGroupDataCache() and updateGroupDataCache()', () => {
@@ -789,11 +789,11 @@ expect(res?.properties).toEqual({ a: 333, b: false, c: 'bbb' })
                     1,
                     undefined,
                     { cache: false }
-)
+                )
 
-const groupsData = await db.fetchGroupDataAndUpdateCache(2, identifiers)
+                const groupsData = await db.fetchGroupDataAndUpdateCache(2, identifiers)
 
-expect(groupsData).toEqual([
+                expect(groupsData).toEqual([
                     {
                         identifier: { index: 0, key: 'abc' },
                         data: { properties: { a: 3 }, created_at: TIMESTAMP },
@@ -872,10 +872,10 @@ expect(groupsData).toEqual([
                     1,
                     undefined,
                     { cache: false }
-)
+                )
 
-const columns = await db.fetchGroupColumnsValues(2, identifiers)
-expect(columns).toEqual({
+                const columns = await db.fetchGroupColumnsValues(2, identifiers)
+                expect(columns).toEqual({
                     group0_properties: JSON.stringify({ a: 3 }),
                     group0_created_at: castTimestampOrNow(TIMESTAMP, TimestampFormat.ClickHouse),
                 })
@@ -896,11 +896,11 @@ expect(columns).toEqual({
                 'INSERT INTO analytickit_plugin (name, organization_id, config_schema, from_json, from_web, is_global, is_preinstalled, is_stateless, created_at, capabilities) values($1, $2, $3, false, false, false, false, false, $4, $5) RETURNING id',
                 ['My Plug', team.organization_id, [], new Date(), {}],
                 ''
-)
-plugin = plug.rows[0].id
-})
+            )
+            plugin = plug.rows[0].id
+        })
 
-test('fetches from the database', async () => {
+        test('fetches from the database', async () => {
             let source = await db.getPluginSource(plugin, 'index.ts')
             expect(source).toBe(null)
 
@@ -908,10 +908,10 @@ test('fetches from the database', async () => {
                 'INSERT INTO analytickit_pluginsourcefile (id, plugin_id, filename, source) values($1, $2, $3, $4)',
                 [new UUIDT().toString(), plugin, 'index.ts', 'USE THE SOURCE'],
                 ''
-)
+            )
 
-source = await db.getPluginSource(plugin, 'index.ts')
-expect(source).toBe('USE THE SOURCE')
+            source = await db.getPluginSource(plugin, 'index.ts')
+            expect(source).toBe('USE THE SOURCE')
         })
     })
 
@@ -948,11 +948,11 @@ expect(source).toBe('USE THE SOURCE')
                 'SELECT feature_flag_key, hash_key, person_id FROM analytickit_featureflaghashkeyoverride',
                 [],
                 ''
-)
-return result.rows
-}
+            )
+            return result.rows
+        }
 
-beforeEach(async () => {
+        beforeEach(async () => {
             team = await getFirstTeam(hub)
             const sourcePerson = await db.createPerson(
                 TIMESTAMP,
@@ -964,27 +964,27 @@ beforeEach(async () => {
                 false,
                 new UUIDT().toString(),
                 ['source_person']
-)
-const targetPerson = await db.createPerson(
-TIMESTAMP,
-{},
-{
+            )
+            const targetPerson = await db.createPerson(
+                TIMESTAMP,
+                {},
+                {
 
-},
-{
+                },
+                {
 
-},
-team.id,
-null,
-false,
-new UUIDT().toString(),
+                },
+                team.id,
+                null,
+                false,
+                new UUIDT().toString(),
                 ['target_person']
-)
-sourcePersonID = sourcePerson.id
-targetPersonID = targetPerson.id
-})
+            )
+            sourcePersonID = sourcePerson.id
+            targetPersonID = targetPerson.id
+        })
 
-it("doesn't fail on empty data", async () => {
+        it("doesn't fail on empty data", async () => {
             await db.addFeatureFlagHashKeysForMergedPerson(team.id, sourcePersonID, targetPersonID)
         })
 
@@ -1020,10 +1020,10 @@ it("doesn't fail on empty data", async () => {
                         person_id: targetPersonID,
                     },
                 ])
-)
-})
+            )
+        })
 
-it('updates all valid keys when conflicts with target person', async () => {
+        it('updates all valid keys when conflicts with target person', async () => {
             await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: sourcePersonID,
@@ -1061,10 +1061,10 @@ it('updates all valid keys when conflicts with target person', async () => {
                         person_id: targetPersonID,
                     },
                 ])
-)
-})
+            )
+        })
 
-it('updates nothing when target person overrides exist', async () => {
+        it('updates nothing when target person overrides exist', async () => {
             await insertRow(db.postgres, 'analytickit_featureflaghashkeyoverride', {
                 team_id: team.id,
                 person_id: targetPersonID,
@@ -1096,7 +1096,7 @@ it('updates nothing when target person overrides exist', async () => {
                         person_id: targetPersonID,
                     },
                 ])
-)
-})
-})
+            )
+        })
+    })
 })

@@ -1,8 +1,8 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
 
-import {pluginsProcessEventStep }from '../../../../src/worker/ingestion/event-pipeline/2-pluginsProcessEventStep'
-import {LazyPersonContainer} from '../../../../src/worker/ingestion/lazy-person-container'
-import {runProcessEvent}from '../../../../src/worker/plugins/run'
+import { pluginsProcessEventStep } from '../../../../src/worker/ingestion/event-pipeline/2-pluginsProcessEventStep'
+import { LazyPersonContainer } from '../../../../src/worker/ingestion/lazy-person-container'
+import { runProcessEvent } from '../../../../src/worker/plugins/run'
 
 jest.mock('../../../../src/worker/plugins/run')
 

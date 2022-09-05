@@ -1,8 +1,8 @@
-import {Hub} from'../../../src/types'
-import {createHub}from '../../../src/utils/db/hub'
-import { SiteUrlManager} from '../../../src/worker/ingestion/site-url-manager'
-import {createPromise} from '../../helpers/promises'
-import {resetTestDatabase} from '../../helpers/sql'
+import { Hub } from '../../../src/types'
+import { createHub } from '../../../src/utils/db/hub'
+import { SiteUrlManager } from '../../../src/worker/ingestion/site-url-manager'
+import { createPromise } from '../../helpers/promises'
+import { resetTestDatabase } from '../../helpers/sql'
 
 jest.mock('../../../src/utils/status')
 
@@ -16,7 +16,7 @@ describe('SiteUrlManager()', () => {
 
     beforeEach(async () => {
         await resetTestDatabase()
-        ;[hub, closeHub] = await createHub()
+            ;[hub, closeHub] = await createHub()
     })
 
     afterEach(async () => {

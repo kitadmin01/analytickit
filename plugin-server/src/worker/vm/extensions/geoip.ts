@@ -1,7 +1,7 @@
-import{GeoIPExtension}from'@analytickit/plugin-scaffold'
+import { GeoIPExtension } from '@analytickit/plugin-scaffold'
 
-import {Hub }from '../../../types'
-import {fetchIpLocationInternally}from '../../mmdb'
+import { Hub } from '../../../types'
+import { fetchIpLocationInternally } from '../../mmdb'
 
 export function createGeoIp(server: Hub): GeoIPExtension {
     return {

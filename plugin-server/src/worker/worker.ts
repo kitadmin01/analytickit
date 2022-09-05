@@ -1,15 +1,15 @@
-import* as Sentry from '@sentry/node'
+import * as Sentry from '@sentry/node'
 
-import {initApp}from '../init'
-import {runInTransaction}from '../sentry'
-import {Hub, PluginConfig, PluginsServerConfig}from '../types'
-import {processError}from '../utils/db/error'
-import {createHub }from '../utils/db/hub'
-import {status}from '../utils/status'
-import {cloneObject, pluginConfigIdFromStack}from '../utils/utils'
-import {setupPlugins}from './plugins/setup'
-import {workerTasks} from './tasks'
-import {TimeoutError }from './vm/vm'
+import { initApp } from '../init'
+import { runInTransaction } from '../sentry'
+import { Hub, PluginConfig, PluginsServerConfig } from '../types'
+import { processError } from '../utils/db/error'
+import { createHub } from '../utils/db/hub'
+import { status } from '../utils/status'
+import { cloneObject, pluginConfigIdFromStack } from '../utils/utils'
+import { setupPlugins } from './plugins/setup'
+import { workerTasks } from './tasks'
+import { TimeoutError } from './vm/vm'
 
 export type PiscinaTaskWorker = ({ task, args }: { task: string; args: any }) => Promise<any>
 
@@ -34,59 +34,59 @@ export async function createWorker(config: PluginsServerConfig, threadId: number
 
             return createTaskRunner(hub)
         }
-)
+    )
 }
 
 export const createTaskRunner =
-(hub: Hub): PiscinaTaskWorker =>
-({ task, args}) =>
-runInTransaction(
-            {
-                op: 'piscina task',
-                name: task,
-                data: args,
-            },
-            async () => {
-                const timer = new Date()
-                let response
+    (hub: Hub): PiscinaTaskWorker =>
+        ({ task, args }) =>
+            runInTransaction(
+                {
+                    op: 'piscina task',
+                    name: task,
+                    data: args,
+                },
+                async () => {
+                    const timer = new Date()
+                    let response
 
-                Sentry.setContext('task', { task, args })
+                    Sentry.setContext('task', { task, args })
 
-                if (task in workerTasks) {
-                    try {
-                        // must clone the object, as we may get from VM2 something like { ..., properties: Proxy {} }
-                        response = cloneObject(await workerTasks[task](hub, args))
-                    } catch (e) {
-                        status.info('🔔', e)
-                        Sentry.captureException(e)
-                        response = { error: e.message }
+                    if (task in workerTasks) {
+                        try {
+                            // must clone the object, as we may get from VM2 something like { ..., properties: Proxy {} }
+                            response = cloneObject(await workerTasks[task](hub, args))
+                        } catch (e) {
+                            status.info('🔔', e)
+                            Sentry.captureException(e)
+                            response = { error: e.message }
+                        }
+                    } else {
+                        response = { error: `Worker task "${task}" not found in: ${Object.keys(workerTasks).join(', ')}` }
                     }
-                } else {
-                    response = { error: `Worker task "${task}" not found in: ${Object.keys(workerTasks).join(', ')}` }
-                }
 
-                hub.statsd?.timing(`piscina_task.${task}`, timer)
-                if (task === 'runPluginJob') {
-                    hub.statsd?.timing('plugin_job', timer, {
-                        type: String(args.job?.type),
-                        pluginConfigId: String(args.job?.pluginConfigId),
-                        pluginConfigTeam: String(args.job?.pluginConfigTeam),
-                    })
+                    hub.statsd?.timing(`piscina_task.${task}`, timer)
+                    if (task === 'runPluginJob') {
+                        hub.statsd?.timing('plugin_job', timer, {
+                            type: String(args.job?.type),
+                            pluginConfigId: String(args.job?.pluginConfigId),
+                            pluginConfigTeam: String(args.job?.pluginConfigTeam),
+                        })
+                    }
+                    return response
+                },
+                (transactionDuration: number) => {
+                    if (
+                        task === 'runEventPipeline' ||
+                        task === 'runBufferEventPipeline' ||
+                        task === 'runAsyncHandlersEventPipeline'
+                    ) {
+                        return transactionDuration > 0.5 ? 1 : 0.01
+                    } else {
+                        return 1
+                    }
                 }
-                return response
-            },
-            (transactionDuration: number) => {
-                if (
-                    task === 'runEventPipeline' ||
-                    task === 'runBufferEventPipeline' ||
-                    task === 'runAsyncHandlersEventPipeline'
-                ) {
-                    return transactionDuration > 0.5 ? 1 : 0.01
-                } else {
-                    return 1
-                }
-            }
-)
+            )
 
 export function processUnhandledRejections(error: Error, server: Hub): void {
     let pluginConfig: PluginConfig | undefined = undefined

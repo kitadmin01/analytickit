@@ -1,20 +1,20 @@
 import Piscina from '@analytickit/piscina'
 import IORedis from 'ioredis'
 
-import {ONE_HOUR} from '../src/config/constants'
-import {startPluginsServer} from '../src/main/pluginsServer'
-import {LogLevel, PluginsServerConfig} from '../src/types'
-import {Hub} from '../src/types'
-import {delay, UUIDT} from '../src/utils/utils'
-import {makePiscina} from '../src/worker/piscina'
-import {createanalytickit, Dummyanalytickit} from '../src/worker/vm/extensions/analytickit'
-import {writeToFile} from '../src/worker/vm/extensions/test-utils'
-import {delayUntilEventIngested, resetTestDatabaseClickhouse} from './helpers/clickhouse'
-import {resetKafka } from './helpers/kafka'
-import {pluginConfig39} from './helpers/plugins'
-import {resetTestDatabase} from './helpers/sql'
+import { ONE_HOUR } from '../src/config/constants'
+import { startPluginsServer } from '../src/main/pluginsServer'
+import { LogLevel, PluginsServerConfig } from '../src/types'
+import { Hub } from '../src/types'
+import { delay, UUIDT } from '../src/utils/utils'
+import { makePiscina } from '../src/worker/piscina'
+import { createanalytickit, Dummyanalytickit } from '../src/worker/vm/extensions/analytickit'
+import { writeToFile } from '../src/worker/vm/extensions/test-utils'
+import { delayUntilEventIngested, resetTestDatabaseClickhouse } from './helpers/clickhouse'
+import { resetKafka } from './helpers/kafka'
+import { pluginConfig39 } from './helpers/plugins'
+import { resetTestDatabase } from './helpers/sql'
 
-const {console: testConsole}= writeToFile
+const { console: testConsole } = writeToFile
 
 jest.mock('../src/utils/status')
 jest.setTimeout(60000) // 60 sec timeout
@@ -188,13 +188,13 @@ describe('E2E', () => {
                     type: 'INFO',
                     message: 'amogus',
                 })
-)
-})
-})
+            )
+        })
+    })
 
-// TODO: we should enable this test again - they are enabled on self-hosted
-// historical exports are currently disabled
-describe.skip('export historical events', () => {
+    // TODO: we should enable this test again - they are enabled on self-hosted
+    // historical exports are currently disabled
+    describe.skip('export historical events', () => {
         const awaitHistoricalEventLogs = async () =>
             await new Promise((resolve) => {
                 resolve(testConsole.read().filter((log) => log[0] === 'exported historical event'))
@@ -236,16 +236,16 @@ describe.skip('export historical events', () => {
             expect(exportedEventsCountAfterJob).toEqual(4)
             expect(exportedEvents.map((e) => e.event)).toEqual(
                 expect.arrayContaining(['historicalEvent1', 'historicalEvent2', 'historicalEvent3', 'historicalEvent4'])
-)
-expect(Object.keys(exportedEvents[0].properties)).toEqual(
+            )
+            expect(Object.keys(exportedEvents[0].properties)).toEqual(
                 expect.arrayContaining([
                     '$$historical_export_source_db',
                     '$$is_historical_export_event',
                     '$$historical_export_timestamp',
                 ])
-)
+            )
 
-expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
+            expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
         })
 
         test('export historical events with specified timestamp boundaries', async () => {
@@ -275,16 +275,16 @@ expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('c
             expect(exportedEventsCountAfterJob).toEqual(4)
             expect(exportedEvents.map((e) => e.event)).toEqual(
                 expect.arrayContaining(['historicalEvent1', 'historicalEvent2', 'historicalEvent3', 'historicalEvent4'])
-)
-expect(Object.keys(exportedEvents[0].properties)).toEqual(
+            )
+            expect(Object.keys(exportedEvents[0].properties)).toEqual(
                 expect.arrayContaining([
                     '$$historical_export_source_db',
                     '$$is_historical_export_event',
                     '$$historical_export_timestamp',
                 ])
-)
+            )
 
-expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
+            expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('clickhouse')
         })
 
         test('correct $elements included in historical event', async () => {
@@ -316,9 +316,9 @@ expect(exportedEvents[0].properties['$$historical_export_source_db']).toEqual('c
                     '$$is_historical_export_event',
                     '$$historical_export_timestamp',
                 ])
-)
+            )
 
-expect(exportedEvents[0].properties['$elements']).toEqual([
+            expect(exportedEvents[0].properties['$elements']).toEqual([
                 {
                     attr_class: 'btn btn-sm',
                     attributes: { attr__class: 'btn btn-sm' },

@@ -1,10 +1,10 @@
-import{ConsoleExtension}from'@analytickit/plugin-scaffold'
+import { ConsoleExtension } from '@analytickit/plugin-scaffold'
 
-import {KAFKA_PLUGIN_LOG_ENTRIES }from '../../src/config/kafka-topics'
-import {Hub, PluginLogEntrySource, PluginLogEntryType}from '../../src/types'
-import {createHub }from '../../src/utils/db/hub'
-import { createConsole}from '../../src/worker/vm/extensions/console'
-import {pluginConfig39}from '../../tests/helpers/plugins'
+import { KAFKA_PLUGIN_LOG_ENTRIES } from '../../src/config/kafka-topics'
+import { Hub, PluginLogEntrySource, PluginLogEntryType } from '../../src/types'
+import { createHub } from '../../src/utils/db/hub'
+import { createConsole } from '../../src/worker/vm/extensions/console'
+import { pluginConfig39 } from '../../tests/helpers/plugins'
 
 jest.setTimeout(60000) // 60 sec timeout
 jest.mock('../../src/utils/status')
@@ -56,9 +56,9 @@ describe('console extension', () => {
                             message: expectedFinalMessage,
                             instance_id: hub.instanceId.toString(),
                         }
-)
-})
-})
-})
-})
+                    )
+                })
+            })
+        })
+    })
 })

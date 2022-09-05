@@ -1,6 +1,6 @@
-import{PreIngestionEvent}from'../../../../src/types'
-import {createEventStep }from '../../../../src/worker/ingestion/event-pipeline/5-createEventStep'
-import {LazyPersonContainer} from '../../../../src/worker/ingestion/lazy-person-container'
+import { PreIngestionEvent } from '../../../../src/types'
+import { createEventStep } from '../../../../src/worker/ingestion/event-pipeline/5-createEventStep'
+import { LazyPersonContainer } from '../../../../src/worker/ingestion/lazy-person-container'
 
 jest.mock('../../../../src/worker/plugins/run')
 

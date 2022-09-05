@@ -1,23 +1,23 @@
-import {PluginEvent} from '@analytickit/plugin-scaffold/src/types'
+import { PluginEvent } from '@analytickit/plugin-scaffold/src/types'
 
-import {Hub, LogLevel}from '../../src/types'
-import {processError}from '../../src/utils/db/error'
-import {createHub}from '../../src/utils/db/hub'
-import {delay, IllegalOperationError}from '../../src/utils/utils'
-import {loadPlugin}from '../../src/worker/plugins/loadPlugin'
-import {runProcessEvent}from '../../src/worker/plugins/run'
-import {loadSchedule, setupPlugins }from '../../src/worker/plugins/setup'
+import { Hub, LogLevel } from '../../src/types'
+import { processError } from '../../src/utils/db/error'
+import { createHub } from '../../src/utils/db/hub'
+import { delay, IllegalOperationError } from '../../src/utils/utils'
+import { loadPlugin } from '../../src/worker/plugins/loadPlugin'
+import { runProcessEvent } from '../../src/worker/plugins/run'
+import { loadSchedule, setupPlugins } from '../../src/worker/plugins/setup'
 import {
-commonOrganizationId,
-mockPluginSourceCode,
-mockPluginTempFolder,
-mockPluginWithSourceFiles,
-plugin60,
-pluginAttachment1,
-pluginConfig39,
-}from '../helpers/plugins'
-import {resetTestDatabase}from '../helpers/sql'
-import { getPluginAttachmentRows, getPluginConfigRows, getPluginRows, setPluginCapabilities}from '../helpers/sqlMock'
+    commonOrganizationId,
+    mockPluginSourceCode,
+    mockPluginTempFolder,
+    mockPluginWithSourceFiles,
+    plugin60,
+    pluginAttachment1,
+    pluginConfig39,
+} from '../helpers/plugins'
+import { resetTestDatabase } from '../helpers/sql'
+import { getPluginAttachmentRows, getPluginConfigRows, getPluginRows, setPluginCapabilities } from '../helpers/sqlMock'
 
 jest.mock('../../src/utils/db/sql')
 jest.mock('../../src/utils/status')
@@ -288,10 +288,10 @@ describe('plugins', () => {
             pluginConfigs.get(39)!,
             new IllegalOperationError('Plugin tried to change event.team_id'),
             expectedReturnedEvent
-)
-})
+        )
+    })
 
-test('plugin throwing error does not prevent ingestion and failure is noted in event', async () => {
+    test('plugin throwing error does not prevent ingestion and failure is noted in event', async () => {
         // silence some spam
         console.log = jest.fn()
         console.error = jest.fn()
@@ -414,9 +414,9 @@ test('plugin throwing error does not prevent ingestion and failure is noted in e
             hub,
             pluginConfigs.get(39)!,
             `Could not load "plugin.json" for plugin test-maxmind-plugin ID ${plugin60.id} (organization ID ${commonOrganizationId})`
-)
+        )
 
-expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
+        expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
     })
 
     test('local plugin with broken plugin.json does not do much', async () => {
@@ -427,8 +427,8 @@ expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
         const [plugin, unlink] = mockPluginTempFolder(
             `function processEvent (event, meta) { event.properties.processed = true; return event }`,
             '{ broken: "plugin.json" -=- '
-)
-getPluginRows.mockReturnValueOnce([plugin])
+        )
+        getPluginRows.mockReturnValueOnce([plugin])
         getPluginConfigRows.mockReturnValueOnce([pluginConfig39])
         getPluginAttachmentRows.mockReturnValueOnce([pluginAttachment1])
 
@@ -439,8 +439,8 @@ getPluginRows.mockReturnValueOnce([plugin])
             hub,
             pluginConfigs.get(39)!,
             expect.stringContaining('Could not load "plugin.json" for plugin ')
-)
-expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
+        )
+        expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
 
         unlink()
     })
@@ -462,8 +462,8 @@ expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
             hub,
             pluginConfigs.get(39)!,
             `Could not load source code for plugin test-maxmind-plugin ID 60 (organization ID ${commonOrganizationId}). Tried: index.js`
-)
-expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
+        )
+        expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
     })
 
     test('plugin config order', async () => {
@@ -639,8 +639,8 @@ expect(await pluginConfigs.get(39)!.vm!.getScheduledTasks()).toEqual({})
             `SELECT transpiled FROM analytickit_pluginsourcefile WHERE plugin_id = $1 AND filename = $2`,
             [60, 'frontend.tsx'],
             ''
-)
-expect(transpiled).toEqual(`"use strict";
+        )
+        expect(transpiled).toEqual(`"use strict";
 export function getFrontendApp (require) { let exports = {}; "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -664,8 +664,8 @@ exports.scene = scene;; return exports; }`)
             `SELECT * FROM analytickit_pluginsourcefile WHERE plugin_id = $1 AND filename = $2`,
             [60, 'frontend.tsx'],
             ''
-)
-expect(plugin.transpiled).toEqual(null)
+        )
+        expect(plugin.transpiled).toEqual(null)
         expect(plugin.status).toEqual('ERROR')
         expect(plugin.error).toContain(`SyntaxError: /frontend.tsx: Unexpected token (1:24)`)
         expect(plugin.error).toContain(`export const scene = {}/`)
@@ -689,10 +689,10 @@ expect(plugin.transpiled).toEqual(null)
                     `SELECT status FROM analytickit_pluginsourcefile WHERE plugin_id = $1 AND filename = $2`,
                     [60, 'frontend.tsx'],
                     ''
-)
-)?.rows?.[0]?.status || null
+                )
+            )?.rows?.[0]?.status || null
 
-expect(await getStatus()).toEqual('TRANSPILED')
+        expect(await getStatus()).toEqual('TRANSPILED')
         expect(await hub.db.getPluginTranspilationLock(60, 'frontend.tsx')).toEqual(false)
         expect(await hub.db.getPluginTranspilationLock(60, 'frontend.tsx')).toEqual(false)
 
@@ -700,9 +700,9 @@ expect(await getStatus()).toEqual('TRANSPILED')
             'UPDATE analytickit_pluginsourcefile SET transpiled = NULL, status = NULL WHERE filename = $1',
             ['frontend.tsx'],
             ''
-)
+        )
 
-expect(await hub.db.getPluginTranspilationLock(60, 'frontend.tsx')).toEqual(true)
+        expect(await hub.db.getPluginTranspilationLock(60, 'frontend.tsx')).toEqual(true)
         expect(await hub.db.getPluginTranspilationLock(60, 'frontend.tsx')).toEqual(false)
         expect(await getStatus()).toEqual('LOCKED')
     })

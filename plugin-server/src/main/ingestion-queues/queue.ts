@@ -1,12 +1,12 @@
 import Piscina from '@analytickit/piscina'
-import {PluginEvent} from '@analytickit/plugin-scaffold'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
 
-import {Hub, IngestionEvent, WorkerMethods}from '../../types'
-import { status}from '../../utils/status'
-import {KafkaQueue}from './kafka-queue'
+import { Hub, IngestionEvent, WorkerMethods } from '../../types'
+import { status } from '../../utils/status'
+import { KafkaQueue } from './kafka-queue'
 
 interface Queues {
-ingestion: KafkaQueue | null
+    ingestion: KafkaQueue | null
 }
 
 export function pauseQueueIfWorkerFull(

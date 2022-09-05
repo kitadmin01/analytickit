@@ -1,24 +1,24 @@
-import {Properties} from '@analytickit/plugin-scaffold'
+import { Properties } from '@analytickit/plugin-scaffold'
 import crypto from 'crypto'
-import {DateTime}from 'luxon'
-import {Hub, PluginConfig, RawEventMessage} from 'types'
+import { DateTime } from 'luxon'
+import { Hub, PluginConfig, RawEventMessage } from 'types'
 
-import {UUIDT} from '../../../utils/utils'
-import {ApiExtension, createApi}from './api'
+import { UUIDT } from '../../../utils/utils'
+import { ApiExtension, createApi } from './api'
 
-const {version}= require('../../../../package.json')
+const { version } = require('../../../../package.json')
 
 interface InternalData {
-distinct_id: string
-event: string
-timestamp: string
-properties: Properties
-team_id: number
-uuid: string
+    distinct_id: string
+    event: string
+    timestamp: string
+    properties: Properties
+    team_id: number
+    uuid: string
 }
 
 export interface Dummyanalytickit {
-capture(event: string, properties?: Record<string, any>): Promise<void>
+    capture(event: string, properties?: Record<string, any>): Promise<void>
     api: ApiExtension
 }
 

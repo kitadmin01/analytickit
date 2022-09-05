@@ -1,9 +1,9 @@
-import{PluginEvent}from'@analytickit/plugin-scaffold'
-import {DateTime} from 'luxon'
+import { PluginEvent } from '@analytickit/plugin-scaffold'
+import { DateTime } from 'luxon'
 
-import {processPersonsStep} from '../../../../src/worker/ingestion/event-pipeline/3-processPersonsStep'
-import {LazyPersonContainer} from '../../../../src/worker/ingestion/lazy-person-container'
-import {updatePersonState} from '../../../../src/worker/ingestion/person-state'
+import { processPersonsStep } from '../../../../src/worker/ingestion/event-pipeline/3-processPersonsStep'
+import { LazyPersonContainer } from '../../../../src/worker/ingestion/lazy-person-container'
+import { updatePersonState } from '../../../../src/worker/ingestion/person-state'
 
 jest.mock('../../../../src/utils/status')
 jest.mock('../../../../src/worker/ingestion/person-state')
@@ -92,7 +92,7 @@ describe('processPersonsStep()', () => {
             'hub.statsd',
             'hub.personManager',
             personContainer
-)
-expect(response).toEqual(['prepareEventStep', pluginEvent, updatedContainer])
+        )
+        expect(response).toEqual(['prepareEventStep', pluginEvent, updatedContainer])
     })
 })

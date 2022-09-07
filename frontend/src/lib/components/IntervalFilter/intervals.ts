@@ -1,4 +1,4 @@
-exportconstintervals = {
+export const intervals = {
 hour: {
     label:'Hour',
 newDateFrom: 'dStart',

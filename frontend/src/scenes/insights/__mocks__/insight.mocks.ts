@@ -1,4 +1,4 @@
-exportconstsampleRetentionPeopleResponse = {
+export const sampleRetentionPeopleResponse = {
 result:[
 {
 person: {

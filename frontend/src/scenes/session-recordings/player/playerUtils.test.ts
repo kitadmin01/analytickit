@@ -1,17 +1,17 @@
-import{RecordingSegment}from'~/types'
-import {parseMetadataResponse}from '../sessionRecordingLogic'
+import { RecordingSegment } from '~/types'
+import { parseMetadataResponse } from '../sessionRecordingLogic'
 import recordingMetaJson from '../__mocks__/recording_meta.json'
 import {
-comparePlayerPositions,
-convertPlayerPositionToX,
-convertXToPlayerPosition,
-getEpochTimeFromPlayerPosition,
-getPlayerPositionFromEpochTime,
-getPlayerPositionFromPlayerTime,
-getPlayerTimeFromPlayerPosition,
-getSegmentFromPlayerPosition,
-guessPlayerPositionFromEpochTimeWithoutWindowId,
-}from './playerUtils'
+    comparePlayerPositions,
+    convertPlayerPositionToX,
+    convertXToPlayerPosition,
+    getEpochTimeFromPlayerPosition,
+    getPlayerPositionFromEpochTime,
+    getPlayerPositionFromPlayerTime,
+    getPlayerTimeFromPlayerPosition,
+    getSegmentFromPlayerPosition,
+    guessPlayerPositionFromEpochTimeWithoutWindowId,
+} from './playerUtils'
 
 const metadata = parseMetadataResponse(recordingMetaJson['session_recording'])
 const segments: RecordingSegment[] = metadata.segments ?? []
@@ -29,15 +29,15 @@ describe('comparePlayerPositions', () => {
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 0 },
                 { windowId: '17da0b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b', time: 0 },
                 segments
-)
-).toEqual(-1)
+            )
+        ).toEqual(-1)
         expect(
             comparePlayerPositions(
                 { windowId: '17da0b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b', time: 0 },
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 0 },
                 segments
-)
-).toEqual(1)
+            )
+        ).toEqual(1)
     })
 
     it('throws when the player positions are not in the segment', () => {
@@ -46,9 +46,9 @@ describe('comparePlayerPositions', () => {
                 { windowId: '17da0b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b', time: 100000000 },
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 10000000 },
                 segments
-)
-}).toThrow(`Could not find player positions in segments`)
-})
+            )
+        }).toThrow(`Could not find player positions in segments`)
+    })
 })
 
 describe('getSegmentFromPlayerPosition', () => {
@@ -57,8 +57,8 @@ describe('getSegmentFromPlayerPosition', () => {
             getSegmentFromPlayerPosition(
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 0 },
                 segments
-)
-).toEqual(segments[0])
+            )
+        ).toEqual(segments[0])
     })
 
     it('returns null if it does not match', () => {
@@ -66,8 +66,8 @@ describe('getSegmentFromPlayerPosition', () => {
             getSegmentFromPlayerPosition(
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 100000000 },
                 segments
-)
-).toEqual(null)
+            )
+        ).toEqual(null)
     })
 })
 
@@ -77,20 +77,20 @@ describe('getPlayerTimeFromPlayerPosition', () => {
             getPlayerTimeFromPlayerPosition(
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 0 },
                 segments
-)
-).toEqual(0)
+            )
+        ).toEqual(0)
         expect(
             getPlayerTimeFromPlayerPosition(
                 { windowId: '17da0b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b', time: 4000 },
                 segments
-)
-).toEqual(44913)
+            )
+        ).toEqual(44913)
         expect(
             getPlayerTimeFromPlayerPosition(
                 { windowId: '17da0b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b', time: 5000 },
                 segments
-)
-).toEqual(45913)
+            )
+        ).toEqual(45913)
     })
 
     it('returns null if it does not find the position', () => {
@@ -98,8 +98,8 @@ describe('getPlayerTimeFromPlayerPosition', () => {
             getPlayerTimeFromPlayerPosition(
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 100000000 },
                 segments
-)
-).toEqual(null)
+            )
+        ).toEqual(null)
     })
 })
 
@@ -127,8 +127,8 @@ describe('getPlayerPositionFromEpochTime', () => {
                 1639078847000,
                 '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f',
                 metadata.startAndEndTimesByWindowId ?? {}
-)
-).toEqual({ windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 227777 })
+            )
+        ).toEqual({ windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 227777 })
     })
 
     it('returns null if it does not find the player time', () => {
@@ -137,15 +137,15 @@ describe('getPlayerPositionFromEpochTime', () => {
                 1739102187000,
                 '17da0b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b',
                 metadata.startAndEndTimesByWindowId ?? {}
-)
-).toEqual(null)
+            )
+        ).toEqual(null)
         expect(
             getPlayerPositionFromEpochTime(
                 1739102187000,
                 'b382b1165-00c767cd61e6e3-1c306851-13c680-17da0b382b210b',
                 metadata.startAndEndTimesByWindowId ?? {}
-)
-).toEqual(null)
+            )
+        ).toEqual(null)
     })
 })
 
@@ -156,8 +156,8 @@ describe('guessPlayerPositionFromEpochTimeWithoutWindowId', () => {
                 1639078847000,
                 metadata.startAndEndTimesByWindowId,
                 metadata.segments
-)
-).toEqual({ windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 227777 })
+            )
+        ).toEqual({ windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 227777 })
     })
 
     it('returns null if the epoch time is outside the segment timebounds', () => {
@@ -166,8 +166,8 @@ describe('guessPlayerPositionFromEpochTimeWithoutWindowId', () => {
                 1739102187000,
                 metadata.startAndEndTimesByWindowId,
                 metadata.segments
-)
-).toEqual(null)
+            )
+        ).toEqual(null)
     })
 })
 
@@ -177,8 +177,8 @@ describe('getEpochTimeFromPlayerPosition', () => {
             getEpochTimeFromPlayerPosition(
                 { windowId: '17da0b29e21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 227777 },
                 metadata.startAndEndTimesByWindowId ?? {}
-)
-).toEqual(1639078847000)
+            )
+        ).toEqual(1639078847000)
     })
 
     it('returns null if it does not find the player position', () => {
@@ -186,8 +186,8 @@ describe('getEpochTimeFromPlayerPosition', () => {
             getEpochTimeFromPlayerPosition(
                 { windowId: '21c36-0df8b0cc82d45-1c306851-1fa400-17da0b29e2213f', time: 227777 },
                 metadata.startAndEndTimesByWindowId ?? {}
-)
-).toEqual(null)
+            )
+        ).toEqual(null)
     })
 })
 
@@ -208,7 +208,7 @@ describe('convertPlayerPositionToX', () => {
                 100,
                 segments,
                 100000
-)
-).toEqual(50)
+            )
+        ).toEqual(50)
     })
 })

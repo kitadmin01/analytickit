@@ -1,4 +1,4 @@
-exportconstletterToRegionalIndicator = {
+export const letterToRegionalIndicator = {
 A:'🇦',
 B: '🇧',
 C: '🇨',

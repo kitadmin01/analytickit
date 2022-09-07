@@ -1,4 +1,4 @@
-exportconstcreateDefaultPluginSource = (name: string): Record<string, any> => ({
+export const createDefaultPluginSource = (name: string): Record<string, any> => ({
 'index.ts': `// Learn more about plugins at: https://analytickit.com/docs/apps/build
 
 // Processes each event, optionally transforming it

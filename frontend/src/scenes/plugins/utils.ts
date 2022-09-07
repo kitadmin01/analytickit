@@ -1,6 +1,6 @@
-import{PluginConfigSchema}from'@analytickit/plugin-scaffold'
-import type {FormInstance }from 'antd/lib/form/hooks/useForm.d'
-import {PluginTypeWithConfig} from 'scenes/plugins/types'
+import { PluginConfigSchema } from '@analytickit/plugin-scaffold'
+import type { FormInstance } from 'antd/lib/form/hooks/useForm.d'
+import { PluginTypeWithConfig } from 'scenes/plugins/types'
 
 // Keep this in sync with: analytickit/api/plugin.py
 export const SECRET_FIELD_VALUE = '**************** analytickit SECRET FIELD ****************'

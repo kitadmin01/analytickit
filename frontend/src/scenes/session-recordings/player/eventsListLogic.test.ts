@@ -1,13 +1,13 @@
-import{expectLogic}from'kea-test-utils'
-import {List}from 'react-virtualized/dist/es/List'
-import { initKeaTests}from '~/test/init'
+import { expectLogic } from 'kea-test-utils'
+import { List } from 'react-virtualized/dist/es/List'
+import { initKeaTests } from '~/test/init'
 import {
-DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
-eventsListLogic,
-}from 'scenes/session-recordings/player/eventsListLogic'
-import { sessionRecordingLogic}from 'scenes/session-recordings/sessionRecordingLogic'
-import {eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import {sessionRecordingPlayerLogic}from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
+    DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
+    eventsListLogic,
+} from 'scenes/session-recordings/player/eventsListLogic'
+import { sessionRecordingLogic } from 'scenes/session-recordings/sessionRecordingLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { sessionRecordingPlayerLogic } from 'scenes/session-recordings/player/sessionRecordingPlayerLogic'
 
 describe('eventsListLogic', () => {
     let logic: ReturnType<typeof eventsListLogic.build>
@@ -103,7 +103,7 @@ describe('eventsListLogic', () => {
         it('scroll to specific rowIndex', async () => {
             const mockedList = {
                 scrollToPosition: jest.fn(),
-                getOffsetForRow: jest.fn(({}: { alignment: string; index: number }) => 40),
+                getOffsetForRow: jest.fn(({ }: { alignment: string; index: number }) => 40),
             }
 
             await expectLogic(logic, async () => {

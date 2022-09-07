@@ -1,34 +1,40 @@
-import{expectLogic}from'kea-test-utils'
-import {initKeaTests}from '~/test/init'
-import {retentionTableLogic} from 'scenes/retention/retentionTableLogic'
-import {insightLogic}from 'scenes/insights/insightLogic'
-import {InsightShortId, InsightType}from '~/types'
-import {useMocks}from '~/mocks/jest'
+import { expectLogic } from 'kea-test-utils'
+import { initKeaTests } from '~/test/init'
+import { retentionTableLogic } from 'scenes/retention/retentionTableLogic'
+import { insightLogic } from 'scenes/insights/insightLogic'
+import { InsightShortId, InsightType } from '~/types'
+import { useMocks } from '~/mocks/jest'
 
 const Insight123 = '123' as InsightShortId
 const result = [
-{
-values: [
-{count: 200, people: []
-},
-{count: 100, people: []
-},
-{count: 75, people: []
-},
-],
-label: 'Chrome::96',
-},
-{
-values: [
-{count: 400, people: []
-},
-{count: 200, people: []
-},
-{count: 150, people: []
-},
-],
-label: 'Safari::34',
-},
+    {
+        values: [
+            {
+                count: 200, people: []
+            },
+            {
+                count: 100, people: []
+            },
+            {
+                count: 75, people: []
+            },
+        ],
+        label: 'Chrome::96',
+    },
+    {
+        values: [
+            {
+                count: 400, people: []
+            },
+            {
+                count: 200, people: []
+            },
+            {
+                count: 150, people: []
+            },
+        ],
+        label: 'Safari::34',
+    },
 ]
 
 describe('retentionTableLogic', () => {

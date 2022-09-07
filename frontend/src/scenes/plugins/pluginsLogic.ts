@@ -596,8 +596,8 @@ export const pluginsLogic = kea<pluginsLogicType>([
             (searchTerm, uninstalledPlugins) =>
                 searchTerm
                     ? uninstalledPlugins.filter((plugin) =>
-                          plugin.name.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
+                        plugin.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
                     : uninstalledPlugins,
         ],
         filteredDisabledPlugins: [
@@ -619,8 +619,8 @@ export const pluginsLogic = kea<pluginsLogicType>([
             (searchTerm, pluginsNeedingUpdates) =>
                 searchTerm
                     ? pluginsNeedingUpdates.filter((plugin) =>
-                          plugin.name.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
+                        plugin.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
                     : pluginsNeedingUpdates,
         ],
         sortableEnabledPlugins: [

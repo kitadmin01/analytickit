@@ -3,4 +3,4 @@ Values duplicated from global.scss
 
 If you edit this file, check there too
 */
-exportconststyles = { zDrawer: 950, zGraphAnnotationPrompt: 99 }
+export const styles = { zDrawer: 950, zGraphAnnotationPrompt: 99 }

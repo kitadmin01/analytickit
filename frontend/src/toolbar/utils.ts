@@ -1,11 +1,11 @@
-import Simmer, {Simmer as SimmerType} from '@analytickit/simmerjs'
-import {cssEscape} from 'lib/utils/cssEscape'
-import {ActionStepType, ActionStepUrlMatching} from '~/types'
-import {ActionStepForm, BoxColor} from '~/toolbar/types'
-import {querySelectorAllDeep} from 'query-selector-shadow-dom'
-import {toolbarLogic} from '~/toolbar/toolbarLogic'
-import {combineUrl, encodeParams} from 'kea-router'
-import {CLICK_TARGET_SELECTOR, CLICK_TARGETS, escapeRegex, TAGS_TO_IGNORE} from 'lib/actionUtils'
+import Simmer, { Simmer as SimmerType } from '@analytickit/simmerjs'
+import { cssEscape } from 'lib/utils/cssEscape'
+import { ActionStepType, ActionStepUrlMatching } from '~/types'
+import { ActionStepForm, BoxColor } from '~/toolbar/types'
+import { querySelectorAllDeep } from 'query-selector-shadow-dom'
+import { toolbarLogic } from '~/toolbar/toolbarLogic'
+import { combineUrl, encodeParams } from 'kea-router'
+import { CLICK_TARGET_SELECTOR, CLICK_TARGETS, escapeRegex, TAGS_TO_IGNORE } from 'lib/actionUtils'
 
 let simmer: SimmerType
 
@@ -223,11 +223,11 @@ export function getElementForStep(step: ActionStepForm, allElements?: HTMLElemen
                 TAGS_TO_IGNORE.indexOf(e.tagName.toLowerCase()) === -1 &&
                 e.innerText?.trim() === textToSearch &&
                 (e.matches(CLICK_TARGET_SELECTOR) || hasCursorPointer(e))
-)
-elements = elements.filter((e) => !elements.find((e2) => isParentOf(e2, e)))
-}
+        )
+        elements = elements.filter((e) => !elements.find((e2) => isParentOf(e2, e)))
+    }
 
-if(elements.length === 1) {
+    if (elements.length === 1) {
         return elements[0]
     }
 
@@ -376,11 +376,11 @@ export async function toolbarFetch(
 
     const payloadData = payload
         ? {
-              body: JSON.stringify(payload),
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          }
+            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
         : {}
 
     const response = await fetch(fullUrl, {

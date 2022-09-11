@@ -35,7 +35,7 @@ major cloud service providers and on-premise deploys
 
 ### Option 3: If you don't need to self-host
 
-Sign up for a free [analytickit Cloud](https://app.analytickit.com/signup) project
+Sign up for a free [analytickit Cloud](https://app.posthog.com/signup) project
 
 ## Features
 

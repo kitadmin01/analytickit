@@ -34,7 +34,7 @@
         },
         {
           "name": "SITE_URL",
-          "value": "https://app.analytickit.com"
+          "value": "https://app.posthog.com"
         },
         {
           "name": "BILLING_TRIAL_DAYS",

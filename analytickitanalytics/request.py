@@ -13,7 +13,7 @@ from analytickitanalytics.version import VERSION
 
 _session = requests.sessions.Session()
 
-DEFAULT_HOST = "https://app.analytickit.com"
+DEFAULT_HOST = "https://app.posthog.com"
 USER_AGENT = "analytickit-python/" + VERSION
 
 

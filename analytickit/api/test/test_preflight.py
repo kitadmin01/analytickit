@@ -131,7 +131,7 @@ class TestPreflight(APIBaseTest):
 
     @pytest.mark.ee
     def test_cloud_preflight_request(self):
-        with self.settings(MULTI_TENANCY=True, SITE_URL="https://app.analytickit.com", OBJECT_STORAGE_ENABLED=False):
+        with self.settings(MULTI_TENANCY=True, SITE_URL="https://app.posthog.com", OBJECT_STORAGE_ENABLED=False):
             response = self.client.get("/_preflight/")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             response = response.json()
@@ -145,7 +145,7 @@ class TestPreflight(APIBaseTest):
                         "cloud": True,
                         "realm": "cloud",
                         "instance_preferences": {"debug_queries": False, "disable_paid_fs": False, },
-                        "site_url": "https://app.analytickit.com",
+                        "site_url": "https://app.posthog.com",
                     }
                 ),
             )

@@ -764,8 +764,8 @@ describe('group()', () => {
         given.lib.group('organization', 'org::6')
         expect(given.lib.getGroups()).toEqual({ organization: 'org::6' })
 
-        given.lib.group('instance', 'app.analytickit.com')
-        expect(given.lib.getGroups()).toEqual({ organization: 'org::6', instance: 'app.analytickit.com' })
+        given.lib.group('instance', 'app.posthog.com')
+        expect(given.lib.getGroups()).toEqual({ organization: 'org::6', instance: 'app.posthog.com' })
     })
 
     it('does not result in a capture call', () => {
@@ -776,7 +776,7 @@ describe('group()', () => {
 
     it('results in a reloadFeatureFlags call if group changes', () => {
         given.lib.group('organization', 'org::5')
-        given.lib.group('instance', 'app.analytickit.com')
+        given.lib.group('instance', 'app.posthog.com')
         given.lib.group('organization', 'org::5')
 
         expect(given.overrides.reloadFeatureFlags).toHaveBeenCalledTimes(2)
@@ -811,7 +811,7 @@ describe('group()', () => {
 
         it('sends group information in event properties', () => {
             given.lib.group('organization', 'org::5')
-            given.lib.group('instance', 'app.analytickit.com')
+            given.lib.group('instance', 'app.posthog.com')
 
             given.lib.capture('some_event', { prop: 5 })
 
@@ -821,7 +821,7 @@ describe('group()', () => {
             expect(eventPayload.event).toEqual('some_event')
             expect(eventPayload.properties.$groups).toEqual({
                 organization: 'org::5',
-                instance: 'app.analytickit.com',
+                instance: 'app.posthog.com',
             })
         })
     })

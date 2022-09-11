@@ -152,7 +152,7 @@ curl -L --header "Content-Type: application/json" -d '{
     "properties": {"domain": "${DOMAIN}"},
     "type": "capture",
     "event": "magic_curl_install"
-}' https://app.analytickit.com/batch/
+}' https://app.posthog.com/batch/
 
 # start up the stack
 echo "Configuring Docker Compose...."

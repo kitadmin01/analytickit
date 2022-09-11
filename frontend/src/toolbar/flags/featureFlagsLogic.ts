@@ -4,7 +4,7 @@ import type { featureFlagsLogicType } from './featureFlagsLogicType'
 import { toolbarFetch } from '~/toolbar/utils'
 import { toolbarLogic } from '~/toolbar/toolbarLogic'
 import Fuse from 'fuse.js'
-import type { analytickit } from 'analytickit-js'
+import type { AnalyticKit } from 'analytickit-js'
 import { analytickit } from '~/toolbar/analytickit'
 import { encodeParams } from 'kea-router'
 import { FEATURE_FLAGS } from 'lib/constants'
@@ -140,7 +140,7 @@ export const featureFlagsLogic = kea<featureFlagsLogicType>({
     }),
 })
 
-function getGroups(analytickitInstance: analytickit | null): Record<string, any> {
+function getGroups(analytickitInstance: AnalyticKit | null): Record<string, any> {
     try {
         return analytickitInstance?.getGroups() || {}
     } catch {

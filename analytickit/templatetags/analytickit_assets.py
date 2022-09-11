@@ -51,7 +51,7 @@ def strip_protocol(path: str) -> str:
     """
     Returns a URL removing the http/https protocol
     Example:
-      {% strip_protocol 'https://app.analytickit.com' %}
-      =>  "app.analytickit.com"
+      {% strip_protocol 'https://app.posthog.com' %}
+      =>  "app.posthog.com"
     """
     return re.sub(r"https?:\/\/", "", path)

@@ -51,7 +51,7 @@ export const dashboardsModel = kea<dashboardsModelType>({
             {
                 loadDashboards: async (_, breakpoint) => {
                     // looking at a fully exported dashboard, return its contents
-                    const exportedDashboard = window.analytickit_EXPORTED_DATA?.dashboard
+                    const exportedDashboard = window.ANALYTICKIT_EXPORTED_DATA?.dashboard
                     if (exportedDashboard?.id && exportedDashboard?.items) {
                         return { [exportedDashboard.id]: exportedDashboard }
                     }

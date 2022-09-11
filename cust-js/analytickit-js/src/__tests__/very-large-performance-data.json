@@ -1707,7 +1707,7 @@
             "serverTiming": []
         },
         {
-            "name": "https://app.analytickit.com/e/?ip=1&_=1641815977640&v=0.0.3",
+            "name": "https://app.posthog.com/e/?ip=1&_=1641815977640&v=0.0.3",
             "entryType": "resource",
             "startTime": 813.6999999992549,
             "duration": 180.7000000011176,
@@ -1731,7 +1731,7 @@
             "serverTiming": []
         },
         {
-            "name": "https://app.analytickit.com/e/?ip=1&_=1641815977642&v=0.0.3",
+            "name": "https://app.posthog.com/e/?ip=1&_=1641815977642&v=0.0.3",
             "entryType": "resource",
             "startTime": 814.7999999988824,
             "duration": 179.80000000074506,

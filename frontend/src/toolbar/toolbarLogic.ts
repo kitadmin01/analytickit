@@ -5,7 +5,7 @@ import { clearSessionToolbarToken } from '~/toolbar/utils'
 import { analytickit } from '~/toolbar/analytickit'
 import { actionsTabLogic } from '~/toolbar/actions/actionsTabLogic'
 import { toolbarButtonLogic } from '~/toolbar/button/toolbarButtonLogic'
-import type { analytickit } from 'analytickit-js'
+import type { AnalyticKit } from 'analytickit-js'
 
 export const toolbarLogic = kea<toolbarLogicType>({
     path: ['toolbar', 'toolbarLogic'],
@@ -31,7 +31,7 @@ export const toolbarLogic = kea<toolbarLogicType>({
         userIntent: [props.userIntent || null, { logout: () => null, clearUserIntent: () => null }],
         buttonVisible: [true, { showButton: () => true, hideButton: () => false, logout: () => false }],
         dataAttributes: [(props.dataAttributes || []) as string[]],
-        analytickit: [(props.analytickit ?? null) as analytickit | null],
+        analytickit: [(props.analytickit ?? null) as AnalyticKit | null],
     }),
 
     selectors: ({ selectors }) => ({

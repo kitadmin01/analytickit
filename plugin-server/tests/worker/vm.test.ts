@@ -799,21 +799,21 @@ describe('vm tests', () => {
         expect((fetch as any).mock.calls.length).toEqual(7)
         expect((fetch as any).mock.calls).toEqual([
             [
-                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'GET',
                 },
             ],
             [
-                'https://app.analytickit.com/api/event?url=param&token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.posthog.com/api/event?url=param&token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'GET',
                 },
             ],
             [
-                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: {
                         Authorization: expect.stringContaining('Bearer phx_'),
@@ -824,7 +824,7 @@ describe('vm tests', () => {
                 },
             ],
             [
-                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'PUT',
@@ -832,21 +832,21 @@ describe('vm tests', () => {
                 },
             ],
             [
-                'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
+                'https://app.posthog.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {
                     headers: { Authorization: expect.stringContaining('Bearer phx_') },
                     method: 'DELETE',
                 },
             ],
             [
-                'https://app.analytickit.com/api/event?token=token',
+                'https://app.posthog.com/api/event?token=token',
                 {
                     headers: { Authorization: 'Bearer secret' },
                     method: 'GET',
                 },
             ],
             [
-                'https://app.analytickit.com/api/projects/' +
+                'https://app.posthog.com/api/projects/' +
                 pluginConfig39.team_id +
                 '/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2',
                 {

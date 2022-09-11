@@ -8,9 +8,9 @@ import Simmer from '@analytickit/simmerjs'
 import { initKea } from '~/initKea'
 import { ToolbarApp } from '~/toolbar/ToolbarApp'
 import { EditorProps } from '~/types'
-import { analytickit } from 'analytickit-js'
+import { AnalyticKit } from 'analytickit-js'
     ; (window as any)['simmer'] = new Simmer(window, { depth: 8 })
-    ; (window as any)['ph_load_editor'] = function (editorParams: EditorProps, analytickit: analytickit) {
+    ; (window as any)['ph_load_editor'] = function (editorParams: EditorProps, analytickit: AnalyticKit) {
         initKea()
         const container = document.createElement('div')
         document.body.appendChild(container)

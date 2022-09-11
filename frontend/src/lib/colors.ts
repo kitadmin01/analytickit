@@ -1,5 +1,5 @@
 /* Insight series colors. */
-constdataColorVars = [
+const dataColorVars = [
 'brand-blue',
 'purple',
 'viridian',

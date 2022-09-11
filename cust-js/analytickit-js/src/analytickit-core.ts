@@ -92,7 +92,7 @@ const USE_XHR = window.XMLHttpRequest && 'withCredentials' in new XMLHttpRequest
 let ENQUEUE_REQUESTS = !USE_XHR && userAgent.indexOf('MSIE') === -1 && userAgent.indexOf('Mozilla') === -1
 
 const defaultConfig = (): AnalyticKitConfig => ({
-    api_host: 'https://app.analytickit.com',
+    api_host: 'https://app.posthog.com',
     api_method: 'POST',
     api_transport: 'XHR',
     token: '',
@@ -1132,7 +1132,7 @@ export class AnalyticKit {
      *
      *     {
      *       // Analytickit host
-     *       api_host: 'https://app.analytickit.com',
+     *       api_host: 'https://app.posthog.com',
      *
      *       // HTTP method for capturing requests
      *       api_method: 'POST'

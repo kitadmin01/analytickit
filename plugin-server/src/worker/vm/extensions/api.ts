@@ -2,7 +2,7 @@ import fetch, { Headers, Response } from 'node-fetch'
 
 import { Hub, PluginConfig } from '../../../types'
 
-const DEFAULT_API_HOST = 'https://app.analytickit.com'
+const DEFAULT_API_HOST = 'https://app.posthog.com'
 
 interface ApiMethodOptions {
     headers?: Headers

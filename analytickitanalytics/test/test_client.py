@@ -166,11 +166,11 @@ class TestClient(unittest.TestCase):
         success, msg = self.client.capture(
             "distinct_id",
             "test_event",
-            groups={"company": "id:5", "instance": "app.analytickit.com"},
+            groups={"company": "id:5", "instance": "app.posthog.com"},
         )
 
         self.assertTrue(success)
-        self.assertEqual(msg["properties"]["$groups"], {"company": "id:5", "instance": "app.analytickit.com"})
+        self.assertEqual(msg["properties"]["$groups"], {"company": "id:5", "instance": "app.posthog.com"})
 
     def test_basic_identify(self):
         client = self.client

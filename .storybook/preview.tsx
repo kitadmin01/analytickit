@@ -2,7 +2,7 @@ import * as React from 'react'
 import '~/styles'
 import './storybook.scss'
 import { worker } from '~/mocks/browser'
-import { loadanalytickitJS } from '~/loadanalytickitJS'
+import { loadAnalyticKitJS } from '~/loadAnalyticKitJS'
 import { KeaStory } from './kea-story'
 import { getStorybookAppContext } from 'storybook/app-context'
 import { useAvailableFeatures } from '~/mocks/features'
@@ -18,12 +18,12 @@ setupMsw()
 const setupanalytickitJs = () => {
     // Make sure we don't hit production analytickit. We want to control requests to,
     // e.g. `/decide/` for feature flags
-    window.JS_analytickit_HOST = window.location.origin
+    window.JS_ANALYTICKIT_HOST = window.location.origin
 
     // We don't be doing any authn so we can just use a fake key
-    window.JS_analytickit_API_KEY = 'dummy-key'
+    window.JS_ANALYTICKIT_API_KEY = 'dummy-key'
 
-    loadanalytickitJS()
+    loadAnalyticKitJS()
 }
 
 setupanalytickitJs()

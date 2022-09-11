@@ -36,17 +36,17 @@ class TestAbsoluteUrls(TestCase):
             ("/api/path", "https://my-amazing.site/", "https://my-amazing.site/api/path"),
             ("api/path", "https://my-amazing.site/base_url/", "https://my-amazing.site/base_url/api/path"),
             ("/api/path", "https://my-amazing.site/base_url", "https://my-amazing.site/base_url/api/path"),
-            (regression_11204, "https://app.analytickit.com", f"https://app.analytickit.com/{regression_11204}",),
-            ("https://app.analytickit.com", "https://app.analytickit.com", "https://app.analytickit.com"),
+            (regression_11204, "https://app.posthog.com", f"https://app.posthog.com/{regression_11204}",),
+            ("https://app.posthog.com", "https://app.posthog.com", "https://app.posthog.com"),
             (
-                "https://app.analytickit.com/some/path?=something",
-                "https://app.analytickit.com",
-                "https://app.analytickit.com/some/path?=something",
+                "https://app.posthog.com/some/path?=something",
+                "https://app.posthog.com",
+                "https://app.posthog.com/some/path?=something",
             ),
             (
                 "an.attackers.domain.com/bitcoin-miner.exe",
-                "https://app.analytickit.com",
-                "https://app.analytickit.com/an.attackers.domain.com/bitcoin-miner.exe",
+                "https://app.posthog.com",
+                "https://app.posthog.com/an.attackers.domain.com/bitcoin-miner.exe",
             ),
             ("/api/path", "", "/api/path"),  # current behavior whether correct or not
             (
@@ -65,12 +65,12 @@ class TestAbsoluteUrls(TestCase):
                     )
 
     def test_absolute_uri_can_not_escape_out_host(self) -> None:
-        with self.settings(SITE_URL="https://app.analytickit.com"):
+        with self.settings(SITE_URL="https://app.posthog.com"):
             with pytest.raises(PotentialSecurityProblemException):
                 absolute_uri("https://an.attackers.domain.com/bitcoin-miner.exe"),
 
     def test_absolute_uri_can_not_escape_out_host_on_different_scheme(self) -> None:
-        with self.settings(SITE_URL="https://app.analytickit.com"):
+        with self.settings(SITE_URL="https://app.posthog.com"):
             with pytest.raises(PotentialSecurityProblemException):
                 absolute_uri("ftp://an.attackers.domain.com/bitcoin-miner.exe"),
 

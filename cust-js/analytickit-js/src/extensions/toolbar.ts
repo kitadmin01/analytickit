@@ -103,7 +103,7 @@ export class Toolbar {
             const editorUrl =
                 host + (host.endsWith('/') ? '' : '/') + 'static/' + toolbarScript + '?_ts=' + new Date().getTime()
             const disableToolbarMetrics =
-                this.instance.get_config('api_host') !== 'https://app.analytickit.com' &&
+                this.instance.get_config('api_host') !== 'https://app.posthog.com' &&
                 this.instance.get_config('advanced_disable_toolbar_metrics')
             editorParams = { ...editorParams, ...(disableToolbarMetrics ? { instrument: false } : {}) }
             loadScript(editorUrl, () => {

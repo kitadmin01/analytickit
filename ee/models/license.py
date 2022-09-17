@@ -32,6 +32,7 @@ class LicenseManager(models.Manager):
         """Return the highest valid license."""
         # KEEP IN SYNC WITH licenseLogic.selectors.relevantLicense FOR THE ACTIVE LICENSE
         valid_licenses = list(self.filter(valid_until__gte=timezone.now()))
+        print("valid_licenses*****=",valid_licenses)
         if not valid_licenses:
             return None
         return max(valid_licenses, key=lambda license: License.PLAN_TO_SORTING_VALUE.get(license.plan, 0))
@@ -91,7 +92,7 @@ def get_licensed_users_available() -> Optional[int]:
 
     license = License.objects.first_valid()
     from analytickit.models import OrganizationInvite
-
+    
     if license:
         if license.max_users is None:
             return None
@@ -99,6 +100,8 @@ def get_licensed_users_available() -> Optional[int]:
         users_left = license.max_users - get_user_model().objects.count() - OrganizationInvite.objects.count()
         return max(users_left, 0)
 
+    print("*****license=",license)
+    
     return None
 
 

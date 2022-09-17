@@ -27,6 +27,7 @@ INVITE_DAYS_VALIDITY = 3  # number of days for which team invites are valid
 
 class OrganizationManager(models.Manager):
     def create(self, *args: Any, **kwargs: Any):
+        print("***** in OrganizationManager")
         return create_with_slug(super().create, *args, **kwargs)
 
     def bootstrap(
@@ -46,10 +47,12 @@ class OrganizationManager(models.Manager):
                 user.current_organization = organization
                 user.current_team = team
                 user.save()
+                print("*****OrganizationManager")
         return organization, organization_membership, team
 
 
 class Organization(UUIDModel):
+    print("***** in Organization1")
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -98,6 +101,8 @@ class Organization(UUIDModel):
     )  # DEPRECATED in favor of `OrganizationDomain` model; previously used to allow self-serve account creation based on social login (#5111)
 
     objects: OrganizationManager = OrganizationManager()
+
+    print("***** in Organization2")
 
     def __str__(self):
         return self.name
@@ -210,6 +215,7 @@ class OrganizationMembership(UUIDModel):
                     )
                 self.level = OrganizationMembership.Level.ADMIN
                 self.save()
+                print("*****OrganizationMembership")
             elif new_level > self.level:
                 raise exceptions.PermissionDenied(
                     "You can only change access level of others to lower or equal to your current one."
@@ -293,6 +299,7 @@ class OrganizationInvite(UUIDModel):
 
 @receiver(models.signals.pre_delete, sender=OrganizationMembership)
 def ensure_organization_membership_consistency(sender, instance: OrganizationMembership, **kwargs):
+    print("*****ensure_organization_membership_consistency")
     save_user = False
     if instance.user.current_organization == instance.organization:
         # reset current_organization if it's the removed organization

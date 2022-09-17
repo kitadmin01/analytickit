@@ -33,7 +33,7 @@ class PremiumMultiprojectPermissions(permissions.BasePermission):
     message = "You must upgrade your AnalyticKit plan to be able to create and manage multiple projects."
 
     def has_permission(self, request: request.Request, view) -> bool:
-        user = cast(User, request.user)
+        user = cast(User, request.user) 
         if request.method in CREATE_METHODS and (
                 (user.organization is None)
                 or (
@@ -41,6 +41,7 @@ class PremiumMultiprojectPermissions(permissions.BasePermission):
                         and not user.organization.is_feature_available(AvailableFeature.ORGANIZATIONS_PROJECTS)
                 )
         ):
+            print("***** has_permission is false")
             return False
         return True
 

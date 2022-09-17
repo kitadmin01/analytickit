@@ -135,6 +135,8 @@ class OrganizationDomain(UUIDModel):
     saml_acs_url: models.CharField = models.CharField(max_length=512, blank=True, null=True)
     saml_x509_cert: models.TextField = models.TextField(blank=True, null=True)
 
+    print("*****OrganizationDomain")
+
     class Meta:
         verbose_name = "domain"
 

@@ -78,7 +78,7 @@ class PersonLimitOffsetPagination(LimitOffsetPagination):
                     "type": "string",
                     "nullable": True,
                     "format": "uri",
-                    "example": "https://app.analytickitkit.com/api/projects/{project_id}/accounts/?offset=400&limit=100",
+                    "example": "https://app.posthog.com/api/projects/{project_id}/accounts/?offset=400&limit=100",
                 },
                 "previous": {
                     "type": "string",

@@ -683,6 +683,7 @@ def get_instance_realm() -> str:
 
     Historically this would also have returned `hosted` for hosted postgresql based installations
     """
+    print("*****get_instance_realm()=", )
     if settings.MULTI_TENANCY:
         return "cloud"
     elif settings.DEMO:

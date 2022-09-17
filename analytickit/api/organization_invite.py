@@ -63,6 +63,7 @@ class OrganizationInviteSerializer(serializers.ModelSerializer):
             is_bulk=self.context.get("bulk_create", False),
             email_available=is_email_available(with_absolute_urls=True),
         )
+        print("*****in OrganizationInviteSerializer",invite)
 
         return invite
 

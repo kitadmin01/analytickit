@@ -24,7 +24,7 @@ class EnterpriseFeatureException(APIException):
             detail=(
                     f"{feature.capitalize() if feature else 'This feature'} is part of the premium AnalyticKit offering. "
                     + (
-                        "To use it, subscribe to AnalyticKit Cloud with a generous free tier: https://app.posthog.com/organization/billing"
+                        "To use it, subscribe to AnalyticKit Cloud with a generous free tier: https://app.analytickit.com/organization/billing"
                         if settings.MULTI_TENANCY
                         else "To use it, get a self-hosted license: https://license.analytickit.com"
                     )

@@ -279,7 +279,8 @@ def render_template(template_name: str, request: HttpRequest, context: Dict = {}
             context["js_analytickit_host"] = "window.location.origin"
     else:
         context["js_analytickit_api_key"] = "'sTMFPsFhdP1Ssg'"
-        context["js_analytickit_host"] = "'https://app.posthog.com'"
+        context["js_analytickit_host"] = "'https://app.analytickit.com'"
+    
 
     context["js_capture_internal_metrics"] = settings.CAPTURE_INTERNAL_METRICS
     context["js_url"] = get_js_url(request)
@@ -316,6 +317,8 @@ def render_template(template_name: str, request: HttpRequest, context: Dict = {}
     context["analytickit_app_context"] = json.dumps(analytickit_app_context, default=json_uuid_convert)
 
     html = template.render(context, request=request)
+    # print("*****In render_template html=", html)
+
     return HttpResponse(html)
 
 

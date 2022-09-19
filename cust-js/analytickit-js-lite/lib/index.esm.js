@@ -691,7 +691,7 @@ var AnalyticKitCore = /** @class */ (function () {
         this._events = new SimpleEventEmitter();
         assert(apiKey, "You must pass your AnalyticKit project's api key.");
         this.apiKey = apiKey;
-        this.host = removeTrailingSlash((options === null || options === void 0 ? void 0 : options.host) || 'https://app.posthog.com');
+        this.host = removeTrailingSlash((options === null || options === void 0 ? void 0 : options.host) || 'https://app.analytickit.com');
         this.flushAt = (options === null || options === void 0 ? void 0 : options.flushAt) ? Math.max(options === null || options === void 0 ? void 0 : options.flushAt, 1) : 20;
         this.flushInterval = (_a = options === null || options === void 0 ? void 0 : options.flushInterval) !== null && _a !== void 0 ? _a : 10000;
         this.captureMode = (options === null || options === void 0 ? void 0 : options.captureMode) || 'form';

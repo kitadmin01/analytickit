@@ -172,7 +172,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                 team=self.team,
                 event="$pageview",
                 distinct_id="blabla",
-                properties={"$domain": "https://app.posthog.com/123"},
+                properties={"$domain": "https://app.analytickit.com/123"},
                 timestamp="2021-01-01T12:00:00Z",
             )
 
@@ -181,7 +181,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                 team=self.team,
                 event="$pageview",
                 distinct_id="blabla",
-                properties={"$domain": "https://app.posthog.com/123"},
+                properties={"$domain": "https://app.analytickit.com/123"},
                 timestamp="2021-01-01T12:00:00Z",
             )
 
@@ -195,7 +195,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
             "insight": "TRENDS",
             "interval": "day",
             "properties": json.dumps(
-                [{"key": "$domain", "value": "app.posthog.com", "operator": "icontains", "type": "event"}]
+                [{"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}]
             ),
         }
 
@@ -216,7 +216,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                 "entity_type": "events",
                 "insight": "TRENDS",
                 "interval": "day",
-                "properties": '[{"key": "$domain", "value": "app.posthog.com", "operator": "icontains", "type": "event"}]',
+                "properties": '[{"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}]',
             },
         )
         insert_cohort_from_insight_filter(
@@ -238,7 +238,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                     }
                 ],
                 "properties": [
-                    {"key": "$domain", "value": "app.posthog.com", "operator": "icontains", "type": "event"}
+                    {"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}
                 ],
                 "entity_id": "$pageview",
                 "entity_type": "events",

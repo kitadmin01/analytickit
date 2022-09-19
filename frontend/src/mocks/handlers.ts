@@ -51,8 +51,8 @@ get: {
     post: {
         '/e/': () => [200, 'ok'],
         '/decide/': MOCK_DECIDE,
-        'https://app.posthog.com/decide/': () => [200, 'ok'],
-        'https://app.posthog.com/engage/': () => [200, 'ok'],
-        'https://app.posthog.com/e/': () => [200, 'ok'],
+        'https://app.analytickit.com/decide/': () => [200, 'ok'],
+        'https://app.analytickit.com/engage/': () => [200, 'ok'],
+        'https://app.analytickit.com/e/': () => [200, 'ok'],
     },
 })

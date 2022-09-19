@@ -72,7 +72,7 @@
         },
         {
           "name": "SITE_URL",
-          "value": "https://app.posthog.com"
+          "value": "https://app.analytickit.com"
         },
         {
           "name": "JS_URL",

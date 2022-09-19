@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 // NOTE: These tests are run against a dedicated test project in AnalyticKit cloud
 // but can be overridden to call a local API when running locally
 const { ANALYTICKIT_API_KEY } = process.env
-const ANALYTICKIT_API_HOST = process.env.ANALYTICKIT_API_HOST || 'https://app.posthog.com'
+const ANALYTICKIT_API_HOST = process.env.ANALYTICKIT_API_HOST || 'https://app.analytickit.com'
 const ANALYTICKIT_API_PROJECT = process.env.ANALYTICKIT_API_PROJECT || '11213'
 
 const HEADERS = { Authorization: `Bearer ${ANALYTICKIT_API_KEY}` }
@@ -44,7 +44,7 @@ export const initAnalytickit = (config) => {
         return testSessionId
     })({
         ...config,
-        api_host: process.env.ANALYTICKIT_API_HOST || 'https://app.posthog.com',
+        api_host: process.env.ANALYTICKIT_API_HOST || 'https://app.analytickit.com',
         api_key: process.env.ANALYTICKIT_PROJECT_KEY,
     })
 }

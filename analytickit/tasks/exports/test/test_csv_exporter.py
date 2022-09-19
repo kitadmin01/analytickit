@@ -170,14 +170,14 @@ class TestCSVExporter(APIBaseTest):
                 csv_exporter.export_csv(exported_asset)
 
     def test_limiting_query_as_expected(self) -> None:
-        with self.settings(SITE_URL="https://app.posthog.com"):
+        with self.settings(SITE_URL="https://app.analytickit.com"):
             modified_url = add_query_params(absolute_uri(regression_11204), {"limit": "3500"})
             actual_bits = self._split_to_dict(modified_url)
             expected_bits = {**self._split_to_dict(regression_11204), **{"limit": "3500"}}
             assert expected_bits == actual_bits
 
     def test_limiting_existing_limit_query_as_expected(self) -> None:
-        with self.settings(SITE_URL="https://app.posthog.com"):
+        with self.settings(SITE_URL="https://app.analytickit.com"):
             url_with_existing_limit = regression_11204 + "&limit=100000"
             modified_url = add_query_params(absolute_uri(url_with_existing_limit), {"limit": "3500"})
             actual_bits = self._split_to_dict(modified_url)

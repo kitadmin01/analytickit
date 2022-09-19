@@ -15,7 +15,7 @@ class AnalyticKitConfig(AppConfig):
     verbose_name = "AnalyticKit"
 
     def ready(self):
-        analytickitanalytics.api_key = "sTMFPsFhdP1Ssg"
+        analytickitanalytics.api_key = "sTMFPsFhdP1Ssg11"
         analytickitanalytics.personal_api_key = os.environ.get("ANALYTICKIT_PERSONAL_API_KEY")
 
         if settings.TEST or os.environ.get("OPT_OUT_CAPTURE", False):

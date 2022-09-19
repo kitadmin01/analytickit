@@ -66,7 +66,7 @@
         },
         {
           "name": "SITE_URL",
-          "value": "https://app.posthog.com"
+          "value": "https://app.analytickit.com"
         },
         {
           "name": "EMAIL_DEFAULT_FROM",

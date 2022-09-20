@@ -1,0 +1,50 @@
+{
+    "name": "@analytickit/plugin-contrib",
+    "version": "0.0.5",
+    "description": "Contributed utilities for plugin authors",
+    "author": "analytickit <hey@analytickit.com>",
+    "repository": "github:analytickit/plugin-contrib",
+    "bugs": {
+        "url": "https://github.com/analytickit/plugin-contrib/issues"
+    },
+    "scripts": {
+        "build": "yarn clean && yarn compile",
+        "clean": "rimraf dist/*",
+        "compile": "tsc -b",
+        "prepublishOnly": "yarn build"
+    },
+    "files": [
+        "README.md",
+        "dist",
+        "src",
+        "tsconfig.json"
+    ],
+    "devDependencies": {
+        "@types/node": "^14.14.37",
+        "eslint": "^7.18.0",
+        "eslint-config-prettier": "^7.2.0",
+        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.1.1",
+        "eslint-plugin-react": "^7.20.0",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "husky": ">=4",
+        "lint-staged": ">=10.5.1",
+        "prettier": "^2.2.1",
+        "rimraf": "^3.0.0",
+        "typescript": "^4.0.5"
+    },
+    "homepage": "https://github.com/analytickit/plugin-contrib#readme",
+    "license": "MIT",
+    "types": "dist/index.d.ts",
+    "main": "dist/index.js",
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,ts}": "eslint --fix",
+        "*.{js,ts,css,scss,json,yml,yaml,md}": "prettier --write"
+    }
+}

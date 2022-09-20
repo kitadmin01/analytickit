@@ -133,7 +133,7 @@ class Consumer(Thread):
 
         @backoff.on_exception(backoff.expo, Exception, max_tries=self.retries + 1, giveup=fatal_exception)
         def send_request():
-            print("*****In consumer.py")
+            print("*****In consumer.py self.host=",self.host)
             batch_post(self.api_key, self.host, gzip=self.gzip, timeout=self.timeout, batch=batch)
 
         send_request()

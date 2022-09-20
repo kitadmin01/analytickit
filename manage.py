@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    print("*****=main() sys.argv=",sys.argv)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "analytickit.settings")
     try:
         from django.core.management import execute_from_command_line

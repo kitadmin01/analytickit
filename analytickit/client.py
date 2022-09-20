@@ -324,6 +324,8 @@ def execute_with_progress(
         if _request_information is not None and _request_information.get("save", False):
             save_query(prepared_sql, execution_time)
 
+    print("*****execute_with_progress")
+
 
 def enqueue_execute_with_progress(
         team_id, query, args=None, settings=None, with_column_types=False, bypass_celery=False, query_id=None,
@@ -362,6 +364,7 @@ def enqueue_execute_with_progress(
     else:
         enqueue_clickhouse_execute_with_progress.delay(team_id, query_id, query, args, settings, with_column_types)
 
+    print("*****enqueue_execute_with_progress")
     return query_id
 
 
@@ -386,6 +389,7 @@ def get_status_or_results(team_id, query_id):
             raise Exception("Requesting team is not executing team")
     except Exception as e:
         query_status = QueryStatus(team_id, error=True, error_message=str(e))
+    print("*****get_status_or_results")    
     return query_status
 
 

@@ -155,6 +155,7 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
             count_tiles_with_no_hash.s(),
             name="count tiles with no filters_hash",
         )
+    print("*****setup_periodic_tasks")
 
 
 # Set up clickhouse query instrumentation

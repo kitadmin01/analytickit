@@ -361,12 +361,12 @@ export const insightLogic = kea<insightLogicType>({
                 shortId === state.short_id
                     ? state
                     : {
-                        // blank slate if switched to a new insight
-                        short_id: shortId,
-                        tags: [],
-                        result: null,
-                        filters: {},
-                    },
+                          // blank slate if switched to a new insight
+                          short_id: shortId,
+                          tags: [],
+                          result: null,
+                          filters: {},
+                      },
             setInsight: (_state, { insight }) => ({
                 ...insight,
             }),
@@ -812,9 +812,9 @@ export const insightLogic = kea<insightLogicType>({
 
                 savedInsight = insightNumericId
                     ? await api.update(
-                        `api/projects/${teamLogic.values.currentTeamId}/insights/${insightNumericId}`,
-                        insightRequest
-                    )
+                          `api/projects/${teamLogic.values.currentTeamId}/insights/${insightNumericId}`,
+                          insightRequest
+                      )
                     : await api.create(`api/projects/${teamLogic.values.currentTeamId}/insights/`, insightRequest)
                 actions.saveInsightSuccess()
             } catch (e) {

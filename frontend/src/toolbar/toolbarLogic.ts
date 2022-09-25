@@ -9,9 +9,7 @@ import type { AnalyticKit } from 'analytickit-js'
 
 export const toolbarLogic = kea<toolbarLogicType>({
     path: ['toolbar', 'toolbarLogic'],
-    props: {
-
-    } as ToolbarProps,
+    props: {} as ToolbarProps,
 
     actions: () => ({
         authenticate: true,

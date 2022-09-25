@@ -146,10 +146,10 @@ export const infiniteListLogic = kea<infiniteListLogicType>({
                         // if this is an unexpanded scoped list, get the count for the normafull list
                         scopedRemoteEndpoint && !isExpanded
                             ? fetchCachedListResponse(remoteEndpoint, {
-                                ...searchParams,
-                                limit: 1,
-                                offset: 0,
-                            })
+                                  ...searchParams,
+                                  limit: 1,
+                                  offset: 0,
+                              })
                             : null,
                     ])
                     breakpoint()

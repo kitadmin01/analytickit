@@ -14,77 +14,77 @@
 @each $space in $spaces {
     .space-y-#{$space} {
         & > * + * {
-            margin-top: #{$space/4}rem;
+            margin-top: calc($space / 4);
         }
     }
 
     .space-x-#{$space} {
         & > * + * {
-            margin-left: #{$space/4}rem;
+            margin-left: calc($space / 4);
         }
     }
 
     .gap-#{$space} {
-        gap: #{$space/4}rem;
+        gap: calc($space / 4);
     }
 
     .w-#{$space} {
-        width: #{$space/4}rem;
+        width: calc($space / 4);
     }
 
     .h-#{$space} {
-        height: #{$space/4}rem;
+        height: calc($space / 4);
     }
 
     .max-w-#{$space} {
-        max-width: #{$space/4}rem;
+        max-width: calc($space / 4);
     }
     .max-h-#{$space} {
-        max-height: #{$space/4}rem;
+        max-height: calc($space / 4);
     }
 
     .min-w-#{$space} {
-        min-width: #{$space/4}rem;
+        min-width: calc($space / 4);
     }
     .min-h-#{$space} {
-        min-height: #{$space/4}rem;
+        min-height: calc($space / 4);
     }
 
     .m-#{$space} {
-        margin: #{$space/4}rem;
+        margin: calc($space / 4);
     }
 
     .mx-#{$space} {
-        margin-left: #{$space/4}rem;
-        margin-right: #{$space/4}rem;
+        margin-left: calc($space / 4);
+        margin-right: calc($space / 4);
     }
 
     .my-#{$space} {
-        margin-top: #{$space/4}rem;
-        margin-bottom: #{$space/4}rem;
+        margin-top: calc($space / 4);
+        margin-bottom: calc($space / 4);
     }
 
     .px-#{$space} {
-        padding-left: #{$space/4}rem;
-        padding-right: #{$space/4}rem;
+        padding-left: calc($space / 4);
+        padding-right: calc($space / 4);
     }
 
     .py-#{$space} {
-        padding-top: #{$space/4}rem;
-        padding-bottom: #{$space/4}rem;
+        padding-top: calc($space / 4);
+        padding-bottom: calc($space / 4);
     }
 
     .p-#{$space} {
-        padding: #{$space/4}rem;
+        padding: calc($space / 4);
     }
 
     @each $side in $sides {
         .m#{str-slice($side, 0, 1)}-#{$space} {
-            margin-#{$side}: #{$space/4}rem;
+            margin-#{$side}: calc($space / 4);
         }
 
         .p#{str-slice($side, 0, 1)}-#{$space} {
-            padding-#{$side}: #{$space/4}rem;
+            padding-#{$side}: calc($space / 4);
         }
     }
 }

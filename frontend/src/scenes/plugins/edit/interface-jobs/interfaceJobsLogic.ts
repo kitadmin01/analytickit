@@ -7,9 +7,7 @@ import { JobSpec } from '~/types'
 import { lemonToast } from 'lib/components/lemonToast'
 
 export const interfaceJobsLogic = kea<interfaceJobsLogicType>({
-    props: {
-
-    } as {
+    props: {} as {
         jobName: string
         pluginConfigId: number
         pluginId: number

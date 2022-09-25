@@ -784,8 +784,8 @@ export const funnelLogic = kea<funnelLogicType>({
                         rowKey: step.order,
                         nestedRowKeys: step.nested_breakdown
                             ? step.nested_breakdown.map((breakdownStep) =>
-                                getVisibilityIndex(step, breakdownStep.breakdown_value)
-                            )
+                                  getVisibilityIndex(step, breakdownStep.breakdown_value)
+                              )
                             : [],
                         isBreakdownParent,
                         breakdown_value: isBreakdownParent ? ['Baseline'] : step.breakdown_value,
@@ -1129,9 +1129,9 @@ export const funnelLogic = kea<funnelLogicType>({
                     (truePositive * trueNegative - falsePositive * falseNegative) /
                     Math.sqrt(
                         (truePositive + falsePositive) *
-                        (truePositive + falseNegative) *
-                        (trueNegative + falsePositive) *
-                        (trueNegative + falseNegative)
+                            (truePositive + falseNegative) *
+                            (trueNegative + falsePositive) *
+                            (trueNegative + falseNegative)
                     )
 
                 const correlationScoreStrength =
@@ -1213,9 +1213,9 @@ export const funnelLogic = kea<funnelLogicType>({
             const cleanedParams = cleanFilters(
                 mergeWithExisting
                     ? {
-                        ...values.filters,
-                        ...filters,
-                    }
+                          ...values.filters,
+                          ...filters,
+                      }
                     : filters,
                 values.filters
             )
@@ -1238,14 +1238,14 @@ export const funnelLogic = kea<funnelLogicType>({
                 ...values.filters,
                 exclusions: values.filters.exclusions
                     ? values.filters.exclusions.map((e, e_i) =>
-                        e_i === index
-                            ? getClampedStepRangeFilter({ stepRange: eventFilter, filters: values.filters })
-                            : e
-                    )
+                          e_i === index
+                              ? getClampedStepRangeFilter({ stepRange: eventFilter, filters: values.filters })
+                              : e
+                      )
                     : [],
             })
         },
-        clearFunnel: ({ }) => {
+        clearFunnel: ({}) => {
             actions.setFilters({ new_entity: values.filters.new_entity }, false, true)
         },
         openPersonsModalForStep: ({ step, converted }) => {

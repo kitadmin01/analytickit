@@ -752,7 +752,7 @@ class TestDecide(BaseTest):
             {
                 "type": "authentication_error",
                 "code": "invalid_api_key",
-                "detail": "Project API key invalid. You can find your project API key in analyticKit project settings.",
+                "detail": "Project API key invalid. You can find your project API key in AnalyticKit project settings.",
                 "attr": None,
             },
         )

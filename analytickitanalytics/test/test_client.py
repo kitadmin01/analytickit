@@ -16,8 +16,8 @@ class TestClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # This ensures no real HTTP POST requests are made
-        cls.client_post_patcher = mock.patch("analytickit.client.batch_post")
-        cls.consumer_post_patcher = mock.patch("analytickit.consumer.batch_post")
+        cls.client_post_patcher = mock.patch("analytickitanalytics.client.batch_post")
+        cls.consumer_post_patcher = mock.patch("analytickitanalytics.consumer.batch_post")
         cls.client_post_patcher.start()
         cls.consumer_post_patcher.start()
 
@@ -86,7 +86,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(msg["properties"]["$lib"], "analytickit-python")
         self.assertEqual(msg["properties"]["$lib_version"], VERSION)
 
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_basic_capture_with_feature_flags(self, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "random-variant"}}
 
@@ -107,7 +107,7 @@ class TestClient(unittest.TestCase):
 
         self.assertEqual(patch_decide.call_count, 1)
 
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_basic_capture_with_feature_flags_switched_off_doesnt_send_them(self, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "random-variant"}}
 
@@ -166,11 +166,11 @@ class TestClient(unittest.TestCase):
         success, msg = self.client.capture(
             "distinct_id",
             "test_event",
-            groups={"company": "id:5", "instance": "app.analytickit.com"},
+            groups={"company": "id:5", "instance": "app.analytickitanalytics.com"},
         )
 
         self.assertTrue(success)
-        self.assertEqual(msg["properties"]["$groups"], {"company": "id:5", "instance": "app.analytickit.com"})
+        self.assertEqual(msg["properties"]["$groups"], {"company": "id:5", "instance": "app.analytickitanalytics.com"})
 
     def test_basic_identify(self):
         client = self.client
@@ -310,28 +310,28 @@ class TestClient(unittest.TestCase):
 
     def test_basic_page(self):
         client = self.client
-        success, msg = client.page("distinct_id", url="https://analytickit.com/contact")
+        success, msg = client.page("distinct_id", url="https://analytickitanalytics.com/contact")
         self.assertFalse(self.failed)
         client.flush()
         self.assertTrue(success)
         self.assertEqual(msg["distinct_id"], "distinct_id")
-        self.assertEqual(msg["properties"]["$current_url"], "https://analytickit.com/contact")
+        self.assertEqual(msg["properties"]["$current_url"], "https://analytickitanalytics.com/contact")
 
     def test_basic_page_distinct_uuid(self):
         client = self.client
         distinct_id = uuid4()
-        success, msg = client.page(distinct_id, url="https://analytickit.com/contact")
+        success, msg = client.page(distinct_id, url="https://analytickitanalytics.com/contact")
         self.assertFalse(self.failed)
         client.flush()
         self.assertTrue(success)
         self.assertEqual(msg["distinct_id"], str(distinct_id))
-        self.assertEqual(msg["properties"]["$current_url"], "https://analytickit.com/contact")
+        self.assertEqual(msg["properties"]["$current_url"], "https://analytickitanalytics.com/contact")
 
     def test_advanced_page(self):
         client = self.client
         success, msg = client.page(
             "distinct_id",
-            "https://analytickit.com/contact",
+            "https://analytickitanalytics.com/contact",
             {"property": "value"},
             {"ip": "192.168.0.1"},
             datetime(2014, 9, 3),
@@ -342,7 +342,7 @@ class TestClient(unittest.TestCase):
 
         self.assertEqual(msg["timestamp"], "2014-09-03T00:00:00+00:00")
         self.assertEqual(msg["context"]["ip"], "192.168.0.1")
-        self.assertEqual(msg["properties"]["$current_url"], "https://analytickit.com/contact")
+        self.assertEqual(msg["properties"]["$current_url"], "https://analytickitanalytics.com/contact")
         self.assertEqual(msg["properties"]["property"], "value")
         self.assertEqual(msg["properties"]["$lib"], "analytickit-python")
         self.assertEqual(msg["properties"]["$lib_version"], VERSION)
@@ -420,7 +420,7 @@ class TestClient(unittest.TestCase):
 
         # the post function should be called 2 times, with a batch size of 10
         # each time.
-        with mock.patch("analytickit.consumer.batch_post", side_effect=mock_post_fn) as mock_post:
+        with mock.patch("analytickitanalytics.consumer.batch_post", side_effect=mock_post_fn) as mock_post:
             for _ in range(20):
                 client.identify("distinct_id", {"trait": "value"})
             time.sleep(1)
@@ -436,8 +436,8 @@ class TestClient(unittest.TestCase):
         for consumer in client.consumers:
             self.assertEqual(consumer.timeout, 15)
 
-    @mock.patch("analytickit.client.Poller")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.Poller")
+    @mock.patch("analytickitanalytics.client.get")
     def test_call_identify_fails(self, patch_get, patch_poll):
         def raise_effect():
             raise Exception("http exception")

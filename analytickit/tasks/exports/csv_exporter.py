@@ -8,7 +8,7 @@ from rest_framework_csv import renderers as csvrenderers
 from sentry_sdk import capture_exception, push_scope
 from statshog.defaults.django import statsd
 
-from analytickit.jwt import analytickitJwtAudience, encode_jwt
+from analytickit.jwt import AnalytickitJwtAudience, encode_jwt
 from analytickit.logging.timing import timed
 from analytickit.models.exported_asset import ExportedAsset, save_content
 from analytickit.utils import absolute_uri
@@ -159,7 +159,7 @@ def _export_to_csv(exported_asset: ExportedAsset, limit: int = 1000, max_limit: 
     body = resource.get("body", None)
 
     access_token = encode_jwt(
-        {"id": exported_asset.created_by_id}, datetime.timedelta(minutes=15), analytickitJwtAudience.IMPERSONATED_USER
+        {"id": exported_asset.created_by_id}, datetime.timedelta(minutes=15), AnalytickitJwtAudience.IMPERSONATED_USER
     )
 
     next_url = None

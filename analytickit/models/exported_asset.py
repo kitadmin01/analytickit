@@ -89,11 +89,11 @@ class ExportedAsset(models.Model):
 def get_public_access_token(asset: ExportedAsset, expiry_delta: Optional[timedelta] = None) -> str:
     if not expiry_delta:
         expiry_delta = timedelta(days=PUBLIC_ACCESS_TOKEN_EXP_DAYS)
-    return encode_jwt({"id": asset.id}, expiry_delta=expiry_delta, audience=analytickitJwtAudience.EXPORTED_ASSET, )
+    return encode_jwt({"id": asset.id}, expiry_delta=expiry_delta, audience=AnalytickitJwtAudience.EXPORTED_ASSET, )
 
 
 def asset_for_token(token: str) -> ExportedAsset:
-    info = decode_jwt(token, audience=analytickitJwtAudience.EXPORTED_ASSET)
+    info = decode_jwt(token, audience=AnalytickitJwtAudience.EXPORTED_ASSET)
     asset = ExportedAsset.objects.select_related("dashboard", "insight").get(pk=info["id"])
 
     return asset

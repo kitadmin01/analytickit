@@ -780,7 +780,7 @@ class TestPluginAPI(APIBaseTest):
 
     def test_create_plugin_config_auth(self, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/AnalyticKit/helloworldplugin"}
+            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
         )
         plugin_id = response.json()["id"]
 
@@ -809,7 +809,7 @@ class TestPluginAPI(APIBaseTest):
 
     def test_update_plugin_config_auth(self, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/AnalyticKit/helloworldplugin"}
+            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
         )
         plugin_id = response.json()["id"]
         response = self.client.post(
@@ -844,7 +844,7 @@ class TestPluginAPI(APIBaseTest):
 
     def test_delete_plugin_config_auth(self, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/AnalyticKit/helloworldplugin"}
+            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
         )
         plugin_id = response.json()["id"]
         response = self.client.post(
@@ -885,7 +885,7 @@ class TestPluginAPI(APIBaseTest):
         response = self.client.post(
             "/api/organizations/@current/plugins/",
             {
-                "url": "https://github.com/analytickit/helloworldplugin/commit/{}".format(
+                "url": "https://github.com/kitadmin01/analytickit-hello-world-plugin/commit/{}".format(
                     HELLO_WORLD_PLUGIN_GITHUB_ATTACHMENT_ZIP[0]
                 )
             },
@@ -953,7 +953,7 @@ class TestPluginAPI(APIBaseTest):
         response = self.client.post(
             "/api/organizations/@current/plugins/",
             {
-                "url": "https://github.com/AnalyticKit/helloworldplugin/commit/{}".format(
+                "url": "https://github.com/kitadmin01/analytickit-hello-world-plugin/commit/{}".format(
                     HELLO_WORLD_PLUGIN_SECRET_GITHUB_ZIP[0]
                 )
             },
@@ -1031,7 +1031,7 @@ class TestPluginAPI(APIBaseTest):
     @patch("analytickit.api.plugin.connections")
     def test_job_trigger(self, db_connections, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/AnalyticKit/helloworldplugin"}
+            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
         )
         plugin_id = response.json()["id"]
         response = self.client.post(
@@ -1060,7 +1060,7 @@ class TestPluginAPI(APIBaseTest):
 
     def test_check_for_updates_plugins_reload_not_called(self, _, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/AnalyticKit/helloworldplugin"}
+            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
         )
         self.assertEqual(mock_reload.call_count, 1)
 
@@ -1084,7 +1084,7 @@ class TestPluginAPI(APIBaseTest):
         self.organization.plugins_access_level = Organization.PluginsAccessLevel.INSTALL
         self.organization.save()
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/AnalyticKit/helloworldplugin"}
+            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
         )
         self.assertEqual(response.status_code, 201)
 

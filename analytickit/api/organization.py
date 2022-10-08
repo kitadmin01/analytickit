@@ -62,7 +62,6 @@ class OrganizationSerializer(serializers.ModelSerializer):
     membership_level = serializers.SerializerMethodField()
     teams = serializers.SerializerMethodField()
     metadata = serializers.SerializerMethodField()
-    print("***** in OrganizationSerializer")
 
     class Meta:
         model = Organization
@@ -162,7 +161,6 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             filter_kwargs = {self.lookup_field: lookup_value}
             organization = get_object_or_404(queryset, **filter_kwargs)
         self.check_object_permissions(self.request, organization)
-        print("*****get_object")
         return organization
 
     def perform_destroy(self, organization: Organization):

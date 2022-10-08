@@ -60,7 +60,6 @@ class UserManager(BaseUserManager):
             user.join(
                 organization=organization, level=OrganizationMembership.Level.OWNER,
             )
-            print("*****In bootstrap")
             return organization, team, user
 
     def create_and_join(
@@ -169,7 +168,6 @@ class User(AbstractUser, UUIDClassicModel):
             if self.current_team is not None:
                 self.current_organization_id = self.current_team.organization_id
             self.current_organization = self.organizations.first()
-            print("***** in def organization(self)")
             self.save()
         return self.current_organization
 

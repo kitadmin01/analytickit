@@ -117,11 +117,11 @@ export const featureFlagsLogic = kea<featureFlagsLogicType>({
             (searchTerm, userFlagsWithOverrideInfo) => {
                 return searchTerm
                     ? new Fuse(userFlagsWithOverrideInfo, {
-                        threshold: 0.3,
-                        keys: ['feature_flag.key', 'feature_flag.name'],
-                    })
-                        .search(searchTerm)
-                        .map(({ item }) => item)
+                          threshold: 0.3,
+                          keys: ['feature_flag.key', 'feature_flag.name'],
+                      })
+                          .search(searchTerm)
+                          .map(({ item }) => item)
                     : userFlagsWithOverrideInfo
             },
         ],

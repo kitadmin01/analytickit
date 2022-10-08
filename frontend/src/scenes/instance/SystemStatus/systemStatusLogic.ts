@@ -27,10 +27,10 @@ export enum ConfigMode {
 export type InstanceStatusTabName = 'overview' | 'metrics' | 'settings' | 'staff_users' | 'kafka_inspector'
 
 /**
-* We whitelist the specific instance settings that can be edited via the /instance/status page.
-* Even if some settings are editable in the frontend according to the API, we may don't want to expose them here.
-* For example: async migrations settings are handled in their own page.
-*/
+ * We whitelist the specific instance settings that can be edited via the /instance/status page.
+ * Even if some settings are editable in the frontend according to the API, we may don't want to expose them here.
+ * For example: async migrations settings are handled in their own page.
+ */
 const EDITABLE_INSTANCE_SETTINGS = [
     'RECORDINGS_TTL_WEEKS',
     'EMAIL_ENABLED',

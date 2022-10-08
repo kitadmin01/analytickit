@@ -11,7 +11,7 @@ interface StepFieldProps {
     step: ActionStepForm
     label: string | JSX.Element
     caption?: string | JSX.Element
-    field: { name: number; fieldKey: number; key: number }
+    field: { name: number; fieldKey?: number | undefined; key: number }
 }
 
 export function StepField({ field, step, item, label, caption }: StepFieldProps): JSX.Element {

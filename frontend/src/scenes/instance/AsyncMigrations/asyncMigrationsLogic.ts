@@ -1,72 +1,72 @@
 import api from 'lib/api'
-import {kea}from 'kea'
-import {userLogic}from 'scenes/userLogic'
+import { kea } from 'kea'
+import { userLogic } from 'scenes/userLogic'
 
-import type {asyncMigrationsLogicType }from './asyncMigrationsLogicType'
-import { systemStatusLogic}from 'scenes/instance/SystemStatus/systemStatusLogic'
-import {InstanceSetting}from '~/types'
-import {lemonToast}from 'lib/components/lemonToast'
+import type { asyncMigrationsLogicType } from './asyncMigrationsLogicType'
+import { systemStatusLogic } from 'scenes/instance/SystemStatus/systemStatusLogic'
+import { InstanceSetting } from '~/types'
+import { lemonToast } from 'lib/components/lemonToast'
 export type TabName = 'overview' | 'internal_metrics'
 
 // keep in sync with MigrationStatus in analytickit/models/async_migration.py
 export enum AsyncMigrationStatus {
-NotStarted = 0,
-Running = 1,
-CompletedSuccessfully = 2,
-Errored = 3,
-RolledBack = 4,
-Starting = 5,
-FailedAtStartup = 6,
+    NotStarted = 0,
+    Running = 1,
+    CompletedSuccessfully = 2,
+    Errored = 3,
+    RolledBack = 4,
+    Starting = 5,
+    FailedAtStartup = 6,
 }
 
 export enum AsyncMigrationsTab {
-Management = 'management',
-Settings = 'settings',
+    Management = 'management',
+    Settings = 'settings',
 }
 
 export const migrationStatusNumberToMessage = {
-0: 'Not started',
-1: 'Running',
-2: 'Complete',
-3: 'Error',
-4: 'Rolled back',
-5: 'Starting',
-6: 'Failed at startup',
+    0: 'Not started',
+    1: 'Running',
+    2: 'Complete',
+    3: 'Error',
+    4: 'Rolled back',
+    5: 'Starting',
+    6: 'Failed at startup',
 }
 
 export interface AsyncMigrationError {
-id: number
-description: string
-created_at: string
+    id: number
+    description: string
+    created_at: string
 }
 export interface AsyncMigration {
-id: number
-name: string
-description: string
-progress: number
-status: AsyncMigrationStatus
-current_operation_index: number
-current_query_id: string
-celery_task_id: string
-started_at: string
-finished_at: string
-analytickit_min_version: string
-analytickit_max_version: string
-error_count: number
-parameters: Record <string, number>
-parameter_definitions: Record < string, [number, string]>
+    id: number
+    name: string
+    description: string
+    progress: number
+    status: AsyncMigrationStatus
+    current_operation_index: number
+    current_query_id: string
+    celery_task_id: string
+    started_at: string
+    finished_at: string
+    analytickit_min_version: string
+    analytickit_max_version: string
+    error_count: number
+    parameters: Record<string, number>
+    parameter_definitions: Record<string, [number, string]>
 }
 
 export interface AsyncMigrationModalProps {
-migration: AsyncMigration
-endpoint: string
-message: string
+    migration: AsyncMigration
+    endpoint: string
+    message: string
 }
 
 export const asyncMigrationsLogic = kea<asyncMigrationsLogicType>({
-path: ['scenes', 'instance', 'AsyncMigrations', 'asyncMigrationsLogic'],
-actions: {
-triggerMigration: (migration: AsyncMigration) => ({ migration }),
+    path: ['scenes', 'instance', 'AsyncMigrations', 'asyncMigrationsLogic'],
+    actions: {
+        triggerMigration: (migration: AsyncMigration) => ({ migration }),
         resumeMigration: (migration: AsyncMigration) => ({ migration }),
         rollbackMigration: (migration: AsyncMigration) => ({ migration }),
         forceStopMigration: (migration: AsyncMigration) => ({ migration }),
@@ -187,9 +187,9 @@ triggerMigration: (migration: AsyncMigration) => ({ migration }),
                 migration,
                 'force_stop_without_rollback',
                 'Force stop without rollback triggered successfully'
-)
-},
-updateMigrationStatus: async({ migration, endpoint, message }) => {
+            )
+        },
+        updateMigrationStatus: async ({ migration, endpoint, message }) => {
             const res = await api.create(`/api/async_migrations/${migration.id}/${endpoint}`, {
                 parameters: migration.parameters,
             })

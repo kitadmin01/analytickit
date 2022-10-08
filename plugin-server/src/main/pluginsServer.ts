@@ -92,13 +92,13 @@ export async function startPluginsServer(
             !mmdbServer
                 ? resolve()
                 : mmdbServer.close((error) => {
-                    if (error) {
-                        reject(error)
-                    } else {
-                        status.info('🛑', 'Closed internal MMDB server!')
-                        resolve()
-                    }
-                })
+                      if (error) {
+                          reject(error)
+                      } else {
+                          status.info('🛑', 'Closed internal MMDB server!')
+                          resolve()
+                      }
+                  })
         )
         if (piscina) {
             await stopPiscina(piscina)
@@ -190,11 +190,11 @@ export async function startPluginsServer(
             },
             ...(hub.capabilities.processAsyncHandlers
                 ? {
-                    'reload-action': async (message) =>
-                        await piscina?.broadcastTask({ task: 'reloadAction', args: JSON.parse(message) }),
-                    'drop-action': async (message) =>
-                        await piscina?.broadcastTask({ task: 'dropAction', args: JSON.parse(message) }),
-                }
+                      'reload-action': async (message) =>
+                          await piscina?.broadcastTask({ task: 'reloadAction', args: JSON.parse(message) }),
+                      'drop-action': async (message) =>
+                          await piscina?.broadcastTask({ task: 'dropAction', args: JSON.parse(message) }),
+                  }
                 : {}),
         })
 

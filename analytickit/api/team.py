@@ -41,7 +41,6 @@ class PremiumMultiprojectPermissions(permissions.BasePermission):
                         and not user.organization.is_feature_available(AvailableFeature.ORGANIZATIONS_PROJECTS)
                 )
         ):
-            print("***** has_permission is false")
             return False
         return True
 

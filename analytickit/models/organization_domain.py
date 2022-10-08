@@ -135,8 +135,6 @@ class OrganizationDomain(UUIDModel):
     saml_acs_url: models.CharField = models.CharField(max_length=512, blank=True, null=True)
     saml_x509_cert: models.TextField = models.TextField(blank=True, null=True)
 
-    print("*****OrganizationDomain")
-
     class Meta:
         verbose_name = "domain"
 
@@ -165,7 +163,6 @@ class OrganizationDomain(UUIDModel):
         """
         Performs a DNS verification for a specific domain.
         """
-
         if not getattr(settings, "MULTI_TENANCY", False):
             # We only do DNS validation on analytickit Cloud
             return self._complete_verification()

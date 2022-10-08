@@ -265,7 +265,6 @@ class PluginViewSet(StructuredViewSetMixin, viewsets.ModelViewSet):
     def repository(self, request: request.Request, **kwargs):
         url = "https://raw.githubusercontent.com/AnalyticKit/integrations-repository/main/plugins.json"
         plugins = requests.get(url)
-        print("**********plugins.text=",plugins.text)
         return Response(json.loads(plugins.text))
 
     @action(methods=["GET"], detail=True)

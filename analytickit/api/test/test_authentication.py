@@ -182,7 +182,7 @@ class TestPasswordResetAPI(APIBaseTest):
         self.assertSetEqual({",".join(outmail.to) for outmail in mail.outbox}, set([self.CONFIG_EMAIL]))
 
         self.assertEqual(
-            mail.outbox[0].subject, "Reset your AnalyticKit password",
+            mail.outbox[0].subject, "Reset your analytickit password",
         )
         self.assertEqual(
             mail.outbox[0].body, "",

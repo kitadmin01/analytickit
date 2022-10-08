@@ -72,7 +72,6 @@ def sentry_init() -> None:
             send_default_pii=True,
             traces_sampler=traces_sampler,
         )
-    print("*****sentry_init()")
 
 
 sentry_init()

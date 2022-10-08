@@ -107,7 +107,6 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_password_change(
             self, instance: User, current_password: Optional[str], password: Optional[str]
     ) -> Optional[str]:
-        print("*****in validate_password_change")
         if password:
             if instance.password and instance.has_usable_password():
                 # If user has a password set, we check it's provided to allow updating it. We need to check that is both

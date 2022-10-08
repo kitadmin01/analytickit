@@ -1,7 +1,7 @@
 # name: test_create_kafka_events_with_disabled_protobuf
-  '
+  '''
   
-  CREATE TABLE IF NOT EXISTS kafka_events ON CLUSTER 'analytickit'
+  CREATE TABLE IF NOT EXISTS kafka_events_json ON CLUSTER 'analytickit'
   (
       uuid UUID,
       event VARCHAR,
@@ -26,12 +26,14 @@
       group4_created_at DateTime64
       
       
-  ) ENGINE = Kafka('kafka:9092', 'clickhouse_events_proto_test', 'group1', 'JSONEachRow')
+  ) ENGINE = Kafka('kafka:9092', 'clickhouse_events_json_test', 'group1', 'JSONEachRow')
   
-  '
----
+      SETTINGS kafka_skip_broken_messages = 100
+  
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_events_dead_letter_queue]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_events_dead_letter_queue ON CLUSTER 'analytickit'
   (
@@ -54,10 +56,10 @@
       
   ) ENGINE = Kafka('test.kafka.broker:9092', 'events_dead_letter_queue_test', 'group1', 'JSONEachRow')
    SETTINGS kafka_skip_broken_messages=1000
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_events_json]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_events_json ON CLUSTER 'analytickit'
   (
@@ -88,10 +90,10 @@
   
       SETTINGS kafka_skip_broken_messages = 100
   
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_groups]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_groups ON CLUSTER 'analytickit'
   (
@@ -103,10 +105,10 @@
       
   ) ENGINE = Kafka('test.kafka.broker:9092', 'clickhouse_groups_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_person]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_person ON CLUSTER 'analytickit'
   (
@@ -120,10 +122,10 @@
       
   ) ENGINE = Kafka('test.kafka.broker:9092', 'clickhouse_person_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_person_distinct_id2]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_person_distinct_id2 ON CLUSTER 'analytickit'
   (
@@ -135,10 +137,10 @@
       
   ) ENGINE = Kafka('test.kafka.broker:9092', 'clickhouse_person_distinct_id_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_person_distinct_id]
-  '
+  '''
   
   CREATE TABLE kafka_person_distinct_id ON CLUSTER 'analytickit'
   (
@@ -149,10 +151,10 @@
       is_deleted Nullable(Int8)
   ) ENGINE = Kafka('test.kafka.broker:9092', 'clickhouse_person_unique_id_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_plugin_log_entries]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_plugin_log_entries ON CLUSTER 'analytickit'
   (
@@ -168,10 +170,10 @@
       
   ) ENGINE = Kafka('test.kafka.broker:9092', 'plugin_log_entries_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_kafka_table_with_different_kafka_host[kafka_session_recording_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_session_recording_events ON CLUSTER 'analytickit'
   (
@@ -187,10 +189,10 @@
       
   ) ENGINE = Kafka('test.kafka.broker:9092', 'clickhouse_session_recording_events_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[cohortpeople]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS cohortpeople ON CLUSTER 'analytickit'
   (
@@ -203,10 +205,10 @@
   Order By (team_id, cohort_id, person_id, version)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS events ON CLUSTER 'analytickit'
   (
@@ -246,10 +248,10 @@
   
   ) ENGINE = Distributed('analytickit', 'analytickit_test', 'events', sipHash64(distinct_id))
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[events_dead_letter_queue]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS events_dead_letter_queue ON CLUSTER 'analytickit'
   (
@@ -278,10 +280,10 @@
   
   SETTINGS index_granularity=512
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[events_dead_letter_queue_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW IF NOT EXISTS events_dead_letter_queue_mv ON CLUSTER 'analytickit'
   TO analytickit_test.events_dead_letter_queue
@@ -306,10 +308,10 @@
   _offset
   FROM analytickit_test.kafka_events_dead_letter_queue
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[events_json_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW events_json_mv ON CLUSTER 'analytickit'
   TO analytickit_test.events
@@ -339,10 +341,10 @@
   _offset
   FROM analytickit_test.kafka_events_json
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[groups]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS groups ON CLUSTER 'analytickit'
   (
@@ -359,10 +361,10 @@
   Order By (team_id, group_type_index, group_key)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[groups_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW groups_mv ON CLUSTER 'analytickit'
   TO analytickit_test.groups
@@ -376,10 +378,10 @@
   _offset
   FROM analytickit_test.kafka_groups
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_events_dead_letter_queue]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_events_dead_letter_queue ON CLUSTER 'analytickit'
   (
@@ -402,10 +404,10 @@
       
   ) ENGINE = Kafka('kafka:9092', 'events_dead_letter_queue_test', 'group1', 'JSONEachRow')
    SETTINGS kafka_skip_broken_messages=1000
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_events_json]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_events_json ON CLUSTER 'analytickit'
   (
@@ -436,10 +438,10 @@
   
       SETTINGS kafka_skip_broken_messages = 100
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_groups]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_groups ON CLUSTER 'analytickit'
   (
@@ -451,10 +453,10 @@
       
   ) ENGINE = Kafka('kafka:9092', 'clickhouse_groups_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_person]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_person ON CLUSTER 'analytickit'
   (
@@ -468,10 +470,10 @@
       
   ) ENGINE = Kafka('kafka:9092', 'clickhouse_person_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_person_distinct_id2]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_person_distinct_id2 ON CLUSTER 'analytickit'
   (
@@ -483,10 +485,10 @@
       
   ) ENGINE = Kafka('kafka:9092', 'clickhouse_person_distinct_id_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_person_distinct_id]
-  '
+  '''
   
   CREATE TABLE kafka_person_distinct_id ON CLUSTER 'analytickit'
   (
@@ -497,10 +499,10 @@
       is_deleted Nullable(Int8)
   ) ENGINE = Kafka('kafka:9092', 'clickhouse_person_unique_id_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_plugin_log_entries]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_plugin_log_entries ON CLUSTER 'analytickit'
   (
@@ -516,10 +518,10 @@
       
   ) ENGINE = Kafka('kafka:9092', 'plugin_log_entries_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[kafka_session_recording_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS kafka_session_recording_events ON CLUSTER 'analytickit'
   (
@@ -535,10 +537,10 @@
       
   ) ENGINE = Kafka('kafka:9092', 'clickhouse_session_recording_events_test', 'group1', 'JSONEachRow')
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person ON CLUSTER 'analytickit'
   (
@@ -557,10 +559,10 @@
   Order By (team_id, id)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person_distinct_id2]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person_distinct_id2 ON CLUSTER 'analytickit'
   (
@@ -579,10 +581,10 @@
       ORDER BY (team_id, distinct_id)
       SETTINGS index_granularity = 512
       
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person_distinct_id2_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW person_distinct_id2_mv ON CLUSTER 'analytickit'
   TO analytickit_test.person_distinct_id2
@@ -597,10 +599,10 @@
   _partition
   FROM analytickit_test.kafka_person_distinct_id2
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person_distinct_id]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person_distinct_id ON CLUSTER 'analytickit'
   (
@@ -617,10 +619,10 @@
   Order By (team_id, distinct_id, person_id)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person_distinct_id_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW person_distinct_id_mv ON CLUSTER 'analytickit'
   TO analytickit_test.person_distinct_id
@@ -633,10 +635,10 @@
   _offset
   FROM analytickit_test.kafka_person_distinct_id
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW person_mv ON CLUSTER 'analytickit'
   TO analytickit_test.person
@@ -652,10 +654,10 @@
   _offset
   FROM analytickit_test.kafka_person
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[person_static_cohort]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person_static_cohort ON CLUSTER 'analytickit'
   (
@@ -671,10 +673,10 @@
   Order By (team_id, cohort_id, person_id, id)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[plugin_log_entries]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS plugin_log_entries ON CLUSTER 'analytickit'
   (
@@ -696,10 +698,10 @@
   
   SETTINGS index_granularity=512
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[plugin_log_entries_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW plugin_log_entries_mv ON CLUSTER 'analytickit'
   TO analytickit_test.plugin_log_entries
@@ -717,10 +719,10 @@
   _offset
   FROM analytickit_test.kafka_plugin_log_entries
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[session_recording_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS session_recording_events ON CLUSTER 'analytickit'
   (
@@ -741,10 +743,10 @@
   
   ) ENGINE = Distributed('analytickit', 'analytickit_test', 'session_recording_events', sipHash64(distinct_id))
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[session_recording_events_mv]
-  '
+  '''
   
   CREATE MATERIALIZED VIEW session_recording_events_mv ON CLUSTER 'analytickit'
   TO analytickit_test.session_recording_events
@@ -761,10 +763,10 @@
   _offset
   FROM analytickit_test.kafka_session_recording_events
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[sharded_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS events ON CLUSTER 'analytickit'
   (
@@ -808,10 +810,10 @@
   SAMPLE BY cityHash64(distinct_id)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[sharded_session_recording_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS session_recording_events ON CLUSTER 'analytickit'
   (
@@ -836,10 +838,10 @@
   
   SETTINGS index_granularity=512
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[writable_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS writable_events ON CLUSTER 'analytickit'
   (
@@ -871,10 +873,10 @@
   
   ) ENGINE = Distributed('analytickit', 'analytickit_test', 'events', sipHash64(distinct_id))
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query[writable_session_recording_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS writable_session_recording_events ON CLUSTER 'analytickit'
   (
@@ -893,10 +895,10 @@
   
   ) ENGINE = Distributed('analytickit', 'analytickit_test', 'session_recording_events', sipHash64(distinct_id))
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[cohortpeople]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS cohortpeople ON CLUSTER 'analytickit'
   (
@@ -909,10 +911,10 @@
   Order By (team_id, cohort_id, person_id, version)
   
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[events_dead_letter_queue]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS events_dead_letter_queue ON CLUSTER 'analytickit'
   (
@@ -941,10 +943,10 @@
   
   SETTINGS index_granularity=512
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[groups]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS groups ON CLUSTER 'analytickit'
   (
@@ -961,10 +963,10 @@
   Order By (team_id, group_type_index, group_key)
   SETTINGS storage_policy = 'hot_to_cold'
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[person]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person ON CLUSTER 'analytickit'
   (
@@ -983,10 +985,10 @@
   Order By (team_id, id)
   SETTINGS storage_policy = 'hot_to_cold'
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[person_distinct_id2]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person_distinct_id2 ON CLUSTER 'analytickit'
   (
@@ -1005,10 +1007,10 @@
       ORDER BY (team_id, distinct_id)
       SETTINGS index_granularity = 512
       
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[person_distinct_id]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person_distinct_id ON CLUSTER 'analytickit'
   (
@@ -1025,10 +1027,10 @@
   Order By (team_id, distinct_id, person_id)
   SETTINGS storage_policy = 'hot_to_cold'
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[person_static_cohort]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS person_static_cohort ON CLUSTER 'analytickit'
   (
@@ -1044,10 +1046,10 @@
   Order By (team_id, cohort_id, person_id, id)
   SETTINGS storage_policy = 'hot_to_cold'
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[plugin_log_entries]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS plugin_log_entries ON CLUSTER 'analytickit'
   (
@@ -1069,10 +1071,10 @@
   
   SETTINGS index_granularity=512
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[sharded_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS sharded_events ON CLUSTER 'analytickit'
   (
@@ -1116,10 +1118,10 @@
   SAMPLE BY cityHash64(distinct_id)
   SETTINGS storage_policy = 'hot_to_cold'
   
-  '
----
+  '''
+# ---
 # name: test_create_table_query_replicated_and_storage[sharded_session_recording_events]
-  '
+  '''
   
   CREATE TABLE IF NOT EXISTS sharded_session_recording_events ON CLUSTER 'analytickit'
   (
@@ -1144,5 +1146,5 @@
   
   SETTINGS index_granularity=512
   
-  '
----
+  '''
+# ---

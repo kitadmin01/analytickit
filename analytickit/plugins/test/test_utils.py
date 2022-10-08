@@ -490,11 +490,12 @@ class TestPluginsUtils(BaseTest):
             )
 
     def test_get_file_from_archive(self, mock_get):
+        print("*****=",HELLO_WORLD_PLUGIN_GITHUB_ZIP[1])
         plugin_json_zip = cast(
             dict, get_file_from_archive(base64.b64decode(HELLO_WORLD_PLUGIN_GITHUB_ZIP[1]), "plugin.json")
         )
         self.assertEqual(plugin_json_zip["name"], "helloworldplugin")
-        self.assertEqual(plugin_json_zip["url"], "https://github.com/analytickit/helloworldplugin")
+        self.assertEqual(plugin_json_zip["url"], "https://github.com/PostHog/helloworldplugin")
         self.assertEqual(plugin_json_zip["description"], "Greet the World and Foo a Bar, JS edition!")
 
         plugin_json_zip = cast(
@@ -508,7 +509,7 @@ class TestPluginsUtils(BaseTest):
             dict, get_file_from_archive(base64.b64decode(HELLO_WORLD_PLUGIN_NPM_TGZ[1]), "plugin.json")
         )
         self.assertEqual(plugin_json_tgz["name"], "helloworldplugin")
-        self.assertEqual(plugin_json_tgz["url"], "https://github.com/analytickit/helloworldplugin")
+        self.assertEqual(plugin_json_tgz["url"], "https://github.com/PostHog/helloworldplugin")
         self.assertEqual(plugin_json_tgz["description"], "Greet the World and Foo a Bar, JS edition!")
 
     def test_put_json_into_zip_archive(self, mock_get):

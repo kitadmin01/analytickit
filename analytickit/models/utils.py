@@ -138,12 +138,13 @@ def generate_random_token(nbytes: int = 32) -> str:
 
 
 def generate_random_token_project() -> str:
-    return "phc_" + generate_random_token()  # "c" standing for "client"
+    token = "phc_" + generate_random_token() 
+    return token # "c" standing for "client"
 
 
 def generate_random_token_personal() -> str:
-    return "phx_" + generate_random_token()  # "x" standing for nothing in particular
-
+    token = "phx_" + generate_random_token()  # "x" standing for nothing in particular
+    return token # "c" standing for "client"
 
 def int_to_base(number: int, base: int) -> str:
     if base > 62:

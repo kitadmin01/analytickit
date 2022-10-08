@@ -38,7 +38,6 @@ class PersonalAPIKeyAuthentication(authentication.BaseAuthentication):
             if authorization_match:
                 return authorization_match.group(1).strip(), "Authorization header"
         data = request.data if request_data is None and isinstance(request, Request) else request_data
-
         if data and "personal_api_key" in data:
             return data["personal_api_key"], "body"
         if "personal_api_key" in request.GET:
@@ -86,6 +85,7 @@ class PersonalAPIKeyAuthentication(authentication.BaseAuthentication):
             key_last_used_at = now
             personal_api_key_object.save()
         assert personal_api_key_object.user is not None
+
         return personal_api_key_object.user, None
 
     @classmethod

@@ -55,7 +55,7 @@ class TestConsumer(unittest.TestCase):
         q = Queue()
         flush_interval = 0.3
         consumer = Consumer(q, TEST_API_KEY, flush_at=10, flush_interval=flush_interval)
-        with mock.patch("analytickit.consumer.batch_post") as mock_post:
+        with mock.patch("analytickitanalytics.consumer.batch_post") as mock_post:
             consumer.start()
             for i in range(0, 3):
                 track = {"type": "track", "event": "python event %d" % i, "distinct_id": "distinct_id"}
@@ -70,7 +70,7 @@ class TestConsumer(unittest.TestCase):
         flush_interval = 0.5
         flush_at = 10
         consumer = Consumer(q, TEST_API_KEY, flush_at=flush_at, flush_interval=flush_interval)
-        with mock.patch("analytickit.consumer.batch_post") as mock_post:
+        with mock.patch("analytickitanalytics.consumer.batch_post") as mock_post:
             consumer.start()
             for i in range(0, flush_at * 2):
                 track = {"type": "track", "event": "python event %d" % i, "distinct_id": "distinct_id"}
@@ -91,7 +91,7 @@ class TestConsumer(unittest.TestCase):
 
         mock_post.call_count = 0
 
-        with mock.patch("analytickit.consumer.batch_post", mock.Mock(side_effect=mock_post)):
+        with mock.patch("analytickitanalytics.consumer.batch_post", mock.Mock(side_effect=mock_post)):
             track = {"type": "track", "event": "python event", "distinct_id": "distinct_id"}
             # request() should succeed if the number of exceptions raised is
             # less than the retries paramater.
@@ -156,7 +156,7 @@ class TestConsumer(unittest.TestCase):
             self.assertTrue(len(data.encode()) < 500000, "batch size (%d) exceeds 500KB limit" % len(data.encode()))
             return res
 
-        with mock.patch("analytickit.request._session.post", side_effect=mock_post_fn) as mock_post:
+        with mock.patch("analytickitanalytics.request._session.post", side_effect=mock_post_fn) as mock_post:
             consumer.start()
             for _ in range(0, n_msgs + 2):
                 q.put(track)

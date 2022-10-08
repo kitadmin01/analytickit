@@ -50,8 +50,6 @@ class OrganizationDomainSerializer(serializers.ModelSerializer):
         if not getattr(settings, "MULTI_TENANCY", False):
             instance, _ = instance.attempt_verification()
 
-        print("*****OrganizationDomainSerializer")
-
         return instance
 
     def validate_domain(self, domain: str) -> str:

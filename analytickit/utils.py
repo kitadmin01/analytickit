@@ -317,7 +317,6 @@ def render_template(template_name: str, request: HttpRequest, context: Dict = {}
     context["analytickit_app_context"] = json.dumps(analytickit_app_context, default=json_uuid_convert)
 
     html = template.render(context, request=request)
-    # print("*****In render_template html=", html)
 
     return HttpResponse(html)
 
@@ -686,7 +685,6 @@ def get_instance_realm() -> str:
 
     Historically this would also have returned `hosted` for hosted postgresql based installations
     """
-    print("*****get_instance_realm()=", )
     if settings.MULTI_TENANCY:
         return "cloud"
     elif settings.DEMO:

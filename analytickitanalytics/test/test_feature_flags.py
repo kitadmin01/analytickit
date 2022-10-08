@@ -29,7 +29,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.failed = False
         self.client = Client(FAKE_TEST_API_KEY, on_error=self.set_fail)
 
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.get")
     def test_flag_person_properties(self, patch_get):
         self.client.feature_flags = [
             {
@@ -67,8 +67,8 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertTrue(feature_flag_match)
         self.assertFalse(not_feature_flag_match)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_flag_group_properties(self, patch_get, patch_decide):
         self.client.feature_flags = [
             {
@@ -158,8 +158,8 @@ class TestLocalEvaluation(unittest.TestCase):
 
         self.assertEqual(patch_decide.call_count, 1)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_flag_with_complex_definition(self, patch_get, patch_decide):
         patch_decide.return_value = {"featureFlags": {"complex-flag": "decide-fallback-value"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
@@ -274,8 +274,8 @@ class TestLocalEvaluation(unittest.TestCase):
         )
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_flags_fallback_to_decide(self, patch_get, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "alakazam", "beta-feature2": "alakazam2"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
@@ -331,8 +331,8 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(feature_flag_match, "alakazam2")
         self.assertEqual(patch_decide.call_count, 2)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_flags_dont_fallback_to_decide_when_only_local_evaluation_is_true(self, patch_get, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "alakazam", "beta-feature2": "alakazam2"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
@@ -398,8 +398,8 @@ class TestLocalEvaluation(unittest.TestCase):
 
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_flag_never_returns_undefined_during_regular_evaluation(self, patch_get, patch_decide):
         patch_decide.return_value = {"featureFlags": {}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
@@ -432,8 +432,8 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertFalse(client.feature_enabled("beta-feature2", "some-distinct-id"))
         self.assertEqual(patch_decide.call_count, 2)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_flag_return_none_when_decide_errors_out(self, patch_get, patch_decide):
         patch_decide.side_effect = APIError(400, "Decide error")
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
@@ -446,7 +446,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertIsNone(client.feature_enabled("beta-feature2", "some-distinct-id"))
         self.assertEqual(patch_decide.call_count, 2)
 
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_experience_continuity_flag_not_evaluated_locally(self, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "decide-fallback-value"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key="test")
@@ -474,7 +474,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(patch_decide.call_count, 1)
 
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_get_all_flags_with_fallback(self, patch_decide, patch_capture):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "variant-1", "beta-feature2": "variant-2"}}
         client = self.client
@@ -535,7 +535,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(patch_capture.call_count, 0)
 
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_get_all_flags_with_fallback_empty_local_flags(self, patch_decide, patch_capture):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "variant-1", "beta-feature2": "variant-2"}}
         client = self.client
@@ -548,7 +548,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(patch_capture.call_count, 0)
 
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_get_all_flags_with_no_fallback(self, patch_decide, patch_capture):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "variant-1", "beta-feature2": "variant-2"}}
         client = self.client
@@ -591,7 +591,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(patch_capture.call_count, 0)
 
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_get_all_flags_with_fallback_but_only_local_evaluation_set(self, patch_decide, patch_capture):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "variant-1", "beta-feature2": "variant-2"}}
         client = self.client
@@ -652,7 +652,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(patch_capture.call_count, 0)
 
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_compute_inactive_flags_locally(self, patch_decide, patch_capture):
         client = self.client
         client.feature_flags = [
@@ -732,8 +732,8 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertEqual(patch_decide.call_count, 0)
         self.assertEqual(patch_capture.call_count, 0)
 
-    @mock.patch("analytickit.client.Poller")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.Poller")
+    @mock.patch("analytickitanalytics.client.get")
     def test_load_feature_flags(self, patch_get, patch_poll):
         patch_get.return_value = {
             "flags": [
@@ -756,8 +756,8 @@ class TestLocalEvaluation(unittest.TestCase):
         with freeze_time("2020-01-01T12:01:00.0000Z"):
             self.assertRaises(APIError, client.load_feature_flags)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_enabled_simple(self, patch_get, patch_decide):
         client = Client(FAKE_TEST_API_KEY)
         client.feature_flags = [
@@ -781,8 +781,8 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertTrue(client.feature_enabled("beta-feature", "distinct_id"))
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_enabled_simple_is_false(self, patch_get, patch_decide):
         client = Client(FAKE_TEST_API_KEY)
         client.feature_flags = [
@@ -806,8 +806,8 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertFalse(client.feature_enabled("beta-feature", "distinct_id"))
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.decide")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.decide")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_enabled_simple_is_true_when_rollout_is_undefined(self, patch_get, patch_decide):
         client = Client(FAKE_TEST_API_KEY)
         client.feature_flags = [
@@ -831,7 +831,7 @@ class TestLocalEvaluation(unittest.TestCase):
         self.assertTrue(client.feature_enabled("beta-feature", "distinct_id"))
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_enabled_simple_with_project_api_key(self, patch_get):
         client = Client(project_api_key=FAKE_TEST_API_KEY, on_error=self.set_fail)
         client.feature_flags = [
@@ -854,7 +854,7 @@ class TestLocalEvaluation(unittest.TestCase):
         ]
         self.assertTrue(client.feature_enabled("beta-feature", "distinct_id"))
 
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_feature_enabled_request_multi_variate(self, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "variant-1"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key="test")
@@ -880,7 +880,7 @@ class TestLocalEvaluation(unittest.TestCase):
         # decide not called because this can be evaluated locally
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.get")
     def test_feature_enabled_simple_without_rollout_percentage(self, patch_get):
         client = Client(FAKE_TEST_API_KEY)
         client.feature_flags = [
@@ -901,7 +901,7 @@ class TestLocalEvaluation(unittest.TestCase):
         ]
         self.assertTrue(client.feature_enabled("beta-feature", "distinct_id"))
 
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_get_feature_flag(self, patch_decide):
         patch_decide.return_value = {"featureFlags": {"beta-feature": "variant-1"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key="test")
@@ -933,8 +933,8 @@ class TestLocalEvaluation(unittest.TestCase):
         # decide not called because this can be evaluated locally
         self.assertEqual(patch_decide.call_count, 0)
 
-    @mock.patch("analytickit.client.Poller")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.Poller")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_feature_enabled_doesnt_exist(self, patch_decide, patch_poll):
         client = Client(FAKE_TEST_API_KEY)
         client.feature_flags = []
@@ -945,8 +945,8 @@ class TestLocalEvaluation(unittest.TestCase):
         patch_decide.side_effect = APIError(401, "decide error")
         self.assertIsNone(client.feature_enabled("doesnt-exist", "distinct_id"))
 
-    @mock.patch("analytickit.client.Poller")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.Poller")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_personal_api_key_doesnt_exist(self, patch_decide, patch_poll):
         client = Client(FAKE_TEST_API_KEY, personal_api_key="test")
         client.feature_flags = []
@@ -955,8 +955,8 @@ class TestLocalEvaluation(unittest.TestCase):
 
         self.assertTrue(client.feature_enabled("feature-flag", "distinct_id"))
 
-    @mock.patch("analytickit.client.Poller")
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.Poller")
+    @mock.patch("analytickitanalytics.client.get")
     def test_load_feature_flags_error(self, patch_get, patch_poll):
         def raise_effect():
             raise Exception("http exception")
@@ -1121,7 +1121,7 @@ class TestMatchProperties(unittest.TestCase):
 
 class TestCaptureCalls(unittest.TestCase):
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_capture_is_called(self, patch_decide, patch_capture):
         patch_decide.return_value = {"featureFlags": {"decide-flag": "decide-value"}}
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
@@ -1212,9 +1212,9 @@ class TestCaptureCalls(unittest.TestCase):
             groups={"organization": "org1"},
         )
 
-    @mock.patch("analytickit.client.MAX_DICT_SIZE", 100)
+    @mock.patch("analytickitanalytics.client.MAX_DICT_SIZE", 100)
     @mock.patch.object(Client, "capture")
-    @mock.patch("analytickit.client.decide")
+    @mock.patch("analytickitanalytics.client.decide")
     def test_capture_multiple_users_doesnt_out_of_memory(self, patch_decide, patch_capture):
         client = Client(FAKE_TEST_API_KEY, personal_api_key=FAKE_TEST_API_KEY)
         client.feature_flags = [
@@ -1268,7 +1268,7 @@ class TestConsistency(unittest.TestCase):
         self.failed = False
         self.client = Client(FAKE_TEST_API_KEY, on_error=self.set_fail)
 
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.get")
     def test_simple_flag_consistency(self, patch_get):
         self.client.feature_flags = [
             {
@@ -2296,7 +2296,7 @@ class TestConsistency(unittest.TestCase):
             else:
                 self.assertFalse(feature_flag_match)
 
-    @mock.patch("analytickit.client.get")
+    @mock.patch("analytickitanalytics.client.get")
     def test_multivariate_flag_consistency(self, patch_get):
         self.client.feature_flags = [
             {

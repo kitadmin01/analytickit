@@ -6,7 +6,7 @@ from uuid import UUID
 import six
 from dateutil.tz import tzutc
 
-from analytickit import utils
+from analytickitanalytics import utils
 
 TEST_API_KEY = "kOOlRy2QlMY9jHZQv0bKz0FZyazBUoY8Arj0lFVNjs4"
 FAKE_TEST_API_KEY = "random_key"

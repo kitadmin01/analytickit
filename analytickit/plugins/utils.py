@@ -219,6 +219,7 @@ def load_json_file(filename: str):
 def get_file_from_zip_archive(archive: bytes, filename: str, *, json_parse: bool) -> Any:
     zip_file = ZipFile(io.BytesIO(archive), "r")
     root_folder = zip_file.namelist()[0]
+    print("*****root_folder=",root_folder)
     file_path = os.path.join(root_folder, filename)
     with zip_file.open(file_path) as reader:
         file_bytes = reader.read()

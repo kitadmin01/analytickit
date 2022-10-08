@@ -39,12 +39,7 @@ def post(
             gz.write(data.encode("utf-8"))
         data = buf.getvalue()
     # data = {"batch": [{"timestamp": "2022-09-18T19:52:35.450951+00:00", "context": {}, "distinct_id": "GS2dEqckg3bcng0Q0JJCRmF0gI3Zjtq9WYMxmWwIqYH", "$set": {"realm": "hosted-clickhouse", "email_opt_in": true, "anonymize_data": false, "email": "test@test.com", "is_signed_up": true, "organization_count": 1, "project_count": 1, "team_member_count_all": 1, "completed_onboarding_once": true, "billing_plan": "enterprise", "organization_id": "01831fbd-9ca5-0000-27e3-5f7e024285db", "project_id": "01831fbd-9e80-0000-5b55-16759a344abf", "project_setup_complete": true, "joined_at": "2022-09-09T00:54:23.961276+00:00", "has_password_set": true, "has_social_auth": false, "social_providers": []}, "event": "$identify", "properties": {"$lib": "analytickit-python", "$lib_version": "2.1.0"}}], "sentAt": "2022-09-18T19:52:35.898694+00:00", "api_key": "phc_VSuvlVsXRjOOynFJUVlFJN7"}  
-    print("*****url in request.py=",url)
-    print("*****api_key in request.py=",api_key)
-    print("*****timeout in request.py=",timeout)
-    print("*****data in request.py=",data)
     res = _session.post(url, data=data, headers=headers, timeout=timeout)
-    print("*****res.text in request.py=",res.text)
     if res.status_code == 200:
         log.debug("data uploaded successfully")
 
@@ -57,7 +52,6 @@ def _process_response(
     log = logging.getLogger("analytickit")
     if res.status_code == 200:
         log.debug(success_message)
-        print("*****_process_response=",res)
         return res.json() if return_json else res
     try:
         payload = res.json()

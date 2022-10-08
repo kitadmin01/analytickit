@@ -1,6 +1,6 @@
 import unittest
 
-import analytickit
+import analytickitanalytics
 
 
 class TestModule(unittest.TestCase):
@@ -9,32 +9,32 @@ class TestModule(unittest.TestCase):
 
     def setUp(self):
         self.failed = False
-        analytickit.api_key = "testsecret"
-        analytickit.on_error = self.failed
+        analytickitanalytics.api_key = "testsecret"
+        analytickitanalytics.on_error = self.failed
 
     def test_no_api_key(self):
-        analytickit.api_key = None
-        self.assertRaises(Exception, analytickit.capture)
+        analytickitanalytics.api_key = None
+        self.assertRaises(Exception, analytickitanalytics.capture)
 
     def test_no_host(self):
-        analytickit.host = None
-        self.assertRaises(Exception, analytickit.capture)
+        analytickitanalytics.host = None
+        self.assertRaises(Exception, analytickitanalytics.capture)
 
     def test_track(self):
-        analytickit.capture("distinct_id", "python module event")
-        analytickit.flush()
+        analytickitanalytics.capture("distinct_id", "python module event")
+        analytickitanalytics.flush()
 
     def test_identify(self):
-        analytickit.identify("distinct_id", {"email": "user@email.com"})
-        analytickit.flush()
+        analytickitanalytics.identify("distinct_id", {"email": "user@email.com"})
+        analytickitanalytics.flush()
 
     def test_alias(self):
-        analytickit.alias("previousId", "distinct_id")
-        analytickit.flush()
+        analytickitanalytics.alias("previousId", "distinct_id")
+        analytickitanalytics.flush()
 
     def test_page(self):
-        analytickit.page("distinct_id", "https://analytickit.com/contact")
-        analytickit.flush()
+        analytickitanalytics.page("distinct_id", "https://analytickit.com/contact")
+        analytickitanalytics.flush()
 
     def test_flush(self):
-        analytickit.flush()
+        analytickitanalytics.flush()

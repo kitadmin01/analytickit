@@ -199,12 +199,12 @@ def get_unsubscribe_token(subscription: Subscription, email: str) -> str:
     return encode_jwt(
         {"id": subscription.id, "email": email, },
         expiry_delta=timedelta(days=UNSUBSCRIBE_TOKEN_EXP_DAYS),
-        audience=analytickitJwtAudience.UNSUBSCRIBE,
+        audience=AnalytickitJwtAudience.UNSUBSCRIBE,
     )
 
 
 def unsubscribe_using_token(token: str) -> Subscription:
-    info = decode_jwt(token, audience=analytickitJwtAudience.UNSUBSCRIBE)
+    info = decode_jwt(token, audience=AnalytickitJwtAudience.UNSUBSCRIBE)
     subscription = Subscription.objects.get(pk=info["id"])
 
     emails = subscription.target_value.split(",")

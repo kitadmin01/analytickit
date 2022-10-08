@@ -1,5 +1,5 @@
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -21,10 +21,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.1
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -60,10 +60,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.10
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -83,10 +83,10 @@
   FROM "analytickit_dashboard"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboard"."id" = "analytickit_dashboardtile"."dashboard_id")
   WHERE "analytickit_dashboardtile"."insight_id" = 2 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.11
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -122,10 +122,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.12
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -141,18 +141,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.13
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboard"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboard"."id" = "analytickit_dashboardtile"."dashboard_id")
   WHERE "analytickit_dashboardtile"."insight_id" = 2 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.14
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -172,10 +172,10 @@
   FROM "analytickit_dashboard"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboard"."id" = "analytickit_dashboardtile"."dashboard_id")
   WHERE "analytickit_dashboardtile"."insight_id" = 2 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.15
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -211,10 +211,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.16
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -230,10 +230,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.17
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -255,10 +255,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.18
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -294,10 +294,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.19
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -321,10 +321,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.2
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -348,10 +348,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.20
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -367,10 +367,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.21
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -457,10 +457,10 @@
          AND NOT "analytickit_dashboard"."deleted"
          AND "analytickit_dashboard"."id" = 2)
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.22
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -470,14 +470,14 @@
          "analytickit_sharingconfiguration"."access_token"
   FROM "analytickit_sharingconfiguration"
   WHERE "analytickit_sharingconfiguration"."dashboard_id" IN (1,
-                                                          2,
-                                                          3,
-                                                          4,
-                                                          5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+                                                              2,
+                                                              3,
+                                                              4,
+                                                              5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.23
-  '
+  '''
   SELECT ("analytickit_dashboardtile"."dashboard_id") AS "_prefetch_related_val_dashboard_id",
          "analytickit_dashboarditem"."id",
          "analytickit_dashboarditem"."name",
@@ -510,15 +510,15 @@
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE (NOT "analytickit_dashboarditem"."deleted"
          AND "analytickit_dashboardtile"."dashboard_id" IN (1,
-                                                        2,
-                                                        3,
-                                                        4,
-                                                        5 /* ... */))
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5 /* ... */))
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.24
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -575,10 +575,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.25
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -614,10 +614,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.26
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -653,10 +653,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.27
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -692,10 +692,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.28
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -731,10 +731,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.29
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -770,10 +770,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.3
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -794,10 +794,10 @@
   WHERE (NOT "analytickit_dashboard"."deleted"
          AND "analytickit_dashboard"."id" = 2)
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.30
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -922,10 +922,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.31
-  '
+  '''
   SELECT ("analytickit_dashboardtile"."insight_id") AS "_prefetch_related_val_insight_id",
          "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
@@ -946,14 +946,14 @@
   FROM "analytickit_dashboard"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboard"."id" = "analytickit_dashboardtile"."dashboard_id")
   WHERE "analytickit_dashboardtile"."insight_id" IN (1,
-                                                 2,
-                                                 3,
-                                                 4,
-                                                 5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+                                                     2,
+                                                     3,
+                                                     4,
+                                                     5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.32
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -988,14 +988,14 @@
          "analytickit_team"."event_properties_numerical"
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" IN (1,
-                                2,
-                                3,
-                                4,
-                                5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+                                    2,
+                                    3,
+                                    4,
+                                    5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.33
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -1010,10 +1010,10 @@
          "analytickit_organization"."domain_whitelist"
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" IN ('00000000-0000-0000-0000-000000000000'::uuid) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.34
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1028,10 +1028,10 @@
          AND "analytickit_dashboardtile"."insight_id" = 2)
   ORDER BY "analytickit_dashboardtile"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.35
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1046,10 +1046,10 @@
          AND "analytickit_dashboardtile"."insight_id" = 2)
   ORDER BY "analytickit_dashboardtile"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.36
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1064,10 +1064,10 @@
          AND "analytickit_dashboardtile"."insight_id" = 2)
   ORDER BY "analytickit_dashboardtile"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.37
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1082,10 +1082,10 @@
          AND "analytickit_dashboardtile"."insight_id" = 2)
   ORDER BY "analytickit_dashboardtile"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.38
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1100,10 +1100,10 @@
          AND "analytickit_dashboardtile"."insight_id" = 2)
   ORDER BY "analytickit_dashboardtile"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.39
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -1115,10 +1115,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.4
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -1154,10 +1154,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.5
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1214,10 +1214,10 @@
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   WHERE "analytickit_dashboardtile"."insight_id" = 2 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.6
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -1236,14 +1236,14 @@
          "analytickit_dashboard"."is_shared"
   FROM "analytickit_dashboard"
   WHERE "analytickit_dashboard"."id" IN (1,
-                                     2,
-                                     3,
-                                     4,
-                                     5 /* ... */) /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+                                         2,
+                                         3,
+                                         4,
+                                         5 /* ... */) /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.7
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -1279,10 +1279,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.8
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -1298,10 +1298,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_adding_insights_is_not_nplus1_for_gets.9
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -1321,10 +1321,10 @@
   FROM "analytickit_dashboard"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboard"."id" = "analytickit_dashboardtile"."dashboard_id")
   WHERE "analytickit_dashboardtile"."insight_id" = 2 /*controller='project_insights-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/insights/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1381,10 +1381,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.1
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -1406,10 +1406,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.10
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -1421,10 +1421,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.2
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -1460,10 +1460,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.3
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -1487,10 +1487,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.4
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -1506,10 +1506,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.5
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -1596,10 +1596,10 @@
          AND NOT "analytickit_dashboard"."deleted"
          AND "analytickit_dashboard"."id" = 2)
   LIMIT 21 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.6
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -1609,14 +1609,14 @@
          "analytickit_sharingconfiguration"."access_token"
   FROM "analytickit_sharingconfiguration"
   WHERE "analytickit_sharingconfiguration"."dashboard_id" IN (1,
-                                                          2,
-                                                          3,
-                                                          4,
-                                                          5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+                                                              2,
+                                                              3,
+                                                              4,
+                                                              5 /* ... */) /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.7
-  '
+  '''
   SELECT ("analytickit_dashboardtile"."dashboard_id") AS "_prefetch_related_val_dashboard_id",
          "analytickit_dashboarditem"."id",
          "analytickit_dashboarditem"."name",
@@ -1649,15 +1649,15 @@
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE (NOT "analytickit_dashboarditem"."deleted"
          AND "analytickit_dashboardtile"."dashboard_id" IN (1,
-                                                        2,
-                                                        3,
-                                                        4,
-                                                        5 /* ... */))
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5 /* ... */))
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.8
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1714,10 +1714,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard.9
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -1842,10 +1842,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-detail',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%28%3FP%3Cpk%3E%5B%5E/.%5D%2B%29/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -1867,10 +1867,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.1
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -1906,10 +1906,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.10
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -2034,10 +2034,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.11
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2049,10 +2049,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.12
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -2068,10 +2068,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.13
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -2093,10 +2093,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.14
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -2132,10 +2132,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.15
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -2159,10 +2159,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.16
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -2198,10 +2198,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.17
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -2258,10 +2258,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.18
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -2277,18 +2277,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.19
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboarditem"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.2
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -2312,10 +2312,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.20
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2327,17 +2327,17 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.21
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_taggeditem"
   WHERE "analytickit_taggeditem"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.22
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -2373,10 +2373,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.23
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -2501,10 +2501,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.24
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2516,10 +2516,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.25
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -2535,10 +2535,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.26
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -2560,10 +2560,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.27
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -2599,10 +2599,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.28
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -2626,10 +2626,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.29
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -2645,10 +2645,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.3
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -2684,18 +2684,18 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.30
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboard"
   WHERE ("analytickit_dashboard"."team_id" = 2
          AND NOT "analytickit_dashboard"."deleted") /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.31
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -2782,10 +2782,10 @@
          AND NOT "analytickit_dashboard"."deleted")
   ORDER BY "analytickit_dashboard"."name" ASC
   LIMIT 100 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.32
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2795,14 +2795,14 @@
          "analytickit_sharingconfiguration"."access_token"
   FROM "analytickit_sharingconfiguration"
   WHERE "analytickit_sharingconfiguration"."dashboard_id" IN (1,
-                                                          2,
-                                                          3,
-                                                          4,
-                                                          5 /* ... */) /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+                                                              2,
+                                                              3,
+                                                              4,
+                                                              5 /* ... */) /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.33
-  '
+  '''
   SELECT ("analytickit_dashboardtile"."dashboard_id") AS "_prefetch_related_val_dashboard_id",
          "analytickit_dashboarditem"."id",
          "analytickit_dashboarditem"."name",
@@ -2835,15 +2835,15 @@
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE (NOT "analytickit_dashboarditem"."deleted"
          AND "analytickit_dashboardtile"."dashboard_id" IN (1,
-                                                        2,
-                                                        3,
-                                                        4,
-                                                        5 /* ... */))
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5 /* ... */))
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.34
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2855,10 +2855,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.35
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2870,10 +2870,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.4
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -2930,10 +2930,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.5
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -2949,18 +2949,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.6
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboarditem"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.7
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -2972,17 +2972,17 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.8
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_taggeditem"
   WHERE "analytickit_taggeditem"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list.9
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3018,10 +3018,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -3043,10 +3043,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.1
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3082,10 +3082,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.10
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -3210,10 +3210,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.11
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -3225,10 +3225,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.12
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -3244,10 +3244,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.13
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -3269,10 +3269,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.14
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3308,10 +3308,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.15
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -3335,10 +3335,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.16
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -3354,18 +3354,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.17
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboard"
   WHERE ("analytickit_dashboard"."team_id" = 2
          AND NOT "analytickit_dashboard"."deleted") /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.18
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -3452,10 +3452,10 @@
          AND NOT "analytickit_dashboard"."deleted")
   ORDER BY "analytickit_dashboard"."name" ASC
   LIMIT 100 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.19
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -3465,14 +3465,14 @@
          "analytickit_sharingconfiguration"."access_token"
   FROM "analytickit_sharingconfiguration"
   WHERE "analytickit_sharingconfiguration"."dashboard_id" IN (1,
-                                                          2,
-                                                          3,
-                                                          4,
-                                                          5 /* ... */) /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+                                                              2,
+                                                              3,
+                                                              4,
+                                                              5 /* ... */) /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.2
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -3496,10 +3496,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.20
-  '
+  '''
   SELECT ("analytickit_dashboardtile"."dashboard_id") AS "_prefetch_related_val_dashboard_id",
          "analytickit_dashboarditem"."id",
          "analytickit_dashboarditem"."name",
@@ -3532,15 +3532,15 @@
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE (NOT "analytickit_dashboarditem"."deleted"
          AND "analytickit_dashboardtile"."dashboard_id" IN (1,
-                                                        2,
-                                                        3,
-                                                        4,
-                                                        5 /* ... */))
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5 /* ... */))
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.21
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -3552,10 +3552,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.22
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -3577,10 +3577,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.23
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3616,10 +3616,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.24
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -3643,10 +3643,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.25
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3682,10 +3682,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.26
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -3742,10 +3742,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.27
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -3761,18 +3761,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.28
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboarditem"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.29
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -3784,10 +3784,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.3
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3823,17 +3823,17 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.30
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_taggeditem"
   WHERE "analytickit_taggeditem"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.31
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -3869,10 +3869,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.32
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -3997,10 +3997,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.33
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -4012,10 +4012,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.34
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -4031,10 +4031,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.35
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -4056,10 +4056,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.36
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -4095,10 +4095,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.37
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -4122,10 +4122,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.38
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -4161,10 +4161,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.39
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -4221,10 +4221,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.4
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -4281,10 +4281,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.40
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -4300,18 +4300,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.41
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboarditem"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.42
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -4323,17 +4323,17 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.43
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_taggeditem"
   WHERE "analytickit_taggeditem"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.44
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -4369,10 +4369,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.45
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -4497,10 +4497,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.46
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -4512,10 +4512,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.47
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -4531,10 +4531,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.48
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -4556,10 +4556,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.49
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -4595,10 +4595,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.5
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -4614,10 +4614,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.50
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -4641,10 +4641,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.51
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -4680,10 +4680,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.52
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -4740,10 +4740,10 @@
   INNER JOIN "analytickit_dashboard" ON ("analytickit_dashboardtile"."dashboard_id" = "analytickit_dashboard"."id")
   INNER JOIN "analytickit_dashboarditem" ON ("analytickit_dashboardtile"."insight_id" = "analytickit_dashboarditem"."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.53
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -4759,18 +4759,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.54
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboarditem"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.55
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -4782,17 +4782,17 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.56
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_taggeditem"
   WHERE "analytickit_taggeditem"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.57
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -4828,10 +4828,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.58
-  '
+  '''
   SELECT "analytickit_dashboardtile"."id",
          "analytickit_dashboardtile"."dashboard_id",
          "analytickit_dashboardtile"."insight_id",
@@ -4956,10 +4956,10 @@
   LEFT OUTER JOIN "analytickit_user" T7 ON ("analytickit_dashboarditem"."last_modified_by_id" = T7."id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.59
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -4971,18 +4971,18 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.6
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboarditem"
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE "analytickit_dashboardtile"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.60
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -4998,10 +4998,10 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.61
-  '
+  '''
   SELECT "analytickit_user"."id",
          "analytickit_user"."password",
          "analytickit_user"."last_login",
@@ -5023,10 +5023,10 @@
   FROM "analytickit_user"
   WHERE "analytickit_user"."id" = 2
   LIMIT 21 /**/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.62
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -5062,10 +5062,10 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.63
-  '
+  '''
   SELECT "analytickit_organizationmembership"."id",
          "analytickit_organizationmembership"."organization_id",
          "analytickit_organizationmembership"."user_id",
@@ -5089,10 +5089,10 @@
   WHERE ("analytickit_organizationmembership"."organization_id" = '00000000-0000-0000-0000-000000000000'::uuid
          AND "analytickit_organizationmembership"."user_id" = 2)
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.64
-  '
+  '''
   SELECT "analytickit_organization"."id",
          "analytickit_organization"."name",
          "analytickit_organization"."slug",
@@ -5108,18 +5108,18 @@
   FROM "analytickit_organization"
   WHERE "analytickit_organization"."id" = '00000000-0000-0000-0000-000000000000'::uuid
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.65
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_dashboard"
   WHERE ("analytickit_dashboard"."team_id" = 2
          AND NOT "analytickit_dashboard"."deleted") /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.66
-  '
+  '''
   SELECT "analytickit_dashboard"."id",
          "analytickit_dashboard"."name",
          "analytickit_dashboard"."description",
@@ -5206,10 +5206,10 @@
          AND NOT "analytickit_dashboard"."deleted")
   ORDER BY "analytickit_dashboard"."name" ASC
   LIMIT 100 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.67
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -5219,14 +5219,14 @@
          "analytickit_sharingconfiguration"."access_token"
   FROM "analytickit_sharingconfiguration"
   WHERE "analytickit_sharingconfiguration"."dashboard_id" IN (1,
-                                                          2,
-                                                          3,
-                                                          4,
-                                                          5 /* ... */) /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+                                                              2,
+                                                              3,
+                                                              4,
+                                                              5 /* ... */) /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.68
-  '
+  '''
   SELECT ("analytickit_dashboardtile"."dashboard_id") AS "_prefetch_related_val_dashboard_id",
          "analytickit_dashboarditem"."id",
          "analytickit_dashboarditem"."name",
@@ -5259,15 +5259,15 @@
   INNER JOIN "analytickit_dashboardtile" ON ("analytickit_dashboarditem"."id" = "analytickit_dashboardtile"."insight_id")
   WHERE (NOT "analytickit_dashboarditem"."deleted"
          AND "analytickit_dashboardtile"."dashboard_id" IN (1,
-                                                        2,
-                                                        3,
-                                                        4,
-                                                        5 /* ... */))
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5 /* ... */))
   ORDER BY "analytickit_dashboarditem"."order" ASC /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.69
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -5279,10 +5279,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.7
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -5294,10 +5294,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.70
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -5309,10 +5309,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.71
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -5324,10 +5324,10 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.72
-  '
+  '''
   SELECT "analytickit_sharingconfiguration"."id",
          "analytickit_sharingconfiguration"."team_id",
          "analytickit_sharingconfiguration"."dashboard_id",
@@ -5339,17 +5339,17 @@
   WHERE "analytickit_sharingconfiguration"."dashboard_id" = 2
   ORDER BY "analytickit_sharingconfiguration"."id" ASC
   LIMIT 1 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.8
-  '
+  '''
   SELECT COUNT(*) AS "__count"
   FROM "analytickit_taggeditem"
   WHERE "analytickit_taggeditem"."dashboard_id" = 2 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---
 # name: TestDashboard.test_retrieve_dashboard_list_query_count_does_not_increase_with_the_dashboard_count.9
-  '
+  '''
   SELECT "analytickit_team"."id",
          "analytickit_team"."uuid",
          "analytickit_team"."organization_id",
@@ -5385,5 +5385,5 @@
   FROM "analytickit_team"
   WHERE "analytickit_team"."id" = 2
   LIMIT 21 /*controller='project_dashboards-list',route='api/projects/%28%3FP%3Cparent_lookup_team_id%3E%5B%5E/.%5D%2B%29/dashboards/%3F%24'*/
-  '
----
+  '''
+# ---

@@ -115,7 +115,7 @@ class TestInstanceSettings(APIBaseTest):
 
         self.assertEqual(mail.outbox[0].from_email, "hellohello@analytickit.com")
         self.assertEqual(
-            mail.outbox[0].subject, "This is a test email of your AnalyticKit instance",
+            mail.outbox[0].subject, "This is a test email of your analytickit instance",
         )
         html_message = mail.outbox[0].alternatives[0][0]  # type: ignore
         self.validate_basic_html(html_message, "http://localhost:8000", preheader="Email successfully set up!")

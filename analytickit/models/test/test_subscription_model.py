@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from freezegun import freeze_time
 
-from analytickit.jwt import analytickitJwtAudience
+from analytickit.jwt import AnalytickitJwtAudience
 from analytickit.models.insight import Insight
 from analytickit.models.subscription import (
     UNSUBSCRIBE_TOKEN_EXP_DAYS,
@@ -80,7 +80,7 @@ class TestSubscription(BaseTest):
         token = get_unsubscribe_token(subscription, "test2@analytickit.com")
         assert token.startswith("ey")
 
-        info = jwt.decode(token, "not-so-secret", audience=analytickitJwtAudience.UNSUBSCRIBE.value,
+        info = jwt.decode(token, "not-so-secret", audience=AnalytickitJwtAudience.UNSUBSCRIBE.value,
                           algorithms=["HS256"])
 
         assert info["id"] == subscription.id

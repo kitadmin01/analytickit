@@ -61,7 +61,9 @@ describe('mmdb', () => {
 
         expect(serverInstance.hub.DISABLE_MMDB).toBeFalsy()
 
-        expect(fetch).toHaveBeenCalledWith('https://s3.amazonaws.com/analytickit/GeoLite2-City.mmdb', { compress: false })
+        expect(fetch).toHaveBeenCalledWith('https://analytickit.s3.amazonaws.com/GeoLite2-City.mmdb', {
+            compress: false,
+        })
         expect(serverInstance.mmdb).toBeInstanceOf(ReaderModel)
 
         const cityResultDirect = serverInstance.mmdb!.city('89.160.20.129')

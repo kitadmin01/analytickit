@@ -1,4 +1,4 @@
-importhttpfrom'http'
+import http from 'http'
 
 import { startPluginsServer } from '../src/main/pluginsServer'
 import { HTTP_SERVER_PORT } from '../src/main/services/http-server'

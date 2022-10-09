@@ -39,8 +39,6 @@ Sign up for a free [analytickit Cloud](https://app.analytickit.com/signup) proje
 
 ## Features
 
-![ui-demo](https://user-images.githubusercontent.com/85295485/144591577-fe97e4a5-5631-4a60-a684-45caf421507f.gif)
-
 We bring all the tools into one place to give you everything you need to build better products:
 
 - **Event-based Analytics** on users or groups - capture your product's usage data to see which users are doing what in

@@ -44,17 +44,21 @@ def mocked_plugin_requests_get(*args, **kwargs):
 
     if args[0] == "https://api.github.com/repos/analytickit/analytickit/commits":
         return MockJSONResponse(
-            [{"sha": "MOCKLATESTCOMMIT",
-              "html_url": "https://www.github.com/analytickit/analytickit/commit/MOCKLATESTCOMMIT"}],
+            [
+                {
+                    "sha": "MOCKLATESTCOMMIT",
+                    "html_url": "https://www.github.com/analytickit/analytickit/commit/MOCKLATESTCOMMIT",
+                }
+            ],
             200,
         )
 
-    if args[0] == "https://api.github.com/repos/analytickit/helloworldplugin/commits":
+    if args[0] == "https://github.com/kitadmin01/analytickit-hello-world-plugin/commits":
         return MockJSONResponse(
             [
                 {
                     "sha": HELLO_WORLD_PLUGIN_GITHUB_ZIP[0],
-                    "html_url": "https://www.github.com/analytickit/helloworldplugin/commit/{}".format(
+                    "html_url": "https://github.com/kitadmin01/analytickit-hello-world-plugin/commit/{}".format(
                         HELLO_WORLD_PLUGIN_GITHUB_ZIP[0]
                     ),
                 }
@@ -91,16 +95,17 @@ def mocked_plugin_requests_get(*args, **kwargs):
         return MockJSONResponse({"pkg": "@analytickit/helloworldplugin", "version": "MOCK"}, 200)
 
     if args[0] == "https://github.com/analytickit/helloworldplugin/archive/{}.zip".format(
-            HELLO_WORLD_PLUGIN_GITHUB_ZIP[0]):
+        HELLO_WORLD_PLUGIN_GITHUB_ZIP[0]
+    ):
         return MockBase64Response(HELLO_WORLD_PLUGIN_GITHUB_ZIP[1], 200)
 
     if args[0] == "https://github.com/analytickit/helloworldplugin/archive/{}.zip".format(
-            HELLO_WORLD_PLUGIN_GITHUB_ATTACHMENT_ZIP[0]
+        HELLO_WORLD_PLUGIN_GITHUB_ATTACHMENT_ZIP[0]
     ):
         return MockBase64Response(HELLO_WORLD_PLUGIN_GITHUB_ATTACHMENT_ZIP[1], 200)
 
     if args[0] == "https://github.com/analytickit/helloworldplugin/archive/{}.zip".format(
-            HELLO_WORLD_PLUGIN_SECRET_GITHUB_ZIP[0]
+        HELLO_WORLD_PLUGIN_SECRET_GITHUB_ZIP[0]
     ):
         return MockBase64Response(HELLO_WORLD_PLUGIN_SECRET_GITHUB_ZIP[1], 200)
 
@@ -125,9 +130,9 @@ def mocked_plugin_requests_get(*args, **kwargs):
         return MockBase64Response(base64.b64encode(archive), 200)
 
     if args[0].startswith(
-            "https://gitlab.com/api/v4/projects/mariusandra%2Fhelloworldplugin/repository/archive.zip?sha={}".format(
-                HELLO_WORLD_PLUGIN_GITLAB_ZIP[0]
-            )
+        "https://gitlab.com/api/v4/projects/mariusandra%2Fhelloworldplugin/repository/archive.zip?sha={}".format(
+            HELLO_WORLD_PLUGIN_GITLAB_ZIP[0]
+        )
     ) or args[0].startswith(
         "https://gitlab.com/api/v4/projects/mariusandra%2Fhelloworldplugin-other/repository/archive.zip?sha={}".format(
             HELLO_WORLD_PLUGIN_GITLAB_ZIP[0]

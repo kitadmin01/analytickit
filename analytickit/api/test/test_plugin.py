@@ -60,7 +60,7 @@ class TestPluginAPI(APIBaseTest):
 
     @freeze_time("2021-08-25T22:09:14.252Z")
     def test_create_plugin_auth(self, mock_get, mock_reload):
-        repo_url = "https://github.com/AnalyticKit/helloworldplugin"
+        repo_url = "https://github.com/kitadmin01/analytickit-hello-world-plugin"
 
         for level in (Organization.PluginsAccessLevel.NONE, Organization.PluginsAccessLevel.CONFIG):
             self.organization.plugins_access_level = level
@@ -78,7 +78,7 @@ class TestPluginAPI(APIBaseTest):
         self.assert_plugin_activity(
             [
                 {
-                    "user": {"first_name": "", "email": "user1@analytickit.com", },
+                    "user": {"first_name": "", "email": "user1@analytickit.com",},
                     "activity": "installed",
                     "created_at": "2021-08-25T22:09:14.252000Z",
                     "scope": "Plugin",
@@ -95,9 +95,9 @@ class TestPluginAPI(APIBaseTest):
         repo_url = "https://github.com/AnalyticKit/helloworldplugin"
 
         for level in (
-                Organization.PluginsAccessLevel.NONE,
-                Organization.PluginsAccessLevel.CONFIG,
-                Organization.PluginsAccessLevel.INSTALL,
+            Organization.PluginsAccessLevel.NONE,
+            Organization.PluginsAccessLevel.CONFIG,
+            Organization.PluginsAccessLevel.INSTALL,
         ):
             self.organization.plugins_access_level = level
             self.organization.save()
@@ -283,7 +283,7 @@ class TestPluginAPI(APIBaseTest):
         self.assert_plugin_activity(
             [
                 {
-                    "user": {"first_name": "", "email": "user1@analytickit.com", },
+                    "user": {"first_name": "", "email": "user1@analytickit.com",},
                     "activity": "installed",
                     "created_at": "2021-08-25T22:09:14.252000Z",
                     "scope": "Plugin",
@@ -291,7 +291,7 @@ class TestPluginAPI(APIBaseTest):
                     "detail": {"name": "helloworldplugin", "changes": None, "merge": None, "short_id": None},
                 },
                 {
-                    "user": {"first_name": "", "email": "user1@analytickit.com", },
+                    "user": {"first_name": "", "email": "user1@analytickit.com",},
                     "activity": "uninstalled",
                     "created_at": "2021-08-25T22:09:14.252000Z",
                     "scope": "Plugin",
@@ -497,7 +497,8 @@ class TestPluginAPI(APIBaseTest):
             response = self.client.post(
                 "/api/organizations/@current/plugins/",
                 {
-                    "url": f"https://github.com/AnalyticKit-plugin/version-less-than/commit/{Version(VERSION).next_major()}"},
+                    "url": f"https://github.com/AnalyticKit-plugin/version-less-than/commit/{Version(VERSION).next_major()}"
+                },
             )
             self.assertEqual(response.status_code, 201)
 
@@ -510,7 +511,7 @@ class TestPluginAPI(APIBaseTest):
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
                 cast(Dict[str, str], response.json())["detail"],
-                'Invalid AnalyticKit semantic version requirement "< ..."!'
+                'Invalid AnalyticKit semantic version requirement "< ..."!',
             )
 
     def test_create_plugin_version_range_gt_next_major_ignore_on_cloud(self, mock_get, mock_reload):
@@ -527,7 +528,7 @@ class TestPluginAPI(APIBaseTest):
         # Create the plugin
         self.assertEqual(mock_reload.call_count, 0)
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"plugin_type": "source", "name": "myplugin_original", },
+            "/api/organizations/@current/plugins/", {"plugin_type": "source", "name": "myplugin_original",},
         )
         plugin_id = response.json()["id"]
         self.assertEqual(mock_reload.call_count, 1)
@@ -568,7 +569,7 @@ class TestPluginAPI(APIBaseTest):
     def test_create_plugin_frontend_source(self, mock_get, mock_reload):
         self.assertEqual(mock_reload.call_count, 0)
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"plugin_type": "source", "name": "myplugin", },
+            "/api/organizations/@current/plugins/", {"plugin_type": "source", "name": "myplugin",},
         )
         self.assertEqual(response.status_code, 201)
         id = response.json()["id"]
@@ -595,7 +596,7 @@ class TestPluginAPI(APIBaseTest):
         self.assertEqual(mock_reload.call_count, 1)
 
         response = self.client.patch(
-            f"/api/organizations/@current/plugins/{id}/update_source", {"frontend.tsx": "export const scene = {}", },
+            f"/api/organizations/@current/plugins/{id}/update_source", {"frontend.tsx": "export const scene = {}",},
         )
 
         self.assertEqual(Plugin.objects.count(), 1)
@@ -626,7 +627,7 @@ class TestPluginAPI(APIBaseTest):
         # Update the source frontend
         self.client.patch(
             f"/api/organizations/@current/plugins/{id}/update_source",
-            {"frontend.tsx": "export const scene = { name: 'new' }", },
+            {"frontend.tsx": "export const scene = { name: 'new' }",},
         )
 
         # It will clear the transpiled frontend
@@ -780,7 +781,8 @@ class TestPluginAPI(APIBaseTest):
 
     def test_create_plugin_config_auth(self, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
+            "/api/organizations/@current/plugins/",
+            {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"},
         )
         plugin_id = response.json()["id"]
 
@@ -794,9 +796,9 @@ class TestPluginAPI(APIBaseTest):
         self.assertEqual(response.status_code, 400)
 
         for level in (
-                Organization.PluginsAccessLevel.ROOT,
-                Organization.PluginsAccessLevel.INSTALL,
-                Organization.PluginsAccessLevel.CONFIG,
+            Organization.PluginsAccessLevel.ROOT,
+            Organization.PluginsAccessLevel.INSTALL,
+            Organization.PluginsAccessLevel.CONFIG,
         ):
             self.organization.plugins_access_level = level
             self.organization.save()
@@ -809,7 +811,8 @@ class TestPluginAPI(APIBaseTest):
 
     def test_update_plugin_config_auth(self, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
+            "/api/organizations/@current/plugins/",
+            {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"},
         )
         plugin_id = response.json()["id"]
         response = self.client.post(
@@ -820,9 +823,9 @@ class TestPluginAPI(APIBaseTest):
         plugin_config_id = response.json()["id"]
 
         for level in (
-                Organization.PluginsAccessLevel.ROOT,
-                Organization.PluginsAccessLevel.INSTALL,
-                Organization.PluginsAccessLevel.CONFIG,
+            Organization.PluginsAccessLevel.ROOT,
+            Organization.PluginsAccessLevel.INSTALL,
+            Organization.PluginsAccessLevel.CONFIG,
         ):
             self.organization.plugins_access_level = level
             self.organization.save()
@@ -844,7 +847,8 @@ class TestPluginAPI(APIBaseTest):
 
     def test_delete_plugin_config_auth(self, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
+            "/api/organizations/@current/plugins/",
+            {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"},
         )
         plugin_id = response.json()["id"]
         response = self.client.post(
@@ -860,9 +864,9 @@ class TestPluginAPI(APIBaseTest):
         self.assertEqual(response.status_code, 404)
 
         for level in (
-                Organization.PluginsAccessLevel.ROOT,
-                Organization.PluginsAccessLevel.INSTALL,
-                Organization.PluginsAccessLevel.CONFIG,
+            Organization.PluginsAccessLevel.ROOT,
+            Organization.PluginsAccessLevel.INSTALL,
+            Organization.PluginsAccessLevel.CONFIG,
         ):
             self.organization.plugins_access_level = level
             self.organization.save()
@@ -1031,7 +1035,8 @@ class TestPluginAPI(APIBaseTest):
     @patch("analytickit.api.plugin.connections")
     def test_job_trigger(self, db_connections, mock_get, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
+            "/api/organizations/@current/plugins/",
+            {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"},
         )
         plugin_id = response.json()["id"]
         response = self.client.post(
@@ -1060,7 +1065,8 @@ class TestPluginAPI(APIBaseTest):
 
     def test_check_for_updates_plugins_reload_not_called(self, _, mock_reload):
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
+            "/api/organizations/@current/plugins/",
+            {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"},
         )
         self.assertEqual(mock_reload.call_count, 1)
 
@@ -1084,7 +1090,8 @@ class TestPluginAPI(APIBaseTest):
         self.organization.plugins_access_level = Organization.PluginsAccessLevel.INSTALL
         self.organization.save()
         response = self.client.post(
-            "/api/organizations/@current/plugins/", {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"}
+            "/api/organizations/@current/plugins/",
+            {"url": "https://github.com/kitadmin01/analytickit-hello-world-plugin"},
         )
         self.assertEqual(response.status_code, 201)
 

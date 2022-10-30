@@ -34,22 +34,22 @@ if DATABASE_URL:
     DATABASES = {"default": dj_database_url.config(default=DATABASE_URL, conn_max_age=600)}
     if DISABLE_SERVER_SIDE_CURSORS:
         DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
-elif os.getenv("analytickit_DB_NAME"):
+elif os.getenv("ANALYTICKIT_DB_NAME"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": get_from_env("analytickit_DB_NAME"),
-            "USER": os.getenv("analytickit_DB_USER", "postgres"),
-            "PASSWORD": os.getenv("analytickit_DB_PASSWORD", ""),
-            "HOST": os.getenv("analytickit_POSTGRES_HOST", "localhost"),
-            "PORT": os.getenv("analytickit_POSTGRES_PORT", "5432"),
+            "NAME": get_from_env("ANALYTICKIT_DB_NAME"),
+            "USER": os.getenv("ANALYTICKIT_DB_USER", "postgres"),
+            "PASSWORD": os.getenv("ANALYTICKIT_DB_PASSWORD", ""),
+            "HOST": os.getenv("ANALYTICKIT_POSTGRES_HOST", "localhost"),
+            "PORT": os.getenv("ANALYTICKIT_POSTGRES_PORT", "5432"),
             "CONN_MAX_AGE": 0,
             "DISABLE_SERVER_SIDE_CURSORS": DISABLE_SERVER_SIDE_CURSORS,
             "SSL_OPTIONS": {
-                "sslmode": os.getenv("analytickit_POSTGRES_SSL_MODE", None),
-                "sslrootcert": os.getenv("analytickit_POSTGRES_CLI_SSL_CA", None),
-                "sslcert": os.getenv("analytickit_POSTGRES_CLI_SSL_CRT", None),
-                "sslkey": os.getenv("analytickit_POSTGRES_CLI_SSL_KEY", None),
+                "sslmode": os.getenv("ANALYTICKIT_POSTGRES_SSL_MODE", None),
+                "sslrootcert": os.getenv("ANALYTICKIT_POSTGRES_CLI_SSL_CA", None),
+                "sslcert": os.getenv("ANALYTICKIT_POSTGRES_CLI_SSL_CRT", None),
+                "sslkey": os.getenv("ANALYTICKIT_POSTGRES_CLI_SSL_KEY", None),
             },
         }
     }
@@ -75,14 +75,14 @@ elif os.getenv("analytickit_DB_NAME"):
     )
 else:
     raise ImproperlyConfigured(
-        f'The environment vars "DATABASE_URL" or "analytickit_DB_NAME" are absolutely required to run this software'
+        f'The environment vars "DATABASE_URL" or "ANALYTICKIT_DB_NAME" are absolutely required to run this software'
     )
 
 if JOB_QUEUE_GRAPHILE_URL:
     DATABASES["graphile"] = dj_database_url.config(default=JOB_QUEUE_GRAPHILE_URL, conn_max_age=600)
 
 # Clickhouse Settings
-CLICKHOUSE_TEST_DB = "analytickit_test"
+CLICKHOUSE_TEST_DB = "ANALYTICKIT_test"
 
 CLICKHOUSE_HOST = os.getenv("CLICKHOUSE_HOST", "localhost")
 CLICKHOUSE_USER = os.getenv("CLICKHOUSE_USER", "default")
@@ -152,16 +152,16 @@ if TEST or DEBUG or IS_COLLECT_STATIC:
 else:
     REDIS_URL = os.getenv("REDIS_URL", "")
 
-if not REDIS_URL and get_from_env("analytickit_REDIS_HOST", ""):
+if not REDIS_URL and get_from_env("ANALYTICKIT_REDIS_HOST", ""):
     REDIS_URL = "redis://:{}@{}:{}/".format(
-        os.getenv("analytickit_REDIS_PASSWORD", ""),
-        os.getenv("analytickit_REDIS_HOST", ""),
-        os.getenv("analytickit_REDIS_PORT", "6379"),
+        os.getenv("ANALYTICKIT_REDIS_PASSWORD", ""),
+        os.getenv("ANALYTICKIT_REDIS_HOST", ""),
+        os.getenv("ANALYTICKIT_REDIS_PORT", "6379"),
     )
 
 if not REDIS_URL:
     raise ImproperlyConfigured(
-        "Env var REDIS_URL or analytickit_REDIS_HOST is absolutely required to run this software.\n"
+        "Env var REDIS_URL or ANALYTICKIT_REDIS_HOST is absolutely required to run this software.\n"
         "If upgrading from analytickit 1.0.10 or earlier, see here: "
         "https://analytickit.com/docs/deployment/upgrading-analytickit#upgrading-from-before-1011"
     )

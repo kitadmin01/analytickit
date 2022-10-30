@@ -15,15 +15,15 @@ export function getDefaultConfig(): PluginsServerConfig {
         DATABASE_URL: isTestEnv()
             ? 'postgres://analytickit:analytickit@localhost:5432/test_analytickit'
             : isDevEnv()
-                ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
-                : null,
-        analytickit_DB_NAME: null,
-        analytickit_DB_USER: 'postgres',
-        analytickit_DB_PASSWORD: '',
-        analytickit_POSTGRES_HOST: 'localhost',
-        analytickit_POSTGRES_PORT: 5432,
+            ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
+            : null,
+        ANALYTICKIT_DB_NAME: null,
+        ANALYTICKIT_DB_USER: 'postgres',
+        ANALYTICKIT_DB_PASSWORD: '',
+        ANALYTICKIT_POSTGRES_HOST: 'localhost',
+        ANALYTICKIT_POSTGRES_PORT: 5432,
         CLICKHOUSE_HOST: 'localhost',
-        CLICKHOUSE_DATABASE: isTestEnv() ? 'analytickit_test' : 'default',
+        CLICKHOUSE_DATABASE: isTestEnv() ? 'ANALYTICKIT_test' : 'default',
         CLICKHOUSE_USER: 'default',
         CLICKHOUSE_PASSWORD: null,
         CLICKHOUSE_CA: null,
@@ -42,9 +42,9 @@ export function getDefaultConfig(): PluginsServerConfig {
         KAFKA_MAX_MESSAGE_BATCH_SIZE: 900_000,
         KAFKA_FLUSH_FREQUENCY_MS: isTestEnv() ? 5 : 500,
         REDIS_URL: 'redis://127.0.0.1',
-        analytickit_REDIS_PASSWORD: '',
-        analytickit_REDIS_HOST: '',
-        analytickit_REDIS_PORT: 6379,
+        ANALYTICKIT_REDIS_PASSWORD: '',
+        ANALYTICKIT_REDIS_HOST: '',
+        ANALYTICKIT_REDIS_PORT: 6379,
         BASE_DIR: '.',
         PLUGINS_RELOAD_PUBSUB_CHANNEL: 'reload-plugins',
         WORKER_CONCURRENCY: coreCount,

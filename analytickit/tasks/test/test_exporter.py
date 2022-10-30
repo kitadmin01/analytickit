@@ -1,11 +1,15 @@
 import base64
 from unittest.mock import MagicMock, patch
 
+import django
+
 from analytickit.models.dashboard import Dashboard
 from analytickit.models.exported_asset import ExportedAsset
 from analytickit.tasks import exporter
 from analytickit.tasks.exports.image_exporter import get_driver
 from analytickit.test.base import APIBaseTest
+
+django.setup()
 
 
 @patch("analytickit.tasks.exports.image_exporter.uuid")

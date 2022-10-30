@@ -66,6 +66,9 @@ class TestPluginSourceFile(BaseTest, QueryMatchingTest):
 
     @snapshot_postgres_queries
     def test_sync_from_plugin_archive_from_zip_with_explicit_index_js_works(self):
+        # zip_file = ZipFile(io.BytesIO(base64.b64decode(HELLO_WORLD_PLUGIN_GITHUB_ZIP[1])), "r")
+        # temp = base64.b64decode(HELLO_WORLD_PLUGIN_GITHUB_ZIP[1])
+
         test_plugin: Plugin = Plugin.objects.create(
             organization=self.organization, name="Contoso", archive=base64.b64decode(HELLO_WORLD_PLUGIN_GITHUB_ZIP[1])
         )

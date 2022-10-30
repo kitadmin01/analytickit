@@ -57,6 +57,11 @@ RUN yarn build
 FROM python:3.8.12-alpine3.14
 
 ENV PYTHONUNBUFFERED 1
+ENV export PYTHONPATH ./analytickit
+ENV DJANGO_SETTINGS_MODULE analytickit.settings
+
+
+
 
 WORKDIR /code
 
@@ -87,7 +92,7 @@ RUN apk --update --no-cache --virtual .geolite-deps add \
     && \
     mkdir share \
     && \
-    ( curl -L "https://analytickit.s3.amazonaws.com/GeoLite2-City.mmdb" | brotli --decompress --output=./share/GeoLite2-City.mmdb ) \
+    ( curl --compressed "https://analytickit.s3.amazonaws.com/GeoLite2-City.mmdb" -o ./share/GeoLite2-City.mmdb) \
     && \
     chmod -R 755 ./share/GeoLite2-City.mmdb \
     && \
@@ -122,6 +127,8 @@ RUN apk --update --no-cache --virtual .build-deps add \
     && \
     apk del .build-deps
 
+
+
 RUN addgroup -S analytickit && \
     adduser -S analytickit -G analytickit
 
@@ -132,9 +139,11 @@ USER analytickit
 # Add in Django deps and generate Django's static files
 COPY manage.py manage.py
 COPY analytickit analytickit/
+COPY ./analytickitanalytics ./analytickitanalytics/
 COPY ee ee/
 COPY --from=frontend /code/frontend/dist /code/frontend/dist
 
+RUN ls -al ./analytickit
 RUN SKIP_SERVICE_VERSION_REQUIREMENTS=1 SECRET_KEY='unsafe secret key for collectstatic only' DATABASE_URL='postgres:///' REDIS_URL='redis:///' python manage.py collectstatic --noinput
 
 # Add in the plugin-server compiled code, as well as the runtime dependencies

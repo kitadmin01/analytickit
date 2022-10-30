@@ -7,7 +7,7 @@ from analytickit.test.base import APIBaseTest
 
 class TestDemo(APIBaseTest):
     def test_create_demo_data(self):
-        random.seed(900)
+        random.seed(1000)
 
         self.client.get("/demo")
         demo_team = Team.objects.get(name__icontains="demo")

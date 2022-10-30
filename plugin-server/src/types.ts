@@ -73,11 +73,11 @@ export interface PluginsServerConfig extends Record<string, any> {
     TASKS_PER_WORKER: number
     TASK_TIMEOUT: number
     DATABASE_URL: string | null
-    analytickit_DB_NAME: string | null
-    analytickit_DB_USER: string
-    analytickit_DB_PASSWORD: string
-    analytickit_POSTGRES_HOST: string
-    analytickit_POSTGRES_PORT: number
+    ANALYTICKIT_DB_NAME: string | null
+    ANALYTICKIT_DB_USER: string
+    ANALYTICKIT_DB_PASSWORD: string
+    ANALYTICKIT_POSTGRES_HOST: string
+    ANALYTICKIT_POSTGRES_PORT: number
     CLICKHOUSE_HOST: string
     CLICKHOUSE_DATABASE: string
     CLICKHOUSE_USER: string
@@ -97,9 +97,9 @@ export interface PluginsServerConfig extends Record<string, any> {
     KAFKA_MAX_MESSAGE_BATCH_SIZE: number
     KAFKA_FLUSH_FREQUENCY_MS: number
     REDIS_URL: string
-    analytickit_REDIS_PASSWORD: string
-    analytickit_REDIS_HOST: string
-    analytickit_REDIS_PORT: number
+    ANALYTICKIT_REDIS_PASSWORD: string
+    ANALYTICKIT_REDIS_HOST: string
+    ANALYTICKIT_REDIS_PORT: number
     BASE_DIR: string
     PLUGINS_RELOAD_PUBSUB_CHANNEL: string
     LOG_LEVEL: LogLevel

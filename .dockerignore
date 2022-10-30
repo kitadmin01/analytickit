@@ -3,6 +3,7 @@
 !requirements.txt
 !requirements-dev.txt
 !analytickit
+!analytickitanalytics
 !plugin-server
 !staticfiles
 !manage.py

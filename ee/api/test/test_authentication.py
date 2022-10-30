@@ -13,11 +13,11 @@ from freezegun.api import freeze_time
 from rest_framework import status
 from social_core.exceptions import AuthFailed, AuthMissingParameter
 
-from ee.api.test.base import APILicensedTest
-from ee.models.license import License
 from analytickit.constants import AvailableFeature
 from analytickit.models import OrganizationMembership, User
 from analytickit.models.organization_domain import OrganizationDomain
+from ee.api.test.base import APILicensedTest
+from ee.models.license import License
 
 SAML_MOCK_SETTINGS = {
     "SOCIAL_AUTH_SAML_SECURITY_CONFIG": {
@@ -162,7 +162,7 @@ class TestEEAuthenticationAPI(APILicensedTest):
     def test_cannot_reset_password_with_enforced_sso(self):
         self.create_enforced_domain()
         with self.settings(
-                **GOOGLE_MOCK_SETTINGS, EMAIL_HOST="localhost", SITE_URL="https://my.analytickit.net",
+            **GOOGLE_MOCK_SETTINGS, EMAIL_HOST="localhost", SITE_URL="https://my.analytickit.net",
         ):
             response = self.client.post("/api/reset/", {"email": "i_dont_exist@analytickit.com"})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -337,7 +337,7 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 
@@ -353,7 +353,7 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # because `follow=True`
-        self.assertRedirects(response, "/")  # redirect to the home page
+        self.assertRedirects(response, "/login?error_code=no_new_organizations")  # redirect to the home page
 
         # Ensure proper user was assigned
         _session = self.client.session
@@ -376,7 +376,7 @@ class TestEESAMLAuthenticationAPI(APILicensedTest):
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 
@@ -439,7 +439,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 
@@ -452,7 +452,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
         with self.assertRaises(AuthFailed) as e:
             response = self.client.post(
                 "/complete/saml/",
-                {"SAMLResponse": saml_response, "RelayState": str(self.organization_domain.id), },
+                {"SAMLResponse": saml_response, "RelayState": str(self.organization_domain.id),},
                 format="multipart",
                 follow=True,
             )
@@ -475,7 +475,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 
@@ -509,7 +509,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 
@@ -544,7 +544,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
 
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 
@@ -623,7 +623,7 @@ YotAcSbU3p5bzd11wpyebYHB"""
         # Attempting to use SAML fails
         _session = self.client.session
         _session.update(
-            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6", }
+            {"saml_state": "ONELOGIN_87856a50b5490e643b1ebef9cb5bf6e78225a3c6",}
         )
         _session.save()
 

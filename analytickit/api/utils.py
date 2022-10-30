@@ -61,7 +61,7 @@ def entity_from_order(order: Optional[str], entities: List[Entity]) -> Optional[
 
 
 def retrieve_entity_from(
-        entity_id: str, entity_type: Optional[str], entity_math: MATH_TYPE, events: List[Entity], actions: List[Entity]
+    entity_id: str, entity_type: Optional[str], entity_math: MATH_TYPE, events: List[Entity], actions: List[Entity]
 ) -> Optional[Entity]:
     """
     Retrieves the entity from the events and actions.
@@ -198,7 +198,7 @@ class EventIngestionContext:
 
 
 def get_event_ingestion_context(
-        request, data, token
+    request, data, token
 ) -> Tuple[Optional[EventIngestionContext], Optional[str], Optional[Any]]:
     db_error = None
     ingestion_context = None
@@ -288,7 +288,7 @@ def get_event_ingestion_context_for_token(token: str) -> Optional[EventIngestion
 
 
 def get_event_ingestion_context_for_personal_api_key(
-        personal_api_key: str, project_id: int
+    personal_api_key: str, project_id: int
 ) -> Optional[EventIngestionContext]:
     """
     Some events use the personal_api_key on a `User` for authentication, along
@@ -307,7 +307,7 @@ def get_event_ingestion_context_for_personal_api_key(
 
 
 def check_definition_ids_inclusion_field_sql(
-        raw_included_definition_ids: Optional[str], is_property: bool, named_key: str
+    raw_included_definition_ids: Optional[str], is_property: bool, named_key: str
 ):
     # Create conditional field based on whether id exists in included_properties
     if is_property:
@@ -331,7 +331,7 @@ def safe_clickhouse_string(s: str) -> str:
 
 
 def create_event_definitions_sql(
-        event_type: CombinedEventType, is_enterprise: bool = False, conditions: str = ""
+    event_type: CombinedEventType, is_enterprise: bool = False, conditions: str = ""
 ) -> str:
     # Prevent fetching deprecated `tags` field. Tags are separately fetched in TaggedItemSerializerMixin
     if is_enterprise:

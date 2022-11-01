@@ -49,7 +49,7 @@
     },
     "dependencies": {
         "@analytickit/chart.js": "^0.0.1",
-        "@analytickit/plugin-scaffold": "^0.0.1",
+        "@analytickit/plugin-scaffold": "^0.0.4",
         "@analytickit/react-rrweb-player": "^0.0.2",
         "@analytickit/simmerjs": "^0.0.1",
         "@ant-design/icons": "^4.7.0",

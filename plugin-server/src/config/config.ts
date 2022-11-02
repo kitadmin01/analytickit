@@ -13,7 +13,7 @@ export function getDefaultConfig(): PluginsServerConfig {
 
     return {
         DATABASE_URL: isTestEnv()
-            ? 'postgres://analytickit:analytickit@localhost:5432/test_analytickit'
+            ? 'postgres://analytickit:analytickit@localhost:5432/analytickit_test'
             : isDevEnv()
             ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
             : null,
@@ -23,7 +23,7 @@ export function getDefaultConfig(): PluginsServerConfig {
         ANALYTICKIT_POSTGRES_HOST: 'localhost',
         ANALYTICKIT_POSTGRES_PORT: 5432,
         CLICKHOUSE_HOST: 'localhost',
-        CLICKHOUSE_DATABASE: isTestEnv() ? 'ANALYTICKIT_test' : 'default',
+        CLICKHOUSE_DATABASE: isTestEnv() ? 'analytickit_test' : 'default',
         CLICKHOUSE_USER: 'default',
         CLICKHOUSE_PASSWORD: null,
         CLICKHOUSE_CA: null,

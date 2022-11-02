@@ -65,7 +65,7 @@
                 "--watchAll=false"
             ],
             "env": {
-                "DATABASE_URL": "postgres://localhost:5432/test_analytickit"
+                "DATABASE_URL": "postgres://localhost:5432/analytickit_test"
             }
         }
     ]

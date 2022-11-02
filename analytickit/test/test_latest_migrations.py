@@ -5,7 +5,7 @@ from unittest import TestCase
 
 
 class TestLatestMigrations(TestCase):
-    def test_analytickit_migration_is_in_sync_with_latest(self) -> None:
+    def analytickit_test_migration_is_in_sync_with_latest(self) -> None:
         """
         regression test
 

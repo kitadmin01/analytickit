@@ -82,7 +82,7 @@ if JOB_QUEUE_GRAPHILE_URL:
     DATABASES["graphile"] = dj_database_url.config(default=JOB_QUEUE_GRAPHILE_URL, conn_max_age=600)
 
 # Clickhouse Settings
-CLICKHOUSE_TEST_DB = "ANALYTICKIT_test"
+CLICKHOUSE_TEST_DB = "analytickit_test"
 
 CLICKHOUSE_HOST = os.getenv("CLICKHOUSE_HOST", "localhost")
 CLICKHOUSE_USER = os.getenv("CLICKHOUSE_USER", "default")

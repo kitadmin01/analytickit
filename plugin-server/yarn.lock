@@ -2252,7 +2252,7 @@
   resolved "https://registry.npmjs.org/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.3.11.tgz#c2764abec1ddeebda52bc86a951596fb12518db9"
   integrity sha512-cDF4qBQLf3U0KypnLn3T1HtE12QmEplPGjWs2Xd/hzVkjsPixVR8XIgLlczsj7Pk7Of7VDnUDLIl52aIdgTm8w==
 
-"@swc/core@^1.2.186":
+"@swc/core@^1.3.11":
   version "1.3.11"
   resolved "https://registry.npmjs.org/@swc/core/-/core-1.3.11.tgz#6525610caa101cc966f6cc047250d704243e37b0"
   integrity sha512-lnCnnnNCsnbrhW/gwkoN0sAeIqOyoHLS4ZB20xmPJjKVfvTnJrAcNnLSiwlYdcoUSFqT2GYZjUAG6usEzRQASA==
@@ -2271,7 +2271,7 @@
     "@swc/core-win32-ia32-msvc" "1.3.11"
     "@swc/core-win32-x64-msvc" "1.3.11"
 
-"@swc/jest@^0.2.21":
+"@swc/jest@^0.2.23":
   version "0.2.23"
   resolved "https://registry.npmjs.org/@swc/jest/-/jest-0.2.23.tgz#0b7499d5927faaa090c5b7a4a0e35122968fef30"
   integrity sha512-ZLj17XjHbPtNsgqjm83qizENw05emLkKGu3WuPUttcy9hkngl0/kcc7fDbcSBpADS0GUtsO+iKPjZFWVAtJSlA==

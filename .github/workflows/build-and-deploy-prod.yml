@@ -6,7 +6,7 @@ name: Build & Deploy Production Containers
 on:
     push:
         branches:
-            - master
+            - first
             - main
 
 concurrency: 'prod_deploy' # Ensure only one of this runs at a time
@@ -33,15 +33,15 @@ jobs:
 
             - name: Fetch analytickit-cloud
               run: |
-                  curl -u analytickit-bot:${{ secrets.ANALYTICKIT_BOT_GITHUB_TOKEN }} -L https://github.com/analytickit/analytickit-cloud/tarball/master | tar --strip-components=1 -xz --
+                  curl -u analytickit-bot:${{ secrets.GITHUB_TOKEN }} -L https://github.com/kitadmin01/analytickit/tarball/first | tar --strip-components=1 -xz --
                   mkdir deploy/
 
-            - name: Checkout master
+            - name: Checkout first
               uses: actions/checkout@v2
               with:
-                  # ref defaults to whatever branch the action is operating on. Leaving it blank on master or main will make it
+                  # ref defaults to whatever branch the action is operating on. Leaving it blank on first or main will make it
                   # easier to switch if we decide to. Also makes branch deploys easier.
-                  # ref: 'master'
+                  # ref: 'first'
                   path: 'deploy/'
 
             - name: Build, tag, and push image to Amazon ECR
@@ -223,7 +223,7 @@ jobs:
         if: github.repository == 'analytickit/analytickit'
         needs: build
         steps:
-            - name: Checkout master
+            - name: Checkout first
               uses: actions/checkout@v2
             - name: Notify Sentry
               uses: getsentry/action-release@v1

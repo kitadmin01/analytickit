@@ -14,7 +14,7 @@ concurrency: 'prod_deploy' # Ensure only one of this runs at a time
 jobs:
     build:
         name: Build & Deploy Production Docker image
-        if: github.repository == 'analytickit/analytickit'
+        if: github.repository == 'kitadmin01/analytickit'
         runs-on: ubuntu-20.04
         permissions:
             contents: read
@@ -204,7 +204,7 @@ jobs:
     slack:
         name: Notify Slack of start of deploy
         runs-on: ubuntu-20.04
-        if: github.repository == 'analytickit/analytickit'
+        if: github.repository == 'kitadmin01/analytickit'
         steps:
             - name: Notify Platform team on slack
               uses: rtCamp/action-slack-notify@v2
@@ -220,7 +220,7 @@ jobs:
     sentry:
         name: Notify Sentry of a production release
         runs-on: ubuntu-20.04
-        if: github.repository == 'analytickit/analytickit'
+        if: github.repository == 'kitadmin01/analytickit'
         needs: build
         steps:
             - name: Checkout first

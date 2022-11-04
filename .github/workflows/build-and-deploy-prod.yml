@@ -31,14 +31,12 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Fetch analytickit-cloud
-              run: |
-                  curl -u analytickit-bot:${{ secrets.GITHUB_TOKEN }} -L https://github.com/kitadmin01/analytickit/tarball/first | tar --strip-components=1 -xz --
-                  mkdir deploy/
-
             - name: Checkout first
+              run: |
+                  mkdir deploy/
               uses: actions/checkout@v2
               with:
+                  repository: 'first'
                   # ref defaults to whatever branch the action is operating on. Leaving it blank on first or main will make it
                   # easier to switch if we decide to. Also makes branch deploys easier.
                   # ref: 'first'

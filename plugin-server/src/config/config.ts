@@ -23,7 +23,7 @@ export function getDefaultConfig(): PluginsServerConfig {
         ANALYTICKIT_POSTGRES_HOST: 'localhost',
         ANALYTICKIT_POSTGRES_PORT: 5432,
         CLICKHOUSE_HOST: 'localhost',
-        CLICKHOUSE_DATABASE: isTestEnv() ? 'ANALYTICKIT_test' : 'default',
+        CLICKHOUSE_DATABASE: isTestEnv() ? 'analytickit_test' : 'default',
         CLICKHOUSE_USER: 'default',
         CLICKHOUSE_PASSWORD: null,
         CLICKHOUSE_CA: null,

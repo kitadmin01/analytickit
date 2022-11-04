@@ -51,7 +51,7 @@ jobs:
                   IMAGE_TAG: ${{ github.sha }}
               run: |
                   pwd
-                  ls -al
+                  ls -R
                   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f production.Dockerfile .
                   docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
                   echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

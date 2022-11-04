@@ -38,7 +38,6 @@ jobs:
             - name: Checkout first
               uses: actions/checkout@v2
               with:
-                  repository: 'first'
                   # ref defaults to whatever branch the action is operating on. Leaving it blank on first or main will make it
                   # easier to switch if we decide to. Also makes branch deploys easier.
                   # ref: 'first'

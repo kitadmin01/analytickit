@@ -15,7 +15,7 @@ jobs:
     build:
         name: Build & Deploy Production Docker image
         if: github.repository == 'kitadmin01/analytickit'
-        runs-on: self-hosted
+        runs-on: ubuntu-20.04
         permissions:
             contents: read
             id-token: write

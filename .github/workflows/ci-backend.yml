@@ -39,7 +39,7 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.repository == 'analytickit/analytickit'
+    if: github.repository == 'kitadmin01/analytickit'
     name: Determine need to run backend checks
     # Set job outputs to values from filter step
     outputs:

@@ -116,9 +116,9 @@ jobs:
       - name: Check migrations
         run: |
           set -e
-          python manage.py makemigrations AnalyticKitConfig
           python manage.py migrate
           python manage.py migrate_clickhouse
+          export SKIP_ASYNC_MIGRATIONS_SETUP=0
           python manage.py run_async_migrations --check
           python manage.py sync_replicated_schema
           git fetch origin first

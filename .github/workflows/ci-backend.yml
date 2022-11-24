@@ -115,7 +115,7 @@ jobs:
 
       - name: Check migrations
         run: |
-          python manage.py makemigrations --check --dry-run
+          python manage.py makemigrations
           git fetch origin first
           # `git diff --name-only` returns a list of files that were changed - added OR deleted OR modified
           # With `--name-status` we get the same, but including a column for status, respectively: A, D, M

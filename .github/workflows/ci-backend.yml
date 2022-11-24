@@ -116,11 +116,11 @@ jobs:
       - name: Check migrations
         run: |
           python manage.py makemigrations --check --dry-run
-          git fetch origin master
+          git fetch origin first
           # `git diff --name-only` returns a list of files that were changed - added OR deleted OR modified
           # With `--name-status` we get the same, but including a column for status, respectively: A, D, M
           # In this check we exclusively care about files that were added (A) in analytickit/migrations/
-          git diff --name-status origin/master..HEAD | grep "A\sanalytickit/migrations/" | awk '{print $2}' | python manage.py test_migrations_are_safe
+          git diff --name-status origin/first..HEAD | grep "A\sanalytickit/migrations/" | awk '{print $2}' | python manage.py test_migrations_are_safe
 
   django:
     needs: changes

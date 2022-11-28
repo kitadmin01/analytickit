@@ -1,12 +1,12 @@
-import {initKea} from'~/initKea'
-import {testUtilsPlugin} from 'kea-test-utils'
-import {createMemoryHistory} from 'history'
+import { initKea } from '~/initKea'
+import { testUtilsPlugin } from 'kea-test-utils'
+import { createMemoryHistory } from 'history'
 import analytickit from 'analytickit-js'
-import {AppContext} from '~/types'
-import {MOCK_DEFAULT_TEAM} from 'lib/api.mock'
-import {dayjs} from 'lib/dayjs'
-import {organizationLogic} from 'scenes/organizationLogic'
-import {teamLogic} from 'scenes/teamLogic'
+import { AppContext } from '~/types'
+import { MOCK_DEFAULT_TEAM } from 'lib/api.mock'
+import { dayjs } from 'lib/dayjs'
+import { organizationLogic } from 'scenes/organizationLogic'
+import { teamLogic } from 'scenes/teamLogic'
 
 process.on('unhandledRejection', (err) => {
     console.warn(err)
@@ -14,9 +14,9 @@ process.on('unhandledRejection', (err) => {
 
 export function initKeaTests(mountCommonLogic = true): void {
     dayjs.tz.setDefault('UTC')
-    window.analytickit_APP_CONTEXT = {
+    window.ANALYTICKIT_APP_CONTEXT = {
         current_team: MOCK_DEFAULT_TEAM,
-        ...window.analytickit_APP_CONTEXT,
+        ...window.ANALYTICKIT_APP_CONTEXT,
     } as unknown as AppContext
     analytickit.init('no token', {
         test: true,

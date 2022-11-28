@@ -25,7 +25,7 @@ function FlutterAndroidSetupSnippet(): JSX.Element {
         <CodeSnippet language={Language.XML}>
             {'<application>\n\t<activity>\n\t\t[...]\n\t</activity>\n\t<meta-data android:name="com.analytickit.analytickit.API_KEY" android:value="' +
                 currentTeam?.api_token +
-                '" />\n\t<meta-data android:name="com.analytickit.analytickit.analytickit_HOST" android:value="' +
+                '" />\n\t<meta-data android:name="com.analytickit.analytickit._HOST" android:value="' +
                 url +
                 '" />\n\t<meta-data android:name="com.analytickit.analytickit.TRACK_APPLICATION_LIFECYCLE_EVENTS" android:value="false" />\n\t<meta-data android:name="com.analytickit.analytickit.DEBUG" android:value="false" />\n</application>'}
         </CodeSnippet>
@@ -40,7 +40,7 @@ function FlutterIOSSetupSnippet(): JSX.Element {
         <CodeSnippet language={Language.XML}>
             {'<dict>\n\t[...]\n\t<key>com.analytickit.analytickit.API_KEY</key>\n\t<string>' +
                 currentTeam?.api_token +
-                '</string>\n\t<key>com.analytickit.analytickit.analytickit_HOST</key>\n\t<string>' +
+                '</string>\n\t<key>com.analytickit.analytickit.ANALYTICKIT_HOST</key>\n\t<string>' +
                 url +
                 '</string>\n\t<key>com.analytickit.analytickit.TRACK_APPLICATION_LIFECYCLE_EVENTS</key>\n\t<false/>\n\t<false/>\n\t[...]\n</dict>'}
         </CodeSnippet>

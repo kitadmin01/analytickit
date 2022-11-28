@@ -5,7 +5,7 @@ import { OrganizationMembershipLevel, RawOrganization } from './../../../../type
 
 type PluginsApiKeyCache<T> = Map<RawOrganization['id'], [T, number]>
 
-const analytickit_BOT_USER_EMAIL_DOMAIN = 'analytickitbot.user'
+const ANALYTICKIT_BOT_USER_EMAIL_DOMAIN = 'analytickitbot.user'
 
 export class PluginsApiKeyManager {
     db: DB
@@ -39,13 +39,13 @@ export class PluginsApiKeyManager {
             let key: string | null = null
             const userResult = await this.db.postgresQuery(
                 `SELECT id FROM analytickit_user WHERE current_organization_id = $1 AND email LIKE $2`,
-                [organizationId, `%@${analytickit_BOT_USER_EMAIL_DOMAIN}`],
+                [organizationId, `%@${ANALYTICKIT_BOT_USER_EMAIL_DOMAIN}`],
                 'fetchPluginsUser'
             )
 
             if (userResult.rowCount < 1) {
                 const botUserEmailId = Math.round(Math.random() * 100000000)
-                const botUserEmail = `${botUserEmailId}@${analytickit_BOT_USER_EMAIL_DOMAIN}`
+                const botUserEmail = `${botUserEmailId}@${ANALYTICKIT_BOT_USER_EMAIL_DOMAIN}`
 
                 // No user yet, provision a user and a key
                 const newUserResult = await this.db.createUser({

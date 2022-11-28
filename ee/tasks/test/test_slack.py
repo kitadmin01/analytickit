@@ -3,7 +3,6 @@ from unittest.mock import MagicMock, patch
 
 from freezegun import freeze_time
 
-from ee.tasks.slack import handle_slack_event
 from analytickit import settings
 from analytickit.models.dashboard import Dashboard
 from analytickit.models.exported_asset import ExportedAsset
@@ -12,6 +11,7 @@ from analytickit.models.integration import Integration
 from analytickit.models.sharing_configuration import SharingConfiguration
 from analytickit.models.subscription import Subscription
 from analytickit.test.base import APIBaseTest
+from ee.tasks.slack import handle_slack_event
 
 
 def create_mock_unfurl_event(team_id: str, links: List[str]):
@@ -28,7 +28,7 @@ def create_mock_unfurl_event(team_id: str, links: List[str]):
             "unfurl_id": "C123456.123456789.987501.1b90fa1278528ce6e2f6c5c2bfa1abc9a41d57d02b29d173f40399c9ffdecf4b",
             "event_ts": "123456621.1855",
             "source": "conversations_history",
-            "links": [{"domain": "app.analytickit.com", "url": link} for link in links],
+            "links": [{"domain": "dpa.analytickit.com", "url": link} for link in links],
         },
         "type": "event_callback",
         "authed_users": ["UXXXXXXX1", "UXXXXXXX2"],

@@ -5,10 +5,17 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
 from semantic_version.base import Version
 
-from analytickit.async_migrations.runner import complete_migration, is_migration_dependency_fulfilled, \
-    start_async_migration
-from analytickit.async_migrations.setup import ALL_ASYNC_MIGRATIONS, analytickit_VERSION, setup_async_migrations, \
-    setup_model
+from analytickit.async_migrations.runner import (
+    complete_migration,
+    is_migration_dependency_fulfilled,
+    start_async_migration,
+)
+from analytickit.async_migrations.setup import (
+    ALL_ASYNC_MIGRATIONS,
+    ANALYTICKIT_VERSION,
+    setup_async_migrations,
+    setup_model,
+)
 from analytickit.models.async_migration import (
     AsyncMigration,
     AsyncMigrationError,
@@ -35,7 +42,7 @@ def get_necessary_migrations() -> Sequence[AsyncMigration]:
         is_migration_required = ALL_ASYNC_MIGRATIONS[migration_name].is_required()
 
         if is_migration_required:
-            if analytickit_VERSION > Version(sm.analytickit_max_version):
+            if ANALYTICKIT_VERSION > Version(sm.analytickit_max_version):
                 necessary_migrations.append(sm)
         else:
             dependency_ok, _ = is_migration_dependency_fulfilled(migration_name)

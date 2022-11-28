@@ -6,7 +6,7 @@ import { userLogic } from 'scenes/userLogic'
 import { IconEmojiPeople, IconLock } from '../icons'
 import { LemonButton } from '../LemonButton'
 import './PayGateMini.scss'
-import { FEATURE_MINIMUM_PLAN, analytickit_CLOUD_STANDARD_PLAN } from 'lib/constants'
+import { FEATURE_MINIMUM_PLAN, ANALYTICKIT_CLOUD_STANDARD_PLAN } from 'lib/constants'
 import { capitalizeFirstLetter } from 'lib/utils'
 
 export interface PayGateMiniProps {
@@ -52,7 +52,7 @@ export function PayGateMini({ feature, style, children, overrideShouldShowGate }
     let gateVariant: 'add-card' | 'contact-sales' | 'check-licensing' | null = null
     if (!overrideShouldShowGate && !hasAvailableFeature(feature)) {
         if (preflight?.cloud) {
-            if (planRequired === analytickit_CLOUD_STANDARD_PLAN) {
+            if (planRequired === ANALYTICKIT_CLOUD_STANDARD_PLAN) {
                 gateVariant = 'add-card'
             } else {
                 gateVariant = 'contact-sales'

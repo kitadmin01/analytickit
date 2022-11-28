@@ -1,8 +1,8 @@
 import AnalyticKit from 'analytickit-js-lite'
 
-const runningOnAnalytickit = !!window.analytickit_APP_CONTEXT
+const runningOnAnalytickit = !!window.ANALYTICKIT_APP_CONTEXT
 const apiKey = runningOnAnalytickit ? window.JS_ANALYTICKIT_API_KEY : 'sTMFPsFhdP1Ssg'
-const apiHost = runningOnAnalytickit ? window.JS_ANALYTICKIT_HOST : 'https://app.analytickit.com'
+const apiHost = runningOnAnalytickit ? window.JS_ANALYTICKIT_HOST : 'https://dpa.analytickit.com'
 
 export const analytickit = new AnalyticKit(apiKey, {
     host: apiHost,

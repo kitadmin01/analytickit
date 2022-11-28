@@ -279,8 +279,7 @@ def render_template(template_name: str, request: HttpRequest, context: Dict = {}
             context["js_analytickit_host"] = "window.location.origin"
     else:
         context["js_analytickit_api_key"] = "'sTMFPsFhdP1Ssg'"
-        context["js_analytickit_host"] = "'https://app.analytickit.com'"
-    
+        context["js_analytickit_host"] = "'https://dpa.analytickit.com'"
 
     context["js_capture_internal_metrics"] = settings.CAPTURE_INTERNAL_METRICS
     context["js_url"] = get_js_url(request)
@@ -425,7 +424,7 @@ def convert_property_value(input: Union[str, bool, dict, list, int, Optional[str
 
 
 def get_compare_period_dates(
-        date_from: datetime.datetime, date_to: datetime.datetime,
+    date_from: datetime.datetime, date_to: datetime.datetime,
 ) -> Tuple[datetime.datetime, datetime.datetime]:
     new_date_to = date_from
     diff = date_to - date_from
@@ -552,8 +551,7 @@ def load_data_from_request(request):
         scope.set_tag("library.version", request.GET.get("ver", "unknown"))
 
     compression = (
-            request.GET.get("compression") or request.POST.get("compression") or request.headers.get("content-encoding",
-                                                                                                     "")
+        request.GET.get("compression") or request.POST.get("compression") or request.headers.get("content-encoding", "")
     ).lower()
 
     return decompress(data, compression)
@@ -705,11 +703,11 @@ def get_can_create_org(user: Union["AbstractBaseUser", "AnonymousUser"]) -> bool
     from analytickit.models.organization import Organization
 
     if (
-            settings.MULTI_TENANCY  # There's no limit of organizations on Cloud
-            or (settings.DEMO and user.is_anonymous)  # Demo users can have a single demo org, but not more
-            or settings.E2E_TESTING
-            or not Organization.objects.filter(for_internal_metrics=False).exists()
-            # Definitely can create an org if zero
+        settings.MULTI_TENANCY  # There's no limit of organizations on Cloud
+        or (settings.DEMO and user.is_anonymous)  # Demo users can have a single demo org, but not more
+        or settings.E2E_TESTING
+        or not Organization.objects.filter(for_internal_metrics=False).exists()
+        # Definitely can create an org if zero
     ):
         return True
 
@@ -751,7 +749,7 @@ def get_instance_available_sso_providers() -> Dict[str, bool]:
         license = License.objects.first_valid()
 
     if getattr(settings, "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", None) and getattr(
-            settings, "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", None,
+        settings, "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", None,
     ):
         if bypass_license or (license is not None and AvailableFeature.GOOGLE_LOGIN in license.available_features):
             output["google-oauth2"] = True
@@ -770,7 +768,7 @@ def flatten(i: Union[List, Tuple]) -> Generator:
 
 
 def get_daterange(
-        start_date: Optional[datetime.datetime], end_date: Optional[datetime.datetime], frequency: str
+    start_date: Optional[datetime.datetime], end_date: Optional[datetime.datetime], frequency: str
 ) -> List[Any]:
     """
     Returns list of a fixed frequency Datetime objects between given bounds.
@@ -867,7 +865,7 @@ class GenericEmails:
         at_location = email.find("@")
         if at_location == -1:
             return False
-        return self.emails.get(email[(at_location + 1):], False)
+        return self.emails.get(email[(at_location + 1) :], False)
 
 
 def get_available_timezones_with_offsets() -> Dict[str, float]:
@@ -917,11 +915,11 @@ def get_helm_info_env() -> dict:
 
 
 def format_query_params_absolute_url(
-        request: Request,
-        offset: Optional[int] = None,
-        limit: Optional[int] = None,
-        offset_alias: Optional[str] = "offset",
-        limit_alias: Optional[str] = "limit",
+    request: Request,
+    offset: Optional[int] = None,
+    limit: Optional[int] = None,
+    offset_alias: Optional[str] = "offset",
+    limit_alias: Optional[str] = "limit",
 ) -> Optional[str]:
     OFFSET_REGEX = re.compile(rf"([&?]{offset_alias}=)(\d+)")
     LIMIT_REGEX = re.compile(rf"([&?]{limit_alias}=)(\d+)")
@@ -1022,15 +1020,15 @@ def get_crontab(schedule: Optional[str]) -> Optional[crontab]:
 
 def should_write_recordings_to_object_storage(team_id: Optional[int]) -> bool:
     return (
-            team_id is not None
-            and settings.OBJECT_STORAGE_ENABLED
-            and team_id == settings.WRITE_RECORDINGS_TO_OBJECT_STORAGE_FOR_TEAM
+        team_id is not None
+        and settings.OBJECT_STORAGE_ENABLED
+        and team_id == settings.WRITE_RECORDINGS_TO_OBJECT_STORAGE_FOR_TEAM
     )
 
 
 def should_read_recordings_from_object_storage(team_id: Optional[int]) -> bool:
     return (
-            team_id is not None
-            and settings.OBJECT_STORAGE_ENABLED
-            and team_id == settings.READ_RECORDINGS_FROM_OBJECT_STORAGE_FOR_TEAM
+        team_id is not None
+        and settings.OBJECT_STORAGE_ENABLED
+        and team_id == settings.READ_RECORDINGS_FROM_OBJECT_STORAGE_FOR_TEAM
     )

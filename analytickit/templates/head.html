@@ -18,9 +18,9 @@
 
 {% if not opt_out_capture and js_analytickit_api_key %}
 <script>
-    window.JS_analytickit_API_KEY = {{js_analytickit_api_key | safe}};
-    window.JS_analytickit_HOST = {{js_analytickit_host | safe}};
-    window.JS_analytickit_SELF_CAPTURE = {{self_capture | yesno:"true,false" }};
+    window.JS_ANALYTICKIT__API_KEY = {{js_analytickit_api_key | safe}};
+    window.JS_ANALYTICKIT__HOST = {{js_analytickit_host | safe}};
+    window.JS_ANALYTICKIT_SELF_CAPTURE = {{self_capture | yesno:"true,false" }};
     window.JS_CAPTURE_INTERNAL_METRICS = {{js_capture_internal_metrics | yesno:"true,false"}}
 
 
@@ -30,7 +30,7 @@
 <script>window.SENTRY_DSN = '{{sentry_dsn}}';</script>
 {% endif %}
 <script id='analytickit-app-user-preload'>
-    window.analytickit_APP_CONTEXT = JSON.parse("{{ analytickit_app_context | escapejs }}");
+    window.ANALYTICKIT_APP_CONTEXT = JSON.parse("{{ analytickit_app_context | escapejs }}");
     // Inject the expected location of JS bundle, use to allow the location of
     // he bundle to be set at runtime, e.g. for analytickit Cloud we serve the
     // frontent JS from a CDN

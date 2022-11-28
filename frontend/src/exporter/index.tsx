@@ -9,7 +9,7 @@ import { ExportedData } from '~/exporter/types'
 
 // Disable tracking for all exports and embeds.
 // This is explicitly set as to not track our customers' customers data.
-// Without it, embeds of self-hosted iframes will log metrics to app.analytickit.com.
+// Without it, embeds of self-hosted iframes will log metrics to dpa.analytickit.com.
 window.JS_ANALYTICKIT_API_KEY = null
 
 loadAnalyticKitJS()

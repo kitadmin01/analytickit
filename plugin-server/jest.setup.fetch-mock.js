@@ -12,7 +12,7 @@ beforeEach(() => {
         'https://analytickit.s3.amazonaws.com/GeoLite2-City.mmdb': readFileSync(
             join(__dirname, 'tests', 'assets', 'GeoLite2-City-Test.mmdb.br')
         ),
-        'https://app.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2': { hello: 'world' },
+        'https://dpa.analytickit.com/api/event?token=THIS+IS+NOT+A+TOKEN+FOR+TEAM+2': { hello: 'world' },
     }
     const headersToUrls = {
         'https://analytickit.s3.amazonaws.com/GeoLite2-City.mmdb': new Map([

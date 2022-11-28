@@ -27,7 +27,7 @@ Object {
         "api_token": "default-team-api-token",
         "app_urls": Array [
           "https://analytickit.com/",
-          "https://app.analytickit.com",
+          "https://dpa.analytickit.com",
         ],
         "completed_snippet_onboarding": true,
         "correlation_config": Object {

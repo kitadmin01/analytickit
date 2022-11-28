@@ -47,7 +47,7 @@ export function loadAnalyticKitJS(): void {
     if ((window as any).SENTRY_DSN) {
         Sentry.init({
             dsn: (window as any).SENTRY_DSN,
-            ...(window.location.host.indexOf('app.analytickit.com') > -1 && {
+            ...(window.location.host.indexOf('dpa.analytickit.com') > -1 && {
                 integrations: [new analytickit.SentryIntegration(analytickit, 'analytickit2', 1899813) as Integration],
             }),
         })

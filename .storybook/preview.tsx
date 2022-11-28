@@ -11,7 +11,7 @@ const setupMsw = () => {
     // Make sure the msw worker is started
     worker.start()
     ;(window as any).__mockServiceWorker = worker
-    ;(window as any).analytickit_APP_CONTEXT = getStorybookAppContext()
+    ;(window as any).ANALYTICKIT_APP_CONTEXT = getStorybookAppContext()
 }
 setupMsw()
 

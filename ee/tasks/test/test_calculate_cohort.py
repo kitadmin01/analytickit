@@ -12,8 +12,9 @@ from analytickit.tasks.test.test_calculate_cohort import calculate_cohort_test_f
 from analytickit.test.base import ClickhouseTestMixin, _create_event, _create_person
 
 
-class TestClickhouseCalculateCohort(ClickhouseTestMixin,
-                                    calculate_cohort_test_factory(_create_event, _create_person)):  # type: ignore
+class TestClickhouseCalculateCohort(
+    ClickhouseTestMixin, calculate_cohort_test_factory(_create_event, _create_person)
+):  # type: ignore
     @patch("analytickit.tasks.calculate_cohort.insert_cohort_from_insight_filter.delay")
     def test_create_stickiness_cohort(self, _insert_cohort_from_insight_filter):
         _create_person(team_id=self.team.pk, distinct_ids=["blabla"])
@@ -172,7 +173,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                 team=self.team,
                 event="$pageview",
                 distinct_id="blabla",
-                properties={"$domain": "https://app.analytickit.com/123"},
+                properties={"$domain": "https://dpa.analytickit.com/123"},
                 timestamp="2021-01-01T12:00:00Z",
             )
 
@@ -181,7 +182,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                 team=self.team,
                 event="$pageview",
                 distinct_id="blabla",
-                properties={"$domain": "https://app.analytickit.com/123"},
+                properties={"$domain": "https://dpa.analytickit.com/123"},
                 timestamp="2021-01-01T12:00:00Z",
             )
 
@@ -195,7 +196,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
             "insight": "TRENDS",
             "interval": "day",
             "properties": json.dumps(
-                [{"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}]
+                [{"key": "$domain", "value": "dpa.analytickit.com", "operator": "icontains", "type": "event"}]
             ),
         }
 
@@ -216,7 +217,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                 "entity_type": "events",
                 "insight": "TRENDS",
                 "interval": "day",
-                "properties": '[{"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}]',
+                "properties": '[{"key": "$domain", "value": "dpa.analytickit.com", "operator": "icontains", "type": "event"}]',
             },
         )
         insert_cohort_from_insight_filter(
@@ -238,7 +239,7 @@ class TestClickhouseCalculateCohort(ClickhouseTestMixin,
                     }
                 ],
                 "properties": [
-                    {"key": "$domain", "value": "app.analytickit.com", "operator": "icontains", "type": "event"}
+                    {"key": "$domain", "value": "dpa.analytickit.com", "operator": "icontains", "type": "event"}
                 ],
                 "entity_id": "$pageview",
                 "entity_type": "events",

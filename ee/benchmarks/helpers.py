@@ -6,7 +6,7 @@ from os.path import dirname
 
 from django.utils.timezone import now
 
-os.environ["analytickit_DB_NAME"] = "analytickit_test"
+os.environ["ANALYTICKIT_DB_NAME"] = "analytickit_test"
 os.environ["DJANGO_SETTINGS_MODULE"] = "analytickit.settings"
 sys.path.append(dirname(dirname(dirname(__file__))))
 
@@ -14,9 +14,9 @@ import django
 
 django.setup()
 
-from ee.clickhouse.materialized_columns.columns import get_materialized_columns
 from analytickit import client
 from analytickit.models.utils import UUIDT
+from ee.clickhouse.materialized_columns.columns import get_materialized_columns
 
 get_column = lambda rows, index: [row[index] for row in rows]
 

@@ -1,140 +1,138 @@
-import{DEFAULT_EXCLUDED_PERSON_PROPERTIES, funnelLogic}from './funnelLogic'
-import {MOCK_DEFAULT_TEAM, MOCK_TEAM_ID}from 'lib/api.mock'
+import { DEFAULT_EXCLUDED_PERSON_PROPERTIES, funnelLogic } from './funnelLogic'
+import { MOCK_DEFAULT_TEAM, MOCK_TEAM_ID } from 'lib/api.mock'
 import analytickit from 'analytickit-js'
-import {expectLogic, partial}from 'kea-test-utils'
-import {initKeaTests}from '~/test/init'
-import {preflightLogic}from 'scenes/PreflightCheck/preflightLogic'
-import { eventUsageLogic}from 'lib/utils/eventUsageLogic'
-import {insightLogic}from 'scenes/insights/insightLogic'
+import { expectLogic, partial } from 'kea-test-utils'
+import { initKeaTests } from '~/test/init'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
+import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
+import { insightLogic } from 'scenes/insights/insightLogic'
 import {
-AvailableFeature,
-FunnelCorrelation,
-FunnelCorrelationResultsType,
-FunnelCorrelationType,
-FunnelVizType,
-InsightLogicProps,
-InsightShortId,
-InsightType,
-TeamType,
-}from '~/types'
-import {teamLogic}from 'scenes/teamLogic'
-import {userLogic}from 'scenes/userLogic'
-import {personsModalLogic} from 'scenes/trends/personsModalLogic'
-import {groupPropertiesModel}from '~/models/groupPropertiesModel'
-import {router}from 'kea-router'
-import {urls}from 'scenes/urls'
-import {useMocks}from '~/mocks/jest'
-import {useAvailableFeatures}from '~/mocks/features'
+    AvailableFeature,
+    FunnelCorrelation,
+    FunnelCorrelationResultsType,
+    FunnelCorrelationType,
+    FunnelVizType,
+    InsightLogicProps,
+    InsightShortId,
+    InsightType,
+    TeamType,
+} from '~/types'
+import { teamLogic } from 'scenes/teamLogic'
+import { userLogic } from 'scenes/userLogic'
+import { personsModalLogic } from 'scenes/trends/personsModalLogic'
+import { groupPropertiesModel } from '~/models/groupPropertiesModel'
+import { router } from 'kea-router'
+import { urls } from 'scenes/urls'
+import { useMocks } from '~/mocks/jest'
+import { useAvailableFeatures } from '~/mocks/features'
 import api from 'lib/api'
 
 const Insight12 = '12' as InsightShortId
 const Insight123 = '123' as InsightShortId
 
 export const mockInsight = {
-id: Insight123,
-short_id: 'SvoU2bMC',
-name: null,
-filters: {
-breakdown: null,
-breakdown_type: null,
-display: 'FunnelViz',
-events: [
-{
-id: '$pageview',
-type: 'events',
-order: 0,
-name: '$pageview',
-custom_name: null,
-math: null,
-math_property: null,
-properties: [],
-},
-{
-id: '$pageview',
-type: 'events',
-order: 1,
-name: '$pageview',
-custom_name: null,
-math: null,
-math_property: null,
-properties: [],
-},
-{
-id: '$pageview',
-type: 'events',
-order: 2,
-name: '$pageview',
-custom_name: null,
-math: null,
-math_property: null,
-properties: [],
-},
-{
-id: '$pageview',
-type: 'events',
-order: 3,
-name: '$pageview',
-custom_name: null,
-math: null,
-math_property: null,
-properties: [],
-},
-],
-funnel_from_step: 0,
-funnel_to_step: 1,
-funnel_viz_type: 'steps',
-insight: 'FUNNELS',
-interval: 'day',
-layout: 'vertical',
-},
-filters_hash: 'cache_d0d88afd2fd8dd2af0b7f2e505588e99',
-order: null,
-deleted: false,
-dashboard: null,
-layouts: {
-
-},
-color: null,
-last_refresh: null,
-refreshing: false,
-result: null,
-created_at: '2021-09-22T18:22:20.036153Z',
-description: null,
-updated_at: '2021-09-22T19:03:49.322258Z',
-tags: [],
-favorited: false,
-saved: false,
-created_by: {
-id: 1,
-uuid: '017c0441-bcb2-0000-bccf-dfc24328c5f3',
-distinct_id: 'fM7b6ZFi8MOssbkDI55ot8tMY2hkzrHdRy1qERa6rCK',
-first_name: 'Alex',
-email: 'alex@analytickit.com',
-},
+    id: Insight123,
+    short_id: 'SvoU2bMC',
+    name: null,
+    filters: {
+        breakdown: null,
+        breakdown_type: null,
+        display: 'FunnelViz',
+        events: [
+            {
+                id: '$pageview',
+                type: 'events',
+                order: 0,
+                name: '$pageview',
+                custom_name: null,
+                math: null,
+                math_property: null,
+                properties: [],
+            },
+            {
+                id: '$pageview',
+                type: 'events',
+                order: 1,
+                name: '$pageview',
+                custom_name: null,
+                math: null,
+                math_property: null,
+                properties: [],
+            },
+            {
+                id: '$pageview',
+                type: 'events',
+                order: 2,
+                name: '$pageview',
+                custom_name: null,
+                math: null,
+                math_property: null,
+                properties: [],
+            },
+            {
+                id: '$pageview',
+                type: 'events',
+                order: 3,
+                name: '$pageview',
+                custom_name: null,
+                math: null,
+                math_property: null,
+                properties: [],
+            },
+        ],
+        funnel_from_step: 0,
+        funnel_to_step: 1,
+        funnel_viz_type: 'steps',
+        insight: 'FUNNELS',
+        interval: 'day',
+        layout: 'vertical',
+    },
+    filters_hash: 'cache_d0d88afd2fd8dd2af0b7f2e505588e99',
+    order: null,
+    deleted: false,
+    dashboard: null,
+    layouts: {},
+    color: null,
+    last_refresh: null,
+    refreshing: false,
+    result: null,
+    created_at: '2021-09-22T18:22:20.036153Z',
+    description: null,
+    updated_at: '2021-09-22T19:03:49.322258Z',
+    tags: [],
+    favorited: false,
+    saved: false,
+    created_by: {
+        id: 1,
+        uuid: '017c0441-bcb2-0000-bccf-dfc24328c5f3',
+        distinct_id: 'fM7b6ZFi8MOssbkDI55ot8tMY2hkzrHdRy1qERa6rCK',
+        first_name: 'Alex',
+        email: 'alex@analytickit.com',
+    },
 }
 
 const funnelResults = [
-{
-action_id: '$pageview',
-count: 19,
-name: '$pageview',
-order: 0,
-type: 'events',
-},
-{
-action_id: '$pageview',
-count: 7,
-name: '$pageview',
-order: 1,
-type: 'events',
-},
-{
-action_id: '$pageview',
-count: 4,
-name: '$pageview',
-order: 2,
-type: 'events',
-},
+    {
+        action_id: '$pageview',
+        count: 19,
+        name: '$pageview',
+        order: 0,
+        type: 'events',
+    },
+    {
+        action_id: '$pageview',
+        count: 7,
+        name: '$pageview',
+        order: 1,
+        type: 'events',
+    },
+    {
+        action_id: '$pageview',
+        count: 4,
+        name: '$pageview',
+        order: 2,
+        type: 'events',
+    },
 ]
 
 describe('funnelLogic', () => {
@@ -245,8 +243,8 @@ describe('funnelLogic', () => {
                                             (correlation) =>
                                                 includePropertyNames.includes('$all') ||
                                                 includePropertyNames.includes(correlation.event.event)
-)
-.filter(
+                                        )
+                                        .filter(
                                             (correlation) =>
                                                 !excludePropertyFromProjectNames.includes(correlation.event.event)
                                         ),
@@ -332,7 +330,7 @@ describe('funnelLogic', () => {
             },
         })
         initKeaTests(false)
-        window.analytickit_APP_CONTEXT = undefined // to force API request to /api/project/@current
+        window.ANALYTICKIT_APP_CONTEXT = undefined // to force API request to /api/project/@current
     })
 
     const defaultProps: InsightLogicProps = {
@@ -496,10 +494,10 @@ describe('funnelLogic', () => {
                 insight: 'FUNNELS',
                 interval: 'day',
             })
-)
-})
+        )
+    })
 
-describe('syncs with insightLogic', () => {
+    describe('syncs with insightLogic', () => {
         const props = { dashboardItemId: Insight123 }
         beforeEach(async () => {
             await initFunnelLogic(props)
@@ -576,13 +574,13 @@ describe('syncs with insightLogic', () => {
                     return (
                         action.type === personsModalLogic.actionTypes.loadPeopleFromUrl &&
                         action.payload?.label === '$pageview'
-)
-},
-])
-})
-})
+                    )
+                },
+            ])
+        })
+    })
 
-describe('selectors', () => {
+    describe('selectors', () => {
         beforeEach(async () => {
             await initFunnelLogic()
         })

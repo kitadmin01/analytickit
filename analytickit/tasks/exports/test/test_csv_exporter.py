@@ -111,8 +111,8 @@ class TestCSVExporter(APIBaseTest):
             csv_exporter.export_csv(exported_asset)
 
             assert (
-                    exported_asset.content
-                    == b"distinct_id,elements_chain,event,id,person,properties.$browser,timestamp\r\n2,,event_name,e9ca132e-400f-4854-a83c-16c151b2f145,,Safari,2022-07-06T19:37:43.095295+00:00\r\n2,,event_name,1624228e-a4f1-48cd-aabc-6baa3ddb22e4,,Safari,2022-07-06T19:37:43.095279+00:00\r\n2,,event_name,66d45914-bdf5-4980-a54a-7dc699bdcce9,,Safari,2022-07-06T19:37:43.095262+00:00\r\n"
+                exported_asset.content
+                == b"distinct_id,elements_chain,event,id,person,properties.$browser,timestamp\r\n2,,event_name,e9ca132e-400f-4854-a83c-16c151b2f145,,Safari,2022-07-06T19:37:43.095295+00:00\r\n2,,event_name,1624228e-a4f1-48cd-aabc-6baa3ddb22e4,,Safari,2022-07-06T19:37:43.095279+00:00\r\n2,,event_name,66d45914-bdf5-4980-a54a-7dc699bdcce9,,Safari,2022-07-06T19:37:43.095262+00:00\r\n"
             )
             assert exported_asset.content_location is None
 
@@ -125,14 +125,14 @@ class TestCSVExporter(APIBaseTest):
             csv_exporter.export_csv(exported_asset)
 
             assert (
-                    exported_asset.content_location
-                    == f"/{TEST_BUCKET}/csv/team-{self.team.id}/task-{exported_asset.id}/a-guid"
+                exported_asset.content_location
+                == f"/{TEST_BUCKET}/csv/team-{self.team.id}/task-{exported_asset.id}/a-guid"
             )
 
             content = object_storage.read(exported_asset.content_location)
             assert (
-                    content
-                    == "distinct_id,elements_chain,event,id,person,properties.$browser,timestamp\r\n2,,event_name,e9ca132e-400f-4854-a83c-16c151b2f145,,Safari,2022-07-06T19:37:43.095295+00:00\r\n2,,event_name,1624228e-a4f1-48cd-aabc-6baa3ddb22e4,,Safari,2022-07-06T19:37:43.095279+00:00\r\n2,,event_name,66d45914-bdf5-4980-a54a-7dc699bdcce9,,Safari,2022-07-06T19:37:43.095262+00:00\r\n"
+                content
+                == "distinct_id,elements_chain,event,id,person,properties.$browser,timestamp\r\n2,,event_name,e9ca132e-400f-4854-a83c-16c151b2f145,,Safari,2022-07-06T19:37:43.095295+00:00\r\n2,,event_name,1624228e-a4f1-48cd-aabc-6baa3ddb22e4,,Safari,2022-07-06T19:37:43.095279+00:00\r\n2,,event_name,66d45914-bdf5-4980-a54a-7dc699bdcce9,,Safari,2022-07-06T19:37:43.095262+00:00\r\n"
             )
 
             assert exported_asset.content is None
@@ -140,7 +140,7 @@ class TestCSVExporter(APIBaseTest):
     @patch("analytickit.models.exported_asset.UUIDT")
     @patch("analytickit.models.exported_asset.object_storage.write")
     def test_csv_exporter_writes_to_asset_when_object_storage_write_fails(
-            self, mocked_object_storage_write, mocked_uuidt
+        self, mocked_object_storage_write, mocked_uuidt
     ) -> None:
         exported_asset = self._create_asset()
         mocked_uuidt.return_value = "a-guid"
@@ -152,8 +152,8 @@ class TestCSVExporter(APIBaseTest):
             assert exported_asset.content_location is None
 
             assert (
-                    exported_asset.content
-                    == b"distinct_id,elements_chain,event,id,person,properties.$browser,timestamp\r\n2,,event_name,e9ca132e-400f-4854-a83c-16c151b2f145,,Safari,2022-07-06T19:37:43.095295+00:00\r\n2,,event_name,1624228e-a4f1-48cd-aabc-6baa3ddb22e4,,Safari,2022-07-06T19:37:43.095279+00:00\r\n2,,event_name,66d45914-bdf5-4980-a54a-7dc699bdcce9,,Safari,2022-07-06T19:37:43.095262+00:00\r\n"
+                exported_asset.content
+                == b"distinct_id,elements_chain,event,id,person,properties.$browser,timestamp\r\n2,,event_name,e9ca132e-400f-4854-a83c-16c151b2f145,,Safari,2022-07-06T19:37:43.095295+00:00\r\n2,,event_name,1624228e-a4f1-48cd-aabc-6baa3ddb22e4,,Safari,2022-07-06T19:37:43.095279+00:00\r\n2,,event_name,66d45914-bdf5-4980-a54a-7dc699bdcce9,,Safari,2022-07-06T19:37:43.095262+00:00\r\n"
             )
 
     @patch("analytickit.tasks.exports.csv_exporter.logger")
@@ -170,14 +170,14 @@ class TestCSVExporter(APIBaseTest):
                 csv_exporter.export_csv(exported_asset)
 
     def test_limiting_query_as_expected(self) -> None:
-        with self.settings(SITE_URL="https://app.analytickit.com"):
+        with self.settings(SITE_URL="https://analytickit.com"):
             modified_url = add_query_params(absolute_uri(regression_11204), {"limit": "3500"})
             actual_bits = self._split_to_dict(modified_url)
             expected_bits = {**self._split_to_dict(regression_11204), **{"limit": "3500"}}
             assert expected_bits == actual_bits
 
     def test_limiting_existing_limit_query_as_expected(self) -> None:
-        with self.settings(SITE_URL="https://app.analytickit.com"):
+        with self.settings(SITE_URL="https://analytickit.com"):
             url_with_existing_limit = regression_11204 + "&limit=100000"
             modified_url = add_query_params(absolute_uri(url_with_existing_limit), {"limit": "3500"})
             actual_bits = self._split_to_dict(modified_url)

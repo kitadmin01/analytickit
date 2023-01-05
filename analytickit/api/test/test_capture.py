@@ -65,22 +65,22 @@ class TestCapture(BaseTest):
         }
 
     def _send_session_recording_event(
-            self,
-            number_of_events=1,
-            event_data="data",
-            snapshot_source=3,
-            snapshot_type=1,
-            session_id="abc123",
-            window_id="def456",
-            distinct_id="ghi789",
-            timestamp=1658516991883,
+        self,
+        number_of_events=1,
+        event_data="data",
+        snapshot_source=3,
+        snapshot_type=1,
+        session_id="abc123",
+        window_id="def456",
+        distinct_id="ghi789",
+        timestamp=1658516991883,
     ):
         event = {
             "event": "$snapshot",
             "properties": {
                 "$snapshot_data": {
                     "type": snapshot_type,
-                    "data": {"source": snapshot_source, "data": event_data, },
+                    "data": {"source": snapshot_source, "data": event_data,},
                     "timestamp": timestamp,
                 },
                 "$session_id": session_id,
@@ -91,8 +91,7 @@ class TestCapture(BaseTest):
         }
 
         self.client.post(
-            "/s/",
-            data={"data": json.dumps([event for _ in range(number_of_events)]), "api_key": self.team.api_token, },
+            "/s/", data={"data": json.dumps([event for _ in range(number_of_events)]), "api_key": self.team.api_token,},
         )
 
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
@@ -103,13 +102,13 @@ class TestCapture(BaseTest):
                 "distinct_id": 2,
                 "token": self.team.api_token,
                 "$elements": [
-                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm", },
-                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻", },
+                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm",},
+                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻",},
                 ],
             },
         }
         with self.assertNumQueries(1):
-            response = self.client.get("/e/?data=%s" % quote(self._to_json(data)), HTTP_ORIGIN="https://localhost", )
+            response = self.client.get("/e/?data=%s" % quote(self._to_json(data)), HTTP_ORIGIN="https://localhost",)
         self.assertEqual(response.get("access-control-allow-origin"), "https://localhost")
         self.assertDictContainsSubset(
             {
@@ -124,7 +123,7 @@ class TestCapture(BaseTest):
 
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_capture_event_ip(self, kafka_produce):
-        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token, }}
+        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token,}}
 
         self.client.get(
             "/e/?data=%s" % quote(self._to_json(data)), HTTP_X_FORWARDED_FOR="1.2.3.4", HTTP_ORIGIN="https://localhost"
@@ -142,7 +141,7 @@ class TestCapture(BaseTest):
 
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_capture_event_ipv6(self, kafka_produce):
-        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token, }}
+        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token,}}
 
         self.client.get(
             "/e/?data=%s" % quote(self._to_json(data)),
@@ -163,7 +162,7 @@ class TestCapture(BaseTest):
     # Regression test as Azure Gateway forwards ipv4 ips with a port number
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_capture_event_ip_with_port(self, kafka_produce):
-        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token, }}
+        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token,}}
 
         self.client.get(
             "/e/?data=%s" % quote(self._to_json(data)),
@@ -183,7 +182,7 @@ class TestCapture(BaseTest):
 
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_capture_event_ip_anonymize(self, kafka_produce):
-        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token, }}
+        data = {"event": "some_event", "properties": {"distinct_id": 2, "token": self.team.api_token,}}
 
         self.team.anonymize_ips = True
         self.team.save()
@@ -192,7 +191,7 @@ class TestCapture(BaseTest):
             "/e/?data=%s" % quote(self._to_json(data)), HTTP_X_FORWARDED_FOR="1.2.3.4", HTTP_ORIGIN="https://localhost"
         )
         self.assertDictContainsSubset(
-            {"distinct_id": "2", "ip": None, "site_url": "http://testserver", "data": data, "team_id": self.team.pk, },
+            {"distinct_id": "2", "ip": None, "site_url": "http://testserver", "data": data, "team_id": self.team.pk,},
             self._to_arguments(kafka_produce),
         )
 
@@ -209,8 +208,8 @@ class TestCapture(BaseTest):
                 "distinct_id": 2,
                 "token": self.team.api_token,
                 "$elements": [
-                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm", },
-                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻", },
+                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm",},
+                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻",},
                 ],
             },
         }
@@ -232,8 +231,8 @@ class TestCapture(BaseTest):
                 "distinct_id": 2,
                 "token": self.team.api_token,
                 "$elements": [
-                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm", },
-                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻", },
+                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm",},
+                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻",},
                 ],
             },
         }
@@ -255,16 +254,15 @@ class TestCapture(BaseTest):
             "properties": {
                 "distinct_id": 2,
                 "$elements": [
-                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm", },
-                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻", },
+                    {"tag_name": "a", "nth_child": 1, "nth_of_type": 2, "attr__class": "btn btn-sm",},
+                    {"tag_name": "div", "nth_child": 1, "nth_of_type": 2, "$el_text": "💻",},
                 ],
             },
         }
         now = timezone.now()
         with freeze_time(now):
             with self.assertNumQueries(5):
-                response = self.client.get("/e/?data=%s" % quote(self._to_json(data)),
-                                           HTTP_ORIGIN="https://localhost", )
+                response = self.client.get("/e/?data=%s" % quote(self._to_json(data)), HTTP_ORIGIN="https://localhost",)
         self.assertEqual(response.get("access-control-allow-origin"), "https://localhost")
         arguments = self._to_arguments(kafka_produce)
         arguments.pop("now")  # can't compare fakedate
@@ -338,8 +336,8 @@ class TestCapture(BaseTest):
             data={
                 "data": json.dumps(
                     [
-                        {"event": "beep", "properties": {"distinct_id": "eeee", "token": self.team.api_token, }, },
-                        {"event": "boop", "properties": {"distinct_id": "aaaa", "token": self.team.api_token, }, },
+                        {"event": "beep", "properties": {"distinct_id": "eeee", "token": self.team.api_token,},},
+                        {"event": "boop", "properties": {"distinct_id": "aaaa", "token": self.team.api_token,},},
                     ]
                 ),
                 "api_key": self.team.api_token,
@@ -461,7 +459,7 @@ class TestCapture(BaseTest):
         self.team.api_token = "rnEnwNvmHphTu5rFG4gWDDs49t00Vk50tDOeDdedMb4"
         self.team.save()
 
-        response = self.client.post("/track?compression=lz64", data="foo", content_type="text/plain", )
+        response = self.client.post("/track?compression=lz64", data="foo", content_type="text/plain",)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
@@ -490,12 +488,12 @@ class TestCapture(BaseTest):
         """
 
         # Empty GET
-        response = self.client.get("/e/?data=", content_type="application/json", HTTP_ORIGIN="https://localhost", )
+        response = self.client.get("/e/?data=", content_type="application/json", HTTP_ORIGIN="https://localhost",)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(kafka_produce.call_count, 0)
 
         # Empty POST
-        response = self.client.post("/e/", {}, content_type="application/json", HTTP_ORIGIN="https://localhost", )
+        response = self.client.post("/e/", {}, content_type="application/json", HTTP_ORIGIN="https://localhost",)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(kafka_produce.call_count, 0)
 
@@ -546,7 +544,7 @@ class TestCapture(BaseTest):
     def test_batch_gzip_header(self, kafka_produce):
         data = {
             "api_key": self.team.api_token,
-            "batch": [{"type": "capture", "event": "user signed up", "distinct_id": "2", }],
+            "batch": [{"type": "capture", "event": "user signed up", "distinct_id": "2",}],
         }
 
         self.client.generic(
@@ -649,8 +647,8 @@ class TestCapture(BaseTest):
         response = self.client.post(
             "/batch/",
             data={
-                "api_key": "this-token-doesnt-exist",
-                "batch": [{"type": "capture", "event": "user signed up", "distinct_id": "whatever", }, ],
+                "api_key": "testToken",
+                "batch": [{"type": "capture", "event": "user signed up", "distinct_id": "whatever",},],
             },
             content_type="application/json",
         )
@@ -664,10 +662,22 @@ class TestCapture(BaseTest):
             ),
         )
 
+    def test_batch_correct_token(self):
+        response = self.client.post(
+            "/batch/",
+            data={
+                "api_key": "token123",
+                "batch": [{"type": "capture", "event": "user signed up", "distinct_id": "whatever",},],
+            },
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+
     def test_batch_token_not_set(self):
         response = self.client.post(
             "/batch/",
-            data={"batch": [{"type": "capture", "event": "user signed up", "distinct_id": "whatever", }, ]},
+            data={"batch": [{"type": "capture", "event": "user signed up", "distinct_id": "whatever",},]},
             content_type="application/json",
         )
 
@@ -684,7 +694,7 @@ class TestCapture(BaseTest):
     def test_batch_distinct_id_not_set(self, statsd_incr):
         response = self.client.post(
             "/batch/",
-            data={"api_key": self.team.api_token, "batch": [{"type": "capture", "event": "user signed up", }, ], },
+            data={"api_key": self.team.api_token, "batch": [{"type": "capture", "event": "user signed up",},],},
             content_type="application/json",
         )
 
@@ -710,7 +720,7 @@ class TestCapture(BaseTest):
             % quote(
                 self._to_json(
                     {
-                        "$set": {"$os": "Mac OS X", },
+                        "$set": {"$os": "Mac OS X",},
                         "$token": "token123",
                         "$distinct_id": 3,
                         "$device_id": "16fd4afae9b2d8-0fce8fe900d42b-39637c0e-7e9000-16fd4afae9c395",
@@ -742,7 +752,7 @@ class TestCapture(BaseTest):
         self.client.post(
             "/track/",
             data={
-                "data": self._dict_to_b64({"event": "$pageview", "properties": {"distinct_id": "eeee", }, }),
+                "data": self._dict_to_b64({"event": "$pageview", "properties": {"distinct_id": "eeee",},}),
                 "api_key": self.team.api_token,  # main difference in this test
             },
         )
@@ -754,12 +764,12 @@ class TestCapture(BaseTest):
         base64 = "eyJldmVudCI6IiRwYWdldmlldyIsInByb3BlcnRpZXMiOnsiZGlzdGluY3RfaWQiOiJlZWVlZWVlZ8+lZWVlZWUifX0="
         dict = self._dict_from_b64(base64)
         self.assertDictEqual(
-            dict, {"event": "$pageview", "properties": {"distinct_id": "eeeeeeegϥeeeee", }, },
+            dict, {"event": "$pageview", "properties": {"distinct_id": "eeeeeeegϥeeeee",},},
         )
 
         # POST with "+" in the base64
         self.client.post(
-            "/track/", data={"data": base64, "api_key": self.team.api_token, },  # main difference in this test
+            "/track/", data={"data": base64, "api_key": self.team.api_token,},  # main difference in this test
         )
         arguments = self._to_arguments(kafka_produce)
         self.assertEqual(arguments["team_id"], self.team.pk)
@@ -768,7 +778,7 @@ class TestCapture(BaseTest):
         # POST with " " in the base64 instead of the "+"
         self.client.post(
             "/track/",
-            data={"data": base64.replace("+", " "), "api_key": self.team.api_token, },  # main difference in this test
+            data={"data": base64.replace("+", " "), "api_key": self.team.api_token,},  # main difference in this test
         )
         arguments = self._to_arguments(kafka_produce)
         self.assertEqual(arguments["team_id"], self.team.pk)
@@ -834,7 +844,7 @@ class TestCapture(BaseTest):
             data={
                 "sent_at": tomorrow_sent_at.isoformat(),
                 "data": self._dict_to_b64(
-                    {"event": "$pageview", "timestamp": tomorrow.isoformat(), "properties": {"distinct_id": "eeee", }, }
+                    {"event": "$pageview", "timestamp": tomorrow.isoformat(), "properties": {"distinct_id": "eeee",},}
                 ),
                 "api_key": self.team.api_token,  # main difference in this test
             },
@@ -1065,7 +1075,7 @@ class TestCapture(BaseTest):
 
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_recording_data_sent_to_object_storage_and_clickhouse_if_env_variable_is_set_for_team(
-            self, kafka_produce
+        self, kafka_produce
     ) -> None:
         with self.settings(WRITE_RECORDINGS_TO_OBJECT_STORAGE_FOR_TEAM=self.team.pk):
             self._send_session_recording_event()
@@ -1076,7 +1086,7 @@ class TestCapture(BaseTest):
 
     @patch("analytickit.kafka_client.client._KafkaProducer.produce")
     def test_recording_data_is_not_sent_to_object_storage_if_env_variable_is_set_for_another_team(
-            self, kafka_produce
+        self, kafka_produce
     ) -> None:
         wrong_team_id = self.team.pk + 1
         with self.settings(WRITE_RECORDINGS_TO_OBJECT_STORAGE_FOR_TEAM=wrong_team_id):
@@ -1127,7 +1137,7 @@ class TestCapture(BaseTest):
                     expected_data = json.dumps(
                         {
                             "type": snapshot_type,
-                            "data": {"source": snapshot_source, "data": event_data, },
+                            "data": {"source": snapshot_source, "data": event_data,},
                             "timestamp": timestamp,
                             "$window_id": window_id,
                         }
@@ -1147,7 +1157,7 @@ class TestCapture(BaseTest):
     def test_large_recording_data_is_split_into_multiple_messages_for_object_storage(self, kafka_produce) -> None:
         with self.settings(WRITE_RECORDINGS_TO_OBJECT_STORAGE_FOR_TEAM=self.team.pk):
             data = "a" * (
-                    512 * 1024
+                512 * 1024
             )  # 512 * 1024 is the max size of a single message, but because each event has a bit more data, this will be split into 2 messages
             self._send_session_recording_event(event_data=data)
             topic_counter = Counter([call[1]["topic"] for call in kafka_produce.call_args_list])
@@ -1161,14 +1171,14 @@ class TestCapture(BaseTest):
             event_without_distinct_id = {
                 "event": "$snapshot",
                 "properties": {
-                    "$snapshot_data": {"type": 1, "data": {"source": 1, "data": "blah", }, "timestamp": 0, },
+                    "$snapshot_data": {"type": 1, "data": {"source": 1, "data": "blah",}, "timestamp": 0,},
                     "$session_id": "session_id",
                     "$window_id": "window_id",
                 },
                 "offset": 1993,
             }
             response = self.client.post(
-                "/s/", data={"data": json.dumps([event_without_distinct_id]), "api_key": self.team.api_token, },
+                "/s/", data={"data": json.dumps([event_without_distinct_id]), "api_key": self.team.api_token,},
             )
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(
@@ -1183,14 +1193,14 @@ class TestCapture(BaseTest):
             event_without_session_id = {
                 "event": "$snapshot",
                 "properties": {
-                    "$snapshot_data": {"type": 1, "data": {"source": 1, "data": "blah", }, "timestamp": 0, },
+                    "$snapshot_data": {"type": 1, "data": {"source": 1, "data": "blah",}, "timestamp": 0,},
                     "$window_id": "window_id",
                     "distinct_id": "distinct_id",
                 },
                 "offset": 1993,
             }
             response = self.client.post(
-                "/s/", data={"data": json.dumps([event_without_session_id]), "api_key": self.team.api_token, },
+                "/s/", data={"data": json.dumps([event_without_session_id]), "api_key": self.team.api_token,},
             )
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(
@@ -1205,7 +1215,7 @@ class TestCapture(BaseTest):
             event_without_timestamp = {
                 "event": "$snapshot",
                 "properties": {
-                    "$snapshot_data": {"type": 1, "data": {"source": 1, "data": "blah", }},
+                    "$snapshot_data": {"type": 1, "data": {"source": 1, "data": "blah",}},
                     "$session_id": "session_id",
                     "$window_id": "window_id",
                     "distinct_id": "distinct_id",
@@ -1213,7 +1223,7 @@ class TestCapture(BaseTest):
                 "offset": 1993,
             }
             response = self.client.post(
-                "/s/", data={"data": json.dumps([event_without_timestamp]), "api_key": self.team.api_token, },
+                "/s/", data={"data": json.dumps([event_without_timestamp]), "api_key": self.team.api_token,},
             )
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(
@@ -1229,7 +1239,7 @@ class TestCapture(BaseTest):
             event_without_type = {
                 "event": "$snapshot",
                 "properties": {
-                    "$snapshot_data": {"data": {"source": 1, "data": "blah", }, "timestamp": 0, },
+                    "$snapshot_data": {"data": {"source": 1, "data": "blah",}, "timestamp": 0,},
                     "$session_id": "session_id",
                     "$window_id": "window_id",
                     "distinct_id": "distinct_id",
@@ -1237,7 +1247,7 @@ class TestCapture(BaseTest):
                 "offset": 1993,
             }
             response = self.client.post(
-                "/s/", data={"data": json.dumps([event_without_type]), "api_key": self.team.api_token, },
+                "/s/", data={"data": json.dumps([event_without_type]), "api_key": self.team.api_token,},
             )
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(
@@ -1260,6 +1270,6 @@ class TestCapture(BaseTest):
                 "offset": 1993,
             }
             self.client.post(
-                "/s/", data={"data": json.dumps([event_without_timestamp]), "api_key": self.team.api_token, },
+                "/s/", data={"data": json.dumps([event_without_timestamp]), "api_key": self.team.api_token,},
             )
             self.assertEqual(kafka_produce.call_count, 2)

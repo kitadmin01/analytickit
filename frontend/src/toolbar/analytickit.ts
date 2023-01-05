@@ -1,16 +1,9 @@
-import AnalyticKit from 'analytickit-js-lite'
+import { browserAnalyticKit } from 'analytickit-js-lite/dist/src/targets/browser'
 
-const runningOnAnalytickit = !!window.ANALYTICKIT_APP_CONTEXT
-const apiKey = runningOnAnalytickit ? window.JS_ANALYTICKIT_API_KEY : 'sTMFPsFhdP1Ssg'
-const apiHost = runningOnAnalytickit ? window.JS_ANALYTICKIT_HOST : 'https://dpa.analytickit.com'
+const apiKey = 'sTMFPsFhdP1Ssg'
+const apiHost = 'https://dpa.analytickit.com'
 
-export const analytickit = new AnalyticKit(apiKey, {
-    host: apiHost,
-    enable: false, // must call.optIn() before any events are sent
-    persistence: 'memory', // We don't want to persist anything, all events are in-memory
-    persistence_name: apiKey + '_toolbar', // We don't need this but it ensures we don't accidentally mess with the standard persistence
+export const analytickit = browserAnalyticKit(apiKey, {
+    apiHost: apiHost,
+    optedIn: false, // must call .optIn() before any events are sent
 })
-
-if (runningOnAnalytickit && window.JS_ANALYTICKIT_SELF_CAPTURE) {
-    analytickit.debug()
-}

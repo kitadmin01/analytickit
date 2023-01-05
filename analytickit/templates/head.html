@@ -1,4 +1,4 @@
-<title>analytickit</title>
+<title>AnalyticKit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf8">
 
@@ -13,15 +13,16 @@
 {% endif %}
 <link rel="mask-icon" href="/static/icons/safari-pinned-tab.svg?v=2021-04-29" color="#FF053C">
 <link rel="manifest" href="/static/site.webmanifest?v=2021-04-29">
-<meta name="apple-mobile-web-app-title" content="analytickit">
-<meta name="application-name" content="analytickit">
+<meta name="apple-mobile-web-app-title" content="AnalyticKit">
+<meta name="application-name" content="AnalyticKit">
 
 {% if not opt_out_capture and js_analytickit_api_key %}
 <script>
-    window.JS_ANALYTICKIT__API_KEY = {{js_analytickit_api_key | safe}};
-    window.JS_ANALYTICKIT__HOST = {{js_analytickit_host | safe}};
-    window.JS_ANALYTICKIT_SELF_CAPTURE = {{self_capture | yesno:"true,false" }};
-    window.JS_CAPTURE_INTERNAL_METRICS = {{js_capture_internal_metrics | yesno:"true,false"}}
+    window.JS_ANALYTICKIT_API_KEY = {{ js_analytickit_api_key | safe }};
+    window.JS_ANALYTICKIT_HOST = {{ js_analytickit_host | safe }};
+    window.JS_ANALYTICKIT_SELF_CAPTURE = {{ self_capture | yesno:"true,false" }};
+    window.JS_CAPTURE_INTERNAL_METRICS = {{ js_capture_internal_metrics | yesno:"true,false" }}
+    document.write(window.JS_ANALYTICKIT_API_KEY);
 
 
 </script>
@@ -38,3 +39,5 @@
 
 
 </script>
+
+

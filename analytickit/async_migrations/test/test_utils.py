@@ -21,7 +21,7 @@ DEFAULT_POSTGRES_OP = AsyncMigrationOperationSQL(database=AnalyticsDBMS.POSTGRES
 
 
 class TestUtils(AsyncMigrationBaseTest):
-    @pytest.mark.ee
+    @pytest.mark.dpa
     @patch("analytickit.client.sync_execute")
     def test_execute_op_clickhouse(self, mock_sync_execute):
         execute_op(DEFAULT_CH_OP, "some_id")

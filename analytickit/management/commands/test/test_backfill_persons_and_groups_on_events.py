@@ -22,7 +22,7 @@ def create_test_events(properties=""):
     )
 
 
-@pytest.mark.ee
+@pytest.mark.dpa
 class TestBackfillPersonsAndGroupsOnEvents(BaseTest, ClickhouseTestMixin):
     def tearDown(self):
         self.recreate_database()

@@ -22,7 +22,7 @@
     window.JS_ANALYTICKIT_HOST = {{ js_analytickit_host | safe }};
     window.JS_ANALYTICKIT_SELF_CAPTURE = {{ self_capture | yesno:"true,false" }};
     window.JS_CAPTURE_INTERNAL_METRICS = {{ js_capture_internal_metrics | yesno:"true,false" }}
-    document.write(window.JS_ANALYTICKIT_API_KEY);
+    document.write(window.JS_ANALYTICKIT_SELF_CAPTURE);
 
 
 </script>

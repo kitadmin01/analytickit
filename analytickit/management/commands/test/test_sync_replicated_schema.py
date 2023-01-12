@@ -7,7 +7,7 @@ from analytickit.management.commands.sync_replicated_schema import Command
 from analytickit.test.base import BaseTest, ClickhouseTestMixin
 
 
-@pytest.mark.ee
+@pytest.mark.dpa
 class TestSyncReplicatedSchema(BaseTest, ClickhouseTestMixin):
     def tearDown(self):
         self.recreate_database()
@@ -42,7 +42,7 @@ class TestSyncReplicatedSchema(BaseTest, ClickhouseTestMixin):
 
     def test_create_missing_tables(self):
         try:
-            from ee.clickhouse.materialized_columns.columns import materialize
+            from dpa.clickhouse.materialized_columns.columns import materialize
         except ImportError:
             pass
         else:

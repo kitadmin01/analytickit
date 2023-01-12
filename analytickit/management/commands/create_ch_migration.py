@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 
-MIGRATION_PATH = "ee/clickhouse/migrations"
+MIGRATION_PATH = "dpa/clickhouse/migrations"
 
 FILE_DEFAULT = """
 from analytickit.infi.clickhouse_orm import migrations # type: ignore

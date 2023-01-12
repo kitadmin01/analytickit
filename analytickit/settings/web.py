@@ -76,12 +76,12 @@ if STATSD_HOST is not None:
 
 # Append Enterprise Edition as an app if available
 try:
-    from ee.apps import EnterpriseConfig  # noqa: F401
+    from dpa.apps import EnterpriseConfig  # noqa: F401
 except ImportError:
     pass
 else:
     INSTALLED_APPS.append("rest_hooks")
-    INSTALLED_APPS.append("ee.apps.EnterpriseConfig")
+    INSTALLED_APPS.append("dpa.apps.EnterpriseConfig")
 
 # Use django-extensions if it exists
 try:

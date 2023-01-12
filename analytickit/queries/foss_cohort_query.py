@@ -78,12 +78,12 @@ def convert_to_entity_params(events: List[Event]) -> Tuple[List, List]:
 
         if event_type == "events":
             res_events.append(
-                {"id": event_val, "name": event_val, "order": idx, "type": event_type, }
+                {"id": event_val, "name": event_val, "order": idx, "type": event_type,}
             )
         elif event_type == "actions":
             action = Action.objects.get(id=event_val)
             res_actions.append(
-                {"id": event_val, "name": action.name, "order": idx, "type": event_type, }
+                {"id": event_val, "name": action.name, "order": idx, "type": event_type,}
             )
 
     return res_events, res_actions
@@ -119,20 +119,20 @@ class FOSSCohortQuery(EventQuery):
     _restrict_event_query_by_time: bool
 
     def __init__(
-            self,
-            filter: Filter,
-            team: Team,
-            *,
-            cohort_pk: Optional[int] = None,
-            round_interval=False,
-            should_join_distinct_ids=False,
-            should_join_persons=False,
-            # Extra events/person table columns to fetch since parent query needs them
-            extra_fields: List[ColumnName] = [],
-            extra_event_properties: List[PropertyName] = [],
-            extra_person_fields: List[ColumnName] = [],
-            override_aggregate_users_by_distinct_id: Optional[bool] = None,
-            **kwargs,
+        self,
+        filter: Filter,
+        team: Team,
+        *,
+        cohort_pk: Optional[int] = None,
+        round_interval=False,
+        should_join_distinct_ids=False,
+        should_join_persons=False,
+        # Extra events/person table columns to fetch since parent query needs them
+        extra_fields: List[ColumnName] = [],
+        extra_event_properties: List[PropertyName] = [],
+        extra_person_fields: List[ColumnName] = [],
+        override_aggregate_users_by_distinct_id: Optional[bool] = None,
+        **kwargs,
     ) -> None:
         self._fields = []
         self._events = []
@@ -234,7 +234,7 @@ class FOSSCohortQuery(EventQuery):
         new_props = _unwrap(filter.property_groups)
         return filter.with_data({"properties": new_props.to_dict()})
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_query(self) -> Tuple[str, Dict[str, Any]]:
 
         if not self._outer_property_groups:
@@ -396,7 +396,7 @@ class FOSSCohortQuery(EventQuery):
         conditions, params = build_conditions(self._outer_property_groups, prepend=f"{self._cohort_pk}_level", num=0)
         return f"AND ({conditions})" if conditions else "", params
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def _get_condition_for_property(self, prop: Property, prepend: str, idx: int) -> Tuple[str, Dict[str, Any]]:
 
         res: str = ""
@@ -410,7 +410,7 @@ class FOSSCohortQuery(EventQuery):
         elif prop.type == "person":
             res, params = self.get_person_condition(prop, prepend, idx)
         elif (
-                prop.type == "static-cohort"
+            prop.type == "static-cohort"
         ):  # "cohort" and "precalculated-cohort" are handled by flattening during initialization
             res, params = self.get_static_cohort_condition(prop, prepend, idx)
         else:
@@ -479,8 +479,8 @@ class FOSSCohortQuery(EventQuery):
         # overall query, while `should_join_distinct_ids` applies only to
         # event subqueries
         self._should_join_persons = (
-                self._column_optimizer.is_using_person_properties
-                or len(self._column_optimizer._used_properties_with_type("static-cohort")) > 0
+            self._column_optimizer.is_using_person_properties
+            or len(self._column_optimizer._used_properties_with_type("static-cohort")) > 0
         )
 
     @cached_property
@@ -499,12 +499,12 @@ class FOSSCohortQuery(EventQuery):
 
     # Check if negations are always paired with a positive filter
     # raise a value error warning that this is an invalid cohort
-    # implemented in /ee
+    # implemented in /dpa
     def _validate_negations(self) -> None:
         pass
 
     def _get_entity(
-            self, event: Tuple[Optional[str], Optional[Union[int, str]]], prepend: str, idx: int
+        self, event: Tuple[Optional[str], Optional[Union[int, str]]], prepend: str, idx: int
     ) -> Tuple[str, Dict[str, Any]]:
         res: str = ""
         params: Dict[str, Any] = {}

@@ -138,7 +138,7 @@ def get_funnel_actor_class(filter: Filter) -> Callable:
     if filter.correlation_person_entity and EE_AVAILABLE:
 
         if EE_AVAILABLE:
-            from ee.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
+            from dpa.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
 
             funnel_actor_class = FunnelCorrelationActors
         else:

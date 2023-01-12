@@ -713,7 +713,7 @@ def get_can_create_org(user: Union["AbstractBaseUser", "AnonymousUser"]) -> bool
 
     if settings.MULTI_ORG_ENABLED:
         try:
-            from ee.models.license import License
+            from dpa.models.license import License
         except ImportError:
             pass
         else:
@@ -742,7 +742,7 @@ def get_instance_available_sso_providers() -> Dict[str, bool]:
     bypass_license: bool = settings.MULTI_TENANCY
     license = None
     try:
-        from ee.models.license import License
+        from dpa.models.license import License
     except ImportError:
         pass
     else:

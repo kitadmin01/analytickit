@@ -30,10 +30,10 @@ from analytickit.models import User
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
 
-ee_urlpatterns: List[Any] = []
+dpa_urlpatterns: List[Any] = []
 try:
-    from ee.urls import extend_api_router
-    from ee.urls import urlpatterns as ee_urlpatterns
+    from dpa.urls import extend_api_router
+    from dpa.urls import urlpatterns as dpa_urlpatterns
 except ImportError:
     pass
 else:
@@ -102,8 +102,8 @@ urlpatterns = [
     opt_slash_path("_health", health),
     opt_slash_path("_stats", stats),
     opt_slash_path("_preflight", preflight_check),
-    # ee
-    *ee_urlpatterns,
+    # dpa
+    *dpa_urlpatterns,
     # api
     path("api/unsubscribe", unsubscribe.unsubscribe),
     path("api/", include(router.urls)),
@@ -158,7 +158,6 @@ if settings.TEST:
 
         sync_execute(TRUNCATE_EVENTS_TABLE_SQL())
         return HttpResponse()
-
 
     urlpatterns.append(path("delete_events/", delete_events))
 

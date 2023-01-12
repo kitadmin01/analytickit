@@ -21,7 +21,7 @@
 !frontend/types
 !frontend/public
 !frontend/*.*
-!ee
+!dpa
 !.devcontainer
 !plugin-server/package.json
 !plugin-server/yarn.lock

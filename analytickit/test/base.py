@@ -23,8 +23,11 @@ from analytickit.models.event.sql import DISTRIBUTED_EVENTS_TABLE_SQL, DROP_EVEN
 from analytickit.models.event.util import bulk_create_events
 from analytickit.models.organization import OrganizationMembership
 from analytickit.models.person import Person
-from analytickit.models.person.sql import DROP_PERSON_TABLE_SQL, PERSONS_TABLE_SQL, \
-    TRUNCATE_PERSON_DISTINCT_ID_TABLE_SQL
+from analytickit.models.person.sql import (
+    DROP_PERSON_TABLE_SQL,
+    PERSONS_TABLE_SQL,
+    TRUNCATE_PERSON_DISTINCT_ID_TABLE_SQL,
+)
 from analytickit.models.person.util import bulk_create_persons, create_person
 from analytickit.models.session_recording_event.sql import (
     DISTRIBUTED_SESSION_RECORDING_EVENTS_TABLE_SQL,
@@ -69,7 +72,7 @@ class ErrorResponsesMixin:
         }
 
     def permission_denied_response(
-            self, message: str = "You do not have permission to perform this action.",
+        self, message: str = "You do not have permission to perform this action.",
     ) -> Dict[str, Optional[str]]:
         return {
             "type": "authentication_error",
@@ -87,7 +90,7 @@ class ErrorResponsesMixin:
         }
 
     def unauthenticated_response(
-            self, message: str = "Authentication credentials were not provided.", code: str = "not_authenticated"
+        self, message: str = "Authentication credentials were not provided.", code: str = "not_authenticated"
     ) -> Dict[str, Optional[str]]:
         return {
             "type": "authentication_error",
@@ -97,7 +100,7 @@ class ErrorResponsesMixin:
         }
 
     def validation_error_response(
-            self, message: str = "Malformed request", code: str = "invalid_input", attr: Optional[str] = None,
+        self, message: str = "Malformed request", code: str = "invalid_input", attr: Optional[str] = None,
     ) -> Dict[str, Optional[str]]:
         return {
             "type": "validation_error",
@@ -215,13 +218,13 @@ def test_with_materialized_columns(event_properties=[], person_properties=[], ve
     """
 
     try:
-        from ee.clickhouse.materialized_columns.analyze import get_materialized_columns, materialize
+        from dpa.clickhouse.materialized_columns.analyze import get_materialized_columns, materialize
     except:
         # EE not available? Just run the main test
         return lambda fn: fn
 
     def decorator(fn):
-        @pytest.mark.ee
+        @pytest.mark.dpa
         def fn_with_materialized(self, *args, **kwargs):
             # Don't run these tests under non-clickhouse classes even if decorated in base classes
             if not getattr(self, "RUN_MATERIALIZED_COLUMN_TESTS", False):
@@ -329,7 +332,7 @@ class BaseTestMigrations(QueryMatchingTest):
 
     def setUp(self):
         assert (
-                self.migrate_from and self.migrate_to  # type: ignore
+            self.migrate_from and self.migrate_to  # type: ignore
         ), "TestCase '{}' must define migrate_from and migrate_to properties".format(type(self).__name__)
         self.migrate_from = [(self.app, self.migrate_from)]  # type: ignore
         self.migrate_to = [(self.app, self.migrate_to)]
@@ -490,7 +493,7 @@ class ClickhouseDestroyTablesMixin(BaseTest):
             ]
         )
         run_clickhouse_statement_in_parallel(
-            [EVENTS_TABLE_SQL(), PERSONS_TABLE_SQL(), SESSION_RECORDING_EVENTS_TABLE_SQL(), ]
+            [EVENTS_TABLE_SQL(), PERSONS_TABLE_SQL(), SESSION_RECORDING_EVENTS_TABLE_SQL(),]
         )
         if CLICKHOUSE_REPLICATION:
             run_clickhouse_statement_in_parallel(
@@ -509,7 +512,7 @@ class ClickhouseDestroyTablesMixin(BaseTest):
             ]
         )
         run_clickhouse_statement_in_parallel(
-            [EVENTS_TABLE_SQL(), PERSONS_TABLE_SQL(), SESSION_RECORDING_EVENTS_TABLE_SQL(), ]
+            [EVENTS_TABLE_SQL(), PERSONS_TABLE_SQL(), SESSION_RECORDING_EVENTS_TABLE_SQL(),]
         )
         if CLICKHOUSE_REPLICATION:
             run_clickhouse_statement_in_parallel(

@@ -34,7 +34,8 @@ class TestPluginsUtils(BaseTest):
         mock_get.assert_called_with("https://api.github.com/repos/analytickit/analytickit/commits", headers={})
 
         parsed_url = parse_url(
-            "https://github.com/analytickit/analytickit/tree/82c9218ee40f561b7f37a22d6b6a0ca82887ee3e")
+            "https://github.com/analytickit/analytickit/tree/82c9218ee40f561b7f37a22d6b6a0ca82887ee3e"
+        )
         self.assertEqual(parsed_url["type"], "github")
         self.assertEqual(parsed_url["user"], "analytickit")
         self.assertEqual(parsed_url["repo"], "analytickit")
@@ -43,7 +44,7 @@ class TestPluginsUtils(BaseTest):
 
         parsed_url = parse_url(
             "https://github.com/analytickit/analytickit/tree/82c9218ee40f561b7f37a22d6b6a0ca82887ee3e",
-            get_latest_if_none=True
+            get_latest_if_none=True,
         )
         self.assertEqual(parsed_url["type"], "github")
         self.assertEqual(parsed_url["user"], "analytickit")
@@ -53,7 +54,8 @@ class TestPluginsUtils(BaseTest):
         mock_get.assert_called_with("https://api.github.com/repos/analytickit/analytickit/commits", headers={})
 
         parsed_url = parse_url(
-            "https://www.github.com/analytickit/analytickit/commit/82c9218ee40f561b7f37a22d6b6a0ca82887ee3e")
+            "https://www.github.com/analytickit/analytickit/commit/82c9218ee40f561b7f37a22d6b6a0ca82887ee3e"
+        )
         self.assertEqual(parsed_url["type"], "github")
         self.assertEqual(parsed_url["user"], "analytickit")
         self.assertEqual(parsed_url["repo"], "analytickit")
@@ -96,8 +98,9 @@ class TestPluginsUtils(BaseTest):
         self.assertEqual(parsed_url["private_token"], "TOKEN")
         self.assertEqual(mock_get.call_count, 1)
 
-        parsed_url = parse_url("https://github.com/analytickit/analytickit?private_token=TOKEN",
-                               get_latest_if_none=True)
+        parsed_url = parse_url(
+            "https://github.com/analytickit/analytickit?private_token=TOKEN", get_latest_if_none=True
+        )
         self.assertEqual(parsed_url["type"], "github")
         self.assertEqual(parsed_url["user"], "analytickit")
         self.assertEqual(parsed_url["repo"], "analytickit")
@@ -131,8 +134,9 @@ class TestPluginsUtils(BaseTest):
             )
             self.assertEqual(mock_get.call_count, 3)
 
-            parsed_url = parse_url("https://github.com/analytickit/analytickit?private_token=TOKEN",
-                                   get_latest_if_none=True)
+            parsed_url = parse_url(
+                "https://github.com/analytickit/analytickit?private_token=TOKEN", get_latest_if_none=True
+            )
             self.assertEqual(parsed_url["type"], "github")
             self.assertEqual(parsed_url["user"], "analytickit")
             self.assertEqual(parsed_url["repo"], "analytickit")
@@ -304,7 +308,8 @@ class TestPluginsUtils(BaseTest):
         )
 
         parsed_url = parse_url(
-            "https://www.npmjs.com/package/analytickit-helloworld-plugin/v/0.0.0?private_token=TOKEN")
+            "https://www.npmjs.com/package/analytickit-helloworld-plugin/v/0.0.0?private_token=TOKEN"
+        )
         self.assertEqual(parsed_url["type"], "npm")
         self.assertEqual(parsed_url["pkg"], "analytickit-helloworld-plugin")
         self.assertEqual(parsed_url["tag"], "0.0.0")
@@ -312,7 +317,8 @@ class TestPluginsUtils(BaseTest):
         self.assertEqual(mock_get.call_count, 3)
 
         parsed_url = parse_url(
-            "https://www.npmjs.com/package/@analytickit/helloworldplugin/v/0.0.0?private_token=TOKEN")
+            "https://www.npmjs.com/package/@analytickit/helloworldplugin/v/0.0.0?private_token=TOKEN"
+        )
         self.assertEqual(parsed_url["type"], "npm")
         self.assertEqual(parsed_url["pkg"], "@analytickit/helloworldplugin")
         self.assertEqual(parsed_url["tag"], "0.0.0")
@@ -323,7 +329,7 @@ class TestPluginsUtils(BaseTest):
         with self.settings(NPM_TOKEN="MY_NPM_TOKEN"):
             parsed_url = parse_url(
                 "https://www.npmjs.com/package/analytickit-helloworld-plugin?private_token=TOKEN",
-                get_latest_if_none=True
+                get_latest_if_none=True,
             )
             self.assertEqual(parsed_url["type"], "npm")
             self.assertEqual(parsed_url["pkg"], "analytickit-helloworld-plugin")
@@ -332,11 +338,12 @@ class TestPluginsUtils(BaseTest):
             self.assertEqual(mock_get.call_count, 4)
             mock_get.assert_called_with(
                 "https://registry.npmjs.org/analytickit-helloworld-plugin/latest",
-                headers={"Authorization": "Bearer TOKEN"}
+                headers={"Authorization": "Bearer TOKEN"},
             )
 
-            parsed_url = parse_url("https://www.npmjs.com/package/analytickit-helloworld-plugin",
-                                   get_latest_if_none=True)
+            parsed_url = parse_url(
+                "https://www.npmjs.com/package/analytickit-helloworld-plugin", get_latest_if_none=True
+            )
             self.assertEqual(parsed_url["type"], "npm")
             self.assertEqual(parsed_url["pkg"], "analytickit-helloworld-plugin")
             self.assertEqual(parsed_url["tag"], "MOCK")
@@ -456,7 +463,7 @@ class TestPluginsUtils(BaseTest):
         self.assertEqual(mock_get.call_count, 1)
         mock_get.assert_called_with(
             "https://registry.npmjs.org/analytickit-helloworld-plugin/-/analytickit-helloworld-plugin-0.0.0.tgz",
-            headers={}
+            headers={},
         )
 
         plugin_npm_tgz = download_plugin_archive(
@@ -481,7 +488,8 @@ class TestPluginsUtils(BaseTest):
             )
 
             plugin_npm_tgz = download_plugin_archive(
-                "https://www.npmjs.com/package/@analytickit/helloworldplugin/v/0.0.0")
+                "https://www.npmjs.com/package/@analytickit/helloworldplugin/v/0.0.0"
+            )
             self.assertEqual(plugin_npm_tgz, base64.b64decode(HELLO_WORLD_PLUGIN_NPM_TGZ[1]))
             self.assertEqual(mock_get.call_count, 4)
             mock_get.assert_called_with(
@@ -490,12 +498,12 @@ class TestPluginsUtils(BaseTest):
             )
 
     def test_get_file_from_archive(self, mock_get):
-        print("*****=",HELLO_WORLD_PLUGIN_GITHUB_ZIP[1])
+        # print("*****=",HELLO_WORLD_PLUGIN_GITHUB_ZIP[1])
         plugin_json_zip = cast(
             dict, get_file_from_archive(base64.b64decode(HELLO_WORLD_PLUGIN_GITHUB_ZIP[1]), "plugin.json")
         )
         self.assertEqual(plugin_json_zip["name"], "helloworldplugin")
-        self.assertEqual(plugin_json_zip["url"], "https://github.com/PostHog/helloworldplugin")
+        self.assertEqual(plugin_json_zip["url"], "https://github.com/AnalyticKit/helloworldplugin")
         self.assertEqual(plugin_json_zip["description"], "Greet the World and Foo a Bar, JS edition!")
 
         plugin_json_zip = cast(
@@ -509,7 +517,7 @@ class TestPluginsUtils(BaseTest):
             dict, get_file_from_archive(base64.b64decode(HELLO_WORLD_PLUGIN_NPM_TGZ[1]), "plugin.json")
         )
         self.assertEqual(plugin_json_tgz["name"], "helloworldplugin")
-        self.assertEqual(plugin_json_tgz["url"], "https://github.com/PostHog/helloworldplugin")
+        self.assertEqual(plugin_json_tgz["url"], "https://github.com/AnalyticKit/helloworldplugin")
         self.assertEqual(plugin_json_tgz["description"], "Greet the World and Foo a Bar, JS edition!")
 
     def test_put_json_into_zip_archive(self, mock_get):

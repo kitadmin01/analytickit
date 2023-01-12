@@ -14,8 +14,7 @@ from analytickit.models import EventDefinition, TaggedItem
 from analytickit.permissions import OrganizationMemberPermissions, TeamMemberAccessPermission
 from analytickit.settings import EE_AVAILABLE
 
-
-# If EE is enabled, we use ee.api.ee_event_definition.EnterpriseEventDefinitionSerializer
+# If EE is enabled, we use dpa.api.dpa_event_definition.EnterpriseEventDefinitionSerializer
 
 
 class EventDefinitionSerializer(TaggedItemSerializerMixin, serializers.ModelSerializer):
@@ -82,8 +81,9 @@ class EventDefinitionViewSet(
         }
 
         if EE_AVAILABLE and self.request.user.organization.is_feature_available(
-                AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
-            from ee.models.event_definition import EnterpriseEventDefinition
+            AvailableFeature.INGESTION_TAXONOMY
+        ):  # type: ignore
+            from dpa.models.event_definition import EnterpriseEventDefinition
 
             # Prevent fetching deprecated `tags` field. Tags are separately fetched in TaggedItemSerializerMixin
             sql = create_event_definitions_sql(event_type, is_enterprise=True, conditions=search_query)
@@ -103,8 +103,9 @@ class EventDefinitionViewSet(
     def get_object(self):
         id = self.kwargs["id"]
         if EE_AVAILABLE and self.request.user.organization.is_feature_available(
-                AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
-            from ee.models.event_definition import EnterpriseEventDefinition
+            AvailableFeature.INGESTION_TAXONOMY
+        ):  # type: ignore
+            from dpa.models.event_definition import EnterpriseEventDefinition
 
             enterprise_event = EnterpriseEventDefinition.objects.filter(id=id).first()
             if enterprise_event:
@@ -123,8 +124,9 @@ class EventDefinitionViewSet(
     def get_serializer_class(self) -> Type[serializers.ModelSerializer]:
         serializer_class = self.serializer_class
         if EE_AVAILABLE and self.request.user.organization.is_feature_available(
-                AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
-            from ee.api.ee_event_definition import EnterpriseEventDefinitionSerializer
+            AvailableFeature.INGESTION_TAXONOMY
+        ):  # type: ignore
+            from dpa.api.dpa_event_definition import EnterpriseEventDefinitionSerializer
 
             serializer_class = EnterpriseEventDefinitionSerializer  # type: ignore
         return serializer_class

@@ -1,5 +1,5 @@
 # name: Test0005PersonCollapsedByVersion.test_migration_schema
-  '''
+  '
   CREATE TABLE analytickit_test.kafka_person
   (
       `id` UUID,
@@ -11,10 +11,10 @@
       `version` UInt64
   )
   ENGINE = Kafka('kafka:9092', 'clickhouse_person_test', 'group1', 'JSONEachRow')
-  '''
-# ---
+  '
+---
 # name: Test0005PersonCollapsedByVersion.test_migration_schema.1
-  '''
+  '
   CREATE TABLE analytickit_test.person
   (
       `id` UUID,
@@ -30,10 +30,10 @@
   ENGINE = ReplicatedReplacingMergeTree('/clickhouse/tables/am0005_20220601000000_noshard/analytickit.person', '{replica}-{shard}', version)
   ORDER BY (team_id, id)
   SETTINGS index_granularity = 8192
-  '''
-# ---
+  '
+---
 # name: Test0005PersonCollapsedByVersion.test_migration_schema.2
-  '''
+  '
   CREATE TABLE analytickit_test.person_backup_0005_person_replacing_by_version
   (
       `id` UUID,
@@ -49,10 +49,10 @@
   ENGINE = ReplicatedReplacingMergeTree('/clickhouse/tables/00000000-0000-0000-0000-000000000000-noshard/analytickit.person', '{replica}-{shard}', _timestamp)
   ORDER BY (team_id, id)
   SETTINGS index_granularity = 819
-  '''
-# ---
+  '
+---
 # name: Test0005PersonCollapsedByVersion.test_migration_schema.3
-  '''
+  '
   CREATE MATERIALIZED VIEW analytickit_test.person_mv TO analytickit_test.person
   (
       `id` UUID,
@@ -76,5 +76,5 @@
       _timestamp,
       _offset
   FROM analytickit_test.kafka_person
-  '''
-# ---
+  '
+---

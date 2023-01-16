@@ -34,16 +34,16 @@ class UserManager(BaseUserManager):
         return user
 
     def bootstrap(
-            self,
-            organization_name: str,
-            email: str,
-            password: Optional[str],
-            first_name: str = "",
-            organization_fields: Optional[Dict[str, Any]] = None,
-            team_fields: Optional[Dict[str, Any]] = None,
-            create_team: Optional[Callable[["Organization", "User"], "Team"]] = None,
-            is_staff: bool = False,
-            **user_fields,
+        self,
+        organization_name: str,
+        email: str,
+        password: Optional[str],
+        first_name: str = "",
+        organization_fields: Optional[Dict[str, Any]] = None,
+        team_fields: Optional[Dict[str, Any]] = None,
+        create_team: Optional[Callable[["Organization", "User"], "Team"]] = None,
+        is_staff: bool = False,
+        **user_fields,
     ) -> Tuple["Organization", "Team", "User"]:
         """Instead of doing the legwork of creating a user from scratch, delegate the details with bootstrap."""
         with transaction.atomic():
@@ -63,13 +63,13 @@ class UserManager(BaseUserManager):
             return organization, team, user
 
     def create_and_join(
-            self,
-            organization: Organization,
-            email: str,
-            password: Optional[str],
-            first_name: str = "",
-            level: OrganizationMembership.Level = OrganizationMembership.Level.MEMBER,
-            **extra_fields,
+        self,
+        organization: Organization,
+        email: str,
+        password: Optional[str],
+        first_name: str = "",
+        level: OrganizationMembership.Level = OrganizationMembership.Level.MEMBER,
+        **extra_fields,
     ) -> "User":
         with transaction.atomic():
             user = self.create_user(email=email, password=password, first_name=first_name, **extra_fields)
@@ -137,10 +137,10 @@ class User(AbstractUser, UUIDClassicModel):
         """
         teams = Team.objects.filter(organization__members=self)
         if Organization.objects.filter(
-                members=self, available_features__contains=[AvailableFeature.PROJECT_BASED_PERMISSIONING]
+            members=self, available_features__contains=[AvailableFeature.PROJECT_BASED_PERMISSIONING]
         ).exists():
             try:
-                from ee.models import ExplicitTeamMembership
+                from dpa.models import ExplicitTeamMembership
             except ImportError:
                 pass
             else:
@@ -179,15 +179,14 @@ class User(AbstractUser, UUIDClassicModel):
         return self.current_team
 
     def join(
-            self, *, organization: Organization,
-            level: OrganizationMembership.Level = OrganizationMembership.Level.MEMBER,
+        self, *, organization: Organization, level: OrganizationMembership.Level = OrganizationMembership.Level.MEMBER,
     ) -> OrganizationMembership:
         with transaction.atomic():
             membership = OrganizationMembership.objects.create(user=self, organization=organization, level=level)
             self.current_organization = organization
             if (
-                    AvailableFeature.PROJECT_BASED_PERMISSIONING not in organization.available_features
-                    or level >= OrganizationMembership.Level.ADMIN
+                AvailableFeature.PROJECT_BASED_PERMISSIONING not in organization.available_features
+                or level >= OrganizationMembership.Level.ADMIN
             ):
                 # If project access control is NOT applicable, simply prefer open projects just in case
                 self.current_team = organization.teams.order_by("access_control", "id").first()
@@ -214,7 +213,7 @@ class User(AbstractUser, UUIDClassicModel):
     def get_analytics_metadata(self):
 
         team_member_count_all: int = (
-            OrganizationMembership.objects.filter(organization__in=self.organizations.all(), )
+            OrganizationMembership.objects.filter(organization__in=self.organizations.all(),)
             .values("user_id")
             .distinct()
             .count()

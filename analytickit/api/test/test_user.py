@@ -98,10 +98,10 @@ class TestUserAPI(APIBaseTest):
             ],
         )
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_organization_metadata_on_user_serializer(self):
         try:
-            from ee.models import EnterpriseEventDefinition, EnterprisePropertyDefinition
+            from dpa.models import EnterpriseEventDefinition, EnterprisePropertyDefinition
         except ImportError:
             pass
         else:
@@ -228,11 +228,11 @@ class TestUserAPI(APIBaseTest):
             properties={
                 "updated_attrs": ["anonymize_data", "email", "email_opt_in", "events_column_config", "first_name"],
             },
-            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid), },
+            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid),},
         )
 
     def test_cannot_upgrade_yourself_to_staff_user(self):
-        response = self.client.patch("/api/users/@me/", {"is_staff": True}, )
+        response = self.client.patch("/api/users/@me/", {"is_staff": True},)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(
@@ -244,7 +244,7 @@ class TestUserAPI(APIBaseTest):
 
     @patch("analytickitanalytics.capture")
     def test_can_update_current_organization(self, mock_capture):
-        response = self.client.patch("/api/users/@me/", {"set_current_organization": str(self.new_org.id)}, )
+        response = self.client.patch("/api/users/@me/", {"set_current_organization": str(self.new_org.id)},)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_data = response.json()
         self.assertEqual(response_data["organization"]["id"], str(self.new_org.id))
@@ -262,7 +262,7 @@ class TestUserAPI(APIBaseTest):
             self.user.distinct_id,
             "user updated",
             properties={"updated_attrs": ["current_organization", "current_team"]},
-            groups={"instance": ANY, "organization": str(self.new_org.id), "project": str(self.new_project.uuid), },
+            groups={"instance": ANY, "organization": str(self.new_org.id), "project": str(self.new_project.uuid),},
         )
 
     @patch("analytickitanalytics.capture")
@@ -285,7 +285,7 @@ class TestUserAPI(APIBaseTest):
             self.user.distinct_id,
             "user updated",
             properties={"updated_attrs": ["current_organization", "current_team"]},
-            groups={"instance": ANY, "organization": str(self.new_org.id), "project": str(team.uuid), },
+            groups={"instance": ANY, "organization": str(self.new_org.id), "project": str(team.uuid),},
         )
 
     def test_cannot_set_mismatching_org_and_team(self):
@@ -416,7 +416,7 @@ class TestUserAPI(APIBaseTest):
             user.distinct_id,
             "user updated",
             properties={"updated_attrs": ["password"]},
-            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid), },
+            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid),},
         )
 
         # User can log in with new password
@@ -449,12 +449,13 @@ class TestUserAPI(APIBaseTest):
             user.distinct_id,
             "user updated",
             properties={"updated_attrs": ["password"]},
-            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid), },
+            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid),},
         )
 
         # User can log in with new password
-        response = self.client.post("/api/login",
-                                    {"email": "no_password@analytickit.com", "password": "a_new_password"})
+        response = self.client.post(
+            "/api/login", {"email": "no_password@analytickit.com", "password": "a_new_password"}
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_with_unusable_password_set_can_set_password(self):
@@ -463,7 +464,7 @@ class TestUserAPI(APIBaseTest):
         user.save()
         self.client.force_login(user)
 
-        response = self.client.patch("/api/users/@me/", {"password": "a_new_password"}, )
+        response = self.client.patch("/api/users/@me/", {"password": "a_new_password"},)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Assert session is still valid

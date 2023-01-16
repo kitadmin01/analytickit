@@ -38,8 +38,9 @@ class Dashboard(models.Model):
     restriction_level: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
         default=RestrictionLevel.EVERYONE_IN_PROJECT_CAN_EDIT, choices=RestrictionLevel.choices,
     )
-    insights = models.ManyToManyField("analytickit.Insight", related_name="dashboards", through="DashboardTile",
-                                      blank=True)
+    insights = models.ManyToManyField(
+        "analytickit.Insight", related_name="dashboards", through="DashboardTile", blank=True
+    )
 
     # Deprecated in favour of app-wide tagging model. See EnterpriseTaggedItem
     deprecated_tags: ArrayField = ArrayField(models.CharField(max_length=32), null=True, blank=True, default=list)
@@ -71,16 +72,16 @@ class Dashboard(models.Model):
 
     def get_effective_privilege_level(self, user_id: int) -> PrivilegeLevel:
         if (
-                # Checks can be skipped if the dashboard in on the lowest restriction level
-                self.effective_restriction_level == self.RestrictionLevel.EVERYONE_IN_PROJECT_CAN_EDIT
-                # Users with restriction rights can do anything
-                or self.can_user_restrict(user_id)
+            # Checks can be skipped if the dashboard in on the lowest restriction level
+            self.effective_restriction_level == self.RestrictionLevel.EVERYONE_IN_PROJECT_CAN_EDIT
+            # Users with restriction rights can do anything
+            or self.can_user_restrict(user_id)
         ):
             # Returning the highest access level if no checks needed
             return self.PrivilegeLevel.CAN_EDIT
 
         try:
-            from ee.models import DashboardPrivilege
+            from dpa.models import DashboardPrivilege
         except ImportError:
             return self.PrivilegeLevel.CAN_VIEW
         else:
@@ -106,8 +107,8 @@ class Dashboard(models.Model):
             return True
         effective_project_membership_level = self.team.get_effective_membership_level(user_id)
         return (
-                effective_project_membership_level is not None
-                and effective_project_membership_level >= OrganizationMembership.Level.ADMIN
+            effective_project_membership_level is not None
+            and effective_project_membership_level >= OrganizationMembership.Level.ADMIN
         )
 
     def get_analytics_metadata(self) -> Dict[str, Any]:

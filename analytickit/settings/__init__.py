@@ -24,7 +24,7 @@ from analytickit.settings.async_migrations import *
 from analytickit.settings.celery import *
 from analytickit.settings.data_stores import *
 from analytickit.settings.dynamic_settings import *
-from analytickit.settings.ee import *
+from analytickit.settings.dpa import *
 from analytickit.settings.ingestion import *
 from analytickit.settings.feature_flags import *
 from analytickit.settings.geoip import *
@@ -100,7 +100,7 @@ HOOK_EVENTS: Dict[str, str] = {}
 MULTI_ORG_ENABLED = get_from_env("MULTI_ORG_ENABLED", False, type_cast=str_to_bool)
 
 # Overriden by analytickit-cloud
-MULTI_TENANCY = False
+MULTI_TENANCY = True
 
 CACHED_RESULTS_TTL = 7 * 24 * 60 * 60  # how long to keep cached results for
 SESSION_RECORDING_TTL = 30  # how long to keep session recording cache. Relatively short because cached result is used throughout the duration a session recording loads.
@@ -125,8 +125,8 @@ KAFKA_RECORDING_EVENTS_TO_OBJECT_STORAGE_INGESTION_TOPIC: str = os.getenv(
 CLEAR_CLICKHOUSE_REMOVED_DATA_SCHEDULE_CRON = get_from_env("CLEAR_CLICKHOUSE_REMOVED_DATA_SCHEDULE_CRON", optional=True)
 
 # Extend and override these settings with EE's ones
-if "ee.apps.EnterpriseConfig" in INSTALLED_APPS:
-    from ee.settings import *  # noqa: F401, F403
+if "dpa.apps.EnterpriseConfig" in INSTALLED_APPS:
+    from dpa.settings import *  # noqa: F401, F403
 
 # Lastly, cloud settings override and modify all
 from analytickit.settings.cloud import *  # noqa: F401

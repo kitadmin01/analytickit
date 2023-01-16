@@ -34,7 +34,7 @@ class TestPreflight(APIBaseTest):
             "clickhouse": True,
             "kafka": True,
             "realm": "hosted-clickhouse",
-            "available_social_auth_providers": {"google-oauth2": False, "github": False, "gitlab": False, },
+            "available_social_auth_providers": {"google-oauth2": False, "github": False, "gitlab": False,},
             "can_create_org": False,
             "email_service_available": False,
             "slack_service": {"available": False, "client_id": None},
@@ -54,7 +54,7 @@ class TestPreflight(APIBaseTest):
             "licensed_users_available": None,
             "site_url": "http://localhost:8000",
             "can_create_org": False,
-            "instance_preferences": {"debug_queries": True, "disable_paid_fs": False, },
+            "instance_preferences": {"debug_queries": True, "disable_paid_fs": False,},
             "object_storage": False,
             "buffer_conversion_seconds": 60,
         }
@@ -76,9 +76,9 @@ class TestPreflight(APIBaseTest):
 
     def test_preflight_request(self):
         with self.settings(
-                MULTI_TENANCY=False,
-                INSTANCE_PREFERENCES=self.instance_preferences(debug_queries=True),
-                OBJECT_STORAGE_ENABLED=False,
+            MULTI_TENANCY=False,
+            INSTANCE_PREFERENCES=self.instance_preferences(debug_queries=True),
+            OBJECT_STORAGE_ENABLED=False,
         ):
             response = self.client.get("/_preflight/")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -93,9 +93,9 @@ class TestPreflight(APIBaseTest):
         patched_s3_client.head_bucket.return_value = True
 
         with self.settings(
-                MULTI_TENANCY=False,
-                INSTANCE_PREFERENCES=self.instance_preferences(debug_queries=True),
-                OBJECT_STORAGE_ENABLED=True,
+            MULTI_TENANCY=False,
+            INSTANCE_PREFERENCES=self.instance_preferences(debug_queries=True),
+            OBJECT_STORAGE_ENABLED=True,
         ):
             response = self.client.get("/_preflight/")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -105,7 +105,7 @@ class TestPreflight(APIBaseTest):
             self.assertEqual(response, self.preflight_authenticated_dict({"object_storage": True}))
             self.assertDictContainsSubset({"Europe/Moscow": 3, "UTC": 0}, available_timezones)
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_cloud_preflight_request_unauthenticated(self):
         set_instance_setting("EMAIL_HOST", "localhost")
         set_instance_setting("SLACK_APP_CLIENT_ID", "slack-client-id")
@@ -121,7 +121,7 @@ class TestPreflight(APIBaseTest):
                 self.preflight_dict(
                     {
                         "email_service_available": True,
-                        "slack_service": {"available": True, "client_id": "slack-client-id", },
+                        "slack_service": {"available": True, "client_id": "slack-client-id",},
                         "can_create_org": True,
                         "cloud": True,
                         "realm": "cloud",
@@ -129,9 +129,9 @@ class TestPreflight(APIBaseTest):
                 ),
             )
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_cloud_preflight_request(self):
-        with self.settings(MULTI_TENANCY=True, SITE_URL="https://app.analytickit.com", OBJECT_STORAGE_ENABLED=False):
+        with self.settings(MULTI_TENANCY=True, SITE_URL="https://analytickit.com", OBJECT_STORAGE_ENABLED=False):
             response = self.client.get("/_preflight/")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             response = response.json()
@@ -144,23 +144,23 @@ class TestPreflight(APIBaseTest):
                         "can_create_org": True,
                         "cloud": True,
                         "realm": "cloud",
-                        "instance_preferences": {"debug_queries": False, "disable_paid_fs": False, },
-                        "site_url": "https://app.analytickit.com",
+                        "instance_preferences": {"debug_queries": False, "disable_paid_fs": False,},
+                        "site_url": "https://analytickit.com",
                     }
                 ),
             )
             self.assertDictContainsSubset({"Europe/Moscow": 3, "UTC": 0}, available_timezones)
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_cloud_preflight_request_with_social_auth_providers(self):
         set_instance_setting("EMAIL_HOST", "localhost")
 
         with self.settings(
-                SOCIAL_AUTH_GOOGLE_OAUTH2_KEY="test_key",
-                SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET="test_secret",
-                MULTI_TENANCY=True,
-                INSTANCE_PREFERENCES=self.instance_preferences(disable_paid_fs=True),
-                OBJECT_STORAGE_ENABLED=False,
+            SOCIAL_AUTH_GOOGLE_OAUTH2_KEY="test_key",
+            SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET="test_secret",
+            MULTI_TENANCY=True,
+            INSTANCE_PREFERENCES=self.instance_preferences(disable_paid_fs=True),
+            OBJECT_STORAGE_ENABLED=False,
         ):
             response = self.client.get("/_preflight/")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -174,9 +174,9 @@ class TestPreflight(APIBaseTest):
                         "can_create_org": True,
                         "cloud": True,
                         "realm": "cloud",
-                        "instance_preferences": {"debug_queries": False, "disable_paid_fs": True, },
+                        "instance_preferences": {"debug_queries": False, "disable_paid_fs": True,},
                         "site_url": "http://localhost:8000",
-                        "available_social_auth_providers": {"google-oauth2": True, "github": False, "gitlab": False, },
+                        "available_social_auth_providers": {"google-oauth2": True, "github": False, "gitlab": False,},
                         "email_service_available": True,
                     }
                 ),
@@ -193,11 +193,11 @@ class TestPreflight(APIBaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), self.preflight_dict({"demo": True, "can_create_org": True, "realm": "demo"}))
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     @pytest.mark.skip_on_multitenancy
     def test_ee_preflight_with_users_limit(self):
         try:
-            from ee.models.license import License, LicenseManager
+            from dpa.models.license import License, LicenseManager
         except ImportError:
             pass
         else:
@@ -222,7 +222,7 @@ class TestPreflight(APIBaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["can_create_org"], True)
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     @pytest.mark.skip_on_multitenancy
     def test_can_create_org_with_multi_org(self):
         # First with no license
@@ -232,7 +232,7 @@ class TestPreflight(APIBaseTest):
         self.assertEqual(response.json()["can_create_org"], False)
 
         try:
-            from ee.models.license import License, LicenseManager
+            from dpa.models.license import License, LicenseManager
         except ImportError:
             pass
         else:

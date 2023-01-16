@@ -2,7 +2,7 @@ import fetch, { Headers, Response } from 'node-fetch'
 
 import { Hub, PluginConfig } from '../../../types'
 
-const DEFAULT_API_HOST = 'https://app.analytickit.com'
+const DEFAULT_API_HOST = 'https://dpa.analytickit.com'
 
 interface ApiMethodOptions {
     headers?: Headers
@@ -65,8 +65,9 @@ export function createApi(server: Hub, pluginConfig: PluginConfig): ApiExtension
                 ? { ...options.data, ...tokenParam }
                 : tokenParam
         )
-        const url = `${host}/${path.replace('@current', pluginConfig.team_id.toString())}${path.includes('?') ? '&' : '?'
-            }${urlParams.toString()}`
+        const url = `${host}/${path.replace('@current', pluginConfig.team_id.toString())}${
+            path.includes('?') ? '&' : '?'
+        }${urlParams.toString()}`
         const headers = {
             Authorization: `Bearer ${apiKey}`,
             ...(method === ApiMethod.Post ? { 'Content-Type': 'application/json' } : {}),

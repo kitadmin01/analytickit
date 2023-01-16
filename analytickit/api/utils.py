@@ -335,7 +335,7 @@ def create_event_definitions_sql(
 ) -> str:
     # Prevent fetching deprecated `tags` field. Tags are separately fetched in TaggedItemSerializerMixin
     if is_enterprise:
-        from ee.models import EnterpriseEventDefinition
+        from dpa.models import EnterpriseEventDefinition
 
         ee_model = EnterpriseEventDefinition
     else:

@@ -19,13 +19,13 @@ function AndroidSetupSnippet(): JSX.Element {
     return (
         <CodeSnippet language={Language.Java}>
             {`public class SampleApp extends Application {
-    private static final String analytickit_API_KEY = "${currentTeam?.api_token}";
-    private static final String analytickit_HOST = "${window.location.origin}";
+    private static final String ANALYTICKIT_API_KEY = "${currentTeam?.api_token}";
+    private static final String ANALYTICKIT_HOST = "${window.location.origin}";
 
     @Override
     public void onCreate() {
         // Create a analytickit client with the given context, API key and host
-        analytickit analytickit = new analytickit.Builder(this, analytickit_API_KEY, analytickit_HOST)
+        analytickit analytickit = new analytickit.Builder(this, ANALYTICKIT_API_KEY, ANALYTICKIT_HOST)
             .captureApplicationLifecycleEvents() // Record certain application events automatically!
             .recordScreenViews() // Record screen views automatically!
             .build();

@@ -1,15 +1,15 @@
-import {expectLogic} from 'kea-test-utils'
-import {initKeaTests} from '~/test/init'
-import {MOCK_DEFAULT_ORGANIZATION} from '../lib/api.mock'
-import {AppContext} from '../types'
-import {organizationLogic} from './organizationLogic'
+import { expectLogic } from 'kea-test-utils'
+import { initKeaTests } from '~/test/init'
+import { MOCK_DEFAULT_ORGANIZATION } from '../lib/api.mock'
+import { AppContext } from '../types'
+import { organizationLogic } from './organizationLogic'
 
 describe('organizationLogic', () => {
     let logic: ReturnType<typeof organizationLogic.build>
 
-    describe('if analytickit_APP_CONTEXT available', () => {
+    describe('if ANALYTICKIT_APP_CONTEXTavailable', () => {
         beforeEach(() => {
-            window.analytickit_APP_CONTEXT = { current_user: { organization: { id: 'WXYZ' } } } as unknown as AppContext
+            window.ANALYTICKIT_APP_CONTEXT = { current_user: { organization: { id: 'WXYZ' } } } as unknown as AppContext
             initKeaTests()
             logic = organizationLogic()
             logic.mount()
@@ -24,9 +24,9 @@ describe('organizationLogic', () => {
         })
     })
 
-    describe('if analytickit_APP_CONTEXT not available', () => {
+    describe('if ANALYTICKIT_APP_CONTEXTnot available', () => {
         beforeEach(async () => {
-            window.analytickit_APP_CONTEXT = undefined as unknown as AppContext
+            window.ANALYTICKIT_APP_CONTEXT = undefined as unknown as AppContext
             initKeaTests()
             logic = organizationLogic()
             logic.mount()

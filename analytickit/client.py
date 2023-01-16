@@ -56,7 +56,7 @@ _request_information: Optional[Dict] = None
 
 # Optimize_move_to_prewhere setting is set because of this regression test
 # test_ilike_regression_with_current_clickhouse_version
-# https://github.com/AnalyticKit/analytickit/blob/master/ee/clickhouse/queries/test/test_trends.py#L1566
+# https://github.com/AnalyticKit/analytickit/blob/master/dpa/clickhouse/queries/test/test_trends.py#L1566
 settings_override = {"optimize_move_to_prewhere": 0}
 
 
@@ -176,10 +176,10 @@ def sync_execute(query, args=None, settings=None, with_column_types=False, flush
 
 
 def query_with_columns(
-        query: str,
-        args: Optional[QueryArgs] = None,
-        columns_to_remove: Optional[Sequence[str]] = None,
-        columns_to_rename: Optional[Dict[str, str]] = None,
+    query: str,
+    args: Optional[QueryArgs] = None,
+    columns_to_remove: Optional[Sequence[str]] = None,
+    columns_to_rename: Optional[Dict[str, str]] = None,
 ) -> List[Dict]:
     if columns_to_remove is None:
         columns_to_remove = []
@@ -227,7 +227,7 @@ def generate_redis_results_key(query_id):
 
 
 def execute_with_progress(
-        team_id, query_id, query, args=None, settings=None, with_column_types=False, update_freq=0.2, task_id=None
+    team_id, query_id, query, args=None, settings=None, with_column_types=False, update_freq=0.2, task_id=None
 ):
     """
     Kick off query with progress reporting
@@ -325,10 +325,8 @@ def execute_with_progress(
             save_query(prepared_sql, execution_time)
 
 
-
 def enqueue_execute_with_progress(
-        team_id, query, args=None, settings=None, with_column_types=False, bypass_celery=False, query_id=None,
-        force=False
+    team_id, query, args=None, settings=None, with_column_types=False, bypass_celery=False, query_id=None, force=False
 ):
     if not query_id:
         query_id = _query_hash(query, team_id, args)
@@ -386,7 +384,7 @@ def get_status_or_results(team_id, query_id):
         if query_status.team_id != team_id:
             raise Exception("Requesting team is not executing team")
     except Exception as e:
-        query_status = QueryStatus(team_id, error=True, error_message=str(e))  
+        query_status = QueryStatus(team_id, error=True, error_message=str(e))
     return query_status
 
 

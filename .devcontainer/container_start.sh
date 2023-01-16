@@ -1,3 +1,3 @@
 #!/bin/env zsh
 
-echo "printf 'Hello 🦔! To start analytickit run this:\n "./ee/bin/docker-ch-dev-web"\n'" > ~/.zshrc
+echo "printf 'Hello 🦔! To start analytickit run this:\n "./dpa/bin/docker-ch-dev-web"\n'" > ~/.zshrc

@@ -65,10 +65,11 @@ class PropertyDefinitionViewSet(
 
     def get_queryset(self):
         use_entreprise_taxonomy = self.request.user.organization.is_feature_available(
-            AvailableFeature.INGESTION_TAXONOMY)  # type: ignore
+            AvailableFeature.INGESTION_TAXONOMY
+        )  # type: ignore
         if use_entreprise_taxonomy:
             try:
-                from ee.models.property_definition import EnterprisePropertyDefinition
+                from dpa.models.property_definition import EnterprisePropertyDefinition
             except ImportError:
                 use_entreprise_taxonomy = False
 
@@ -127,8 +128,11 @@ class PropertyDefinitionViewSet(
         if use_entreprise_taxonomy:
             # Prevent fetching deprecated `tags` field. Tags are separately fetched in TaggedItemSerializerMixin
             property_definition_fields = ", ".join(
-                [f'"{f.column}"' for f in EnterprisePropertyDefinition._meta.get_fields() if
-                 hasattr(f, "column") and f.column not in ["deprecated_tags", "tags"]],  # type: ignore
+                [
+                    f'"{f.column}"'
+                    for f in EnterprisePropertyDefinition._meta.get_fields()
+                    if hasattr(f, "column") and f.column not in ["deprecated_tags", "tags"]
+                ],  # type: ignore
             )
 
             return EnterprisePropertyDefinition.objects.raw(
@@ -166,7 +170,7 @@ class PropertyDefinitionViewSet(
         serializer_class = self.serializer_class
         if self.request.user.organization.is_feature_available(AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
             try:
-                from ee.api.ee_property_definition import EnterprisePropertyDefinitionSerializer
+                from dpa.api.dpa_property_definition import EnterprisePropertyDefinitionSerializer
             except ImportError:
                 pass
             else:
@@ -177,7 +181,7 @@ class PropertyDefinitionViewSet(
         id = self.kwargs["id"]
         if self.request.user.organization.is_feature_available(AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
             try:
-                from ee.models.property_definition import EnterprisePropertyDefinition
+                from dpa.models.property_definition import EnterprisePropertyDefinition
             except ImportError:
                 pass
             else:

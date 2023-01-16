@@ -15,9 +15,7 @@ const GRACEFUL_EXIT_PERIOD_SECONDS = 5
 /** Number of Redis error events until the server is killed gracefully. */
 const REDIS_ERROR_COUNTER_LIMIT = 10
 
-export class NoRowsUpdatedError extends Error {
-
-}
+export class NoRowsUpdatedError extends Error {}
 
 export function killGracefully(): void {
     status.error('⏲', 'Shutting plugin server down gracefully with SIGTERM...')
@@ -51,9 +49,9 @@ export function setLogLevel(logLevel: LogLevel): void {
         const logFunction = (console as any)[loopLevel]
         if (logFunction) {
             const originalFunction = logFunction._original || logFunction
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                ; (console as any)[loopLevel] = () => { }
-                ; (console as any)[loopLevel]._original = originalFunction
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            ;(console as any)[loopLevel] = () => {}
+            ;(console as any)[loopLevel]._original = originalFunction
         }
     }
 }
@@ -89,8 +87,8 @@ export class UUID {
     static validateString(candidate: any, throwOnInvalid = true): boolean {
         const isValid = Boolean(
             candidate &&
-            typeof candidate === 'string' &&
-            candidate.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i)
+                typeof candidate === 'string' &&
+                candidate.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i)
         )
         if (!isValid && throwOnInvalid) {
             throw new Error(
@@ -310,14 +308,14 @@ export async function tryTwice<T extends any>(
 }
 
 export async function createRedis(serverConfig: PluginsServerConfig): Promise<Redis.Redis> {
-    const credentials: Partial<RedisOptions> | undefined = serverConfig.analytickit_REDIS_HOST
+    const credentials: Partial<RedisOptions> | undefined = serverConfig.ANALYTICKIT_REDIS_HOST
         ? {
-            password: serverConfig.analytickit_REDIS_PASSWORD,
-            port: serverConfig.analytickit_REDIS_PORT,
-        }
+              password: serverConfig.ANALYTICKIT_REDIS_PASSWORD,
+              port: serverConfig.ANALYTICKIT_REDIS_PORT,
+          }
         : undefined
 
-    const redis = new Redis(credentials ? serverConfig.analytickit_REDIS_HOST : serverConfig.REDIS_URL, {
+    const redis = new Redis(credentials ? serverConfig.ANALYTICKIT_REDIS_HOST : serverConfig.REDIS_URL, {
         ...credentials,
         maxRetriesPerRequest: -1,
     })
@@ -359,26 +357,26 @@ export function createPostgresPool(
     onError?: (error: Error) => any
 ): Pool {
     if (typeof configOrDatabaseUrl !== 'string') {
-        if (!configOrDatabaseUrl.DATABASE_URL && !configOrDatabaseUrl.analytickit_DB_NAME) {
-            throw new Error('Invalid configuration for Postgres: either DATABASE_URL or analytickit_DB_NAME required')
+        if (!configOrDatabaseUrl.DATABASE_URL && !configOrDatabaseUrl.ANALYTICKIT_DB_NAME) {
+            throw new Error('Invalid configuration for Postgres: either DATABASE_URL or ANALYTICKIT_DB_NAME required')
         }
     }
     const credentials: Partial<PoolConfig> =
         typeof configOrDatabaseUrl === 'string'
             ? {
-                connectionString: configOrDatabaseUrl,
-            }
+                  connectionString: configOrDatabaseUrl,
+              }
             : configOrDatabaseUrl.DATABASE_URL
-                ? {
-                    connectionString: configOrDatabaseUrl.DATABASE_URL,
-                }
-                : {
-                    database: configOrDatabaseUrl.analytickit_DB_NAME ?? undefined,
-                    user: configOrDatabaseUrl.analytickit_DB_USER,
-                    password: configOrDatabaseUrl.analytickit_DB_PASSWORD,
-                    host: configOrDatabaseUrl.analytickit_POSTGRES_HOST,
-                    port: configOrDatabaseUrl.analytickit_POSTGRES_PORT,
-                }
+            ? {
+                  connectionString: configOrDatabaseUrl.DATABASE_URL,
+              }
+            : {
+                  database: configOrDatabaseUrl.ANALYTICKIT_DB_NAME ?? undefined,
+                  user: configOrDatabaseUrl.ANALYTICKIT_DB_USER,
+                  password: configOrDatabaseUrl.ANALYTICKIT_DB_PASSWORD,
+                  host: configOrDatabaseUrl.ANALYTICKIT_POSTGRES_HOST,
+                  port: configOrDatabaseUrl.ANALYTICKIT_POSTGRES_PORT,
+              }
 
     const pgPool = new Pool({
         ...credentials,
@@ -386,8 +384,8 @@ export function createPostgresPool(
         max: 10,
         ssl: process.env.DYNO // Means we are on Heroku
             ? {
-                rejectUnauthorized: false,
-            }
+                  rejectUnauthorized: false,
+              }
             : undefined,
     })
 
@@ -480,18 +478,18 @@ export function groupBy<T extends Record<string, any>, K extends keyof T>(
 ): Record<T[K], T[] | T> {
     return flat
         ? objects.reduce((grouping, currentItem) => {
-            if (currentItem[key] in grouping) {
-                throw new Error(
-                    `Key "${String(key)}" has more than one matching value, which is not allowed in flat groupBy!`
-                )
-            }
-            grouping[currentItem[key]] = currentItem
-            return grouping
-        }, {} as Record<T[K], T>)
+              if (currentItem[key] in grouping) {
+                  throw new Error(
+                      `Key "${String(key)}" has more than one matching value, which is not allowed in flat groupBy!`
+                  )
+              }
+              grouping[currentItem[key]] = currentItem
+              return grouping
+          }, {} as Record<T[K], T>)
         : objects.reduce((grouping, currentItem) => {
-            ; (grouping[currentItem[key]] = grouping[currentItem[key]] || []).push(currentItem)
-            return grouping
-        }, {} as Record<T[K], T[]>)
+              ;(grouping[currentItem[key]] = grouping[currentItem[key]] || []).push(currentItem)
+              return grouping
+          }, {} as Record<T[K], T[]>)
 }
 
 export function clamp(value: number, min: number, max: number): number {

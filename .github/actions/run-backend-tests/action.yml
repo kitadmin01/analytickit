@@ -13,7 +13,7 @@ inputs:
     clickhouse-server-image:
         required: true
         type: string
-    ee:
+    dpa:
         required: true
         type: boolean
     foss:
@@ -93,14 +93,14 @@ runs:
           if: ${{ inputs.foss == 'true' }}
           shell: bash
           run: |
-              pytest -m "not ee and not async_migrations" analytickit/ --cov  --cov-report=xml:coverage-postgres.xml \
+              pytest -m "not dpa and not async_migrations" analytickit/ --cov  --cov-report=xml:coverage-postgres.xml \
                 --durations=150 --durations-min=1.0 $PYTEST_ARGS
 
-        - name: Run ee/ tests
-          if: ${{ inputs.ee == 'true' && inputs.person-on-events != 'true' }}
+        - name: Run dpa/ tests
+          if: ${{ inputs.dpa == 'true' && inputs.person-on-events != 'true' }}
           shell: bash
           run: |
-              pytest ee \
+              pytest dpa \
                   --splits ${{ inputs.concurrency }} \
                   --group ${{ inputs.group }} \
                   --store-durations \
@@ -109,20 +109,20 @@ runs:
                   --durations=100 --durations-min=1.0 \
                   $PYTEST_ARGS
 
-        - name: Run ee/ tests with person-on-events, no snapshot commits
-          if: ${{ inputs.ee == 'true' && inputs.person-on-events == 'true' }}
+        - name: Run dpa/ tests with person-on-events, no snapshot commits
+          if: ${{ inputs.dpa == 'true' && inputs.person-on-events == 'true' }}
           shell: bash
           run: |
-              ENABLE_ACTOR_ON_EVENTS_TEAMS=all pytest ee \
+              ENABLE_ACTOR_ON_EVENTS_TEAMS=all pytest dpa \
                   --splits ${{ inputs.concurrency }} \
                   --group ${{ inputs.group }} \
                   $PYTEST_ARGS
 
-        - name: Run pytest.mark.ee tests
-          if: ${{ inputs.ee == 'true' && inputs.group == '1' }}
+        - name: Run pytest.mark.dpa tests
+          if: ${{ inputs.dpa == 'true' && inputs.group == '1' }}
           shell: bash
           run: |
-              pytest analytickit -m "ee" --durations=100 --durations-min=1.0
+              pytest analytickit -m "dpa" --durations=100 --durations-min=1.0
 
         - uses: codecov/codecov-action@v2
           if: ${{ inputs.cloud == 'false' }}
@@ -133,7 +133,7 @@ runs:
 
         - name: Upload updated timing data as artifacts
           uses: actions/upload-artifact@v2
-          if: ${{ inputs.ee == 'true' && inputs.person-on-events != 'true'}}
+          if: ${{ inputs.dpa == 'true' && inputs.person-on-events != 'true'}}
           with:
               name: timing_data-${{ inputs.group }}
               path: .test_durations

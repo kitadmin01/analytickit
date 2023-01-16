@@ -157,7 +157,6 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
         )
 
 
-
 # Set up clickhouse query instrumentation
 @task_prerun.connect
 def set_up_instrumentation(task_id, task, **kwargs):
@@ -189,7 +188,7 @@ def redis_heartbeat():
 
 @app.task(ignore_result=True, bind=True)
 def enqueue_clickhouse_execute_with_progress(
-        self, team_id, query_id, query, args=None, settings=None, with_column_types=False
+    self, team_id, query_id, query, args=None, settings=None, with_column_types=False
 ):
     """
     Kick off query with progress reporting
@@ -272,7 +271,7 @@ CLICKHOUSE_TABLES = [
 
 if settings.CLICKHOUSE_REPLICATION:
     CLICKHOUSE_TABLES.extend(
-        ["sharded_events", "sharded_session_recording_events", ]
+        ["sharded_events", "sharded_session_recording_events",]
     )
 
 
@@ -509,7 +508,7 @@ def recompute_materialized_columns_enabled() -> bool:
     from analytickit.models.instance_setting import get_instance_setting
 
     if get_instance_setting("MATERIALIZED_COLUMNS_ENABLED") and get_instance_setting(
-            "COMPUTE_MATERIALIZED_COLUMNS_ENABLED"
+        "COMPUTE_MATERIALIZED_COLUMNS_ENABLED"
     ):
         return True
     return False
@@ -519,7 +518,7 @@ def recompute_materialized_columns_enabled() -> bool:
 def clickhouse_materialize_columns():
     if recompute_materialized_columns_enabled():
         try:
-            from ee.clickhouse.materialized_columns.analyze import materialize_properties_task
+            from dpa.clickhouse.materialized_columns.analyze import materialize_properties_task
         except ImportError:
             pass
         else:
@@ -530,7 +529,7 @@ def clickhouse_materialize_columns():
 def clickhouse_mark_all_materialized():
     if recompute_materialized_columns_enabled():
         try:
-            from ee.tasks.materialized_columns import mark_all_materialized
+            from dpa.tasks.materialized_columns import mark_all_materialized
         except ImportError:
             pass
         else:
@@ -541,7 +540,7 @@ def clickhouse_mark_all_materialized():
 def clickhouse_send_license_usage():
     try:
         if not settings.MULTI_TENANCY:
-            from ee.tasks.send_license_usage import send_license_usage
+            from dpa.tasks.send_license_usage import send_license_usage
 
             send_license_usage()
     except ImportError:
@@ -551,7 +550,7 @@ def clickhouse_send_license_usage():
 @app.task(ignore_result=True)
 def send_org_usage_report():
     try:
-        from ee.tasks.org_usage_report import send_all_org_usage_reports
+        from dpa.tasks.org_usage_report import send_all_org_usage_reports
     except ImportError:
         pass
     else:
@@ -561,7 +560,7 @@ def send_org_usage_report():
 @app.task(ignore_result=True)
 def schedule_all_subscriptions():
     try:
-        from ee.tasks.subscriptions import schedule_all_subscriptions as _schedule_all_subscriptions
+        from dpa.tasks.subscriptions import schedule_all_subscriptions as _schedule_all_subscriptions
     except ImportError:
         pass
     else:

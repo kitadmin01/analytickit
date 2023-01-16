@@ -16,7 +16,7 @@ Cypress.on('window:before:load', (win) => {
 })
 
 beforeEach(() => {
-    cy.intercept('https://app.analytickit.com/decide/*', (req) =>
+    cy.intercept('https://dpa.analytickit.com/decide/*', (req) =>
         req.reply(
             decideResponse({
                 'toolbar-launch-side-action': true,

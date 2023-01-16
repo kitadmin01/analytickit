@@ -135,6 +135,7 @@ def get_token(data, request) -> Optional[str]:
 
 
 def get_project_id(data, request) -> Optional[int]:
+    # project data is stored in analytickit_team in DB
     if request.GET.get("project_id"):
         return int(request.POST["project_id"])
     if request.POST.get("project_id"):
@@ -348,11 +349,11 @@ def create_event_definitions_sql(
     }
     shared_conditions = f"WHERE team_id = %(team_id)s {conditions}"
 
-    def select_ee_event_definitions(fields: str):
+    def select_dpa_event_definitions(fields: str):
         return f"""
             SELECT {fields}
-            FROM ee_enterpriseeventdefinition
-            FULL OUTER JOIN analytickit_eventdefinition ON analytickit_eventdefinition.id=ee_enterpriseeventdefinition.eventdefinition_ptr_id
+            FROM dpa_enterpriseeventdefinition
+            FULL OUTER JOIN analytickit_eventdefinition ON analytickit_eventdefinition.id=dpa_enterpriseeventdefinition.eventdefinition_ptr_id
         """
 
     def select_event_definitions(fields: str):
@@ -371,7 +372,7 @@ def create_event_definitions_sql(
 
         return (
             f"""
-                {select_ee_event_definitions(raw_event_definition_fields)}
+                {select_dpa_event_definitions(raw_event_definition_fields)}
                 {shared_conditions}
                 {ordering}
             """
@@ -406,7 +407,7 @@ def create_event_definitions_sql(
     )
 
     event_definition_table = (
-        select_ee_event_definitions(raw_event_definition_fields)
+        select_dpa_event_definitions(raw_event_definition_fields)
         if is_enterprise
         else select_event_definitions(raw_event_definition_fields)
     )

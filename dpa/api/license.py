@@ -58,6 +58,7 @@ class LicenseViewSet(
     serializer_class = LicenseSerializer
 
     def get_queryset(self) -> QuerySet:
+        # check MULTI_TENANCY env added in kit-infra helm project, if it is not set return none
         if getattr(settings, "MULTI_TENANCY", False):
             return License.objects.none()
 

@@ -134,9 +134,9 @@ describe('DB', () => {
             ])
         })
 
-        it('returns actions with correct `ee_hook`', async () => {
+        it('returns actions with correct `dpa_hook`', async () => {
             await hub.db.postgres.query('UPDATE analytickit_action SET post_to_slack = false')
-            await insertRow(hub.db.postgres, 'ee_hook', {
+            await insertRow(hub.db.postgres, 'dpa_hook', {
                 id: 'abc',
                 team_id: 2,
                 user_id: 1001,
@@ -193,9 +193,9 @@ describe('DB', () => {
             expect(await db.fetchAction(69)).toEqual(null)
         })
 
-        it('does not return actions with incorrect ee_hook', async () => {
+        it('does not return actions with incorrect dpa_hook', async () => {
             await hub.db.postgres.query('UPDATE analytickit_action SET post_to_slack = false')
-            await insertRow(hub.db.postgres, 'ee_hook', {
+            await insertRow(hub.db.postgres, 'dpa_hook', {
                 id: 'abc',
                 team_id: 2,
                 user_id: 1001,
@@ -205,7 +205,7 @@ describe('DB', () => {
                 created: new Date().toISOString(),
                 updated: new Date().toISOString(),
             })
-            await insertRow(hub.db.postgres, 'ee_hook', {
+            await insertRow(hub.db.postgres, 'dpa_hook', {
                 id: 'efg',
                 team_id: 2,
                 user_id: 1001,
@@ -224,11 +224,11 @@ describe('DB', () => {
 
         describe('FOSS', () => {
             beforeEach(async () => {
-                await hub.db.postgres.query('ALTER TABLE ee_hook RENAME TO ee_hook_backup')
+                await hub.db.postgres.query('ALTER TABLE dpa_hook RENAME TO dpa_hook_backup')
             })
 
             afterEach(async () => {
-                await hub.db.postgres.query('ALTER TABLE ee_hook_backup RENAME TO ee_hook')
+                await hub.db.postgres.query('ALTER TABLE dpa_hook_backup RENAME TO dpa_hook')
             })
 
             it('does not blow up', async () => {
@@ -615,7 +615,11 @@ describe('DB', () => {
             const jobPayload = { foo: 'string' }
             await db.addOrUpdatePublicJob(88, jobName, jobPayload)
             const publicJobs = (
-                await db.postgresQuery('SELECT public_jobs FROM analytickit_plugin WHERE id = $1', [88], 'testPublicJob1')
+                await db.postgresQuery(
+                    'SELECT public_jobs FROM analytickit_plugin WHERE id = $1',
+                    [88],
+                    'testPublicJob1'
+                )
             ).rows[0].public_jobs
 
             expect(publicJobs[jobName]).toEqual(jobPayload)
@@ -628,7 +632,11 @@ describe('DB', () => {
             const jobPayload = { foo: 'string' }
             await db.addOrUpdatePublicJob(88, jobName, jobPayload)
             const publicJobs = (
-                await db.postgresQuery('SELECT public_jobs FROM analytickit_plugin WHERE id = $1', [88], 'testPublicJob1')
+                await db.postgresQuery(
+                    'SELECT public_jobs FROM analytickit_plugin WHERE id = $1',
+                    [88],
+                    'testPublicJob1'
+                )
             ).rows[0].public_jobs
 
             expect(publicJobs[jobName]).toEqual(jobPayload)
@@ -968,12 +976,8 @@ describe('DB', () => {
             const targetPerson = await db.createPerson(
                 TIMESTAMP,
                 {},
-                {
-
-                },
-                {
-
-                },
+                {},
+                {},
                 team.id,
                 null,
                 false,

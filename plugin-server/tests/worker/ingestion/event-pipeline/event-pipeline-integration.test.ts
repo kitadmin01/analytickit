@@ -21,7 +21,7 @@ describe('Event Pipeline integration test', () => {
     beforeEach(async () => {
         await resetTestDatabase()
         await resetTestDatabaseClickhouse()
-            ;[hub, closeServer] = await createHub()
+        ;[hub, closeServer] = await createHub()
 
         jest.spyOn(hub.db, 'fetchPerson')
     })
@@ -131,8 +131,12 @@ describe('Event Pipeline integration test', () => {
     })
 
     it('fires a REST hook', async () => {
-        await hub.db.postgresQuery(`UPDATE analytickit_organization SET available_features = '{"zapier"}'`, [], 'testTag')
-        await insertRow(hub.db.postgres, 'ee_hook', {
+        await hub.db.postgresQuery(
+            `UPDATE analytickit_organization SET available_features = '{"zapier"}'`,
+            [],
+            'testTag'
+        )
+        await insertRow(hub.db.postgres, 'dpa_hook', {
             id: 'abc',
             team_id: 2,
             user_id: commonUserId,

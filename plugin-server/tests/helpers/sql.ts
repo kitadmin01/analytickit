@@ -70,8 +70,8 @@ export async function resetTestDatabase(
     const config = { ...defaultConfig, ...extraServerConfig }
     const db = new Pool({ connectionString: config.DATABASE_URL! })
     try {
-        await db.query('TRUNCATE TABLE ee_hook CASCADE')
-    } catch { }
+        await db.query('TRUNCATE TABLE dpa_hook CASCADE')
+    } catch {}
 
     await db.query(POSTGRES_TRUNCATE_TABLES_QUERY)
     const mocks = makePluginObjects(code)
@@ -297,7 +297,7 @@ export async function getErrorForPluginConfig(id: number): Promise<any> {
     try {
         const response = await db.query('SELECT * FROM analytickit_pluginconfig WHERE id = $1', [id])
         error = response.rows[0]['error']
-    } catch { }
+    } catch {}
 
     await db.end()
     return error

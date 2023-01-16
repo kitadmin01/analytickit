@@ -42,7 +42,7 @@ class TestAsyncMigrations(BaseTest):
         create_async_migration(name="test_migration", description=TEST_MIGRATION_DESCRIPTION)
         return super().setUp()
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     @patch.object(AsyncResult, "state", states.STARTED)
     @patch("analytickit.celery.app.control.inspect", side_effect=inspect_mock)
     @patch("analytickit.tasks.async_migrations.run_async_migration.delay", side_effect=run_async_migration_mock)
@@ -73,7 +73,7 @@ class TestAsyncMigrations(BaseTest):
         self.assertEqual(sm.current_operation_index, 7)
         self.assertEqual(sm.progress, 100)
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     @patch.object(AsyncResult, "state", states.STARTED)
     @patch("analytickit.celery.app.control.inspect", side_effect=inspect_mock)
     @patch("analytickit.tasks.async_migrations.run_async_migration.delay", side_effect=run_async_migration_mock)

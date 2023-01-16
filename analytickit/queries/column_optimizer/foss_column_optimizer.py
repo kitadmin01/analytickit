@@ -72,7 +72,7 @@ class FOSSColumnOptimizer:
 
             # :TRICKY: Action definition may contain elements_chain usage
             #
-            # See ee/clickhouse/models/action.py#format_action_filter for an example
+            # See dpa/clickhouse/models/action.py#format_action_filter for an example
             if entity.type == TREND_FILTER_TYPE_ACTIONS:
                 if uses_elements_chain(entity.get_action()):
                     return True
@@ -87,8 +87,8 @@ class FOSSColumnOptimizer:
         if not isinstance(self.filter, StickinessFilter):
             # Some breakdown types read properties
             #
-            # See ee/clickhouse/queries/trends/breakdown.py#get_query or
-            # ee/clickhouse/queries/breakdown_props.py#get_breakdown_prop_values
+            # See dpa/clickhouse/queries/trends/breakdown.py#get_query or
+            # dpa/clickhouse/queries/breakdown_props.py#get_breakdown_prop_values
             if self.filter.breakdown_type in ["event", "person"]:
                 boxed_breakdown = box_value(self.filter.breakdown)
                 for b in boxed_breakdown:
@@ -106,20 +106,20 @@ class FOSSColumnOptimizer:
 
             # Math properties are also implicitly used.
             #
-            # See ee/clickhouse/queries/trends/util.py#process_math
+            # See dpa/clickhouse/queries/trends/util.py#process_math
             if entity.math_property:
                 counter[(entity.math_property, "event", None)] += 1
 
             # :TRICKY: If action contains property filters, these need to be included
             #
-            # See ee/clickhouse/models/action.py#format_action_filter for an example
+            # See dpa/clickhouse/models/action.py#format_action_filter for an example
             if entity.type == TREND_FILTER_TYPE_ACTIONS:
                 counter += get_action_tables_and_properties(entity.get_action())
 
         if (
-                not isinstance(self.filter, StickinessFilter)
-                and self.filter.correlation_type == FunnelCorrelationType.PROPERTIES
-                and self.filter.correlation_property_names
+            not isinstance(self.filter, StickinessFilter)
+            and self.filter.correlation_type == FunnelCorrelationType.PROPERTIES
+            and self.filter.correlation_property_names
         ):
 
             for prop_value in self.filter.correlation_property_names:

@@ -1,13 +1,13 @@
-import {AppContext, PathType} from '~/types'
+import { AppContext, PathType } from '~/types'
 
 declare global {
-export interface Window {
-analytickit_APP_CONTEXT?: AppContext
-}
+    export interface Window {
+        ANALYTICKIT_APP_CONTEXT?: AppContext
+    }
 }
 
 export function getAppContext(): AppContext | undefined {
-    return window.analytickit_APP_CONTEXT || undefined
+    return window.ANALYTICKIT_APP_CONTEXT || undefined
 }
 
 export function getDefaultEventName(): string {

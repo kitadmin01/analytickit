@@ -37,7 +37,7 @@ class Paths:
     _extra_event_fields: List[ColumnName]
     _extra_event_properties: List[PropertyName]
 
-    def __init__(self, filter: PathFilter, team: Team, funnel_filter: Optional[Filter] = None, ) -> None:
+    def __init__(self, filter: PathFilter, team: Team, funnel_filter: Optional[Filter] = None,) -> None:
         self._filter = filter
         self._team = team
         self.params = {
@@ -80,7 +80,7 @@ class Paths:
         resp = []
         for res in results:
             resp.append(
-                {"source": res[0], "target": res[1], "value": res[2], "average_conversion_time": res[3], }
+                {"source": res[0], "target": res[1], "value": res[2], "average_conversion_time": res[3],}
             )
         return resp
 
@@ -177,7 +177,7 @@ class Paths:
             extra_group_array_select_statements=extra_event_clauses.group_array_select_statements,
         )
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def should_query_funnel(self) -> bool:
         return False
 
@@ -206,26 +206,26 @@ class Paths:
             {'LIMIT %(edge_limit)s' if self._filter.edge_limit else ''}
         """
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_path_query_funnel_cte(self, funnel_filter: Filter):
         return "", {}
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_edge_weight_clause(self) -> Tuple[str, Dict]:
         return "", {}
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_target_point_filter(self) -> str:
         if self._filter.start_point:
             return f"WHERE target_index > 0"
         else:
             return ""
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_session_threshold_clause(self) -> str:
         return "arraySplit(x -> if(x.3 < %(session_time_threshold)s, 0, 1), paths_tuple)"
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_target_clause(self) -> Tuple[str, Dict]:
         params: Dict[str, Union[str, None]] = {"target_point": None, "secondary_target_point": None}
 
@@ -257,11 +257,11 @@ class Paths:
             params,
         )
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_array_compacting_function(self) -> Literal["arrayResize", "arraySlice"]:
         return "arraySlice"
 
-    # Implemented in /ee
+    # Implemented in /dpa
     def get_filtered_path_ordering(self) -> Tuple[str, ...]:
         fields_to_include = ["filtered_path", "filtered_timings"] + [
             f"filtered_{field}s" for field in self.extra_event_fields_and_properties

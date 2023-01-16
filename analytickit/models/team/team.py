@@ -1,12 +1,12 @@
 import re
 from typing import TYPE_CHECKING, Any, List, Optional
 
-import analytickitanalytics
 import pytz
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+import analytickitanalytics
 from analytickit.constants import AvailableFeature
 from analytickit.helpers.dashboard_templates import create_dashboard_from_template
 from analytickit.models.dashboard import Dashboard
@@ -49,9 +49,8 @@ class TeamManager(models.Manager):
                 example_email = re.search(r"@[\w.]+", example_emails[0])
                 if example_email:
                     return [
-                               {"key": "email", "operator": "not_icontains", "value": example_email.group(),
-                                "type": "person"},
-                           ] + filters
+                        {"key": "email", "operator": "not_icontains", "value": example_email.group(), "type": "person"},
+                    ] + filters
         return filters
 
     def create_with_data(self, user: Any = None, default_dashboards: bool = True, **kwargs) -> "Team":
@@ -151,19 +150,19 @@ class Team(UUIDClassicModel):
     objects: TeamManager = TeamManager()
 
     def get_effective_membership_level_for_parent_membership(
-            self, requesting_parent_membership: "OrganizationMembership"
+        self, requesting_parent_membership: "OrganizationMembership"
     ) -> Optional["OrganizationMembership.Level"]:
         if (
-                not requesting_parent_membership.organization.is_feature_available(
-                    AvailableFeature.PROJECT_BASED_PERMISSIONING
-                )
-                or not self.access_control
+            not requesting_parent_membership.organization.is_feature_available(
+                AvailableFeature.PROJECT_BASED_PERMISSIONING
+            )
+            or not self.access_control
         ):
             return requesting_parent_membership.level
         from analytickit.models.organization import OrganizationMembership
 
         try:
-            from ee.models import ExplicitTeamMembership
+            from dpa.models import ExplicitTeamMembership
         except ImportError:
             # Only organizations admins and above get implicit project membership
             if requesting_parent_membership.level < OrganizationMembership.Level.ADMIN:

@@ -82,7 +82,7 @@ class InstanceSettingsSerializer(serializers.Serializer):
                 # so this command should never be run
                 raise serializers.ValidationError("This setting cannot be updated on MULTI_TENANCY.")
 
-            # TODO: Move to top-level imports once CH is moved out of `ee`
+            # TODO: Move to top-level imports once CH is moved out of `dpa`
             from analytickit.client import sync_execute
             from analytickit.models.session_recording_event.sql import UPDATE_RECORDINGS_TABLE_TTL_SQL
 

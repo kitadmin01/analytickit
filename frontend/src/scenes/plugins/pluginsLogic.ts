@@ -750,7 +750,7 @@ export const pluginsLogic = kea<pluginsLogicType>([
             const analytickitHostSchema = configSchema.find(({ key }) => key === 'analytickitHost')
             if (
                 analytickitHostSchema &&
-                (!pluginConfig?.analytickitHost || pluginConfig.analytickitHost === 'https://app.analytickit.com')
+                (!pluginConfig?.analytickitHost || pluginConfig.analytickitHost === 'https://dpa.analytickit.com')
             ) {
                 form.setFieldsValue({ analytickitHost: window.location.origin })
             }

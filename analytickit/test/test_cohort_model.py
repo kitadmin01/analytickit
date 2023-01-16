@@ -34,7 +34,7 @@ class TestCohort(BaseTest):
         self.assertEqual(cohort.people.count(), 2)
         self.assertEqual(cohort.is_calculating, False)
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_calculating_cohort_clickhouse(self):
         person1 = Person.objects.create(
             distinct_ids=["person1"], team_id=self.team.pk, properties={"$some_prop": "something"}
@@ -53,7 +53,7 @@ class TestCohort(BaseTest):
 
         uuids = [
             row[0]
-            for row in sync_execute(GET_COHORTPEOPLE_BY_COHORT_ID, {"cohort_id": cohort.pk, "team_id": self.team.pk}, )
+            for row in sync_execute(GET_COHORTPEOPLE_BY_COHORT_ID, {"cohort_id": cohort.pk, "team_id": self.team.pk},)
         ]
         self.assertCountEqual(uuids, [person1.uuid, person3.uuid])
 
@@ -224,7 +224,7 @@ class TestCohort(BaseTest):
     def test_group_to_property_conversion_with_missing_days_and_invalid_count(self):
         cohort = Cohort.objects.create(
             team=self.team,
-            groups=[{"count": -3, "label": "$pageview", "event_id": "$pageview", "count_operator": "gte"}, ],
+            groups=[{"count": -3, "label": "$pageview", "event_id": "$pageview", "count_operator": "gte"},],
             name="cohort1",
         )
 

@@ -1,10 +1,10 @@
 from typing import Dict, Optional
 
 from django.core.exceptions import ImproperlyConfigured
-from analytickit.infi.clickhouse_orm.utils import import_submodules
 from semantic_version.base import Version
 
 from analytickit.async_migrations.definition import AsyncMigrationDefinition
+from analytickit.infi.clickhouse_orm.utils import import_submodules
 from analytickit.models.async_migration import AsyncMigration, get_all_completed_async_migrations
 from analytickit.models.instance_setting import get_instance_setting
 from analytickit.settings import TEST
@@ -23,7 +23,7 @@ ASYNC_MIGRATION_TO_DEPENDENCY: Dict[str, Optional[str]] = {}
 # inverted mapping of ASYNC_MIGRATION_TO_DEPENDENCY
 DEPENDENCY_TO_ASYNC_MIGRATION: Dict[Optional[str], str] = {}
 
-analytickit_VERSION = Version(VERSION)
+ANALYTICKIT_VERSION = Version(VERSION)
 
 ASYNC_MIGRATIONS_MODULE_PATH = "analytickit.async_migrations.migrations"
 ASYNC_MIGRATIONS_EXAMPLE_MODULE_PATH = "analytickit.async_migrations.examples"
@@ -61,12 +61,13 @@ def setup_async_migrations(ignore_analytickit_version: bool = False):
         ASYNC_MIGRATION_TO_DEPENDENCY[migration_name] = dependency
 
         if (
-                (not ignore_analytickit_version)
-                and (migration_name in unapplied_migrations)
-                and (analytickit_VERSION > Version(migration.analytickit_max_version))
+            (not ignore_analytickit_version)
+            and (migration_name in unapplied_migrations)
+            and (ANALYTICKIT_VERSION > Version(migration.analytickit_max_version))
         ):
             raise ImproperlyConfigured(
-                f"Migration {migration_name} is required for analytickit versions above {VERSION}.")
+                f"Migration {migration_name} is required for analytickit versions above {VERSION}."
+            )
 
     for key, val in ASYNC_MIGRATION_TO_DEPENDENCY.items():
         DEPENDENCY_TO_ASYNC_MIGRATION[val] = key

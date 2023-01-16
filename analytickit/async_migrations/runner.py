@@ -4,7 +4,7 @@ from semantic_version.base import SimpleSpec
 
 from analytickit.async_migrations.definition import AsyncMigrationDefinition
 from analytickit.async_migrations.setup import (
-    analytickit_VERSION,
+    ANALYTICKIT_VERSION,
     get_async_migration_definition,
     get_async_migration_dependency,
 )
@@ -28,8 +28,9 @@ MAX_CONCURRENT_ASYNC_MIGRATIONS = 1
 
 
 def start_async_migration(
-        migration_name: str, ignore_analytickit_version=False,
-        migration_definition: Optional[AsyncMigrationDefinition] = None
+    migration_name: str,
+    ignore_analytickit_version=False,
+    migration_definition: Optional[AsyncMigrationDefinition] = None,
 ) -> bool:
     """
     Performs some basic checks to ensure the migration can indeed run, and then kickstarts the chain of operations
@@ -53,10 +54,10 @@ def start_async_migration(
     )
 
     if (
-            not migration_instance
-            or over_concurrent_migrations_limit
-            or not analytickit_version_valid
-            or migration_instance.status == MigrationStatus.Running
+        not migration_instance
+        or over_concurrent_migrations_limit
+        or not analytickit_version_valid
+        or migration_instance.status == MigrationStatus.Running
     ):
         return False
 
@@ -208,7 +209,7 @@ def attempt_migration_rollback(migration_instance: AsyncMigration):
 
 
 def is_analytickit_version_compatible(analytickit_min_version, analytickit_max_version):
-    return analytickit_VERSION in SimpleSpec(f">={analytickit_min_version},<={analytickit_max_version}")
+    return ANALYTICKIT_VERSION in SimpleSpec(f">={analytickit_min_version},<={analytickit_max_version}")
 
 
 def run_next_migration(candidate: str):
@@ -227,15 +228,14 @@ def is_migration_dependency_fulfilled(migration_name: str) -> Tuple[bool, str]:
     dependency = get_async_migration_dependency(migration_name)
 
     dependency_ok: bool = (
-            not dependency or AsyncMigration.objects.get(
-        name=dependency).status == MigrationStatus.CompletedSuccessfully
+        not dependency or AsyncMigration.objects.get(name=dependency).status == MigrationStatus.CompletedSuccessfully
     )
     error = f"Could not trigger migration because it depends on {dependency}" if not dependency_ok else ""
     return dependency_ok, error
 
 
 def check_service_version_requirements(
-        service_version_requirements: List[ServiceVersionRequirement],
+    service_version_requirements: List[ServiceVersionRequirement],
 ) -> Tuple[bool, str]:
     for service_version_requirement in service_version_requirements:
         in_range, version = service_version_requirement.is_service_in_accepted_version()

@@ -22,12 +22,12 @@ class EnterpriseFeatureException(APIException):
     def __init__(self, feature: Optional[str] = None) -> None:
         super().__init__(
             detail=(
-                    f"{feature.capitalize() if feature else 'This feature'} is part of the premium AnalyticKit offering. "
-                    + (
-                        "To use it, subscribe to AnalyticKit Cloud with a generous free tier: https://app.analytickit.com/organization/billing"
-                        if settings.MULTI_TENANCY
-                        else "To use it, get a self-hosted license: https://license.analytickit.com"
-                    )
+                f"{feature.capitalize() if feature else 'This feature'} is part of the premium AnalyticKit offering. "
+                + (
+                    "To use it, subscribe to AnalyticKit Cloud with a generous free tier: https://dpa.analytickit.com/organization/billing"
+                    if settings.MULTI_TENANCY
+                    else "To use it, get a self-hosted license: https://license.analytickit.com"
+                )
             )
         )
 
@@ -52,12 +52,12 @@ def exception_reporting(exception: Exception, context: ExceptionContext) -> None
 
 
 def generate_exception_response(
-        endpoint: str,
-        detail: str,
-        code: str = "invalid",
-        type: str = "validation_error",
-        attr: Optional[str] = None,
-        status_code: int = status.HTTP_400_BAD_REQUEST,
+    endpoint: str,
+    detail: str,
+    code: str = "invalid",
+    type: str = "validation_error",
+    attr: Optional[str] = None,
+    status_code: int = status.HTTP_400_BAD_REQUEST,
 ) -> JsonResponse:
     """
     Generates a friendly JSON error response in line with drf-exceptions-hog for endpoints not under DRF.
@@ -65,6 +65,8 @@ def generate_exception_response(
 
     from analytickit.internal_metrics import incr
 
-    incr(f"analytickit_cloud_raw_endpoint_exception",
-         tags={"endpoint": endpoint, "code": code, "type": type, "attr": attr})
-    return JsonResponse({"type": type, "code": code, "detail": detail, "attr": attr}, status=status_code, )
+    incr(
+        f"analytickit_cloud_raw_endpoint_exception",
+        tags={"endpoint": endpoint, "code": code, "type": type, "attr": attr},
+    )
+    return JsonResponse({"type": type, "code": code, "detail": detail, "attr": attr}, status=status_code,)

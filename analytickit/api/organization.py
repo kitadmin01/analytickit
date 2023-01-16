@@ -30,14 +30,14 @@ class PremiumMultiorganizationPermissions(permissions.BasePermission):
     def has_permission(self, request: Request, view) -> bool:
         user = cast(User, request.user)
         if (
-                # Make multiple orgs only premium on self-hosted, since enforcement of this wouldn't make sense on Cloud
-                not settings.MULTI_TENANCY
-                and request.method in CREATE_METHODS
-                and (
+            # Make multiple orgs only premium on self-hosted, since enforcement of this wouldn't make sense on Cloud
+            not settings.MULTI_TENANCY
+            and request.method in CREATE_METHODS
+            and (
                 user.organization is None
                 or not user.organization.is_feature_available(AvailableFeature.ORGANIZATIONS_PROJECTS)
-        )
-                and user.organizations.count() >= 1
+            )
+            and user.organizations.count() >= 1
         ):
             return False
         return True
@@ -53,8 +53,8 @@ class OrganizationPermissionsWithDelete(OrganizationAdminWritePermissions):
             OrganizationMembership.Level.OWNER if request.method == "DELETE" else OrganizationMembership.Level.ADMIN
         )
         return (
-                OrganizationMembership.objects.get(user=cast(User, request.user), organization=organization).level
-                >= min_level
+            OrganizationMembership.objects.get(user=cast(User, request.user), organization=organization).level
+            >= min_level
         )
 
 
@@ -115,7 +115,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         }
 
         try:
-            from ee.models import EnterpriseEventDefinition, EnterprisePropertyDefinition
+            from dpa.models import EnterpriseEventDefinition, EnterprisePropertyDefinition
         except ImportError:
             return output
 

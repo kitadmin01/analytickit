@@ -116,15 +116,15 @@ class TestSignupAPI(APIBaseTest):
                     "attr": None,
                     "code": "permission_denied",
                     "detail": "New organizations cannot be created in this instance. Contact your administrator if you"
-                              " think this is a mistake.",
+                    " think this is a mistake.",
                     "type": "authentication_error",
                 },
             )
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_signup_allowed_on_self_hosted_with_env_var(self):
         try:
-            from ee.models.license import License, LicenseManager
+            from dpa.models.license import License, LicenseManager
         except ImportError:
             pass
         else:
@@ -259,7 +259,7 @@ class TestSignupAPI(APIBaseTest):
         """
 
         response = self.client.post(
-            "/api/signup/", {"first_name": "Jane", "email": "hedgehog75@analytickit.com", "password": "notsecure", },
+            "/api/signup/", {"first_name": "Jane", "email": "hedgehog75@analytickit.com", "password": "notsecure",},
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -284,12 +284,12 @@ class TestSignupAPI(APIBaseTest):
         self.assertEqual(Dashboard.objects.filter(team=user.team).count(), 1)
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_api_can_use_social_login_to_create_organization_if_enabled(self, mock_request):
         Organization.objects.create(name="Test org")
 
         try:
-            from ee.models.license import License, LicenseManager
+            from dpa.models.license import License, LicenseManager
         except ImportError:
             pass
         else:
@@ -314,13 +314,13 @@ class TestSignupAPI(APIBaseTest):
             )  # page where user will create a new org
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     @pytest.mark.skip_on_multitenancy
     def test_api_cannot_use_social_login_to_create_organization_if_disabled(self, mock_request):
         Organization.objects.create(name="Test org")
         # Even with a valid license, because `MULTI_ORG_ENABLED` is not enabled, no new organizations will be allowed.
         try:
-            from ee.models.license import License, LicenseManager
+            from dpa.models.license import License, LicenseManager
         except ImportError:
             pass
         else:
@@ -343,7 +343,7 @@ class TestSignupAPI(APIBaseTest):
             )  # show the user an error; operation not permitted
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_api_social_login_to_create_organization(self, mock_request):
         with self.settings(SOCIAL_AUTH_GITHUB_KEY="github_123", SOCIAL_AUTH_GITHUB_SECRET="github_secret"):
             response = self.client.get(reverse("social:begin", kwargs={"backend": "github"}))
@@ -424,20 +424,20 @@ class TestSignupAPI(APIBaseTest):
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_social_signup_with_whitelisted_domain_on_self_hosted(self, mock_sso_providers, mock_request):
         self.run_test_for_whitelisted_domain(mock_sso_providers, mock_request)
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_social_signup_with_whitelisted_domain_on_cloud(self, mock_sso_providers, mock_request):
         with self.settings(MULTI_TENANCY=True):
             self.run_test_for_whitelisted_domain(mock_sso_providers, mock_request)
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_social_signup_with_whitelisted_domain_on_cloud_reverse(self, mock_sso_providers, mock_request):
         with self.settings(MULTI_TENANCY=True):
             # user already exists
@@ -482,9 +482,9 @@ class TestSignupAPI(APIBaseTest):
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_cannot_social_signup_with_whitelisted_but_jit_provisioning_disabled(
-            self, mock_sso_providers, mock_request
+        self, mock_sso_providers, mock_request
     ):
         mock_sso_providers.return_value = {"google-oauth2": True}
         new_org = Organization.objects.create(name="Test org")
@@ -507,7 +507,7 @@ class TestSignupAPI(APIBaseTest):
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_cannot_social_signup_with_whitelisted_but_unverified_domain(self, mock_sso_providers, mock_request):
         mock_sso_providers.return_value = {"google-oauth2": True}
         new_org = Organization.objects.create(name="Test org")
@@ -530,7 +530,7 @@ class TestSignupAPI(APIBaseTest):
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_api_cannot_use_whitelist_for_different_domain(self, mock_sso_providers, mock_request):
         mock_sso_providers.return_value = {"google-oauth2": True}
         new_org = Organization.objects.create(name="Test org")
@@ -556,7 +556,7 @@ class TestSignupAPI(APIBaseTest):
 
     @mock.patch("social_core.backends.base.BaseAuth.request")
     @mock.patch("analytickit.api.authentication.get_instance_available_sso_providers")
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_social_signup_to_existing_org_without_whitelisted_domain_on_cloud(self, mock_sso_providers, mock_request):
         mock_sso_providers.return_value = {"google-oauth2": True}
         Organization.objects.create(name="Hogflix Movies")
@@ -676,7 +676,7 @@ class TestInviteSignup(APIBaseTest):
                 "type": "validation_error",
                 "code": "invalid_recipient",
                 "detail": "This invite is intended for another email address: t*****9@analytickit.com."
-                          " You tried to sign up with test+39@analytickit.com.",
+                " You tried to sign up with test+39@analytickit.com.",
                 "attr": None,
             },
         )
@@ -758,7 +758,7 @@ class TestInviteSignup(APIBaseTest):
         # Assert that the password was correctly saved
         self.assertTrue(user.check_password("test_password"))
 
-    @pytest.mark.ee
+    @pytest.mark.dpa
     def test_api_invite_sign_up_where_there_are_no_default_non_private_projects(self):
         self.client.logout()
         invite: OrganizationInvite = OrganizationInvite.objects.create(

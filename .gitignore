@@ -36,7 +36,7 @@ docker-compose.prod.yml
 *.isorted
 build-storybook.log
 storybook-static
-ee/benchmarks/results
+dpa/benchmarks/results
 .coverage
 coverage-*.xml
 object_storage/

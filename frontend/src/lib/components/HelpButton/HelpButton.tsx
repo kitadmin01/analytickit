@@ -6,15 +6,7 @@ import { HelpType } from '~/types'
 import type { helpButtonLogicType } from './HelpButtonType'
 import { Popup } from '../Popup/Popup'
 import { LemonButton } from '../LemonButton'
-import {
-    IconArrowDropDown,
-    IconArticle,
-    IconGithub,
-    IconHelpOutline,
-    IconMail,
-    IconQuestionAnswer,
-    IconMessages,
-} from '../icons'
+import { IconArrowDropDown, IconArticle, IconHelpOutline, IconMail, IconQuestionAnswer, IconMessages } from '../icons'
 import clsx from 'clsx'
 import { Placement } from '@floating-ui/react-dom-interactions'
 import { inAppPromptLogic } from 'lib/logic/inAppPrompt/inAppPromptLogic'
@@ -98,23 +90,6 @@ export function HelpButton({
                             Ask us a question
                         </LemonButton>
                     </a>
-                    <a
-                        href="https://github.com/analytickit/analytickit/issues/new/choose"
-                        rel="noopener"
-                        target="_blank"
-                    >
-                        <LemonButton
-                            icon={<IconGithub />}
-                            status="stealth"
-                            fullWidth
-                            onClick={() => {
-                                reportHelpButtonUsed(HelpType.GitHub)
-                                hideHelp()
-                            }}
-                        >
-                            Create an issue on GitHub
-                        </LemonButton>
-                    </a>
                     <a href="mailto:hey@analytickit.com" target="_blank">
                         <LemonButton
                             icon={<IconMail />}
@@ -129,7 +104,7 @@ export function HelpButton({
                         </LemonButton>
                     </a>
                     {!contactOnly && (
-                        <a href={`https://analytickit.com/docs${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
+                        <a href={`https://analytickit.com/analytickit-dpa/`} rel="noopener" target="_blank">
                             <LemonButton
                                 icon={<IconArticle />}
                                 status="stealth"

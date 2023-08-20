@@ -6,7 +6,6 @@ import { LemonButton } from '../../../lib/components/LemonButton'
 import { LemonRow } from '../../../lib/components/LemonRow'
 import {
     IconCheckmark,
-    IconOffline,
     IconLogout,
     IconUpdate,
     IconExclamation,
@@ -155,7 +154,7 @@ function License({ license, expired }: { license: LicenseType | null; expired: b
     )
 }
 
-function SystemStatus(): JSX.Element {
+/*function SystemStatus(): JSX.Element {
     const { closeSitePopover } = useActions(navigationLogic)
     const { systemStatus } = useValues(navigationLogic)
 
@@ -180,7 +179,7 @@ function SystemStatus(): JSX.Element {
             </>
         </LemonRow>
     )
-}
+}*/
 
 function Version(): JSX.Element {
     const { closeSitePopover } = useActions(navigationLogic)
@@ -219,7 +218,7 @@ function Version(): JSX.Element {
     )
 }
 
-function AsyncMigrations(): JSX.Element {
+/*function AsyncMigrations(): JSX.Element {
     const { closeSitePopover } = useActions(navigationLogic)
     const { asyncMigrationsOk } = useValues(navigationLogic)
 
@@ -244,7 +243,7 @@ function AsyncMigrations(): JSX.Element {
             </>
         </LemonRow>
     )
-}
+}*/
 
 function InstanceSettings(): JSX.Element | null {
     const { closeSitePopover } = useActions(navigationLogic)
@@ -324,12 +323,22 @@ export function SitePopover(): JSX.Element {
                     {(!(preflight?.cloud || preflight?.demo) || user?.is_staff) && (
                         <SitePopoverSection title="analytickit instance">
                             {!preflight?.cloud && <License license={relevantLicense} expired={expired} />}
+                            {!preflight?.cloud && <Version />}
+                            <InstanceSettings />
+                        </SitePopoverSection>
+                    )}
+
+                    {/**(!(preflight?.cloud || preflight?.demo) || user?.is_staff) && (
+                     * This is commented to remove Instance Setting link on the UI for regular users. The KitAdmin app
+                     * will have this feature.
+                        <SitePopoverSection title="analytickit instance">
+                            {!preflight?.cloud && <License license={relevantLicense} expired={expired} />}
                             <SystemStatus />
                             {!preflight?.cloud && <Version />}
                             <AsyncMigrations />
                             <InstanceSettings />
                         </SitePopoverSection>
-                    )}
+                    )*/}
                     <SitePopoverSection>
                         <SignOutButton />
                     </SitePopoverSection>

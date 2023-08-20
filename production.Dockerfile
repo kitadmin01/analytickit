@@ -87,7 +87,7 @@ RUN apk --update --no-cache add \
 #   It's better here to fail at build then it is to fail at boot time.
 
 RUN apk --update --no-cache --virtual .geolite-deps add \
-    "curl~=7" \
+    "curl~=8" \
     "brotli~=1.0.9" \
     && \
     mkdir share \
@@ -187,4 +187,4 @@ EXPOSE 8000
 # Expose the port from which we serve OpenMetrics data
 EXPOSE 8001
 
-CMD ["./bin/docker"]
+CMD ["/bin/docker"]

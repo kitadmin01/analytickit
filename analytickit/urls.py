@@ -23,6 +23,9 @@ from analytickit.api import (
     unsubscribe,
     user,
 )
+
+# for crypto
+from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
 from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
@@ -140,6 +143,20 @@ urlpatterns = [
         "login/<str:backend>/", authentication.sso_login, name="social_begin"
     ),  # overrides from `social_django.urls` to validate proper license
     path("", include("social_django.urls", namespace="social")),
+    # crypto
+    path("api/unsubscribe", unsubscribe.unsubscribe),
+    path(
+        "api/com_eng/",
+        CommunityEngagementViewSet.as_view({"get": "list", "post": "create"}),
+        name="com_eng-list-create",
+    ),
+    path(
+        "api/com_eng/<int:pk>/",
+        CommunityEngagementViewSet.as_view(
+            {"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}
+        ),
+        name="com_eng-detail",
+    ),
 ]
 
 if settings.DEBUG:

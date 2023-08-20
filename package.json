@@ -36,6 +36,7 @@
         "eslint": "eslint frontend/src",
         "typegen:write": "kea-typegen write",
         "typegen:check": "kea-typegen check",
+        "typegen:watch": "kea-typegen watch",
         "typegen:clean": "find frontend/src -type f -name '*Type.ts' -delete",
         "format:python": "black . && isort .",
         "format:js": "yarn prettier && yarn eslint --fix",

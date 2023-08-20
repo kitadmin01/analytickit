@@ -153,3 +153,8 @@ project_dashboards_router.register(
 project_insights_router.register(
     r"sharing", sharing.SharingConfigurationViewSet, "project_insight_sharing", ["team_id", "insight_id"],
 )
+
+# crypto
+from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
+
+router.register(r"community_engagement", CommunityEngagementViewSet)

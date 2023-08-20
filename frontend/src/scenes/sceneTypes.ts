@@ -1,63 +1,66 @@
-import {LogicWrapper} from'kea'
+import { LogicWrapper } from 'kea'
 
 // The enum here has to match the first and only exported component of the scene.
 // If so, we can preload the scene's required chunks in parallel with the scene itself.
+
 export enum Scene {
-Error404 = '404',
-ErrorNetwork = '4xx',
-ErrorProjectUnavailable = 'ProjectUnavailable',
-Dashboards = 'Dashboards',
-Dashboard = 'Dashboard',
-Insight = 'Insight',
-Cohorts = 'Cohorts',
-Cohort = 'Cohort',
-Events = 'Events',
-DataManagement = 'DataManagement',
-EventDefinitions = 'EventDefinitionsTable',
-EventDefinition = 'EventDefinition',
-EventPropertyDefinitions = 'EventPropertyDefinitionsTable',
-EventPropertyDefinition = 'EventPropertyDefinition',
-SessionRecordings = 'SessionsRecordings',
-Person = 'Person',
-Persons = 'Persons',
-Groups = 'Groups',
-Group = 'Group',
-Action = 'Action',
-Actions = 'ActionsTable',
-Experiments = 'Experiments',
-Experiment = 'Experiment',
-FeatureFlags = 'FeatureFlags',
-FeatureFlag = 'FeatureFlag',
-OrganizationSettings = 'OrganizationSettings',
-OrganizationCreateFirst = 'OrganizationCreate',
-ProjectHomepage = 'ProjectHomepage',
-ProjectSettings = 'ProjectSettings',
-ProjectCreateFirst = 'ProjectCreate',
-SystemStatus = 'SystemStatus',
-Licenses = 'Licenses',
-AsyncMigrations = 'AsyncMigrations',
-DeadLetterQueue = 'DeadLetterQueue',
-MySettings = 'MySettings',
-Annotations = 'Annotations',
-Billing = 'Billing',
-BillingSubscribed = 'BillingSubscribed',
-BillingLocked = 'BillingLocked',
-Plugins = 'Plugins',
-FrontendAppScene = 'FrontendAppScene',
-SavedInsights = 'SavedInsights',
-ToolbarLaunch = 'ToolbarLaunch',
-WebPerformance = 'WebPerformance',
-IntegrationsRedirect = 'IntegrationsRedirect',
-// Authentication, onboarding & initialization routes
-Login = 'Login',
-Signup = 'Signup',
-InviteSignup = 'InviteSignup',
-PasswordReset = 'PasswordReset',
-PasswordResetComplete = 'PasswordResetComplete',
-PreflightCheck = 'PreflightCheck',
-Ingestion = 'IngestionWizard',
-OrganizationCreationConfirm = 'OrganizationCreationConfirm',
-Unsubscribe = 'Unsubscribe',
+    Error404 = '404',
+    ErrorNetwork = '4xx',
+    ErrorProjectUnavailable = 'ProjectUnavailable',
+    Dashboards = 'Dashboards',
+    Dashboard = 'Dashboard',
+    Insight = 'Insight',
+    Cohorts = 'Cohorts',
+    Cohort = 'Cohort',
+    Events = 'Events',
+    DataManagement = 'DataManagement',
+    EventDefinitions = 'EventDefinitionsTable',
+    EventDefinition = 'EventDefinition',
+    EventPropertyDefinitions = 'EventPropertyDefinitionsTable',
+    EventPropertyDefinition = 'EventPropertyDefinition',
+    SessionRecordings = 'SessionsRecordings',
+    Person = 'Person',
+    Persons = 'Persons',
+    Groups = 'Groups',
+    Group = 'Group',
+    Action = 'Action',
+    Actions = 'ActionsTable',
+    Experiments = 'Experiments',
+    Experiment = 'Experiment',
+    FeatureFlags = 'FeatureFlags',
+    FeatureFlag = 'FeatureFlag',
+    OrganizationSettings = 'OrganizationSettings',
+    OrganizationCreateFirst = 'OrganizationCreate',
+    ProjectHomepage = 'ProjectHomepage',
+    ProjectSettings = 'ProjectSettings',
+    ProjectCreateFirst = 'ProjectCreate',
+    SystemStatus = 'SystemStatus',
+    Licenses = 'Licenses',
+    AsyncMigrations = 'AsyncMigrations',
+    DeadLetterQueue = 'DeadLetterQueue',
+    MySettings = 'MySettings',
+    Annotations = 'Annotations',
+    Billing = 'Billing',
+    BillingSubscribed = 'BillingSubscribed',
+    BillingLocked = 'BillingLocked',
+    Plugins = 'Plugins',
+    FrontendAppScene = 'FrontendAppScene',
+    SavedInsights = 'SavedInsights',
+    ToolbarLaunch = 'ToolbarLaunch',
+    WebPerformance = 'WebPerformance',
+    IntegrationsRedirect = 'IntegrationsRedirect',
+    // Authentication, onboarding & initialization routes
+    Login = 'Login',
+    Signup = 'Signup',
+    InviteSignup = 'InviteSignup',
+    PasswordReset = 'PasswordReset',
+    PasswordResetComplete = 'PasswordResetComplete',
+    PreflightCheck = 'PreflightCheck',
+    Ingestion = 'IngestionWizard',
+    OrganizationCreationConfirm = 'OrganizationCreationConfirm',
+    Unsubscribe = 'Unsubscribe',
+    //crypto
+    CommunityEngagement = 'CommunityEngagement',
 }
 
 export type SceneProps = Record<string, any>
@@ -65,12 +68,12 @@ export type SceneProps = Record<string, any>
 export type SceneComponent = (params?: SceneProps) => JSX.Element | null
 
 export interface SceneExport {
-/** component to render for this scene */
-component: SceneComponent
-/** logic to mount for this scene */
-logic?: LogicWrapper
-/** convert URL parameters from scenes.ts into logic props */
-paramsToProps?:(params: SceneParams) => SceneProps
+    /** component to render for this scene */
+    component: SceneComponent
+    /** logic to mount for this scene */
+    logic?: LogicWrapper
+    /** convert URL parameters from scenes.ts into logic props */
+    paramsToProps?: (params: SceneParams) => SceneProps
     /** when was the scene last touched, unix timestamp for sortability */
     lastTouch?: number
 }

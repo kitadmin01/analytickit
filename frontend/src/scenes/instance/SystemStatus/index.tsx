@@ -7,10 +7,10 @@ import { useActions, useValues } from 'kea'
 import { PageHeader } from 'lib/components/PageHeader'
 import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
 import { IconOpenInNew } from 'lib/components/icons'
-import { OverviewTab } from 'scenes/instance/SystemStatus/OverviewTab'
-import { InternalMetricsTab } from 'scenes/instance/SystemStatus/InternalMetricsTab'
+//import { OverviewTab } from 'scenes/instance/SystemStatus/OverviewTab'
+//import { InternalMetricsTab } from 'scenes/instance/SystemStatus/InternalMetricsTab'
 import { SceneExport } from 'scenes/sceneTypes'
-import { InstanceConfigTab } from './InstanceConfigTab'
+//import { InstanceConfigTab } from './InstanceConfigTab'
 import { userLogic } from 'scenes/userLogic'
 import { LemonTag } from 'lib/components/LemonTag/LemonTag'
 import { StaffUsersTab } from './StaffUsersTab'
@@ -33,11 +33,11 @@ export function SystemStatus(): JSX.Element {
     return (
         <div className="system-status-scene">
             <PageHeader
-                title="Instance status & settings"
+                title="Welcome Staff Users"
                 caption={
                     <>
-                        Here you can find all the critical runtime details and settings of your analytickit instance. You
-                        have access to this because you're a <b>staff user</b>.{' '}
+                        You have access to this because you're a <b>staff user</b>. You can add or delete other staff
+                        users
                         <a
                             target="_blank"
                             style={{ display: 'inline-flex', alignItems: 'center' }}
@@ -71,8 +71,8 @@ export function SystemStatus(): JSX.Element {
                             <b>
                                 <code>{window.location.origin}</code>
                             </b>
-                            . In order for analytickit to work properly, please set this to the origin where your instance
-                            is hosted.{' '}
+                            . In order for analytickit to work properly, please set this to the origin where your
+                            instance is hosted.{' '}
                             <a
                                 target="_blank"
                                 rel="noopener"
@@ -94,26 +94,6 @@ export function SystemStatus(): JSX.Element {
                 activeKey={tab}
                 onTabClick={(key) => setTab(key as InstanceStatusTabName)}
             >
-                <Tabs.TabPane tab="System overview" key="overview">
-                    <OverviewTab />
-                </Tabs.TabPane>
-                {user?.is_staff && (
-                    <>
-                        <Tabs.TabPane tab="Internal metrics" key="metrics">
-                            <InternalMetricsTab />
-                        </Tabs.TabPane>
-                        <Tabs.TabPane
-                            tab={
-                                <>
-                                    Settings <LemonTag type="warning">Beta</LemonTag>
-                                </>
-                            }
-                            key="settings"
-                        >
-                            <InstanceConfigTab />
-                        </Tabs.TabPane>
-                    </>
-                )}
                 {user?.is_staff && (
                     <Tabs.TabPane tab={<>Staff Users</>} key="staff_users">
                         <StaffUsersTab />
@@ -135,3 +115,28 @@ export function SystemStatus(): JSX.Element {
         </div>
     )
 }
+
+/*
+Removed for users and moved to KitAdmin App
+<Tabs.TabPane tab="System overview" key="overview">
+    <OverviewTab />
+</Tabs.TabPane>
+<Tabs.TabPane tab="Internal metrics" key="metrics">2
+    <InternalMetricsTab />
+</Tabs.TabPane>
+{user?.is_staff && (
+    <>
+
+        <Tabs.TabPane
+            tab={
+                <>
+                    Settings <LemonTag type="warning">Beta</LemonTag>
+                </>
+            }
+            key="settings"
+        >
+            <InstanceConfigTab />
+        </Tabs.TabPane>
+    </>
+)}
+*/

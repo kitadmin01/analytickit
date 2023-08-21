@@ -223,9 +223,9 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         allowUnauthenticated: true,
     },
 
-    [Scene.CommunityEngagement]: {
+    [Scene.ComEng]: {
         projectBased: true,
-        name: 'Community Engagement',
+        name: 'Community Engagement Overview',
     },
 }
 
@@ -314,5 +314,5 @@ export const routes: Record<string, Scene> = {
     [urls.ingestion() + '/*']: Scene.Ingestion,
     [urls.unsubscribe()]: Scene.Unsubscribe,
     [urls.integrationsRedirect(':kind')]: Scene.IntegrationsRedirect,
-    [urls.communityEngagement()]: Scene.CommunityEngagement,
+    [urls.comEng()]: Scene.ComEng,
 }

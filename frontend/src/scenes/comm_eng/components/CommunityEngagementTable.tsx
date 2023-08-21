@@ -1,34 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { LemonTable } from 'lib/components/LemonTable/LemonTable'
 import { CommunityEngagement } from '../models/CommunityEngagementModel'
+import { LemonTableColumns } from 'lib/components/LemonTable/types'
 
-interface CommunityEngagementTableProps {
-    data: CommunityEngagement[]
-}
+const CommunityEngagementTable: React.FC = () => {
+    const [data, setData] = useState<CommunityEngagement[]>([])
+    const [loading, setLoading] = useState(true)
 
-const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ data }) => {
+    useEffect(() => {
+        axios
+            .get('/api/com_eng/')
+            .then((response) => {
+                setData(response.data.results) // Ensure you're setting the correct part of the response
+                console.log(response.data.results) // Log the data
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error)
+                setLoading(false)
+            })
+    }, [])
+
+    const columns: LemonTableColumns<CommunityEngagement> = [
+        { title: 'Team ID', dataIndex: 'team_id' as keyof CommunityEngagement },
+        { title: 'Campaign Name', dataIndex: 'campaign_name' as keyof CommunityEngagement },
+        { title: 'Token Address', dataIndex: 'token_address' as keyof CommunityEngagement },
+        { title: 'Contract Type', dataIndex: 'contract_type' as keyof CommunityEngagement },
+        { title: 'Start Date', dataIndex: 'start_date' as keyof CommunityEngagement },
+        { title: 'End Date', dataIndex: 'end_date' as keyof CommunityEngagement },
+        { title: 'Contract Address', dataIndex: 'contract_address' as keyof CommunityEngagement },
+        // ... Add other columns here
+    ]
+
     return (
-        <div className="community-engagement-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Team ID</th>
-                        <th>Campaign Name</th>
-                        <th>Token Address</th>
-                        {/* ... Add other headers as needed */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item) => (
-                        <tr key={item.team_id}>
-                            <td>{item.team_id}</td>
-                            <td>{item.campaign_name}</td>
-                            <td>{item.token_address}</td>
-                            {/* ... Add other data cells as needed */}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <LemonTable
+            columns={columns}
+            dataSource={data}
+            loading={loading}
+            // You can add other LemonTable props as needed
+        />
     )
 }
 

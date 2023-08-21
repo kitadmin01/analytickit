@@ -60,7 +60,7 @@ export enum Scene {
     OrganizationCreationConfirm = 'OrganizationCreationConfirm',
     Unsubscribe = 'Unsubscribe',
     //crypto
-    CommunityEngagement = 'CommunityEngagement',
+    ComEng = 'ComEng',
 }
 
 export type SceneProps = Record<string, any>

@@ -157,4 +157,4 @@ project_insights_router.register(
 # crypto
 from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
 
-router.register(r"community_engagement", CommunityEngagementViewSet)
+router.register(r"com_eng", CommunityEngagementViewSet)

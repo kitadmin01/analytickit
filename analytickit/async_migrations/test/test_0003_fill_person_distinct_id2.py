@@ -10,7 +10,7 @@ from analytickit.async_migrations.test.util import AsyncMigrationBaseTest
 MIGRATION_NAME = "0003_fill_person_distinct_id2"
 
 
-@pytest.mark.ee
+@pytest.mark.dpa
 class Test0003FillPersonDistinctId2(AsyncMigrationBaseTest):
     def setUp(self):
         from analytickit.client import sync_execute
@@ -66,6 +66,6 @@ class Test0003FillPersonDistinctId2(AsyncMigrationBaseTest):
 
         sync_execute(
             "INSERT INTO person_distinct_id SELECT %(distinct_id)s, %(person_id)s, %(team_id)s, %(sign)s, %(timestamp)s, 0 VALUES",
-            {**kwargs, "timestamp": datetime(2020, 1, 2) + timedelta(days=self.timestamp), },
+            {**kwargs, "timestamp": datetime(2020, 1, 2) + timedelta(days=self.timestamp),},
         )
         self.timestamp += 1

@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from analytickit.models import Team, User
 
 try:
-    from ee.models.license import License
+    from dpa.models.license import License
 except ImportError:
     License = None  # type: ignore
 
@@ -30,7 +30,7 @@ class OrganizationManager(models.Manager):
         return create_with_slug(super().create, *args, **kwargs)
 
     def bootstrap(
-            self, user: Optional["User"], *, team_fields: Optional[Dict[str, Any]] = None, **kwargs,
+        self, user: Optional["User"], *, team_fields: Optional[Dict[str, Any]] = None, **kwargs,
     ) -> Tuple["Organization", Optional["OrganizationMembership"], "Team"]:
         """Instead of doing the legwork of creating an organization yourself, delegate the details with bootstrap."""
         from .team import Team  # Avoiding circular import
@@ -99,7 +99,6 @@ class Organization(UUIDModel):
 
     objects: OrganizationManager = OrganizationManager()
 
-
     def __str__(self):
         return self.name
 
@@ -123,7 +122,7 @@ class Organization(UUIDModel):
         if License is not None:
             license = License.objects.first_valid()
             if license:
-                return (license.plan, "ee")
+                return (license.plan, "dpa")
         return (None, None)
 
     @property
@@ -135,7 +134,7 @@ class Organization(UUIDModel):
         plan, realm = self._billing_plan_details
         if not plan:
             self.available_features = []
-        elif realm in ("ee", "demo"):
+        elif realm in ("dpa", "demo"):
             self.available_features = License.PLANS.get(plan, [])
         else:
             self.available_features = self.billing.available_features  # type: ignore
@@ -172,8 +171,10 @@ class OrganizationMembership(UUIDModel):
         OWNER = 15, "owner"
 
     organization: models.ForeignKey = models.ForeignKey(
-        "analytickit.Organization", on_delete=models.CASCADE, related_name="memberships",
-        related_query_name="membership"
+        "analytickit.Organization",
+        on_delete=models.CASCADE,
+        related_name="memberships",
+        related_query_name="membership",
     )
     user: models.ForeignKey = models.ForeignKey(
         "analytickit.User",
@@ -199,7 +200,7 @@ class OrganizationMembership(UUIDModel):
         return str(self.Level(self.level))
 
     def validate_update(
-            self, membership_being_updated: "OrganizationMembership", new_level: Optional[Level] = None
+        self, membership_being_updated: "OrganizationMembership", new_level: Optional[Level] = None
     ) -> None:
         if new_level is not None:
             if membership_being_updated.id == self.id:
@@ -265,7 +266,7 @@ class OrganizationInvite(UUIDModel):
             )
 
         if OrganizationMembership.objects.filter(
-                organization=self.organization, user__email=self.target_email,
+            organization=self.organization, user__email=self.target_email,
         ).exists():
             raise exceptions.ValidationError(
                 "Another user with this email address already belongs to this organization.",

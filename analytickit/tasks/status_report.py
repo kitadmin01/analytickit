@@ -3,12 +3,12 @@ import os
 from collections import Counter
 from typing import Any, Dict, List, Tuple
 
-import analytickitanalytics
 import structlog
 from django.conf import settings
 from django.db import connection
 from psycopg2 import sql
 
+import analytickitanalytics
 from analytickit import version_requirement
 from analytickit.models import GroupTypeMapping, Person, Team, User
 from analytickit.models.dashboard import Dashboard
@@ -192,7 +192,7 @@ def fetch_sql(sql_: str, params: Tuple[Any, ...]) -> List[Any]:
 
 def get_instance_licenses() -> List[str]:
     try:
-        from ee.models import License
+        from dpa.models import License
     except ImportError:
         return []
     else:

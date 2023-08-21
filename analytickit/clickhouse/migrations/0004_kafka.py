@@ -1,5 +1,4 @@
 from analytickit.infi.clickhouse_orm import migrations
-
 from analytickit.models.event.sql import DISTRIBUTED_EVENTS_TABLE_SQL, WRITABLE_EVENTS_TABLE_SQL
 from analytickit.models.person.sql import (
     KAFKA_PERSONS_DISTINCT_ID_TABLE_SQL,
@@ -19,7 +18,7 @@ from analytickit.settings import CLICKHOUSE_REPLICATION
 # we can't simply add a DROP TABLE for the old tables as there may still be
 # events in Kafka that need to be consumed. We'd need some orchestration around
 # this to avoid losing in flight events. See migration
-# ee/clickhouse/migrations/0025_json_events.py for details of the new tables.
+# dpa/clickhouse/migrations/0025_json_events.py for details of the new tables.
 #
 # For new installs however, we don't need to be consider this case, so we can
 # simply not create them.

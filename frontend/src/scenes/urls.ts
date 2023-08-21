@@ -1,19 +1,19 @@
-import {DashboardType, FilterType, InsightShortId} from '~/types'
-import {combineUrl} from 'kea-router'
-import {ExportOptions} from '~/exporter/types'
+import { DashboardType, FilterType, InsightShortId } from '~/types'
+import { combineUrl } from 'kea-router'
+import { ExportOptions } from '~/exporter/types'
 
 /**
-* To add a new URL to the front end:
-* - add a URL function here
-* - add a scene to the enum in sceneTypes.ts
-* - add a scene configuration in scenes.ts
-* - add a route to scene mapping in scenes.ts
-* - and add a scene import in appScenes.ts
-*
-* Sync the paths with AutoProjectMiddleware!
-*/
+ * To add a new URL to the front end:
+ * - add a URL function here
+ * - add a scene to the enum in sceneTypes.ts
+ * - add a scene configuration in scenes.ts
+ * - add a route to scene mapping in scenes.ts
+ * - and add a scene import in appScenes.ts
+ *
+ * Sync the paths with AutoProjectMiddleware!
+ */
 export const urls = {
-default:(): string => '/',
+    default: (): string => '/',
     dashboards: (): string => '/dashboard',
     dashboard: (id: string | number, highlightInsightId?: string): string =>
         combineUrl(`/dashboard/${id}`, highlightInsightId ? { highlightInsightId } : {}).url,
@@ -90,6 +90,8 @@ default:(): string => '/',
     deadLetterQueue: (): string => '/instance/dead_letter_queue',
     unsubscribe: (): string => '/unsubscribe',
     integrationsRedirect: (kind: string): string => `/integrations/${kind}/redirect`,
+    comEng: (): string => '/com_eng',
+
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {
             ...(exportOptions?.whitelabel ? { whitelabel: null } : {}),

@@ -36,11 +36,11 @@ docker-compose.prod.yml
 *.isorted
 build-storybook.log
 storybook-static
-ee/benchmarks/results
+dpa/benchmarks/results
 .coverage
 coverage-*.xml
 object_storage/
 __emails__
 share/GeoLite2-City.mmdb
 a11y/
-kit3.8/
+kit3.8/*

@@ -14,7 +14,7 @@ from analytickitanalytics.version import VERSION
 _session = requests.sessions.Session()
 
 
-DEFAULT_HOST = "https://app.analytickit.com"
+DEFAULT_HOST = "https://dpa.analytickit.com"
 USER_AGENT = "analytickit-python/" + VERSION
 
 
@@ -38,7 +38,7 @@ def post(
             # whose default encoding is utf-8.
             gz.write(data.encode("utf-8"))
         data = buf.getvalue()
-    # data = {"batch": [{"timestamp": "2022-09-18T19:52:35.450951+00:00", "context": {}, "distinct_id": "GS2dEqckg3bcng0Q0JJCRmF0gI3Zjtq9WYMxmWwIqYH", "$set": {"realm": "hosted-clickhouse", "email_opt_in": true, "anonymize_data": false, "email": "test@test.com", "is_signed_up": true, "organization_count": 1, "project_count": 1, "team_member_count_all": 1, "completed_onboarding_once": true, "billing_plan": "enterprise", "organization_id": "01831fbd-9ca5-0000-27e3-5f7e024285db", "project_id": "01831fbd-9e80-0000-5b55-16759a344abf", "project_setup_complete": true, "joined_at": "2022-09-09T00:54:23.961276+00:00", "has_password_set": true, "has_social_auth": false, "social_providers": []}, "event": "$identify", "properties": {"$lib": "analytickit-python", "$lib_version": "2.1.0"}}], "sentAt": "2022-09-18T19:52:35.898694+00:00", "api_key": "phc_VSuvlVsXRjOOynFJUVlFJN7"}  
+    # data = {"batch": [{"timestamp": "2022-09-18T19:52:35.450951+00:00", "context": {}, "distinct_id": "GS2dEqckg3bcng0Q0JJCRmF0gI3Zjtq9WYMxmWwIqYH", "$set": {"realm": "hosted-clickhouse", "email_opt_in": true, "anonymize_data": false, "email": "test@test.com", "is_signed_up": true, "organization_count": 1, "project_count": 1, "team_member_count_all": 1, "completed_onboarding_once": true, "billing_plan": "enterprise", "organization_id": "01831fbd-9ca5-0000-27e3-5f7e024285db", "project_id": "01831fbd-9e80-0000-5b55-16759a344abf", "project_setup_complete": true, "joined_at": "2022-09-09T00:54:23.961276+00:00", "has_password_set": true, "has_social_auth": false, "social_providers": []}, "event": "$identify", "properties": {"$lib": "analytickit-python", "$lib_version": "2.1.0"}}], "sentAt": "2022-09-18T19:52:35.898694+00:00", "api_key": "phc_VSuvlVsXRjOOynFJUVlFJN7"}
     res = _session.post(url, data=data, headers=headers, timeout=timeout)
     if res.status_code == 200:
         log.debug("data uploaded successfully")

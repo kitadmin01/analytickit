@@ -79,7 +79,7 @@ export const loginLogic = kea<loginLogicType>({
         authenticateSuccess: ({ authenticateResponse }) => {
             if (authenticateResponse?.success) {
                 handleLoginRedirect()
-                // Reload the page after login to ensure analytickit_APP_CONTEXT is set correctly.
+                // Reload the page after login to ensure ANALYTICKIT_APP_CONTEXT is set correctly.
                 window.location.reload()
             }
         },

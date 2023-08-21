@@ -39,4 +39,4 @@ else
     export SKIP_TRIGRAM_INDEX_FOR_TESTS=1
 fi
 
-nodemon -w ./analytickit -w ./ee --ext py --exec "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES pytest --reuse-db --durations-min=2.0 ${MIGRATIONS} -s $* --snapshot-update; mypy analytickit ee"
+nodemon -w ./analytickit -w ./dpa --ext py --exec "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES pytest --reuse-db --durations-min=2.0 ${MIGRATIONS} -s $* --snapshot-update; mypy analytickit dpa"

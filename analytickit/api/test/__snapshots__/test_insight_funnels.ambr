@@ -1,5 +1,5 @@
 # name: ClickhouseTestFunnelTypes.test_funnel_time_to_convert_auto_bins
-  '''
+  '
   /* request:api_projects_(?P<parent_lookup_team_id>[^_.]+)_insights_funnel_?$ (ClickhouseInsightsViewSet) */ WITH step_runs AS
     (SELECT *
      FROM
@@ -129,10 +129,10 @@
      FROM system.numbers
      LIMIT ifNull(bin_count, 0) + 1) fill USING (bin_from_seconds)
   ORDER BY bin_from_seconds SETTINGS allow_experimental_window_functions = 1
-  '''
-# ---
+  '
+---
 # name: ClickhouseTestFunnelTypes.test_funnel_time_to_convert_auto_bins_strict
-  '''
+  '
   /* request:api_projects_(?P<parent_lookup_team_id>[^_.]+)_insights_funnel_?$ (ClickhouseInsightsViewSet) */ WITH step_runs AS
     (SELECT *
      FROM
@@ -240,10 +240,10 @@
      FROM system.numbers
      LIMIT ifNull(bin_count, 0) + 1) fill USING (bin_from_seconds)
   ORDER BY bin_from_seconds SETTINGS allow_experimental_window_functions = 1
-  '''
-# ---
+  '
+---
 # name: ClickhouseTestFunnelTypes.test_funnel_time_to_convert_auto_bins_unordered
-  '''
+  '
   /* request:api_projects_(?P<parent_lookup_team_id>[^_.]+)_insights_funnel_?$ (ClickhouseInsightsViewSet) */ WITH step_runs AS
     (SELECT *
      FROM
@@ -454,5 +454,5 @@
      FROM system.numbers
      LIMIT ifNull(bin_count, 0) + 1) fill USING (bin_from_seconds)
   ORDER BY bin_from_seconds SETTINGS allow_experimental_window_functions = 1
-  '''
-# ---
+  '
+---

@@ -1,5 +1,4 @@
 import pytest
-from analytickit.infi.clickhouse_orm.utils import import_submodules
 
 from analytickit.async_migrations.definition import AsyncMigrationDefinition, AsyncMigrationOperation
 from analytickit.async_migrations.setup import (
@@ -7,12 +6,13 @@ from analytickit.async_migrations.setup import (
     get_async_migration_definition,
     setup_async_migrations,
 )
+from analytickit.infi.clickhouse_orm.utils import import_submodules
 from analytickit.models.async_migration import AsyncMigration
 from analytickit.test.base import BaseTest
 from analytickit.version_requirement import ServiceVersionRequirement
 
 
-@pytest.mark.ee
+@pytest.mark.dpa
 class TestAsyncMigrationDefinition(BaseTest):
     def test_get_async_migration_definition(self):
         from analytickit.async_migrations.examples.example import example_fn, example_rollback_fn

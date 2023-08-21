@@ -204,7 +204,7 @@ export class DB {
             let fullQuery = ''
             try {
                 fullQuery = getFinalPostgresQuery(queryString, values as any[])
-            } catch { }
+            } catch {}
             const timeout = timeoutGuard('Postgres slow query warning after 30 sec', {
                 queryString,
                 values,
@@ -610,9 +610,9 @@ export class DB {
                 const key = this.getGroupDataCacheKey(teamId, group.identifier.index, group.identifier.key)
                 const value = group.data
                     ? {
-                        properties: group.data.properties,
-                        created_at: group.data.created_at.toISO(),
-                    }
+                          properties: group.data.properties,
+                          created_at: group.data.created_at.toISO(),
+                      }
                     : null
                 return [key, value]
             })
@@ -756,9 +756,9 @@ export class DB {
                 identifier,
                 data: row
                     ? {
-                        properties: row.group_properties,
-                        created_at: DateTime.fromISO(row.created_at).toUTC(),
-                    }
+                          properties: row.group_properties,
+                          created_at: DateTime.fromISO(row.created_at).toUTC(),
+                      }
                     : null,
             }
         })
@@ -834,11 +834,11 @@ export class DB {
                     .rows as RawPerson[]
             ).map(
                 (rawPerson: RawPerson) =>
-                ({
-                    ...rawPerson,
-                    created_at: DateTime.fromISO(rawPerson.created_at).toUTC(),
-                    version: Number(rawPerson.version || 0),
-                } as Person)
+                    ({
+                        ...rawPerson,
+                        created_at: DateTime.fromISO(rawPerson.created_at).toUTC(),
+                        version: Number(rawPerson.version || 0),
+                    } as Person)
             )
         } else {
             throw new Error(`Can't fetch persons for database: ${database}`)
@@ -974,8 +974,9 @@ export class DB {
         // Potentially overriding values badly if there was an update to the person after computing updateValues above
         const queryString = `UPDATE analytickit_person SET version = COALESCE(version, 0)::numeric + 1, ${Object.keys(
             update
-        ).map((field, index) => `"${sanitizeSqlIdentifier(field)}" = $${index + 1}`)} WHERE id = $${Object.values(update).length + 1
-            }
+        ).map((field, index) => `"${sanitizeSqlIdentifier(field)}" = $${index + 1}`)} WHERE id = $${
+            Object.values(update).length + 1
+        }
         RETURNING *`
 
         const updateResult: QueryResult = await this.postgresQuery(queryString, values, 'updatePerson', client)
@@ -1316,31 +1317,31 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
         return (
             events?.map(
                 (event) =>
-                ({
-                    ...event,
-                    ...(typeof event['properties'] === 'string'
-                        ? { properties: JSON.parse(event.properties) }
-                        : {}),
-                    ...(!!event['person_properties'] && typeof event['person_properties'] === 'string'
-                        ? { person_properties: JSON.parse(event.person_properties) }
-                        : {}),
-                    ...(!!event['group0_properties'] && typeof event['group0_properties'] === 'string'
-                        ? { group0_properties: JSON.parse(event.group0_properties) }
-                        : {}),
-                    ...(!!event['group1_properties'] && typeof event['group1_properties'] === 'string'
-                        ? { group1_properties: JSON.parse(event.group1_properties) }
-                        : {}),
-                    ...(!!event['group2_properties'] && typeof event['group2_properties'] === 'string'
-                        ? { group2_properties: JSON.parse(event.group2_properties) }
-                        : {}),
-                    ...(!!event['group3_properties'] && typeof event['group3_properties'] === 'string'
-                        ? { group3_properties: JSON.parse(event.group3_properties) }
-                        : {}),
-                    ...(!!event['group4_properties'] && typeof event['group4_properties'] === 'string'
-                        ? { group4_properties: JSON.parse(event.group4_properties) }
-                        : {}),
-                    timestamp: clickHouseTimestampToISO(event.timestamp),
-                } as ClickHouseEvent)
+                    ({
+                        ...event,
+                        ...(typeof event['properties'] === 'string'
+                            ? { properties: JSON.parse(event.properties) }
+                            : {}),
+                        ...(!!event['person_properties'] && typeof event['person_properties'] === 'string'
+                            ? { person_properties: JSON.parse(event.person_properties) }
+                            : {}),
+                        ...(!!event['group0_properties'] && typeof event['group0_properties'] === 'string'
+                            ? { group0_properties: JSON.parse(event.group0_properties) }
+                            : {}),
+                        ...(!!event['group1_properties'] && typeof event['group1_properties'] === 'string'
+                            ? { group1_properties: JSON.parse(event.group1_properties) }
+                            : {}),
+                        ...(!!event['group2_properties'] && typeof event['group2_properties'] === 'string'
+                            ? { group2_properties: JSON.parse(event.group2_properties) }
+                            : {}),
+                        ...(!!event['group3_properties'] && typeof event['group3_properties'] === 'string'
+                            ? { group3_properties: JSON.parse(event.group3_properties) }
+                            : {}),
+                        ...(!!event['group4_properties'] && typeof event['group4_properties'] === 'string'
+                            ? { group4_properties: JSON.parse(event.group4_properties) }
+                            : {}),
+                        timestamp: clickHouseTimestampToISO(event.timestamp),
+                    } as ClickHouseEvent)
             ) || []
         )
     }
@@ -1422,15 +1423,20 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
     // EventDefinition
 
     public async fetchEventDefinitions(): Promise<EventDefinitionType[]> {
-        return (await this.postgresQuery('SELECT * FROM analytickit_eventdefinition', undefined, 'fetchEventDefinitions'))
-            .rows as EventDefinitionType[]
+        return (
+            await this.postgresQuery('SELECT * FROM analytickit_eventdefinition', undefined, 'fetchEventDefinitions')
+        ).rows as EventDefinitionType[]
     }
 
     // PropertyDefinition
 
     public async fetchPropertyDefinitions(): Promise<PropertyDefinitionType[]> {
         return (
-            await this.postgresQuery('SELECT * FROM analytickit_propertydefinition', undefined, 'fetchPropertyDefinitions')
+            await this.postgresQuery(
+                'SELECT * FROM analytickit_propertydefinition',
+                undefined,
+                'fetchPropertyDefinitions'
+            )
         ).rows as PropertyDefinitionType[]
     }
 
@@ -1610,7 +1616,7 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
             const { rows } = await this.postgresQuery<Hook>(
                 `
                 SELECT *
-                FROM ee_hook
+                FROM dpa_hook
                 WHERE event = 'action_performed'
                 ${actionId !== undefined ? 'AND resource_id = $1' : ''}
                 `,
@@ -1620,7 +1626,7 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
             return rows
         } catch (err) {
             // On FOSS this table does not exist - ignore errors
-            if (err.message.includes('relation "ee_hook" does not exist')) {
+            if (err.message.includes('relation "dpa_hook" does not exist')) {
                 return []
             }
 
@@ -1629,7 +1635,7 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
     }
 
     public async deleteRestHook(hookId: Hook['id']): Promise<void> {
-        await this.postgresQuery(`DELETE FROM ee_hook WHERE id = $1`, [hookId], 'deleteRestHook')
+        await this.postgresQuery(`DELETE FROM dpa_hook WHERE id = $1`, [hookId], 'deleteRestHook')
     }
 
     public async createUser({

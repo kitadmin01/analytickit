@@ -9,7 +9,7 @@ class TestTaggedItem(BaseTest):
     def test_exactly_one_object_constraint(self):
         # Setup
         dashboard = Dashboard.objects.create(team_id=self.team.id, name="private dashboard")
-        insight = Insight.objects.create(filters={"events": [{"id": "$pageview"}]}, team_id=self.team.id, )
+        insight = Insight.objects.create(filters={"events": [{"id": "$pageview"}]}, team_id=self.team.id,)
         DashboardTile.objects.create(insight=insight, dashboard=dashboard)
         tag = Tag.objects.create(name="tag", team_id=self.team.id)
 
@@ -33,7 +33,7 @@ class TestTaggedItem(BaseTest):
 
     def test_uniqueness_constraint_insight(self):
         dashboard = Dashboard.objects.create(team_id=self.team.id, name="private dashboard")
-        insight = Insight.objects.create(filters={"events": [{"id": "$pageview"}]}, team_id=self.team.id, )
+        insight = Insight.objects.create(filters={"events": [{"id": "$pageview"}]}, team_id=self.team.id,)
         DashboardTile.objects.create(insight=insight, dashboard=dashboard)
         tag = Tag.objects.create(name="tag", team_id=self.team.id)
 
@@ -43,7 +43,7 @@ class TestTaggedItem(BaseTest):
 
     def test_uniqueness_constraint_event_definition(self):
         try:
-            from ee.models import EnterpriseEventDefinition
+            from dpa.models import EnterpriseEventDefinition
         except ImportError:
             pass
         else:
@@ -58,7 +58,7 @@ class TestTaggedItem(BaseTest):
 
     def test_uniqueness_constraint_property_definition(self):
         try:
-            from ee.models import EnterprisePropertyDefinition
+            from dpa.models import EnterprisePropertyDefinition
         except ImportError:
             pass
         else:

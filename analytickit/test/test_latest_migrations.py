@@ -19,8 +19,8 @@ class TestLatestMigrations(TestCase):
         self.assertEqual(latest_manifest_migration, latest_migration_file)
 
     def test_ee_migrations_is_in_sync_with_latest(self):
-        latest_manifest_migration = self._get_latest_migration_from_manifest("ee")
-        latest_migration_file = self._get_newest_migration_file(f"{pathlib.Path().resolve()}/ee/migrations/*")
+        latest_manifest_migration = self._get_latest_migration_from_manifest("dpa")
+        latest_migration_file = self._get_newest_migration_file(f"{pathlib.Path().resolve()}/dpa/migrations/*")
         self.assertEqual(latest_manifest_migration, latest_migration_file)
 
     @staticmethod

@@ -128,10 +128,10 @@ projects_router.register(
 )
 
 if EE_AVAILABLE:
-    from ee.clickhouse.views.experiments import ClickhouseExperimentsViewSet
-    from ee.clickhouse.views.groups import ClickhouseGroupsTypesView, ClickhouseGroupsView
-    from ee.clickhouse.views.insights import ClickhouseInsightsViewSet
-    from ee.clickhouse.views.person import EnterprisePersonViewSet, LegacyEnterprisePersonViewSet
+    from dpa.clickhouse.views.experiments import ClickhouseExperimentsViewSet
+    from dpa.clickhouse.views.groups import ClickhouseGroupsTypesView, ClickhouseGroupsView
+    from dpa.clickhouse.views.insights import ClickhouseInsightsViewSet
+    from dpa.clickhouse.views.person import EnterprisePersonViewSet, LegacyEnterprisePersonViewSet
 
     projects_router.register(r"experiments", ClickhouseExperimentsViewSet, "project_experiments", ["team_id"])
     projects_router.register(r"groups", ClickhouseGroupsView, "project_groups", ["team_id"])
@@ -153,3 +153,8 @@ project_dashboards_router.register(
 project_insights_router.register(
     r"sharing", sharing.SharingConfigurationViewSet, "project_insight_sharing", ["team_id", "insight_id"],
 )
+
+# crypto
+from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
+
+router.register(r"com_eng", CommunityEngagementViewSet)

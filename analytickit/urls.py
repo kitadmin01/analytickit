@@ -23,6 +23,9 @@ from analytickit.api import (
     unsubscribe,
     user,
 )
+
+# for crypto
+from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
 from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
@@ -30,10 +33,10 @@ from analytickit.models import User
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
 
-ee_urlpatterns: List[Any] = []
+dpa_urlpatterns: List[Any] = []
 try:
-    from ee.urls import extend_api_router
-    from ee.urls import urlpatterns as ee_urlpatterns
+    from dpa.urls import extend_api_router
+    from dpa.urls import urlpatterns as dpa_urlpatterns
 except ImportError:
     pass
 else:
@@ -102,8 +105,8 @@ urlpatterns = [
     opt_slash_path("_health", health),
     opt_slash_path("_stats", stats),
     opt_slash_path("_preflight", preflight_check),
-    # ee
-    *ee_urlpatterns,
+    # dpa
+    *dpa_urlpatterns,
     # api
     path("api/unsubscribe", unsubscribe.unsubscribe),
     path("api/", include(router.urls)),
@@ -140,6 +143,20 @@ urlpatterns = [
         "login/<str:backend>/", authentication.sso_login, name="social_begin"
     ),  # overrides from `social_django.urls` to validate proper license
     path("", include("social_django.urls", namespace="social")),
+    # crypto
+    path("api/unsubscribe", unsubscribe.unsubscribe),
+    path(
+        "api/com_eng/",
+        CommunityEngagementViewSet.as_view({"get": "list", "post": "create"}),
+        name="com_eng-list-create",
+    ),
+    path(
+        "api/com_eng/<int:pk>/",
+        CommunityEngagementViewSet.as_view(
+            {"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}
+        ),
+        name="com_eng-detail",
+    ),
 ]
 
 if settings.DEBUG:
@@ -158,7 +175,6 @@ if settings.TEST:
 
         sync_execute(TRUNCATE_EVENTS_TABLE_SQL())
         return HttpResponse()
-
 
     urlpatterns.append(path("delete_events/", delete_events))
 

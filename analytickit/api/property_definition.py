@@ -65,10 +65,11 @@ class PropertyDefinitionViewSet(
 
     def get_queryset(self):
         use_entreprise_taxonomy = self.request.user.organization.is_feature_available(
-            AvailableFeature.INGESTION_TAXONOMY)  # type: ignore
+            AvailableFeature.INGESTION_TAXONOMY
+        )  # type: ignore
         if use_entreprise_taxonomy:
             try:
-                from ee.models.property_definition import EnterprisePropertyDefinition
+                from dpa.models.property_definition import EnterprisePropertyDefinition
             except ImportError:
                 use_entreprise_taxonomy = False
 
@@ -127,16 +128,19 @@ class PropertyDefinitionViewSet(
         if use_entreprise_taxonomy:
             # Prevent fetching deprecated `tags` field. Tags are separately fetched in TaggedItemSerializerMixin
             property_definition_fields = ", ".join(
-                [f'"{f.column}"' for f in EnterprisePropertyDefinition._meta.get_fields() if
-                 hasattr(f, "column") and f.column not in ["deprecated_tags", "tags"]],  # type: ignore
+                [
+                    f'"{f.column}"'
+                    for f in EnterprisePropertyDefinition._meta.get_fields()
+                    if hasattr(f, "column") and f.column not in ["deprecated_tags", "tags"]
+                ],  # type: ignore
             )
 
             return EnterprisePropertyDefinition.objects.raw(
                 f"""
                             SELECT {property_definition_fields},
                                    {event_property_field} AS is_event_property
-                            FROM ee_enterprisepropertydefinition
-                            FULL OUTER JOIN analytickit_propertydefinition ON analytickit_propertydefinition.id=ee_enterprisepropertydefinition.propertydefinition_ptr_id
+                            FROM dpa_enterprisepropertydefinition
+                            FULL OUTER JOIN analytickit_propertydefinition ON analytickit_propertydefinition.id=dpa_enterprisepropertydefinition.propertydefinition_ptr_id
                             WHERE team_id = %(team_id)s AND name NOT IN %(excluded_properties)s
                              {name_filter} {numerical_filter} {search_query} {event_property_filter} {is_feature_flag_filter}
                             ORDER BY is_event_property DESC, query_usage_30_day DESC NULLS LAST, name ASC
@@ -166,7 +170,7 @@ class PropertyDefinitionViewSet(
         serializer_class = self.serializer_class
         if self.request.user.organization.is_feature_available(AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
             try:
-                from ee.api.ee_property_definition import EnterprisePropertyDefinitionSerializer
+                from dpa.api.dpa_property_definition import EnterprisePropertyDefinitionSerializer
             except ImportError:
                 pass
             else:
@@ -177,7 +181,7 @@ class PropertyDefinitionViewSet(
         id = self.kwargs["id"]
         if self.request.user.organization.is_feature_available(AvailableFeature.INGESTION_TAXONOMY):  # type: ignore
             try:
-                from ee.models.property_definition import EnterprisePropertyDefinition
+                from dpa.models.property_definition import EnterprisePropertyDefinition
             except ImportError:
                 pass
             else:

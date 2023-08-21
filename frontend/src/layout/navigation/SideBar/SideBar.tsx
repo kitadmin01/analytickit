@@ -4,7 +4,6 @@ import { Link } from 'lib/components/Link'
 import React, { useState } from 'react'
 import { ProjectSwitcherOverlay } from '~/layout/navigation/ProjectSwitcher'
 import {
-    IconApps,
     IconBarChart,
     IconCoffee,
     IconCohort,
@@ -26,7 +25,6 @@ import { LemonDivider } from 'lib/components/LemonDivider'
 import { Lettermark } from 'lib/components/Lettermark/Lettermark'
 import { dashboardsModel } from '~/models/dashboardsModel'
 import { organizationLogic } from '~/scenes/organizationLogic'
-import { canViewPlugins } from '~/scenes/plugins/access'
 import { Scene } from '~/scenes/sceneTypes'
 import { teamLogic } from '~/scenes/teamLogic'
 import { urls } from '~/scenes/urls'
@@ -38,9 +36,7 @@ import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
 import { groupsModel } from '~/models/groupsModel'
 import { userLogic } from 'scenes/userLogic'
 import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
-import { SideBarApps } from '~/layout/navigation/SideBar/SideBarApps'
 import { PageButton } from '~/layout/navigation/SideBar/PageButton'
-import { frontendAppsLogic } from 'scenes/apps/frontendAppsLogic'
 import { authorizedUrlsLogic } from 'scenes/toolbar-launch/authorizedUrlsLogic'
 import { LemonButton } from 'lib/components/LemonButton'
 import { Tooltip } from 'lib/components/Tooltip'
@@ -56,7 +52,6 @@ function Pages(): JSX.Element {
     const { hasAvailableFeature } = useValues(userLogic)
     const { preflight } = useValues(preflightLogic)
     const { currentTeam } = useValues(teamLogic)
-    const { frontendApps } = useValues(frontendAppsLogic)
     const { appUrls, launchUrl } = useValues(authorizedUrlsLogic)
 
     const [arePinnedDashboardsShown, setArePinnedDashboardsShown] = useState(false)
@@ -184,32 +179,6 @@ function Pages(): JSX.Element {
                     />
                     <PageButton icon={<IconCohort />} identifier={Scene.Cohorts} to={urls.cohorts()} />
                     <PageButton icon={<IconComment />} identifier={Scene.Annotations} to={urls.annotations()} />
-                    {featureFlags[FEATURE_FLAGS.FRONTEND_APPS] ? (
-                        <>
-                            {canViewPlugins(currentOrganization) || Object.keys(frontendApps).length > 0 ? (
-                                <>
-                                    <div className="SideBar__heading">Apps</div>
-                                    {canViewPlugins(currentOrganization) && (
-                                        <PageButton
-                                            title="Browse Apps"
-                                            icon={<IconApps />}
-                                            identifier={Scene.Plugins}
-                                            to={urls.projectApps()}
-                                        />
-                                    )}
-                                    {Object.keys(frontendApps).length > 0 && <SideBarApps />}
-                                </>
-                            ) : null}
-                            <div className="SideBar__heading">Configuration</div>
-                        </>
-                    ) : (
-                        <>
-                            <LemonDivider />
-                            {canViewPlugins(currentOrganization) && (
-                                <PageButton icon={<IconApps />} identifier={Scene.Plugins} to={urls.projectApps()} />
-                            )}
-                        </>
-                    )}
 
                     <PageButton
                         icon={<IconTools />}

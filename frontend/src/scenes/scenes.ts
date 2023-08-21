@@ -222,6 +222,11 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     [Scene.Unsubscribe]: {
         allowUnauthenticated: true,
     },
+
+    [Scene.ComEng]: {
+        projectBased: true,
+        name: 'Community Engagement Overview',
+    },
 }
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
@@ -251,11 +256,11 @@ export const routes: Record<string, Scene> = {
     [urls.createAction()]: Scene.Action,
     [urls.action(':id')]: Scene.Action,
     [urls.insightNew()]: Scene.Insight,
-    [urls.insightEdit(':shortId'as InsightShortId)]: Scene.Insight,
-    [urls.insightView(':shortId'as InsightShortId)]: Scene.Insight,
-    [urls.insightSubcriptions(':shortId'as InsightShortId)]: Scene.Insight,
-    [urls.insightSubcription(':shortId'as InsightShortId, ':subscriptionId')]: Scene.Insight,
-    [urls.insightSharing(':shortId'as InsightShortId)]: Scene.Insight,
+    [urls.insightEdit(':shortId' as InsightShortId)]: Scene.Insight,
+    [urls.insightView(':shortId' as InsightShortId)]: Scene.Insight,
+    [urls.insightSubcriptions(':shortId' as InsightShortId)]: Scene.Insight,
+    [urls.insightSubcription(':shortId' as InsightShortId, ':subscriptionId')]: Scene.Insight,
+    [urls.insightSharing(':shortId' as InsightShortId)]: Scene.Insight,
     [urls.savedInsights()]: Scene.SavedInsights,
     [urls.actions()]: Scene.Actions, // TODO: remove when "simplify-actions" FF is released
     [urls.eventDefinitions()]: Scene.EventDefinitions,
@@ -309,4 +314,5 @@ export const routes: Record<string, Scene> = {
     [urls.ingestion() + '/*']: Scene.Ingestion,
     [urls.unsubscribe()]: Scene.Unsubscribe,
     [urls.integrationsRedirect(':kind')]: Scene.IntegrationsRedirect,
+    [urls.comEng()]: Scene.ComEng,
 }

@@ -18,7 +18,7 @@ from analytickit.test.base import APIBaseTest
 class TestLoginPrecheckAPI(APIBaseTest):
     """
     Tests the login precheck API.
-    Please note additional login tests are included in ee/api/test/test_authentication.py
+    Please note additional login tests are included in dpa/api/test/test_authentication.py
     """
 
     CONFIG_AUTO_LOGIN = False
@@ -50,7 +50,7 @@ class TestLoginPrecheckAPI(APIBaseTest):
 class TestLoginAPI(APIBaseTest):
     """
     Tests the general password login API.
-    Please note additional login tests are included in ee/api/test/test_authentication.py (e.g. testing SSO enforcement)
+    Please note additional login tests are included in dpa/api/test/test_authentication.py (e.g. testing SSO enforcement)
     """
 
     CONFIG_AUTO_LOGIN = False
@@ -71,7 +71,7 @@ class TestLoginAPI(APIBaseTest):
             self.user.distinct_id,
             "user logged in",
             properties={"social_provider": ""},
-            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid), },
+            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid),},
         )
 
     @patch("analytickitanalytics.capture")
@@ -173,7 +173,7 @@ class TestPasswordResetAPI(APIBaseTest):
         set_instance_setting("EMAIL_HOST", "localhost")
 
         with self.settings(
-                CELERY_TASK_ALWAYS_EAGER=True, SITE_URL="https://my.analytickit.net",
+            CELERY_TASK_ALWAYS_EAGER=True, SITE_URL="https://my.analytickit.net",
         ):
             response = self.client.post("/api/reset/", {"email": self.CONFIG_EMAIL})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -190,13 +190,14 @@ class TestPasswordResetAPI(APIBaseTest):
 
         html_message = mail.outbox[0].alternatives[0][0]  # type: ignore
         self.validate_basic_html(
-            html_message, "https://my.analytickit.net",
+            html_message,
+            "https://my.analytickit.net",
             preheader="Please follow the link inside to reset your password.",
         )
 
         # validate reset token
         link_index = html_message.find("https://my.analytickit.net/reset")
-        reset_link = html_message[link_index: html_message.find('"', link_index)]
+        reset_link = html_message[link_index : html_message.find('"', link_index)]
         self.assertTrue(
             default_token_generator.check_token(
                 self.user, reset_link.replace("https://my.analytickit.net/reset/", "").replace(f"{self.user.uuid}/", "")
@@ -222,7 +223,7 @@ class TestPasswordResetAPI(APIBaseTest):
         )
 
         with self.settings(
-                CELERY_TASK_ALWAYS_EAGER=True, SITE_URL="https://my.analytickit.net",
+            CELERY_TASK_ALWAYS_EAGER=True, SITE_URL="https://my.analytickit.net",
         ):
             response = self.client.post("/api/reset/", {"email": self.CONFIG_EMAIL})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -231,13 +232,14 @@ class TestPasswordResetAPI(APIBaseTest):
 
         html_message = mail.outbox[0].alternatives[0][0]  # type: ignore
         self.validate_basic_html(
-            html_message, "https://my.analytickit.net",
+            html_message,
+            "https://my.analytickit.net",
             preheader="Please follow the link inside to reset your password.",
         )
 
         # validate reset token
         link_index = html_message.find("https://my.analytickit.net/reset")
-        reset_link = html_message[link_index: html_message.find('"', link_index)]
+        reset_link = html_message[link_index : html_message.find('"', link_index)]
         self.assertTrue(
             default_token_generator.check_token(
                 self.user, reset_link.replace(f"https://my.analytickit.net/reset/{self.user.uuid}/", "")
@@ -252,7 +254,7 @@ class TestPasswordResetAPI(APIBaseTest):
         set_instance_setting("EMAIL_HOST", "localhost")
 
         with self.settings(
-                CELERY_TASK_ALWAYS_EAGER=True, SITE_URL="https://my.analytickit.net",
+            CELERY_TASK_ALWAYS_EAGER=True, SITE_URL="https://my.analytickit.net",
         ):
             response = self.client.post("/api/reset/", {"email": "i_dont_exist@analytickit.com"})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -345,12 +347,12 @@ class TestPasswordResetAPI(APIBaseTest):
             self.user.distinct_id,
             "user logged in",
             properties={"social_provider": ""},
-            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid), },
+            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid),},
         )
         mock_capture.assert_any_call(
             self.user.distinct_id,
             "user password reset",
-            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid), },
+            groups={"instance": ANY, "organization": str(self.team.organization_id), "project": str(self.team.uuid),},
         )
         self.assertEqual(mock_capture.call_count, 2)
 
@@ -382,7 +384,7 @@ class TestPasswordResetAPI(APIBaseTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.json(),
-            {"type": "validation_error", "code": "required", "detail": "This field is required.", "attr": "token", },
+            {"type": "validation_error", "code": "required", "detail": "This field is required.", "attr": "token",},
         )
 
         # user remains logged out

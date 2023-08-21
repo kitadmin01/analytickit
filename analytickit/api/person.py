@@ -65,8 +65,12 @@ from analytickit.queries.trends.lifecycle import Lifecycle
 from analytickit.queries.util import get_earliest_timestamp
 from analytickit.settings import EE_AVAILABLE
 from analytickit.tasks.split_person import split_person
-from analytickit.utils import convert_property_value, format_query_params_absolute_url, is_anonymous_id, \
-    relative_date_parse
+from analytickit.utils import (
+    convert_property_value,
+    format_query_params_absolute_url,
+    is_anonymous_id,
+    relative_date_parse,
+)
 
 
 class PersonLimitOffsetPagination(LimitOffsetPagination):
@@ -78,13 +82,13 @@ class PersonLimitOffsetPagination(LimitOffsetPagination):
                     "type": "string",
                     "nullable": True,
                     "format": "uri",
-                    "example": "https://app.analytickit.com/api/projects/{project_id}/accounts/?offset=400&limit=100",
+                    "example": "https://dpa.analytickit.com/api/projects/{project_id}/accounts/?offset=400&limit=100",
                 },
                 "previous": {
                     "type": "string",
                     "nullable": True,
                     "format": "uri",
-                    "example": "https://app.analytickit.com/api/projects/{project_id}/accounts/?offset=400&limit=100",
+                    "example": "https://dpa.analytickit.com/api/projects/{project_id}/accounts/?offset=400&limit=100",
                 },
                 "results": schema,
             },
@@ -134,7 +138,7 @@ def get_funnel_actor_class(filter: Filter) -> Callable:
     if filter.correlation_person_entity and EE_AVAILABLE:
 
         if EE_AVAILABLE:
-            from ee.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
+            from dpa.clickhouse.queries.funnels.funnel_correlation_persons import FunnelCorrelationActors
 
             funnel_actor_class = FunnelCorrelationActors
         else:
@@ -263,7 +267,7 @@ class PersonViewSet(PKorUUIDViewSet, StructuredViewSetMixin, viewsets.ModelViewS
 
     @cached_function
     def calculate_funnel_persons(
-            self, request: request.Request
+        self, request: request.Request
     ) -> Dict[str, Tuple[List, Optional[str], Optional[str]]]:
         if request.user.is_anonymous or not self.team:
             return {"result": ([], None, None)}
@@ -351,7 +355,8 @@ class PersonViewSet(PKorUUIDViewSet, StructuredViewSetMixin, viewsets.ModelViewS
                 try:
                     # Try loading as json for dicts or arrays
                     flattened.append(
-                        {"name": convert_property_value(json.loads(value)), "count": count})  # type: ignore
+                        {"name": convert_property_value(json.loads(value)), "count": count}
+                    )  # type: ignore
                 except json.decoder.JSONDecodeError:
                     flattened.append({"name": convert_property_value(value), "count": count})
         return response.Response(flattened)
@@ -391,7 +396,7 @@ class PersonViewSet(PKorUUIDViewSet, StructuredViewSetMixin, viewsets.ModelViewS
                 scope="Person",
                 activity="was_merged_into_person",
                 detail=Detail(
-                    merge=Merge(type="Person", source=PersonSerializer(p).data, target=PersonSerializer(person).data, )
+                    merge=Merge(type="Person", source=PersonSerializer(p).data, target=PersonSerializer(person).data,)
                 ),
             )
 
@@ -607,7 +612,7 @@ class PersonViewSet(PKorUUIDViewSet, StructuredViewSetMixin, viewsets.ModelViewS
 
 
 def paginated_result(
-        entites: Union[List[Dict[str, Any]], ReturnDict], request: request.Request, offset: int = 0,
+    entites: Union[List[Dict[str, Any]], ReturnDict], request: request.Request, offset: int = 0,
 ) -> Optional[str]:
     return format_paginated_url(request, offset, 100) if len(entites) > 99 else None
 

@@ -87,7 +87,7 @@ RUN apk --update --no-cache add \
 #   It's better here to fail at build then it is to fail at boot time.
 
 RUN apk --update --no-cache --virtual .geolite-deps add \
-    "curl~=7" \
+    "curl~=8" \
     "brotli~=1.0.9" \
     && \
     mkdir share \
@@ -140,10 +140,9 @@ USER analytickit
 COPY manage.py manage.py
 COPY analytickit analytickit/
 COPY ./analytickitanalytics ./analytickitanalytics/
-COPY ee ee/
+COPY dpa dpa/
 COPY --from=frontend /code/frontend/dist /code/frontend/dist
 
-RUN ls -al ./analytickit
 RUN SKIP_SERVICE_VERSION_REQUIREMENTS=1 SECRET_KEY='unsafe secret key for collectstatic only' DATABASE_URL='postgres:///' REDIS_URL='redis:///' python manage.py collectstatic --noinput
 
 # Add in the plugin-server compiled code, as well as the runtime dependencies
@@ -188,4 +187,4 @@ EXPOSE 8000
 # Expose the port from which we serve OpenMetrics data
 EXPOSE 8001
 
-CMD ["./bin/docker"]
+CMD ["/bin/docker"]

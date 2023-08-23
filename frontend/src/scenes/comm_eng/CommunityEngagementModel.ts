@@ -1,4 +1,5 @@
 export interface CommunityEngagement {
+    id: any
     team_id: number
     campaign_name: string
     token_address: string

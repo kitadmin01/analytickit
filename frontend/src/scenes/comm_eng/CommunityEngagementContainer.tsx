@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import CommunityEngagementTable from './components/CommunityEngagementTable'
-import { fetchAllCommunityEngagements } from './services/CommunityEngagementService'
-import { CommunityEngagement } from './models/CommunityEngagementModel'
+import CommunityEngagementTable from './CommunityEngagementTable'
+import { fetchAllCommunityEngagements } from './CommunityEngagementService'
+import { CommunityEngagement } from './CommunityEngagementModel'
 import './CommunityEngagement.scss'
 
 const CommunityEngagementContainer: React.FC = () => {

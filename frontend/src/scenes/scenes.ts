@@ -227,6 +227,11 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Community Engagement Overview',
     },
+
+    [Scene.ComEngDetail]: {
+        projectBased: true,
+        name: 'Community Engagement Detail',
+    },
 }
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
@@ -315,4 +320,5 @@ export const routes: Record<string, Scene> = {
     [urls.unsubscribe()]: Scene.Unsubscribe,
     [urls.integrationsRedirect(':kind')]: Scene.IntegrationsRedirect,
     [urls.comEng()]: Scene.ComEng,
+    [urls.comEngDetail(':id')]: Scene.ComEngDetail,
 }

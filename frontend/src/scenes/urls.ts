@@ -91,6 +91,7 @@ export const urls = {
     unsubscribe: (): string => '/unsubscribe',
     integrationsRedirect: (kind: string): string => `/integrations/${kind}/redirect`,
     comEng: (): string => '/com_eng',
+    comEngDetail: (id: string): string => `/com_eng/${id}`,
 
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {

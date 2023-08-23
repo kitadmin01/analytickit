@@ -1,4 +1,4 @@
-import { CommunityEngagement, CommunityEngagementCreatePayload } from '../models/CommunityEngagementModel'
+import { CommunityEngagement, CommunityEngagementCreatePayload } from './CommunityEngagementModel'
 
 const API_ENDPOINT = '/api/com_eng'
 

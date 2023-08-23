@@ -52,4 +52,20 @@
             }
         }
     }
+
+    .campaign-button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline; /* Optional: if you want the button to look like a link */
+        padding: 0; /* Remove any default padding */
+        font-size: inherit; /* Ensure the button's font size matches its surrounding text */
+        font-family: inherit; /* Ensure the button's font family matches its surrounding text */
+        outline: none; /* Remove focus outline */
+    }
+
+    .campaign-button:hover {
+        color: darkblue; /* Change color on hover for better UX */
+    }
 }

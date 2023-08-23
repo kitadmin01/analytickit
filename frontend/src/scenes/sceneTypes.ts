@@ -61,6 +61,7 @@ export enum Scene {
     Unsubscribe = 'Unsubscribe',
     //crypto
     ComEng = 'ComEng',
+    ComEngDetail = 'ComEngDetail',
 }
 
 export type SceneProps = Record<string, any>

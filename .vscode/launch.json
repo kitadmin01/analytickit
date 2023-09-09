@@ -77,6 +77,29 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "name": "Debug txn_anz.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/analytickit/crypto/txn_anz.py",
+            "args": [],
+            "env": {
+                "PYTHONUNBUFFERED": "1",
+                "PYTHONPATH": "./",
+                "E2E_TESTING": "1",
+                "DJANGO_SETTINGS_MODULE": "analytickit.settings",
+                "DEBUG": "1",
+                "CLICKHOUSE_SECURE": "False",
+                "KAFKA_URL": "kafka://localhost",
+                "DATABASE_URL": "postgres://analytickit:analytickit@localhost:5432/analytickit",
+                "SKIP_SERVICE_VERSION_REQUIREMENTS": "1",
+                "PRINT_SQL": "1"
+            },
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/kit3.8/bin/python",
+            "cwd": "${workspaceFolder}"
+        },
+        
+        {
             "type": "node",
             "name": "vscode-jest-tests.v2",
             "request": "launch",

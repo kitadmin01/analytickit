@@ -7,12 +7,10 @@ __copyright__ ="AnalyticKit, Inc. 2023"
 
 
 import json
-import structlog
+from logger_config import logger
 import datetime
 from collections import defaultdict
 
-
-logger = structlog.get_logger(__name__)
 
 
 class MetricCalculator:
@@ -26,22 +24,21 @@ class MetricCalculator:
         self.token_address = token_address
 
     def calculate_dau(self):
-        # Calculate daily active users for the data provided.
+        # Calculate daily active users for the data provided. 
         # The data dict contains all the Ethereum related data retrieved from the s3 bucket.
 
         # Extract the 'transactions' and 'token_transfers' data
         transactions_data = self.data.get('transactions', [])
         token_transfers_data = self.data.get('token_transfers', [])
 
-        active_addresses = {record.get('to_address')
-                            for record in transactions_data}
-        active_addresses.update({record.get('to_address')
-                                for record in token_transfers_data})
+        active_addresses = {record.get('to_address') for record in transactions_data}
+        active_addresses.update({record.get('to_address') for record in token_transfers_data})
 
         # Remove None values if any
         active_addresses.discard(None)
 
         return len(active_addresses)
+
 
     def calculate_contract_calls(self):
         # Extract the 'transactions' data
@@ -212,6 +209,15 @@ class MetricCalculator:
             len(token_transfers_data) if token_transfers_data else 0
 
         return ave_token_transfer_value / 1e18
+    
+    def calculate_token_transfer_value(self):
+        # Extract the 'token_transfers' data
+        token_transfers_data = self.data.get('token_transfers', [])
+
+        # Convert the values to float first to handle scientific notation, then convert to int if needed
+        return sum(int(float(transfer.get('value', 0))) for transfer in token_transfers_data)
+
+
 
     def calculate_token_flow(self):
         """

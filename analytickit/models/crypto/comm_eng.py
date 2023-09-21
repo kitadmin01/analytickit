@@ -6,8 +6,8 @@ __copyright__ ="AnalyticKit, Inc. 2023"
 """
 
 from django.db import models
-import datetime
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 
 class S3File(models.Model):
@@ -25,6 +25,22 @@ class S3File(models.Model):
     @classmethod
     def get_all_key_names(cls):
         return list(cls.objects.values_list('key_name', flat=True))
+    
+    @classmethod
+    def get_previous_day_key_name(cls):
+        # Calculate the previous day's date and return as a list
+        prev_day = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+        key_pattern = f"/date={prev_day}/"
+
+        # Fetch all keys that have the previous day's date in their name
+        previous_day_keys = cls.objects.filter(key_name__contains=key_pattern)
+
+        return [key.key_name for key in previous_day_keys]
+    
+    @classmethod
+    def any_record_exists(cls):
+        return cls.objects.exists()
+
 
 
 class CommunityEngagement(models.Model):
@@ -51,8 +67,16 @@ class CommunityEngagement(models.Model):
 
     @classmethod
     def get_campaign_records_today(cls):
-        today = datetime.date.today()
+        today = datetime.now().date()
         return cls.objects.filter(start_date__lte=today, end_date__gte=today)
+
+    def is_first_campaign_analytic(self):
+        """
+        Returns True if the CommunityEngagement instance has no related 
+        CampaignAnalytic at all, otherwise False.
+        """
+        return not CampaignAnalytic.objects.filter(community_engagement=self).exists()
+
 
 class CampaignAnalytic(models.Model):
     """
@@ -87,7 +111,7 @@ class CampaignAnalytic(models.Model):
 
     @classmethod
     def get_or_create_for_today(cls, community_engagement=None):
-        # Get today's start and end time
+        # Get today's start and end time.
         today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
         today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
         

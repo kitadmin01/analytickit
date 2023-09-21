@@ -1,5 +1,5 @@
 admin: 0003_logentry_add_action_flag_choices
-analytickit: 0006_auto_20230906_0121
+analytickit: 0007_remove_campaignanalytic_average_gas_used
 auth: 0012_alter_user_first_name_max_length
 axes: 0006_remove_accesslog_trusted
 contenttypes: 0002_remove_content_type_name

@@ -34,7 +34,7 @@ async function getMmdbStatus(hub: Hub): Promise<MMDBFileStatus> {
     return (await hub.db.redisGet(MMDB_STATUS_REDIS_KEY, MMDBFileStatus.Idle)) as MMDBFileStatus
 }
 
-/** Decompress a Brotli-compressed MMDB buffer and open a reader from it. */
+/** Decompress a Brotli-compressed MMDB buffer and open a reader from it. 
 async function decompressAndOpenMmdb(brotliContents: Buffer, filename: string): Promise<ReaderModel> {
     return await new Promise((resolve, reject) => {
         brotliDecompress(brotliContents, (error, result) => {
@@ -55,7 +55,24 @@ async function decompressAndOpenMmdb(brotliContents: Buffer, filename: string): 
             }
         })
     })
+}*/
+/**
+ * mmdb file is not Brotli-compressed so no need to decompress it, insted we can read it directly
+ * fixed for Analytickit
+ * */ 
+function decompressAndOpenMmdb(contents: Buffer, filename: string): ReaderModel {
+    status.info(
+        '🪗',
+        `Using ${filename} with size ${prettyBytes(contents.byteLength)}`
+    );
+    try {
+        return Reader.openBuffer(contents);
+    } catch (e) {
+        throw new Error(`Failed to open MMDB file ${filename}: ${e.message}`);
+    }
 }
+
+
 
 /** Download latest MMDB database, save it, and return its reader. */
 async function fetchAndInsertFreshMmdb(hub: Hub): Promise<ReaderModel> {
@@ -65,9 +82,17 @@ async function fetchAndInsertFreshMmdb(hub: Hub): Promise<ReaderModel> {
     status.info('⏳', 'Downloading GeoLite2 database from analytickit servers...')
     const response = await fetch(MMDB_ENDPOINT, { compress: false })
     const contentType = response.headers.get('content-type')
-    const filename = response.headers.get('content-disposition')!.match(/filename="(.+)"/)![1]
-    const brotliContents = await response.buffer()
-    status.info('✅', `Downloaded ${filename} of ${prettyBytes(brotliContents.byteLength)}`)
+     // Check for the presence of 'content-disposition' header
+     const contentDisposition = response.headers.get('content-disposition');
+     let filename;
+     if (contentDisposition) {
+         filename = contentDisposition.match(/filename="(.+)"/)![1];
+     } else {
+         // Use a default filename or derive from the URL
+         filename = 'GeoLite2-City-2023-09-19.mmdb';
+     }
+     const brotliContents = await response.buffer()
+     status.info('✅', `Downloaded ${filename} of ${prettyBytes(brotliContents.byteLength)}`)
 
     // Insert new attachment
     const newAttachmentResults = await db.postgresQuery<PluginAttachmentDB>(

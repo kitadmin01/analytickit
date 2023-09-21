@@ -1,3 +1,10 @@
+"""
+Created on Aug 25 2023
+
+__author__ = "Mani Malarvannan"
+__copyright__ ="AnalyticKit, Inc. 2023"
+"""
+
 from django.shortcuts import get_object_or_404
 from rest_framework import response, serializers, status, viewsets
 from rest_framework.permissions import IsAuthenticated

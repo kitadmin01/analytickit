@@ -8,16 +8,15 @@ __copyright__ ="AnalyticKit, Inc. 2023"
 
 
 from typing import List, Dict
-import structlog
+from logger_config import logger
 import boto3
 import json
 from enum import Enum
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
+import gc
 
-
-logger = structlog.get_logger(__name__)
 
 class S3_RECORD(Enum):
     FULL = "full"
@@ -59,7 +58,7 @@ class S3Retriever:
 
         # Fetch filenames between 2020 and today
         current_date = datetime.now()
-        start_date = datetime(2020, 8, 1)
+        start_date = datetime(2020, 1, 1)
 
         all_files = []
 
@@ -75,7 +74,7 @@ class S3Retriever:
         return all_files
     
 
-    def fetch_files_for_date(self, target_date):
+    def fetch_keys_for_date(self, target_date):
         """
         Retrieves all the keys for a specific date from the S3 bucket and returns them. This function 
         will be run every day once at 12 AM.
@@ -94,47 +93,48 @@ class S3Retriever:
         
         return files_for_date
     
-    
     def get_blockchain_data(self, contract_address: str, token_address: str, s3_keys: List[str]) -> Dict[str, List[Dict]]:
-        """
-        This function gets the data from the S3 bucket for the given contract address and token address using the provided S3 keys.
-        """
         bucket = 'aws-public-blockchain'
-        s3 = boto3.client('s3')
         results = {}
 
+        # Adjust for batch processing
+        BATCH_SIZE = 100
+        s3_keys_batches = [s3_keys[i:i + BATCH_SIZE] for i in range(0, len(s3_keys), BATCH_SIZE)]
+        
         with ThreadPoolExecutor() as executor:
-            future_to_key = {executor.submit(self.get_data_for_key, key, bucket, contract_address, token_address): key for key in s3_keys}
+            future_to_batch = {executor.submit(self.get_data_for_batch, batch, bucket, contract_address, token_address): batch for batch in s3_keys_batches}
             
-            for future in concurrent.futures.as_completed(future_to_key):
-                orig_key = future_to_key[future]
+            for future in concurrent.futures.as_completed(future_to_batch):
+                orig_batch = future_to_batch[future]
                 try:
-                    data = future.result()
-                    for key, value in data.items(): # Since get_data_for_key now returns a dictionary
-                        if key in results:
-                            results[key].append(value)
-                        else:
-                            results[key] = [value]
+                    data_generators = future.result()
+                    for data_generator in data_generators:
+                        for key, value in data_generator:
+                            if not isinstance(value, dict):
+                                logger.warning(f'S3 SQL didnt find record in key {key}: {orig_batch}')
+                                continue
+                            results.setdefault(key, []).append(value)
                 except Exception as exc:
-                    logger.error(f'{orig_key} generated an exception: {exc}')
+                    logger.error(f'{orig_batch} generated an exception: {exc}')
 
+        gc.collect()
         return results
-
+    
+    def get_data_for_batch(self, key_batch, bucket, contract_address, token_address):
+        for key in key_batch:
+            yield from self.get_data_for_key(key, bucket, contract_address, token_address)
 
 
     def get_data_for_key(self, key, bucket, contract_address, token_address):
         s3 = boto3.client('s3')
-        logger.info("Processing file:", key)
+        categories = ['token_transfers', 'transactions']
+        category_key = next((category for category in categories if category in key), None)
 
-        # Predefined categories
-        categories = ['token_transfers', 'transactions', 'logs', 'blocks', 'contracts', 'traces']
-
-        category_key = next(
-            (category for category in categories if category in key), None
-        )
-        # If the key doesn't belong to any category, return an empty dictionary
+        # If the key doesn't belong to any category, return an empty generator
         if not category_key:
-            return {}
+            return
+        
+        logger.info("Processing file: %s", key)  # Corrected logger format
 
         query = f"SELECT * FROM S3Object s WHERE s.token_address = '{token_address}' OR s.receipt_contract_address = '{contract_address}' OR s.from_address = '{contract_address}' OR s.to_address = '{contract_address}'"
         content_response = s3.select_object_content(
@@ -145,15 +145,20 @@ class S3Retriever:
             InputSerialization={'Parquet': {}},
             OutputSerialization={'JSON': {}}
         )
+
         buffer = ""
         for event in content_response['Payload']:
             if 'Records' in event:
                 buffer += event['Records']['Payload'].decode('utf-8')
                 while '\n' in buffer:
                     record, buffer = buffer.split('\n', 1)
-                    parsed_record = json.loads(record, parse_float=str)
+                    yield category_key, json.loads(record, parse_float=str)
 
-        # Return dictionary with category key and parsed_record as value
-        return {category_key: parsed_record}
+    
+
+
+
+
+
 
     

@@ -23,8 +23,7 @@ curl -s 'http://localhost:8123/ping' || ( service_warning 'ClickHouse'; bin/chec
 ./bin/start-backend &
 ./bin/start-frontend &
 
-# start crypto
-
-./analytickit/crypto/run_crypto.sh &
+# run crypto every day night at 1AM as a corn job
+# ./analytickit/crypto/run_crypto.sh &
 
 wait

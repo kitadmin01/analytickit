@@ -57,7 +57,7 @@ export function BillingSubscribed(): JSX.Element {
                 {billing?.is_billing_active && billing.plan && (
                     <>
                         {' '}
-                        to the <b>{billing.plan.name}</b>
+                        to the <b>{billing.plan.name}</b> plan.
                     </>
                 )}{' '}
                 and can use all the premium features immediately.

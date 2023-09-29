@@ -26,6 +26,7 @@ from analytickit.models import Team, User
 from analytickit.models.organization import Organization
 from analytickit.tasks import user_identify
 from analytickit.utils import get_js_url
+from dpa.models.billing import Billing
 
 
 class UserAuthenticationThrottle(UserRateThrottle):
@@ -105,7 +106,7 @@ class UserSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError(f"Object with id={value} does not exist.", code="does_not_exist")
 
     def validate_password_change(
-            self, instance: User, current_password: Optional[str], password: Optional[str]
+        self, instance: User, current_password: Optional[str], password: Optional[str]
     ) -> Optional[str]:
         if password:
             if instance.password and instance.has_usable_password():
@@ -185,6 +186,18 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Lis
     ]
     queryset = User.objects.filter(is_active=True)
     lookup_field = "uuid"
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        # Check if the user was successfully created
+        if response.status_code == 201:  # HTTP 201 Created
+            user = self.get_object()
+
+            # Create a new billing record and associate with the user
+            Billing.objects.create(user=user)
+
+        return response
 
     def get_object(self) -> Any:
         lookup_value = self.kwargs[self.lookup_field]

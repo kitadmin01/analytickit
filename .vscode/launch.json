@@ -64,6 +64,7 @@
             "env": {
                 "PYTHONUNBUFFERED": "1",
                 "E2E_TESTING": "1",
+                "CAPTURE_INTERNAL_METRICS": "1",
                 "DJANGO_SETTINGS_MODULE": "analytickit.settings",
                 "DEBUG": "1",
                 "CLICKHOUSE_SECURE": "False",
@@ -98,7 +99,7 @@
             "python": "${workspaceFolder}/kit3.8/bin/python",
             "cwd": "${workspaceFolder}"
         },
-        
+
         {
             "type": "node",
             "name": "vscode-jest-tests.v2",

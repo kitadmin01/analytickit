@@ -12,7 +12,7 @@ export function CurrentUsage(): JSX.Element | null {
     const { eventAllocation, percentage, strokeColor, billing } = useValues(billingLogic)
     const plan = billing?.plan
 
-    if (!billing) {
+    if (!billing || !billing.is_billing_active) {
         return null
     }
 
@@ -51,30 +51,22 @@ export function CurrentUsage(): JSX.Element | null {
         <>
             <div className="space-top" />
             <Card title="Current monthly usage">
-                {billing.should_display_current_bill && (
+                <h3 className="l3">Current bill amount</h3>
+                {billing?.current_bill_amount !== undefined && billing?.current_bill_amount !== null ? (
                     <>
-                        <h3 className="l3">Current bill amount</h3>
-                        {billing?.current_bill_amount !== undefined && billing?.current_bill_amount !== null ? (
-                            <>
-                                This is the amount (in dollars) of the bill for the currently ongoing period. The final
-                                amount will be billed a few days after the end of the month. Please note this number is
-                                reported on a daily basis,{' '}
-                                <b>so events ingested in the last 24 hours may not be reflected yet.</b>
-                                <div className="bill-amount">
-                                    {`$${billing?.current_bill_amount?.toLocaleString()}`}
-                                </div>
-                                <LemonTable columns={columns} dataSource={billing.tiers || []} />
-                            </>
-                        ) : (
-                            <>
-                                We can't show your current bill amount right now. Please check back again in a few
-                                minutes or{' '}
-                                <a href="https://analytickit.com/support/" target="_blank">
-                                    contact us
-                                </a>{' '}
-                                if this message does not disappear.
-                            </>
-                        )}
+                        This is the amount (in dollars) of the bill for the currently ongoing period. The final amount
+                        will be billed a few days after the end of the month. Please note this number is reported on a
+                        daily basis, <b>so events ingested in the last 24 hours may not be reflected yet.</b>
+                        <div className="bill-amount">{`$${billing?.current_bill_amount?.toLocaleString()}`}</div>
+                        <LemonTable columns={columns} dataSource={billing.tiers || []} />
+                    </>
+                ) : (
+                    <>
+                        We can't show your current bill amount right now. Please check back again in a few minutes or{' '}
+                        <a href="https://analytickit.com/support/" target="_blank">
+                            contact us
+                        </a>{' '}
+                        if this message does not disappear.
                     </>
                 )}
                 <h3 className="l3 mt-4">Current event usage</h3>
@@ -84,17 +76,13 @@ export function CurrentUsage(): JSX.Element | null {
                         <Tooltip title={`${usage.toLocaleString()} events`}>
                             <b>{compactNumber(usage)}</b>
                         </Tooltip>{' '}
-                        events {billing.current_bill_usage ? 'this billing period' : 'this month'} (calculated every
-                        day).{' '}
+                        events this month (calculated every day).{' '}
                         {eventAllocation && (
                             <>
                                 You can use up to <b>{compactNumber(eventAllocation)}</b> events per month.
                             </>
                         )}
-                        {plan &&
-                            !plan.event_allowance &&
-                            !plan.is_metered_billing &&
-                            'Your current plan has an unlimited event allocation.'}
+                        {plan && !plan.event_allowance && 'Your current plan has an unlimited event allocation.'}
                         <Progress
                             type="line"
                             percent={percentage !== null ? Math.floor(percentage * 100) : 100}
@@ -116,11 +104,15 @@ export function CurrentUsage(): JSX.Element | null {
                     <div className="mt-4 text-muted">
                         Your current billing period runs from{' '}
                         <strong>
-                            {dayjs.unix(billing.current_bill_cycle.current_period_start).format('MMMM DD, YYYY')}
+                            {dayjs
+                                .unix(Number(billing.current_bill_cycle.current_period_start))
+                                .format('MMMM DD, YYYY')}
                         </strong>{' '}
                         until{' '}
                         <strong>
-                            {dayjs.unix(billing.current_bill_cycle.current_period_end).format('MMMM DD, YYYY')}
+                            {dayjs
+                                .unix(Number(billing.current_bill_cycle.current_period_start))
+                                .format('MMMM DD, YYYY')}
                         </strong>
                         , which is when you'll be charged.
                     </div>

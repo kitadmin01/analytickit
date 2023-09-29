@@ -2,6 +2,7 @@ from typing import Any, Callable, List, Optional, cast
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
 from django.urls import URLPattern, include, path, re_path
 from django.views.decorators import csrf
@@ -15,7 +16,6 @@ from analytickit.api import (
     capture,
     decide,
     organizations_router,
-    project_dashboards_router,
     projects_router,
     router,
     sharing,
@@ -34,13 +34,9 @@ from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
 
 dpa_urlpatterns: List[Any] = []
-try:
-    from dpa.urls import extend_api_router
-    from dpa.urls import urlpatterns as dpa_urlpatterns
-except ImportError:
-    pass
-else:
-    extend_api_router(router, projects_router=projects_router, project_dashboards_router=project_dashboards_router)
+
+
+from dpa.urls import urlpatterns as dpa_urlpatterns
 
 try:
     # See https://github.com//analytickit-cloud/blob/master/multi_tenancy/router.py
@@ -49,6 +45,13 @@ except ImportError:
     pass
 else:
     extend_api_router_cloud(router, organizations_router=organizations_router, projects_router=projects_router)
+
+# The admin interface is disabled on self-hosted instances, as its misuse can be unsafe
+admin_urlpatterns = (
+    [path("admin/", include("loginas.urls")), path("admin/", admin.site.urls)]
+    if settings.MULTI_TENANCY or settings.DEMO
+    else []
+)
 
 
 @csrf.ensure_csrf_cookie
@@ -107,6 +110,8 @@ urlpatterns = [
     opt_slash_path("_preflight", preflight_check),
     # dpa
     *dpa_urlpatterns,
+    # admin
+    *admin_urlpatterns,
     # api
     path("api/unsubscribe", unsubscribe.unsubscribe),
     path("api/", include(router.urls)),

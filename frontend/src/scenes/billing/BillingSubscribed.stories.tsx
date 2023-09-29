@@ -1,5 +1,6 @@
 import { Meta } from '@storybook/react'
 import { BillingSubscribed } from './BillingSubscribed'
+import { BillingLocked } from './BillingLocked' // Ensure this import is correct
 import React, { useEffect } from 'react'
 import { mswDecorator } from '~/mocks/browser'
 import preflightJson from '~/mocks/fixtures/_preflight.json'
@@ -17,6 +18,7 @@ export default {
                     cloud: true,
                     realm: 'cloud',
                 },
+                // You might want to add mock endpoints for the billing API calls if they are made during the component's lifecycle
             },
         }),
     ],
@@ -28,6 +30,8 @@ export const Subscribed = (): JSX.Element => {
     })
     return <BillingSubscribed />
 }
-export const BillingLocked = (): JSX.Element => {
+
+export const _BillingLocked = (): JSX.Element => {
+    // Renamed to avoid name conflict
     return <BillingLocked />
 }

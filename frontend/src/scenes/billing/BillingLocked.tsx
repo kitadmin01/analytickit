@@ -23,7 +23,7 @@ export function BillingLocked(): JSX.Element | null {
             <p>
                 You've used <strong>{compactNumber(billing.current_usage)}</strong> events this month. To continue using
                 analytickit, you'll need to enter a credit card. See{' '}
-                <a href="https://analytickit.com/pricing" target="_blank">
+                <a href="https://analytickit.com/pricing" target="_blank" rel="noopener noreferrer">
                     our website for pricing information.
                 </a>
                 <br />

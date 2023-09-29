@@ -2,7 +2,6 @@ import { kea } from 'kea'
 import api from 'lib/api'
 import type { billingLogicType } from './billingLogicType'
 import { PlanInterface, BillingType } from '~/types'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
 import analytickit from 'analytickit-js'
 import { sceneLogic } from 'scenes/sceneLogic'
 import { Scene } from 'scenes/sceneTypes'
@@ -10,6 +9,7 @@ import { lemonToast } from 'lib/components/lemonToast'
 import { router } from 'kea-router'
 import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
 import { FEATURE_FLAGS } from 'lib/constants'
+import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
 
 export const UTM_TAGS = 'utm_medium=in-product&utm_campaign=billing-management'
 export const ALLOCATION_THRESHOLD_ALERT = 0.85 // Threshold to show warning of event usage near limit
@@ -36,7 +36,7 @@ export const billingLogic = kea<billingLogicType>({
             null as BillingType | null,
             {
                 loadBilling: async () => {
-                    const response = await api.get('api/billing/')
+                    const response = await api.get('api/billing/@current')
                     if (!response?.plan) {
                         actions.loadPlans()
                     }
@@ -53,9 +53,8 @@ export const billingLogic = kea<billingLogicType>({
                     return response as BillingType
                 },
                 setBillingLimit: async (billing: BillingType) => {
-                    const res = await api.update('api/billing/', billing)
+                    const res = await api.update('api/billing/@current', billing)
                     lemonToast.success(`Billing limit set to $${billing.billing_limit} usd/month`)
-
                     return res as BillingType
                 },
             },
@@ -64,8 +63,19 @@ export const billingLogic = kea<billingLogicType>({
             [] as PlanInterface[],
             {
                 loadPlans: async () => {
-                    const response = await api.get('api/plans?self_serve=1')
-                    return response.results
+                    //const response = await api.get('api/plans?self_serve=1');
+                    const response = {
+                        key: 'premium',
+                        name: 'Premium Plan',
+                        custom_setup_billing_message: 'Set up your Premium Plan billing',
+                        image_url: 'https://example.com/path/to/image.png',
+                        self_serve: true,
+                        is_metered_billing: true,
+                        event_allowance: 1000000,
+                        price_string: '$100/month',
+                    }
+                    //return response.results;
+                    return [response]
                 },
             },
         ],
@@ -103,13 +113,11 @@ export const billingLogic = kea<billingLogicType>({
             (percentage) => {
                 let color: string | Record<string, string> = 'var(--primary)'
                 if (percentage === null || percentage === undefined) {
-                    /* No event limit set */
                     color = {
                         from: '#1890FF',
                         to: '#52C41A',
                     }
                 }
-
                 if (percentage && percentage > 0.65 && percentage < 0.8) {
                     color = 'var(--warning)'
                 }
@@ -190,3 +198,4 @@ export const billingLogic = kea<billingLogicType>({
         },
     }),
 })
+export { PlanInterface }

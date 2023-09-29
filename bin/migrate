@@ -1,7 +1,5 @@
 #!/bin/bash
 set -e
-# python ./manage.py migrate --fake
-# echo "run fake"
 python manage.py migrate
 echo "run migrate"
 python manage.py migrate_clickhouse

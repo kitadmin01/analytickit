@@ -1,27 +1,21 @@
 import { Button, Card, Col, Row, Skeleton } from 'antd'
 import { useActions, useValues } from 'kea'
-import React, { useEffect, useState } from 'react'
-import { PlanInterface } from '~/types'
 import { billingLogic } from './billingLogic'
 import defaultImg from 'public/plan-default.svg'
 import { Spinner } from 'lib/components/Spinner/Spinner'
+import React from 'react'
 
-function Plan({ plan, onSubscribe }: { plan: PlanInterface; onSubscribe: (plan: PlanInterface) => void }): JSX.Element {
-    const [detail, setDetail] = useState('')
-    const [isDetailLoading, setIsDetailLoading] = useState(true)
-
-    const loadPlanDetail = async (key: string): Promise<void> => {
-        const response = await fetch(`/api/plans/${key}/template/`)
-        if (response.ok) {
-            setDetail(await response.text())
-        }
-        setIsDetailLoading(false)
+interface PlanProps {
+    plan: {
+        key: string
+        name: string
+        price_string: string
+        image_url?: string
     }
+    onSubscribe: (plan: { key: string }) => void
+}
 
-    useEffect(() => {
-        loadPlanDetail(plan.key)
-    }, [plan.key])
-
+function Plan({ plan, onSubscribe }: PlanProps): JSX.Element {
     return (
         <Card>
             <div className="cursor-pointer" onClick={() => onSubscribe(plan)}>
@@ -39,11 +33,6 @@ function Plan({ plan, onSubscribe }: { plan: PlanInterface; onSubscribe: (plan: 
                     Subscribe now
                 </Button>
             </div>
-            {isDetailLoading ? (
-                <Skeleton paragraph={{ rows: 6 }} title={false} className="mt-4" active />
-            ) : (
-                <div className="plan-description" dangerouslySetInnerHTML={{ __html: detail }} />
-            )}
         </Card>
     )
 }
@@ -52,7 +41,7 @@ export function BillingEnrollment(): JSX.Element | null {
     const { plans, plansLoading, billingSubscriptionLoading } = useValues(billingLogic)
     const { subscribe } = useActions(billingLogic)
 
-    const handleBillingSubscribe = (plan: PlanInterface): void => {
+    const handleBillingSubscribe = (plan: { key: string }): void => {
         subscribe(plan.key)
     }
 
@@ -71,7 +60,7 @@ export function BillingEnrollment(): JSX.Element | null {
             ) : (
                 <Card title="Billing Plan Enrollment">
                     <Row gutter={16} className="space-top" style={{ display: 'flex', justifyContent: 'center' }}>
-                        {plans.map((plan: PlanInterface) => (
+                        {plans.map((plan) => (
                             <Col sm={8} key={plan.key} className="text-center">
                                 {billingSubscriptionLoading ? (
                                     <Spinner />

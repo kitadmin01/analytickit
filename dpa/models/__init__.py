@@ -1,3 +1,4 @@
+from .billing import Billing
 from .dashboard_privilege import DashboardPrivilege
 from .event_definition import EnterpriseEventDefinition
 from .explicit_team_membership import ExplicitTeamMembership
@@ -12,4 +13,5 @@ __all__ = [
     "Hook",
     "License",
     "EnterprisePropertyDefinition",
+    "Billing",
 ]

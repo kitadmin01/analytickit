@@ -19,7 +19,7 @@ export function CurrentPlan({ plan }: { plan: PlanInterface }): JSX.Element {
     return (
         <>
             <div className="space-top" />
-            {billing?.should_setup_billing ? (
+            {billing?.is_billing_active ? (
                 <Alert
                     type="warning"
                     message={

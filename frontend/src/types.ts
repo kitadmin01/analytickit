@@ -25,9 +25,10 @@ import { BehavioralFilterKey, BehavioralFilterType } from 'scenes/cohorts/Cohort
 import { LogicWrapper } from 'kea'
 import { AggregationAxisFormat } from 'scenes/insights/aggregationAxisFormat'
 
-export type Optional<T, K extends string | number | symbol> = Omit<T, K> & {
-    [K in keyof T]?: T[K]
-}
+export type Optional<T, K extends string | number | symbol> = Omit<T, K> &
+    {
+        [K in keyof T]?: T[K]
+    }
 
 // Keep this in sync with backend constants (constants.py)
 export enum AvailableFeature {
@@ -179,15 +180,15 @@ export interface ExplicitTeamMemberType extends BaseMemberType {
 }
 
 /**
-* While OrganizationMemberType and ExplicitTeamMemberType refer to actual Django models,
-* this interface is only used in the frontend for fusing the data from these models together.
-*/
+ * While OrganizationMemberType and ExplicitTeamMemberType refer to actual Django models,
+ * this interface is only used in the frontend for fusing the data from these models together.
+ */
 export interface FusedTeamMemberType extends BaseMemberType {
     /**
-    * Level at which the user explicitly is in the project.
-    * Null means that membership is implicit (when showing permitted members)
-    * or that there's no membership at all (when showing addable members).
-    */
+     * Level at which the user explicitly is in the project.
+     * Null means that membership is implicit (when showing permitted members)
+     * or that there's no membership at all (when showing addable members).
+     */
     explicit_team_level: TeamMembershipLevel | null
     /** Level at which the user is in the organization. */
     organization_level: OrganizationMembershipLevel
@@ -739,14 +740,15 @@ export interface SessionRecordingEvents {
 }
 
 export interface CurrentBillCycleType {
-    current_period_start: number
-    current_period_end: number
+    current_period_start: string
+    current_period_end: string
 }
 
 export interface BillingType {
+    user_id: string
     should_setup_billing: boolean
     is_billing_active: boolean
-    plan: PlanInterface | null
+    plan: PlanInterface
     billing_period_ends: string
     event_allocation: number | null
     current_usage: number | null
@@ -1714,9 +1716,9 @@ export interface FunnelCorrelation {
     failure_people_url: string
     correlation_type: FunnelCorrelationType.Failure | FunnelCorrelationType.Success
     result_type:
-    | FunnelCorrelationResultsType.Events
-    | FunnelCorrelationResultsType.Properties
-    | FunnelCorrelationResultsType.EventWithProperties
+        | FunnelCorrelationResultsType.Events
+        | FunnelCorrelationResultsType.Properties
+        | FunnelCorrelationResultsType.EventWithProperties
 }
 
 export enum SignificanceCode {

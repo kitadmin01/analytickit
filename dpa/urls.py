@@ -6,6 +6,7 @@ from rest_framework_extensions.routers import NestedRegistryItem
 from analytickit.api.routing import DefaultRouterPlusPlus
 from dpa.api import integration
 from dpa.api.billing import BillingRetrieveUpdateView
+from dpa.api.checkout import CreateCheckoutSessionView, get_available_plans
 
 from .api import (
     authentication,
@@ -45,4 +46,7 @@ def extend_api_router(
 urlpatterns: List[Any] = [
     path("api/saml/metadata/", authentication.saml_metadata_view),
     path("api/billing/<str:user_id>/", BillingRetrieveUpdateView.as_view(), name="billing-retrieve-update-current"),
+    path("api/checkout/", CreateCheckoutSessionView.as_view(), name="checkout-view"),
+    path('api/plans/', get_available_plans, name='get-available-plans'),
+
 ]

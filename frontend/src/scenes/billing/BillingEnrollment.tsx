@@ -1,18 +1,23 @@
-import { Button, Card, Col, Row, Skeleton } from 'antd'
-import { useActions, useValues } from 'kea'
-import { billingLogic } from './billingLogic'
-import defaultImg from 'public/plan-default.svg'
-import { Spinner } from 'lib/components/Spinner/Spinner'
-import React from 'react'
+import { Button, Card, Col, Row, Skeleton} from 'antd';
+import { useValues } from 'kea';
+import { billingLogic } from './billingLogic';
+import defaultImg from 'public/plan-default.svg';
+import { Spinner } from 'lib/components/Spinner/Spinner';
+import React, { useState, useEffect } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import api from 'lib/api';
+
+type PlanType = {
+    key: string;
+    name: string;
+    price_string: string;
+    url: string;
+    image_url: string;
+};
 
 interface PlanProps {
-    plan: {
-        key: string
-        name: string
-        price_string: string
-        image_url?: string
-    }
-    onSubscribe: (plan: { key: string }) => void
+    plan: PlanType;
+    onSubscribe: (plan: PlanType) => void;
 }
 
 function Plan({ plan, onSubscribe }: PlanProps): JSX.Element {
@@ -34,21 +39,70 @@ function Plan({ plan, onSubscribe }: PlanProps): JSX.Element {
                 </Button>
             </div>
         </Card>
-    )
+    );
 }
 
 export function BillingEnrollment(): JSX.Element | null {
-    const { plans, plansLoading, billingSubscriptionLoading } = useValues(billingLogic)
-    const { subscribe } = useActions(billingLogic)
+    const [availablePlans, setAvailablePlans] = useState<PlanType[]>([]);
+    const { plansLoading, billingSubscriptionLoading } = useValues(billingLogic);
 
-    const handleBillingSubscribe = (plan: { key: string }): void => {
-        subscribe(plan.key)
-    }
+    /**const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
 
-    if (!plans.length && !plansLoading) {
-        // If there are no plans to which enrollment is available, no point in showing the component
-        return null
-    }
+    const showPaymentModal = (plan: PlanType):void => {
+        setSelectedPlan(plan);
+        setIsModalVisible(true);
+    };
+
+    const handleConfirmPayment = ():void => {
+        if (selectedPlan) {
+            handleBillingSubscribe(selectedPlan);
+        }
+        setIsModalVisible(false);
+    };
+
+    const handleCancelPayment = ():void => {
+        setIsModalVisible(false);
+    };*/
+
+    useEffect(() => {
+        fetch('/api/plans/')
+            .then(response => response.json())
+            .then(data => setAvailablePlans(data));
+    }, []);
+
+    const STRIPE_PUBLIC_KEY = "pk_test_51MCCGYFtMel7myQSEOfWiBOkj5xiGIBFWurBvRQuk9NmMCl6KyidtoGLobYwWd84ADPNwUBS71VS1GVC7vm9P9Jx00QxCLxtJ4";
+    const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
+
+    const handleBillingSubscribe = (plan: PlanType):void => {
+        (async () => {
+            try {
+                const response = await api.create('api/checkout/', { plan });
+                
+                if (response.error) {
+                    console.error(response.error);
+                    // Display the error to the user using a modal, toast, or any other UI component
+                    return;
+                }
+    
+                const sessionId = response.id;
+                const stripe = await stripePromise;
+                if (!stripe) {
+                    console.error("Stripe failed to initialize.");
+                    return;
+                }
+                const result = await stripe.redirectToCheckout({ sessionId });
+    
+                if (result.error) {
+                    console.error(result.error.message);
+                }
+            } catch (error) {
+                console.error("Error starting the checkout process:", error);
+            }
+        })();
+    };
+    
+    
 
     return (
         <>
@@ -60,15 +114,15 @@ export function BillingEnrollment(): JSX.Element | null {
             ) : (
                 <Card title="Billing Plan Enrollment">
                     <Row gutter={16} className="space-top" style={{ display: 'flex', justifyContent: 'center' }}>
-                        {plans.map((plan) => (
-                            <Col sm={8} key={plan.key} className="text-center">
-                                {billingSubscriptionLoading ? (
-                                    <Spinner />
-                                ) : (
-                                    <Plan plan={plan} onSubscribe={handleBillingSubscribe} />
-                                )}
-                            </Col>
-                        ))}
+                    {availablePlans.map((plan) => (
+                    <Col sm={8} key={plan.key} className="text-center">
+                        {billingSubscriptionLoading ? (
+                            <Spinner />
+                        ) : (
+                            <Plan plan={plan} onSubscribe={handleBillingSubscribe} />
+                        )}
+                    </Col>
+                ))}
                     </Row>
                 </Card>
             )}

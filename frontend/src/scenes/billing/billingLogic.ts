@@ -83,7 +83,7 @@ export const billingLogic = kea<billingLogicType>({
             null as BillingType | null,
             {
                 subscribe: async (plan) => {
-                    return await api.create('billing/subscribe', { plan })
+                    return await api.create('api/checkout/', { plan })
                 },
             },
         ],

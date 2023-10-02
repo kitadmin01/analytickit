@@ -131,3 +131,8 @@ if "dpa.apps.EnterpriseConfig" in INSTALLED_APPS:
 
 # Lastly, cloud settings override and modify all
 from analytickit.settings.cloud import *  # noqa: F401
+
+# Stripe
+STRIPE_PUBLIC_KEY = "pk_test_51MCCGYFtMel7myQSEOfWiBOkj5xiGIBFWurBvRQuk9NmMCl6KyidtoGLobYwWd84ADPNwUBS71VS1GVC7vm9P9Jx00QxCLxtJ4"
+STRIPE_SECRET_KEY = "sk_test_51MCCGYFtMel7myQSX3WLQDtzbA63XRE7ykr8ZhgLP9Ay9ibTw6cPj5v3pSiXEXPwcsh06XR1t8hfd1XVdPX7faLM00QbleRLBs"
+STRIPE_WEBHOOK_SECRET = "whsec_aPIJsiXAApNnsB3ox9EBYfnYoWgv09dm"

@@ -10,6 +10,8 @@ from enum import Enum
 import structlog
 from dpa.models import Billing
 from analytickit.models.user import User
+from analytickit.settings.utils import get_from_env, str_to_bool
+
 
 
 logger = structlog.get_logger(__name__)
@@ -63,6 +65,10 @@ def serialize_plan(plan_enum):
     }
 
 
+DEBUG = get_from_env("DEBUG", False, type_cast=str_to_bool)
+HOST = "http://localhost:8000"
+if not DEBUG:
+    HOST = "https://dpa.analytickit.com"
 
 
 
@@ -112,7 +118,6 @@ class CreateCheckoutSessionView(View):
             logger.info(f"plan_id: {plan_id}")
             plan_details = PLAN_DETAILS.get(plan_id)
 
-            YOUR_DOMAIN = "http://localhost:8000"
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[
@@ -132,8 +137,8 @@ class CreateCheckoutSessionView(View):
                     "plan_id": plan_id
                 },
                 mode='payment',
-                success_url=YOUR_DOMAIN + '/success/',
-                cancel_url=YOUR_DOMAIN + '/cancel/',
+                success_url=HOST + '/success/',
+                cancel_url=HOST + '/cancel/',
                
             )
             return JsonResponse({

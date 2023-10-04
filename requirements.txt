@@ -26,6 +26,8 @@ attrs==21.4.0
     #   jsonschema
     #   outcome
     #   trio
+backoff==1.6.0
+    # via -r requirements.in
 billiard==3.6.3.0
     # via celery
 boto3==1.21.29
@@ -166,6 +168,8 @@ importlib-resources==5.9.0
     # via jsonschema
 inflection==0.5.1
     # via drf-spectacular
+iso8601==0.1.12
+    # via -r requirements.in
 isodate==0.6.1
     # via python3-saml
 jmespath==1.0.0
@@ -198,6 +202,8 @@ marshmallow-enum==1.5.1
 maxminddb==2.2.0
     # via geoip2
 mimesis==5.2.1
+    # via -r requirements.in
+monotonic==1.5
     # via -r requirements.in
 multidict==6.0.2
     # via

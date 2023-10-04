@@ -1,9 +1,9 @@
 admin: 0003_logentry_add_action_flag_choices
-analytickit: 0007_remove_campaignanalytic_average_gas_used
+analytickit: 0008_auto_20231003_1339
 auth: 0012_alter_user_first_name_max_length
 axes: 0006_remove_accesslog_trusted
 contenttypes: 0002_remove_content_type_name
-dpa: 0003_billing_event_allocation
+dpa: 0004_alter_billing_event_allowance
 rest_hooks: 0002_swappable_hook_model
 sessions: 0001_initial
 social_django: 0010_uid_db_index

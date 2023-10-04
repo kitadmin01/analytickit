@@ -10,6 +10,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 
+
 class S3File(models.Model):
     key_name = models.TextField(unique=True)  # Assuming that each keyname is unique.
     creation_ts = models.DateTimeField(auto_now_add=True)  # The date and time when the filename was added to the database.
@@ -47,7 +48,12 @@ class CommunityEngagement(models.Model):
     """
     Stores campaign details from UI
     """
-    team_id = models.IntegerField()
+    team = models.ForeignKey(
+        'analytickit.Team',  
+        on_delete=models.CASCADE,
+        related_name='community_engagements',
+        related_query_name='community_engagement'
+    )
     campaign_name = models.CharField(max_length=50)
     token_address = models.CharField(max_length=42)
     CONTRACT_TYPES = [

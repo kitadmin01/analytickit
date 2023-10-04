@@ -151,16 +151,16 @@ urlpatterns = [
     # crypto
     path("api/unsubscribe", unsubscribe.unsubscribe),
     path(
-        "api/com_eng/",
+        "api/campaign/",
         CommunityEngagementViewSet.as_view({"get": "list", "post": "create"}),
-        name="com_eng-list-create",
+        name="campaign-list-create",
     ),
     path(
-        "api/com_eng/<int:pk>/",
+        "api/campaign/<int:pk>/",
         CommunityEngagementViewSet.as_view(
             {"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}
         ),
-        name="com_eng-detail",
+        name="campaign-detail",
     ),
 ]
 

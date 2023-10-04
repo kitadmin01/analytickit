@@ -1,6 +1,6 @@
 import { CommunityEngagement, CommunityEngagementCreatePayload } from './CommunityEngagementModel'
 
-const API_ENDPOINT = '/api/com_eng'
+const API_ENDPOINT = '/api/campaign'
 
 export const fetchAllCommunityEngagements = async (): Promise<CommunityEngagement[]> => {
     const response = await fetch(API_ENDPOINT)

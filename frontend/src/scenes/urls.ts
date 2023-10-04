@@ -90,8 +90,8 @@ export const urls = {
     deadLetterQueue: (): string => '/instance/dead_letter_queue',
     unsubscribe: (): string => '/unsubscribe',
     integrationsRedirect: (kind: string): string => `/integrations/${kind}/redirect`,
-    comEng: (): string => '/com_eng',
-    comEngDetail: (id: string): string => `/com_eng/${id}`,
+    comEng: (): string => '/campaign',
+    comEngDetail: (id: string): string => `/campaign/${id}`,
 
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {

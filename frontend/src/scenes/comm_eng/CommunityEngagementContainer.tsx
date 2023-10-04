@@ -1,33 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import CommunityEngagementTable from './CommunityEngagementTable'
-import { fetchAllCommunityEngagements } from './CommunityEngagementService'
-import { CommunityEngagement } from './CommunityEngagementModel'
-import './CommunityEngagement.scss'
+import React, { useState, useEffect } from 'react';
+import CommunityEngagementTable from './CommunityEngagementTable';
+import { fetchAllCommunityEngagements } from './CommunityEngagementService';
+import { CommunityEngagement } from './CommunityEngagementModel';
+import './CommunityEngagement.scss';
+
+interface Props {
+    data: CommunityEngagement[];
+}
 
 const CommunityEngagementContainer: React.FC = () => {
-    const [data, setData] = useState<CommunityEngagement[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
+    const [data, setData] = useState<CommunityEngagement[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
             try {
-                const result = await fetchAllCommunityEngagements()
-                setData(result)
-                setLoading(false)
+                const result = await fetchAllCommunityEngagements();
+                setData(result);
             } catch (err: any) {
-                setError(err.message)
-                setLoading(false)
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
-        }
-        fetchData()
-    }, [])
+        };
+        fetchData();
+    }, []);
 
     if (loading) {
-        return <p>Loading...</p>
+        return <p>Loading...</p>;
     }
     if (error) {
-        return <p>Error: {error}</p>
+        return <p>Error: {error}</p>;
     }
 
     return (
@@ -35,7 +39,7 @@ const CommunityEngagementContainer: React.FC = () => {
             <h1>Community Engagement</h1>
             <CommunityEngagementTable data={data} />
         </div>
-    )
-}
+    );
+};
 
-export default CommunityEngagementContainer
+export default CommunityEngagementContainer;

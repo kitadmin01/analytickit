@@ -21,12 +21,14 @@ from django.shortcuts import get_object_or_404
 from analytickit.models.crypto.comm_eng import CommunityEngagement
 from analytickit.models.crypto.comm_eng import CampaignAnalytic
 
+
+
 class CommunityEngagementSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CommunityEngagement
         fields = [
             "id",
-            "team_id",
             "campaign_name",
             "token_address",
             "contract_type",
@@ -88,12 +90,18 @@ class CommunityEngagementViewSet(viewsets.ModelViewSet):
         # You can add filters here if needed
         return super().get_queryset()
 
+    
     def create(self, request, *args, **kwargs):
+        # get the current_team_id of the user
+        team_id = request.user.current_team_id
+              
         serializer = self.get_serializer(data=request.data, context={"request": request})
         if serializer.is_valid():
-            serializer.save()
-            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Manually set the team after validating the serializer
+            instance = serializer.save(team_id=team_id)
+            return response.Response(self.get_serializer(instance).data, status=status.HTTP_201_CREATED)
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

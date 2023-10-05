@@ -1,41 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CommunityEngagement } from './CommunityEngagementModel';
-import { LemonTableColumn } from 'lib/components/LemonTable/types';
+import {LemonTable} from '../../lib/components/LemonTable/LemonTable';
 import './CommunityEngagement.scss';
 
-interface Props {
-    data: CommunityEngagement[];
-}
-
-const EditButton: React.FC<{ record: CommunityEngagement; onEdit: (record: CommunityEngagement) => void }> = ({ record, onEdit }) => (
-    <button onClick={() => onEdit(record)}>Edit</button>
-);
-
-const DeleteButton: React.FC<{ id: number; onDelete: (id: number) => void }> = ({ id, onDelete }) => (
-    <button onClick={() => onDelete(id)}>Delete</button>
-);
-
-const CommunityEngagementTable: React.FC<Props> = ({ data: propData }) => {
-    const [data, setData] = useState<CommunityEngagement[]>(propData);
-    const [loading, setLoading] = useState(true);
+const CommunityEngagementTable: React.FC = () => {
+    const [data, setData] = useState<CommunityEngagement[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         fetchCampaigns();
     }, []);
 
-    const fetchCampaigns = (): void => {
-        axios
-            .get('/api/campaign/')
-            .then((response) => {
-                console.log('Fetched data:', response.data.results);
-                setData(response.data.results);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-                setLoading(false);
-            });
+    const fetchCampaigns = async (): Promise<void> => {
+        try {
+            const response = await axios.get('/api/campaign/');
+            setData(response.data.results);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleEdit = (campaign: CommunityEngagement): void => {
@@ -43,58 +28,43 @@ const CommunityEngagementTable: React.FC<Props> = ({ data: propData }) => {
     };
 
     const handleDelete = (id: number): void => {
-        axios
-            .delete(`/api/campaign/${id}/`)
-            .then(() => {
-                fetchCampaigns();
-            })
-            .catch((error) => {
-                console.error('Error deleting campaign:', error);
-            });
+        // Your delete logic here
     };
 
-    const renderCampaignName = (campaignName?: string): JSX.Element => {
-        if (!campaignName) {
-            return <span>Error: Invalid Campaign Name</span>;
-        }
-
-        const campaign = data.find((c) => c.campaign_name === campaignName);
-        console.log('Found campaign for name:', campaignName, campaign);
-
-        if (!campaign) {
-            return <span>Error: Invalid Campaign</span>;
-        }
-
-        return (
-            <button className="campaign-button" onClick={() => handleEdit(campaign)}>
-                {campaignName}
-            </button>
-        );
-    };
-
-    const columns: LemonTableColumn<CommunityEngagement, keyof CommunityEngagement>[] = [
-        { title: 'Campaign Name', dataIndex: 'campaign_name', render: renderCampaignName },
-        { title: 'Start Date', dataIndex: 'start_date' },
-        { title: 'End Date', dataIndex: 'end_date' },
+    const columns = [
+        {
+            title: 'Campaign Name',
+            dataIndex: 'campaign_name',
+            sorter: (a: CommunityEngagement, b: CommunityEngagement) => a.campaign_name.localeCompare(b.campaign_name),
+        },
+        {
+            title: 'Start Date',
+            dataIndex: 'start_date',
+        },
+        {
+            title: 'End Date',
+            dataIndex: 'end_date',
+        },
         {
             title: 'Actions',
-            dataIndex: 'actions' as keyof CommunityEngagement,
+            dataIndex: 'actions',
             render: (record: CommunityEngagement) => (
                 <>
-                    <EditButton record={record} onEdit={handleEdit} />
-                    <DeleteButton id={record.id} onDelete={handleDelete} />
+                    <button onClick={() => handleEdit(record)}>Edit</button>
+                    <button onClick={() => handleDelete(record.id)}>Delete</button>
                 </>
             ),
         },
     ];
 
     return (
-        <div className="community-engagement">
-            <div className="table-container">
-                {/* Your LemonTable component should be used here, using the columns defined above */}
-            </div>
-        </div>
+        <LemonTable
+            columns={columns}
+            dataSource={data}
+            loading={loading}
+            // Additional props as per your use-case
+        />
     );
-}
+};
 
 export default CommunityEngagementTable;

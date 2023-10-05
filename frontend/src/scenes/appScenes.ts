@@ -56,6 +56,6 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.PasswordResetComplete]: () => import('./authentication/PasswordResetComplete'),
     [Scene.Unsubscribe]: () => import('./Unsubscribe/Unsubscribe'),
     [Scene.IntegrationsRedirect]: () => import('./IntegrationsRedirect/IntegrationsRedirect'),
-    [Scene.ComEng]: () => import('./comm_eng/CommunityEngagementTable'),
+    [Scene.ComEng]: () => import('./comm_eng/CommunityEngagementContainer'),
     [Scene.ComEngDetail]: () => import('./comm_eng/CommunityEngagementDetail'),
 }

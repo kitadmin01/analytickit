@@ -18,3 +18,4 @@ SCRIPT_PATH=./analytickit/crypto/txn_anz.py
 
 # Run the python script
 $PYTHON_PATH $SCRIPT_PATH
+ 

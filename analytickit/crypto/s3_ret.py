@@ -13,9 +13,10 @@ import boto3
 import json
 from enum import Enum
 import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 import gc
+import traceback
 
 
 class S3_RECORD(Enum):
@@ -97,46 +98,46 @@ class S3Retriever:
         bucket = 'aws-public-blockchain'
         results = {}
 
-        # Adjust for batch processing
-        BATCH_SIZE = 100
+        BATCH_SIZE = 10  # Adjust batch size according to your memory capability.
         s3_keys_batches = [s3_keys[i:i + BATCH_SIZE] for i in range(0, len(s3_keys), BATCH_SIZE)]
         
-        with ThreadPoolExecutor() as executor:
+        # Using a context manager for ThreadPoolExecutor to ensure threads are cleaned up promptly
+        with ThreadPoolExecutor(max_workers=5) as executor:  # Limiting the max_workers can prevent excessive memory usage.
             future_to_batch = {executor.submit(self.get_data_for_batch, batch, bucket, contract_address, token_address): batch for batch in s3_keys_batches}
             
-            for future in concurrent.futures.as_completed(future_to_batch):
+            for future in as_completed(future_to_batch):
                 orig_batch = future_to_batch[future]
                 try:
                     data_generators = future.result()
                     for data_generator in data_generators:
-                        for key, value in data_generator:
-                            if not isinstance(value, dict):
-                                logger.warning(f'S3 SQL didnt find record in key {key}: {orig_batch}')
-                                continue
-                            results.setdefault(key, []).append(value)
+                        key, value = data_generator
+                        logger.debug(f"Key: {key}, Value: {value}")  # Replaced print with logging to better control output and avoid potential I/O issues.
+                        
+                        if not isinstance(value, dict):
+                            logger.warning(f'S3 SQL didn’t find record in key {key}: {orig_batch}')
+                            continue
+                        results.setdefault(key, []).append(value)
                 except Exception as exc:
-                    logger.error(f'{orig_batch} generated an exception: {exc}')
+                    logger.error(f"Exception with batch {orig_batch}: {exc}", exc_info=True)  # Using exc_info instead of traceback for logging.
 
-        gc.collect()
+        gc.collect()  # Forced garbage collection
         return results
     
     def get_data_for_batch(self, key_batch, bucket, contract_address, token_address):
         for key in key_batch:
             yield from self.get_data_for_key(key, bucket, contract_address, token_address)
 
-
     def get_data_for_key(self, key, bucket, contract_address, token_address):
         s3 = boto3.client('s3')
         categories = ['token_transfers', 'transactions']
         category_key = next((category for category in categories if category in key), None)
 
-        # If the key doesn't belong to any category, return an empty generator
         if not category_key:
             return
         
-        logger.info("Processing file: %s", key)  # Corrected logger format
+        logger.info("Processing file: %s", key)
 
-        query = f"SELECT * FROM S3Object s WHERE s.token_address = '{token_address}' OR s.receipt_contract_address = '{contract_address}' OR s.from_address = '{contract_address}' OR s.to_address = '{contract_address}'"
+        query = f"SELECT * FROM S3Object s WHERE s.receipt_contract_address = '{contract_address}' OR s.from_address = '{contract_address}' OR s.to_address = '{contract_address}' OR s.token_address = '{token_address}' "
         content_response = s3.select_object_content(
             Bucket=bucket,
             Key=key,
@@ -152,8 +153,13 @@ class S3Retriever:
                 buffer += event['Records']['Payload'].decode('utf-8')
                 while '\n' in buffer:
                     record, buffer = buffer.split('\n', 1)
-                    yield category_key, json.loads(record, parse_float=str)
-
+                    try:
+                        record_dict = json.loads(record, parse_float=str)
+                        yield (key, record_dict)
+                    except json.JSONDecodeError as je:
+                        logger.error(f"Error decoding JSON: {je}, Raw record: {record}")
+                    except Exception as e:
+                        logger.error(f"Unexpected error: {e}")
     
 
 

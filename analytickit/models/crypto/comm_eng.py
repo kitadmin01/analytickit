@@ -8,7 +8,7 @@ __copyright__ ="AnalyticKit, Inc. 2023"
 from django.db import models
 from django.utils import timezone
 from datetime import datetime, timedelta
-
+from django.utils.timezone import make_aware
 
 
 class S3File(models.Model):
@@ -74,14 +74,20 @@ class CommunityEngagement(models.Model):
     @classmethod
     def get_campaign_records_today(cls):
         today = datetime.now().date()
-        return cls.objects.filter(start_date__lte=today, end_date__gte=today)
+        query = cls.objects.filter(start_date__lte=today, end_date__gte=today)
+        query_str = str(query.query)
+        return query
 
-    def is_first_campaign_analytic(self):
+
+
+    def has_associated_campaign_analytic(self):
         """
-        Returns True if the CommunityEngagement instance has no related 
-        CampaignAnalytic at all, otherwise False.
+        Returns True if the CommunityEngagement instance has at least one related 
+        CampaignAnalytic, otherwise False.
         """
-        return not CampaignAnalytic.objects.filter(community_engagement=self).exists()
+        return CampaignAnalytic.objects.filter(community_engagement=self).exists()
+
+
 
 
 class CampaignAnalytic(models.Model):
@@ -93,27 +99,28 @@ class CampaignAnalytic(models.Model):
     community_engagement = models.ForeignKey(CommunityEngagement, on_delete=models.CASCADE, null=True)
     creation_ts = models.DateTimeField(auto_now_add=True) 
     update_ts = models.DateTimeField(auto_now_add=True) 
-    active_users = models.IntegerField(null=True)
-    total_contract_calls = models.IntegerField(null=True)
-    function_calls_count = models.JSONField(null=True)
-    tot_tokens_transferred = models.DecimalField(max_digits=30, decimal_places=10, null=True)
-    referral_count = models.IntegerField(null=True)
+    active_users = models.IntegerField(default=0)
+    total_contract_calls = models.IntegerField(default=0)
+    function_calls_count = models.JSONField(default=dict)
+    tot_tokens_transferred = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    referral_count = models.IntegerField(default=0)
     last_modified = models.DateTimeField(auto_now=True, null=True)
-    tot_txns = models.IntegerField(null=True)
-    ave_gas_used = models.DecimalField(max_digits=20, decimal_places=5, null=True)
+    tot_txns = models.IntegerField(default=0)
+    ave_gas_used = models.DecimalField(max_digits=20, decimal_places=5, default=0)
 
     # New fields
-    transaction_value_distribution = models.JSONField(null=True)  # Store distribution data as JSON
-    ave_txn_fee = models.DecimalField(max_digits=20, decimal_places=5, null=True)
-    tot_txn_from_address = models.JSONField(null=True)  # Store counts of transactions from specific addresses as JSON
-    tot_txn_to_address = models.JSONField(null=True)  # Store counts of transactions to specific addresses as JSON
-    freq_txn = models.JSONField(null=True)  # Store frequency data based on day/time as JSON
-    token_transfer_volume = models.DecimalField(max_digits=30, decimal_places=10, null=True)
-    token_transfer_value = models.DecimalField(max_digits=30, decimal_places=10, null=True)
-    most_active_token_addresses = models.JSONField(null=True)  # Store addresses and their activity level as JSON
-    ave_token_transfer_value = models.DecimalField(max_digits=30, decimal_places=10, null=True)
-    token_flow = models.JSONField(null=True)  # Store flow data between addresses as JSON
-    token_transfer_value_distribution = models.JSONField(null=True)  # Store distribution data as JSON
+    transaction_value_distribution = models.JSONField(default=dict)  # Store distribution data as JSON
+    ave_txn_fee = models.DecimalField(max_digits=20, decimal_places=5, default=0)
+    tot_txn_from_address = models.JSONField(default=dict)  # Store counts of transactions from specific addresses as JSON
+    tot_txn_to_address = models.JSONField(default=dict)  # Store counts of transactions to specific addresses as JSON
+    freq_txn = models.JSONField(default=dict)  # Store frequency data based on day/time as JSON
+    token_transfer_volume = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    token_transfer_value = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    most_active_token_addresses = models.JSONField(default=dict)  # Store addresses and their activity level as JSON
+    ave_token_transfer_value = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    token_flow = models.JSONField(default=dict)  # Store flow data between addresses as JSON
+    token_transfer_value_distribution = models.JSONField(default=dict)  # Store distribution data as JSON
+
 
     @classmethod
     def get_or_create_for_today(cls, community_engagement=None):
@@ -131,5 +138,23 @@ class CampaignAnalytic(models.Model):
         obj, created = cls.objects.get_or_create(**filters)
         
         return obj
+    
+    @classmethod
+    def  get_or_create_campaign_analytic_for_today(cls, community_engagement):
+        """
+        Returns a CampaignAnalytic instance for the given community_engagement and today's date.
+        Creates a new instance if it doesn't exist, otherwise returns the existing instance.
+        """
+        today = make_aware(datetime.now()).date()
+        # Try to get the existing instance
+        campaign_analytic = cls.objects.filter(
+            community_engagement=community_engagement, 
+            creation_ts__date=today
+        ).first()
+        # If it doesn't exist, create a new one
+        if not campaign_analytic:
+            campaign_analytic = cls.objects.create(community_engagement=community_engagement)
+        
+        return campaign_analytic
 
 

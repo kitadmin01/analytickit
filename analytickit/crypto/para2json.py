@@ -11,7 +11,7 @@ import dask.dataframe as dd
 
 
 # Specify the folder where your parquet files are stored
-folder_path = './analytickit/crypto/s3data'
+folder_path = '/home/mani/Downloads/'
 
 # List all files in the folder
 all_files = os.listdir(folder_path)

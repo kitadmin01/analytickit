@@ -15,6 +15,8 @@ from decimal import Decimal, InvalidOperation
 from collections import Counter
 from datetime import datetime, timedelta
 from decimal import Decimal, InvalidOperation
+from collections import Counter
+import heapq 
 
 class MetricCalculator:
     """
@@ -60,8 +62,40 @@ class MetricCalculator:
         return len(contract_calls)
 
     def calculate_average_gas_used(self):
-        # Extract the 'transactions' data
-        transactions_data = self.data.get('transactions', [])
+        """
+        Calculate and return the average gas used per transaction based on the input S3 data.
+        - self.data: Dictionary with s3 keys as keys and transaction data as values.
+
+        Gas-Related Fields in transaction data
+        gas:The amount of gas units that a transaction is allowed to consume.
+        Note: Transactions specify the maximum amount of gas they are willing to consume, and unused gas is refunded.
+
+        gas_price:The price (in wei, where 1 ether = 10^18 wei) that the sender is willing to pay per unit of gas.
+        Note: This is typical for legacy transactions (type 0x0). The user specifies a gas price, and the total transaction fee is gas_price * gas_used.
+        
+        max_fee_per_gas: The maximum fee per gas unit the sender is willing to pay.
+        Note: Used in EIP-1559 transactions, where the user specifies a maximum they are willing to pay per gas unit.
+        
+        max_priority_fee_per_gas:The maximum fee per gas unit to be sent to the miner, in case of congestion.
+        Note: Also used in EIP-1559 transactions, to determine how much of the total fee goes to the miner.
+
+        receipt_gas_used:Actual amount of gas units consumed by the transaction.
+        Note: At the end of execution, the actual gas used is calculated. The remaining (if any) of gas - receipt_gas_used is refunded.
+        
+        receipt_cumulative_gas_used:The total amount of gas used in the block when this transaction was processed.
+        Note: Shows the accumulative gas used in the block up to and including this transaction.
+        
+        receipt_effective_gas_price:The effective gas price paid by the sender, considering base fee and priority fee.
+        Note: Especially relevant in EIP-1559 transactions.
+        """
+
+        # Extract 'transactions' data from s3_data
+        transactions_data = [
+            txn_data
+            for s3_key, txn_data_list in self.data.items()
+            if 'transactions' in s3_key  # Only process keys related to transactions
+            for txn_data in txn_data_list  # Extract transaction data from the list
+        ]
 
         # If there are no transactions, return 0 to avoid division by zero
         if not transactions_data:
@@ -77,6 +111,7 @@ class MetricCalculator:
 
         # Return the average gas used per transaction
         return total_gas_used / len(transactions_data)
+
 
 
     def calculate_function_calls_count(self):
@@ -185,25 +220,31 @@ class MetricCalculator:
         address_count = self._extracted_from_calculate_total_transactions_address('to_address')
         return address_count
 
-    def _extracted_from_calculate_total_transactions_address(self, address: str) -> dict:
-        """
-        Helper function to aggregate transaction counts per specified address field.
+    def _extracted_from_calculate_total_transactions_address(self, address: str, top_n: int = 10) -> dict:
+            """
+            Helper function to aggregate transaction counts per specified address field.
+            It now returns the top_n addresses by transaction count.
 
-        Args:
-            address (str): The key to aggregate upon ('from_address' or 'to_address').
-            
-        Returns:
-            dict: A dictionary containing the transaction count per address.
-        """
-        result = {}
-        # Loop through all keys in data to get all transactions
-        for parquet_key, transactions_data in self.data.items():
-            # Check if key indicates transaction data
-            if 'transactions' in parquet_key:
-                for txn in transactions_data:
-                    if address_data := txn.get(address):
-                        result[address_data] = result.get(address_data, 0) + 1
-        return result
+            Args:
+                address (str): The key to aggregate upon ('from_address' or 'to_address').
+                top_n (int): Number of top addresses to return, default is 10.
+                
+            Returns:
+                dict: A dictionary containing the transaction count per address for top N addresses.
+            """
+            result = {}
+            # Loop through all keys in data to get all transactions
+            for parquet_key, transactions_data in self.data.items():
+                # Check if key indicates transaction data
+                if 'transactions' in parquet_key:
+                    for txn in transactions_data:
+                        if address_data := txn.get(address):
+                            result[address_data] = result.get(address_data, 0) + 1
+
+            # Using heapq to efficiently get the top N addresses
+            top_addresses = heapq.nlargest(top_n, result.items(), key=lambda x: x[1])
+
+            return dict(top_addresses)
 
     
 
@@ -265,31 +306,32 @@ class MetricCalculator:
         return total_volume
 
 
-
-
     def most_active_token_addresses(self):
         # The counter will automatically keep track of counts for each address
         address_counts = Counter()
 
         # Loop through each partition of data
         for partition, transfers in self.data.items():
-            # Loop through each transfer in the partition
-            for transfer in transfers:
-                from_address = transfer.get('from_address')
-                to_address = transfer.get('to_address')
+            # Check if the partition is related to token_transfers
+            if 'token_transfers' in partition:
+                # Loop through each transfer in the partition
+                for transfer in transfers:
+                    from_address = self.reformat_token_address(transfer.get('from_address'))
+                    to_address = self.reformat_token_address(transfer.get('to_address'))
 
-                # Increment count for from_address
-                if from_address:
-                    address_counts[from_address] += 1
+                    # Increment count for from_address
+                    if from_address:
+                        address_counts[from_address] += 1
 
-                # Increment count for to_address
-                if to_address:
-                    address_counts[to_address] += 1
+                    # Increment count for to_address
+                    if to_address:
+                        address_counts[to_address] += 1
 
         # Get the most common addresses (e.g., top 10)
         most_common_addresses = address_counts.most_common(10)
 
         return dict(most_common_addresses)
+
 
     def calculate_token_transfer_volume(self):
         total_volume_wei = Decimal('0')
@@ -357,23 +399,24 @@ class MetricCalculator:
         return total_value_eth
 
 
+    # Function to reformat the address
+    def reformat_token_address(self, address):
+        return '0x' + address[23:] if address and len(address) > 23 else address
 
 
-    def calculate_token_flow(self):
+    def calculate_token_flow(self, top_n: int = 10):
         """
-        The "token_flow" is mapping of the transfers of a specific token between 
+        The "token_flow" is a mapping of the transfers of a specific token between 
         sender and receiver addresses. This can be represented as a directed graph 
         where each edge signifies a token transfer and its weight is the amount 
         transferred. However, for simplicity, we can represent it as a JSON object 
         where each key is a tuple (from_address, to_address) and its value is the 
         total amount transferred between these two addresses.
+
+        Now returns top_n token flows by value.
         """
         # Dictionary to store the flow of tokens between addresses
         flow_dict = {}
-
-        # Function to reformat the address
-        def reformat_address(address):
-            return '0x' + address[23:] if address and len(address) > 23 else address
 
         # Iterate through all keys in self.data
         for key, token_transfers_data in self.data.items():
@@ -383,8 +426,8 @@ class MetricCalculator:
                 continue
             
             for transfer in token_transfers_data:
-                from_address = reformat_address(transfer.get('from_address'))
-                to_address = reformat_address(transfer.get('to_address'))
+                from_address = self.reformat_token_address(transfer.get('from_address'))
+                to_address = self.reformat_token_address(transfer.get('to_address'))
 
                 # safely convert value to integer
                 try:
@@ -392,7 +435,7 @@ class MetricCalculator:
                     value = int(Decimal(transfer.get('value', '0')))
                 except InvalidOperation as e:
                     print(f"Error converting value to int: {e}")
-                    value = 0  # or whatever default/fallback value is appropriate
+                    value = 0  # or whatever default/f fallback value is appropriate
                 
                 # Use tuple (from_address, to_address) as the key, and add up the values
                 flow_key = (from_address, to_address)
@@ -401,10 +444,13 @@ class MetricCalculator:
                 else:
                     flow_dict[flow_key] = value
 
+        # Extract top_n flows
+        top_flows = heapq.nlargest(top_n, flow_dict.items(), key=lambda x: x[1])
+        
         # Convert the tuple keys into a more JSON-friendly format
         return [
             {"from": key[0], "to": key[1], "value": str(value)}
-            for key, value in flow_dict.items()
+            for key, value in top_flows
         ]
 
 
@@ -413,28 +459,36 @@ class MetricCalculator:
     def calculate_token_transfer_value_distribution(self):
         # Define the bins for token transfer value distribution
         bins = [
-            # ... (keeping your bins the same)
+            (0, 1e15),            # 0 to 0.001 ETH
+            (1e15, 1e16),        # 0.001 to 0.01 ETH
+            (1e16, 1e17),        # 0.01 to 0.1 ETH
+            (1e17, 1e18),        # 0.1 to 1 ETH
+            (1e18, 10 * 1e18),   # 1 to 10 ETH
+            (10 * 1e18, 100 * 1e18),  # 10 to 100 ETH
+            (100 * 1e18, 500 * 1e18),  # 100 to 500 ETH
+            (500 * 1e18, 1e21)      # 500 ETH to 1000 ETH
         ]
 
         # Dictionary to store the count of transfers in each bin
         distribution_dict = {
             f"{bin_range[0]/1e18}-{bin_range[1]/1e18} ETH": 0 for bin_range in bins}
 
-        # Loop through all token transfer lists in self.data
-        for token_transfers in self.data.values():
-            # Check each token transfer and update the appropriate bin in the distribution
-            for transfer in token_transfers:
-                try:
-                    # Convert to float first, then to int to handle scientific notation
-                    value = int(float(transfer.get('value', '0')))  # assuming the value is a string
-                except ValueError as ve:
-                    print(f"Error converting value to int: {ve}")
-                    value = 0  # or an appropriate fallback value
-                
-                for bin_range in bins:
-                    if bin_range[0] <= value < bin_range[1]:
-                        distribution_dict[f"{bin_range[0]/1e18}-{bin_range[1]/1e18} ETH"] += 1
-                        break
+        # Loop through all data in self.data and check if it's related to token_transfers
+        for partition, token_transfers in self.data.items():
+            if 'token_transfers' in partition:
+                # Check each token transfer and update the appropriate bin in the distribution
+                for transfer in token_transfers:
+                    try:
+                        # Convert to float first, then to int to handle scientific notation
+                        value = int(float(transfer.get('value', '0')))  # assuming the value is a string
+                    except ValueError as ve:
+                        print(f"Error converting value to int: {ve}")
+                        value = 0  # or an appropriate fallback value
+                    
+                    for bin_range in bins:
+                        if bin_range[0] <= value < bin_range[1]:
+                            distribution_dict[f"{bin_range[0]/1e18}-{bin_range[1]/1e18} ETH"] += 1
+                            break
 
         return distribution_dict
 
@@ -445,42 +499,19 @@ class MetricCalculator:
 
         # Iterate through each file path and its corresponding transaction data
         for filepath, txn_data_list in self.data.items():
-            # Check if 'txn_data_list' is a list and proceed
-            if isinstance(txn_data_list, list):
-                # Extracting the block_timestamp from the transactions
+            # Check if the file path indicates transaction data and if 'txn_data_list' is a list
+            if 'transactions' in filepath and isinstance(txn_data_list, list):
+                # Extracting the date from the transactions
                 for txn in txn_data_list:
-                    # Check if the transaction type is as expected
-                    if txn.get("type") == "transactions":
-                        timestamp = MetricCalculator.safe_int_conversion(txn.get('block_timestamp', 0))
-                        if timestamp:
-                            # Convert the timestamp to a human-readable date
-                            # Assuming timestamp is in milliseconds
-                            date = MetricCalculator.custom_utcfromtimestamp(timestamp).date()
+                    date_str = txn.get('date', '')
+                    if date_str:
+                        try:
+                            # Convert the date string to a datetime object and back to string to ensure a consistent format
+                            date = datetime.strptime(date_str, "%Y-%m-%d").date()
                             freq_by_day[str(date)] += 1
+                        except ValueError as e:
+                            print(f"Could not convert date: {e}")
 
         return dict(freq_by_day)
-
-
-    
-    def custom_utcfromtimestamp(timestamp_ms):
-        # Reference epoch
-        epoch = datetime(1970, 1, 1)
-        
-        # Split the timestamp into seconds and milliseconds parts
-        timestamp_s, ms = divmod(timestamp_ms, 1000)
-        
-        try:
-            # Constructing datetime object from epoch + timedelta in seconds + timedelta in milliseconds
-            return epoch + timedelta(seconds=timestamp_s) + timedelta(milliseconds=ms)
-        except OverflowError:
-            print(f"OverflowError with timestamp_ms: {timestamp_ms}, timestamp_s: {timestamp_s}, ms: {ms}")
-            raise
-
-    def safe_int_conversion(num_str):
-        try:
-            return int(float(num_str))
-        except ValueError as ve:
-            print(f"Failed to convert: {num_str}, due to: {str(ve)}")
-        return 0
 
 

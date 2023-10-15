@@ -115,7 +115,7 @@ class TxnAnalyzer:
                 camp_analytic.token_transfer_value = met_cal.calculate_token_transfer_value()
 
                 # Assuming that most_active_token_addresses() returns a dict, not a JSON string
-                camp_analytic.most_active_addresses = met_cal.most_active_token_addresses()
+                camp_analytic.most_active_token_addresses = met_cal.most_active_token_addresses()
 
                 new_value = met_cal.calculate_average_token_transfer_value()
                 camp_analytic.ave_token_transfer_value = Decimal(str(new_value))

@@ -7,7 +7,7 @@ __copyright__ ="AnalyticKit, Inc. 2023"
 
 from django.db import models
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from django.utils.timezone import make_aware
 
 
@@ -41,6 +41,12 @@ class S3File(models.Model):
     @classmethod
     def any_record_exists(cls):
         return cls.objects.exists()
+    
+    def get_campaign_analytics(self):
+        """
+        Returns all CampaignAnalytic objects associated with this CommunityEngagement
+        """
+        return self.campaignanalytic_set.all()
 
 
 
@@ -78,7 +84,25 @@ class CommunityEngagement(models.Model):
         query_str = str(query.query)
         return query
 
+    @classmethod
+    def is_engagement_eligible_for_team(cls, team_id):
+        """
+        Checks if a CommunityEngagement exists for the given team_id where today's date
+        is in between start_date and end_date.
+        
+        Args:
+        - team_id (int): The ID of the team to check for.
 
+        Returns:
+        - bool: True if no such engagement exists, False otherwise.
+        """
+        today = date.today()
+        exists = cls.objects.filter(
+            team=team_id,
+            start_date__lte=today,
+            end_date__gte=today
+        ).exists()
+        return not exists
 
     def has_associated_campaign_analytic(self):
         """
@@ -87,6 +111,11 @@ class CommunityEngagement(models.Model):
         """
         return CampaignAnalytic.objects.filter(community_engagement=self).exists()
 
+    def get_all_changes_in_avg_gas_price(self):
+        """
+        Returns all change_in_average_gas_price values from associated CampaignAnalytic objects.
+        """
+        return [analytic.change_in_average_gas_price for analytic in self.campaignanalytic_set.all()]
 
 
 
@@ -103,12 +132,9 @@ class CampaignAnalytic(models.Model):
     total_contract_calls = models.IntegerField(default=0)
     function_calls_count = models.JSONField(default=dict)
     tot_tokens_transferred = models.DecimalField(max_digits=30, decimal_places=10, default=0)
-    referral_count = models.IntegerField(default=0)
     last_modified = models.DateTimeField(auto_now=True, null=True)
     tot_txns = models.IntegerField(default=0)
     ave_gas_used = models.DecimalField(max_digits=20, decimal_places=5, default=0)
-
-    # New fields
     transaction_value_distribution = models.JSONField(default=dict)  # Store distribution data as JSON
     ave_txn_fee = models.DecimalField(max_digits=20, decimal_places=5, default=0)
     tot_txn_from_address = models.JSONField(default=dict)  # Store counts of transactions from specific addresses as JSON
@@ -120,6 +146,30 @@ class CampaignAnalytic(models.Model):
     ave_token_transfer_value = models.DecimalField(max_digits=30, decimal_places=10, default=0)
     token_flow = models.JSONField(default=dict)  # Store flow data between addresses as JSON
     token_transfer_value_distribution = models.JSONField(default=dict)  # Store distribution data as JSON
+
+    # New fieldss for storing various metrics from receipt_effective_gas_price
+    average_effective_gas_price = models.DecimalField(max_digits=20, decimal_places=5, default=0)
+    median_effective_gas_price = models.DecimalField(max_digits=20, decimal_places=5, default=0)
+    gas_price_min = models.DecimalField(max_digits=20, decimal_places=5, default=0)  # Part of gas_price_range
+    gas_price_max = models.DecimalField(max_digits=20, decimal_places=5, default=0)  # Part of gas_price_range
+    total_daily_fees = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    change_in_average_gas_price = models.DecimalField(max_digits=20, decimal_places=5, default=0)
+    
+    # Since transactions_count_by_gas_price_range, daily_percentile_analysis, transactions_relative_to_previous_day_avg, 
+    # gas_price_histogram encapsulate various subfields, using JSONFields
+    transactions_by_gas_price_range = models.JSONField(default=dict)
+    daily_percentile_data = models.JSONField(default=dict)
+    transactions_relative_prev_day = models.JSONField(default=dict)
+    gas_price_histogram_data = models.JSONField(default=dict)
+    
+    daily_standard_deviation = models.DecimalField(max_digits=20, decimal_places=5, default=0)
+    
+    # Cumulative data might benefit from individual fields for simplicity and frequent querying
+    cumulative_gas_used = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    cumulative_transaction_fees = models.DecimalField(max_digits=30, decimal_places=10, default=0)
+    cumulative_avg_gas_price = models.DecimalField(max_digits=20, decimal_places=5, default=0)
+    cumulative_transactions_count = models.IntegerField(default=0)
+
 
 
     @classmethod

@@ -151,6 +151,11 @@ urlpatterns = [
     # crypto
     path("api/unsubscribe", unsubscribe.unsubscribe),
     path(
+        "api/campaign/check-eligibility/",
+        CommunityEngagementViewSet.as_view({"get": "check_eligibility"}),
+        name="check-eligibility",
+    ),
+    path(
         "api/campaign/",
         CommunityEngagementViewSet.as_view({"get": "list", "post": "create"}),
         name="campaign-list-create",
@@ -162,6 +167,13 @@ urlpatterns = [
         ),
         name="campaign-detail",
     ),
+    path(
+    "api/campaign/<int:pk>/analytic/",
+    CommunityEngagementViewSet.as_view({"get": "analytic"}),
+    name="analytic",
+    ),
+
+
 ]
 
 if settings.DEBUG:

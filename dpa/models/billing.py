@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import date, timedelta
 
 class Billing(models.Model):
     user = models.ForeignKey("analytickit.User", on_delete=models.CASCADE, related_name="billing_info")
@@ -12,8 +12,8 @@ class Billing(models.Model):
     event_allocation = models.PositiveIntegerField(default=0)  # Number of events allocated for the plan
 
     # Billing cycle details
-    billing_period_starts = models.DateField(null=True, blank=True)
-    billing_period_ends = models.DateField(null=True, blank=True)
+    billing_period_starts = models.DateField(default=date.today)
+    billing_period_ends = models.DateField(default=lambda: date.today() + timedelta(days=365))
 
     # Usage details
     current_usage = models.PositiveIntegerField(default=0)  # Number of events used so far

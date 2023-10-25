@@ -9,10 +9,12 @@ __copyright__ ="AnalyticKit, Inc. 2023"
 """
 import os
 import django
-# uses /home/mani/sass/analytickit/dpa/settings.py, theis is needed before you can run this program
+import sys
+# uses /home/mani/sass/analytickit/dpa/settings.py, this is needed before you can run this program
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'analytickit.settings')
 # Need this to initialize Django 
 django.setup()
+sys.path.append('./analytickit/crypto') # needed for pytest
 
 
 from logger_config import logger
@@ -25,7 +27,7 @@ import json
 from decimal import Decimal
 import re
 import datetime
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from django.utils.timezone import make_aware
 
 class TxnAnalyzer:
@@ -55,7 +57,9 @@ class TxnAnalyzer:
         # filtered_keys used for testing only
         filtered_keys = [
             key for key in s3_keys 
-            if datetime.strptime(key.split('date=')[1].split('/')[0], "%Y-%m-%d") >= datetime(2023, 10, 5)
+            # for now get previous 10 days worh of data from S3, instead of going and getting all the data since 2015.
+            if datetime.strptime(key.split('date=')[1].split('/')[0], "%Y-%m-%d").date() >= (date.today() - timedelta(days=1))
+
         ]
         s3_keys = filtered_keys
 
@@ -70,7 +74,7 @@ class TxnAnalyzer:
             else:
                 s3_key_batches = [S3File.get_previous_day_key_name()[i:i + BATCH_SIZE] for i in range(0, len(S3File.get_previous_day_key_name()), BATCH_SIZE)]
 
-            s3_key_batches = s3_keys_batches_filtered # for testing only
+            s3_key_batches = s3_keys_batches_filtered # for now use the filtered batches to get data for the previous 10 days from today
             # create a new or get existsing camp_analytic for today. Only one
             # camp_analytic per day.
             # camp_analytic = CampaignAnalytic. get_or_create_for_today(campaign)
@@ -125,6 +129,26 @@ class TxnAnalyzer:
 
                 # Assuming that calculate_token_transfer_value_distribution() returns a dict
                 camp_analytic.token_transfer_value_distribution = met_cal.calculate_token_transfer_value_distribution()
+
+                #new fields 
+                camp_analytic.average_effective_gas_price = met_cal.average_effective_gas_price()
+                camp_analytic.median_effective_gas_price = met_cal.median_effective_gas_price()
+                camp_analytic.gas_price_min,  camp_analytic.gas_price_max = met_cal.gas_price_range()
+               
+                camp_analytic.total_daily_fees = met_cal.total_daily_fees()
+                # camp_analytic.change_in_average_gas_price = met_cal.change_in_average_gas_price(campaign.get_all_changes_in_avg_gas_price())
+                camp_analytic.transactions_by_gas_price_range = met_cal.transactions_count_by_gas_price_range()
+                camp_analytic.daily_percentile_data = met_cal.daily_percentile_analysis()
+                camp_analytic.transactions_relative_prev_day = met_cal.transactions_relative_to_previous_day_avg()
+                camp_analytic.gas_price_histogram_data = met_cal.gas_price_histogram()
+                camp_analytic.daily_standard_deviation = met_cal.daily_standard_deviation()
+                camp_analytic.cumulative_gas_used = met_cal.cumulative_gas_used()
+                camp_analytic.cumulative_transaction_fees = met_cal.cumulative_transaction_fees()
+                camp_analytic.cumulative_avg_gas_price = met_cal.cumulative_avg_gas_price()
+                camp_analytic.cumulative_transactions_count = met_cal.cumulative_transactions_count()
+    
+
+
 
                 del eth_jsons  # Delete large variables to free memory
                 gc.collect()   # Force garbage collection

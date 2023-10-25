@@ -37,6 +37,9 @@ class BillingRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     lookup_url_kwarg = "user_id"
 
     def get_object(self):
+        '''
+        This function is called when /organization/billing is called from UI
+        '''
         user_id = self.kwargs.get(self.lookup_url_kwarg)
         if user_id == "@current":
             user = self.request.user
@@ -44,6 +47,7 @@ class BillingRetrieveUpdateView(generics.RetrieveUpdateAPIView):
             user = User.objects.get(id=user_id)
 
         # Get the billing instance with the latest billing_period_ends date for the user
+        # returns data from dpa_billing with the associated user_id
         instance = Billing.objects.filter(user=user).order_by("-billing_period_ends").first()
 
         # If no billing instance exists for the user, create one

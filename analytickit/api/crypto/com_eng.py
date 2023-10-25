@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-
+from rest_framework.response import Response
 
 
 
@@ -119,7 +119,18 @@ class CommunityEngagementViewSet(viewsets.ModelViewSet):
 
     # Custom action to retrieve CampaignAnalytic data for a specific CommunityEngagement instance
     @action(detail=True, methods=['get'])
-    def campaign_analytic(self, request, pk=None):
+    def analytic(self, request, pk=None):
         engagement = self.get_object()
-        serializer = CampaignAnalyticSerializer(engagement.campaign_analytic, many=True)
+        # Use the reverse relation to get associated CampaignAnalytic objects
+        campaign_analytics = engagement.campaignanalytic_set.all()
+        serializer = CampaignAnalyticSerializer(campaign_analytics, many=True)
         return response.Response(serializer.data)
+
+    @action(detail=False, methods=['GET'], url_path='check-eligibility')
+    def check_eligibility(self, request):
+        team_id = request.query_params.get('team_id')
+        if not team_id:
+            return Response({"error": "team_id parameter is required"}, status=400)
+        
+        is_eligible = CommunityEngagement.is_engagement_eligible_for_team(team_id)
+        return Response({"is_eligible": is_eligible})

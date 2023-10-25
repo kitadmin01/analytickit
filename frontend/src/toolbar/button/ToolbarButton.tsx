@@ -2,7 +2,7 @@ import './ToolbarButton.scss'
 
 import React, { useRef, useEffect } from 'react'
 import { useActions, useValues } from 'kea'
-import { HogLogo } from '~/toolbar/assets/HogLogo'
+import { KitLogo } from '~/toolbar/assets/KitLogo'
 import { Circle } from '~/toolbar/button/Circle'
 import { toolbarButtonLogic } from '~/toolbar/button/toolbarButtonLogic'
 import { heatmapLogic } from '~/toolbar/elements/heatmapLogic'
@@ -113,7 +113,7 @@ export function ToolbarButton(): JSX.Element {
             rootNode
             width={62}
             className="floating-toolbar-button"
-            content={<HogLogo style={{ width: 45, cursor: 'pointer' }} />}
+            content={<KitLogo style={{ width: 45, cursor: 'pointer' }} />}
             {...clickEvents}
             onMouseOver={isAuthenticated ? undefined : () => setExtensionPercentage(1)}
             style={{ borderRadius: 10, height: 46, marginTop: -23 }}

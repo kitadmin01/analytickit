@@ -50,6 +50,16 @@ def delete_teams_clickhouse_data(team_ids: List[int]):
 
 
 def deleted_teams_with_clickhouse_data() -> List[int]:
+    '''
+    this function helps you find team IDs that were present in the ClickHouse database's 
+    events table but are no longer present in the Team model in Django. 
+    It returns a list of these "deleted" team IDs.
+    
+    Note: This function is only useful if you have already deleted the team from Django. 
+    If you have not deleted the team from Django, you can safely ignore this function.
+    You can use /api/projects/<pk> (pk is team_id from analytickit_team. 
+    project in the api is associated with team in Postgres)
+    '''
     valid_team_ids = set(Team.objects.all().values_list("pk", flat=True))
     clickhouse_teams_result = sync_execute("SELECT DISTINCT team_id FROM events")
     clickhouse_team_ids = set(row[0] for row in clickhouse_teams_result)

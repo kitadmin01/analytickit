@@ -41,7 +41,7 @@ coreschema==0.0.4
     # via coreapi
 coverage==5.5
     # via pytest-cov
-django==3.2.14
+django==3.2.23
     # via
     #   -c requirements.txt
     #   django-stubs

@@ -10,6 +10,7 @@ export function GroupsTabs(): JSX.Element {
     const { setTab } = useActions(groupsListLogic)
     const { currentTab } = useValues(groupsListLogic)
     const { groupTypes, aggregationLabel } = useValues(groupsModel)
+    console.log(groupTypes, 'groupTypes')
     const { groupsAccessStatus } = useValues(groupsAccessLogic)
 
     const showGroupsIntroductionPage = [
@@ -20,7 +21,7 @@ export function GroupsTabs(): JSX.Element {
 
     return (
         <Tabs activeKey={currentTab} onChange={(activeKey) => setTab(activeKey)}>
-            <Tabs.TabPane tab="Persons" key="-1" />
+            <Tabs.TabPane tab="Visitors" key="-1" />
 
             {showGroupsIntroductionPage ? (
                 <Tabs.TabPane tab="Introducing Group Analytics" key="0" />

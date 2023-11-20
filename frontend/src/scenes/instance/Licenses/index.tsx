@@ -58,7 +58,7 @@ function ConfirmCancelModal({
                     </LemonButton>
                     <LemonButton data-attr="deactivate-license-proceed" type="primary" status="danger" onClick={onOk}>
                         {willDeleteProjects ? (
-                            <>Deactivate license & delete {nonDemoProjects.length} project(s)</>
+                            <>Deactivate license & delete {nonDemoProjects.length} campaign(s)</>
                         ) : (
                             'Deactivate license'
                         )}
@@ -70,7 +70,7 @@ function ConfirmCancelModal({
                 {!hasAnotherValidLicense ? (
                     <li>
                         You will <strong>IMMEDIATELY</strong> lose access to all premium features such as{' '}
-                        <strong>multiple projects</strong>, <strong>single sign on</strong>,{' '}
+                        <strong>multiple campaign</strong>, <strong>single sign on</strong>,{' '}
                         <strong>group analytics</strong>, <strong>multivariate feature flags</strong> and many more.
                     </li>
                 ) : (
@@ -80,7 +80,7 @@ function ConfirmCancelModal({
                 )}
                 {willDeleteProjects && (
                     <li>
-                        We will <strong className="text-danger">DELETE</strong> the following projects:
+                        We will <strong className="text-danger">DELETE</strong> the following campaigns:
                         <ul>
                             {nonDemoProjects.map((team: TeamType) => (
                                 <li key={team.id}>
@@ -88,7 +88,7 @@ function ConfirmCancelModal({
                                 </li>
                             ))}
                         </ul>
-                        To keep one of these projects instead, remove all other projects first.
+                        To keep one of these campaigns instead, remove all other campaigns first.
                     </li>
                 )}
                 <li>You will immediately be billed for usage in the current period, if any.</li>

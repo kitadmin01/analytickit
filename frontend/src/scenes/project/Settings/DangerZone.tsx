@@ -21,8 +21,8 @@ export function DeleteProjectModal({
 
     return (
         <Modal
-            title="Delete the project and its data?"
-            okText={`Delete ${currentTeam ? currentTeam.name : 'the current project'}`}
+            title="Delete the campaign and its data?"
+            okText={`Delete ${currentTeam ? currentTeam.name : 'the current campaign'}`}
             okType="danger"
             onOk={currentTeam ? () => deleteTeam(currentTeam) : undefined}
             okButtonProps={{
@@ -39,10 +39,10 @@ export function DeleteProjectModal({
         >
             <p>
                 Project deletion <b>cannot be undone</b>. You will lose all data, <b>including events</b>, related to
-                the project.
+                the campaign.
             </p>
             <p>
-                Please type <strong>{currentTeam ? currentTeam.name : "this project's name"}</strong> to confirm.
+                Please type <strong>{currentTeam ? currentTeam.name : "this campaign's name"}</strong> to confirm.
             </p>
             <Input
                 type="text"
@@ -80,7 +80,7 @@ export function DangerZone({ isRestricted }: RestrictedComponentProps): JSX.Elem
                         icon={<IconDelete />}
                         disabled={isRestricted}
                     >
-                        Delete {currentTeam?.name || 'the current project'}
+                        Delete {currentTeam?.name || 'the current campaign'}
                     </LemonButton>
                 </div>
             </div>

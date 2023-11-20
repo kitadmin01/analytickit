@@ -27,7 +27,7 @@ export const PersonsSearch = ({ autoFocus = true }: { autoFocus?: boolean }): JS
             <LemonInput
                 type="search"
                 autoFocus={autoFocus}
-                placeholder="Search for persons"
+                placeholder="Search for visitors"
                 onChange={setSearchTerm}
                 value={searchTerm}
                 data-attr="persons-search"

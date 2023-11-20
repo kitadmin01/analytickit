@@ -74,7 +74,7 @@ export function GroupAnalytics(): JSX.Element | null {
                     Group Analytics
                 </h2>
                 <p>
-                    This project has access to group analytics. Below you can configure how various group types are
+                    This campaign has access to group analytics. Below you can configure how various group types are
                     displayed throughout the app.
                 </p>
                 <LemonTable columns={columns} dataSource={groupTypes} loading={groupTypesLoading} />

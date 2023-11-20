@@ -10,7 +10,7 @@ export default {
         docs: {
             description: {
                 component:
-                    'Lettermarks are used as visual, icon-like representations of actors (project members, organizations, query steps, cohort criteria groups, etc) in the product. Lettermarks should vary between the 8 variants we have shown below. Ideally the same colour is not placed next to each other',
+                    'Lettermarks are used as visual, icon-like representations of actors (campaign members, organizations, query steps, cohort criteria groups, etc) in the product. Lettermarks should vary between the 8 variants we have shown below. Ideally the same colour is not placed next to each other',
             },
         },
     },

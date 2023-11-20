@@ -50,7 +50,7 @@ function DisplayName(): JSX.Element {
     if (currentTeam?.is_demo) {
         return (
             <p>
-                <i>The demo project cannot be renamed.</i>
+                <i>The demo campaign cannot be renamed.</i>
             </p>
         )
     }
@@ -64,7 +64,7 @@ function DisplayName(): JSX.Element {
                 disabled={!name || !currentTeam || name === currentTeam.name}
                 loading={currentTeamLoading}
             >
-                Rename Project
+                Rename Campaign
             </LemonButton>
         </div>
     )
@@ -85,8 +85,8 @@ export function ProjectSettings(): JSX.Element {
         <div>
             <PageHeader
                 title="Project settings"
-                caption={`Organize your analytics within the project. These settings only apply to ${
-                    currentTeam?.name ?? 'the current project'
+                caption={`Organize your analytics within the campaign. These settings only apply to ${
+                    currentTeam?.name ?? 'the current campaign'
                 }.`}
             />
             <div className="border rounded p-6">
@@ -112,7 +112,7 @@ export function ProjectSettings(): JSX.Element {
                     and click it.
                     <br />
                     This will enable our tracking, on the currently loaded page only. The data will show up in this
-                    project.
+                    campaign.
                     <br />
                 </p>
                 <div>{currentTeam && <JSBookmarklet team={currentTeam} />}</div>
@@ -125,10 +125,10 @@ export function ProjectSettings(): JSX.Element {
                 Go, PHP, iOS, Android, and more.
                 <LemonDivider className="my-6" />
                 <h2 id="project-variables" className="subtitle mb-4">
-                    Project Variables
+                    Campaign Variables
                 </h2>
                 <h3 id="project-api-key" className="l3">
-                    Project API Key
+                    Campaign API Key
                 </h3>
                 <p>
                     You can use this write-only key in any one of{' '}
@@ -138,11 +138,11 @@ export function ProjectSettings(): JSX.Element {
                     actions={[
                         {
                             icon: <IconRefresh />,
-                            title: 'Reset project API key',
+                            title: 'Reset campaign API key',
                             popconfirmProps: {
                                 title: (
                                     <>
-                                        Reset the project's API key?{' '}
+                                        Reset the campaign's API key?{' '}
                                         <b>This will invalidate the current API key and cannot be undone.</b>
                                     </>
                                 ),
@@ -153,7 +153,7 @@ export function ProjectSettings(): JSX.Element {
                             callback: resetToken,
                         },
                     ]}
-                    copyDescription="project API key"
+                    copyDescription="campaign API key"
                 >
                     {currentTeam?.api_token || ''}
                 </CodeSnippet>
@@ -165,7 +165,7 @@ export function ProjectSettings(): JSX.Element {
                     Project ID
                 </h3>
                 <p>
-                    You can use this ID to reference your project in our <a href="https://analytickit.com/docs/api">API</a>.
+                    You can use this ID to reference your campaign in our <a href="https://analytickit.com/docs/api">API</a>.
                 </p>
                 <CodeSnippet copyDescription="project ID">{String(currentTeam?.id || '')}</CodeSnippet>
                 <LemonDivider className="my-6" />
@@ -173,7 +173,7 @@ export function ProjectSettings(): JSX.Element {
                     Timezone
                 </h2>
                 <p>
-                    Set the timezone for your project. All charts will be based on this timezone, including how analytickit
+                    Set the timezone for your campaign. All charts will be based on this timezone, including how analytickit
                     buckets data in day/week/month intervals.
                 </p>
                 <TimezoneConfig />

@@ -16,9 +16,9 @@ export function TimezoneConfig(): JSX.Element {
     }
     function onChange(val: string): void {
         Modal.confirm({
-            title: `Do you want to change the timezone of this project?`,
+            title: `Do you want to change the timezone of this campaign?`,
             content:
-                'This will change how every graph in this project is calculated, which means your data will look different than it did before.',
+                'This will change how every graph in this campaign is calculated, which means your data will look different than it did before.',
             icon: <ExclamationCircleOutlined />,
             okText: 'Change timezone',
             okType: 'danger',

@@ -85,7 +85,7 @@ function TZLabelRaw({
                             <Col className="name">
                                 <ProjectOutlined /> {shortTimeZone(currentTeam.timezone, parsedTime.toDate())}
                             </Col>
-                            <Col className="scope">Project</Col>
+                            <Col className="scope">Campaign</Col>
                             <Col className="time" style={timeStyle}>
                                 {parsedTime.tz(currentTeam.timezone).format(DATE_OUTPUT_FORMAT)}
                             </Col>

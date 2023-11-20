@@ -42,11 +42,11 @@ export function AddMembersModalWithButton({ isRestricted }: RestrictedComponentP
                 icon={<UserAddOutlined />}
                 disabled={isRestricted}
             >
-                Add members to project
+                Add members to campaign
             </Button>
             <Modal
-                title={`Adding members${currentTeam?.name ? ` to project ${currentTeam.name}` : ''}`}
-                okText="Add members to project"
+                title={`Adding members${currentTeam?.name ? ` to campaign ${currentTeam.name}` : ''}`}
+                okText="Add members to campaign"
                 onOk={handleOnFinish}
                 okButtonProps={{
                     // @ts-expect-error - data-attr works just fine despite not being in ButtonProps
@@ -91,13 +91,13 @@ export function AddMembersModalWithButton({ isRestricted }: RestrictedComponentP
                                         style={{ display: 'inline-flex', marginRight: 8 }}
                                     />
                                     {member.user.first_name} ({member.user.email})
-                                    {!!member.level && <i> – already has project access</i>}
+                                    {!!member.level && <i> – already has campaign access</i>}
                                 </Select.Option>
                             ))}
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        label="With project-specific access level"
+                        label="With campaign-specific access level"
                         style={{ marginBottom: 0 }}
                         name="level"
                         initialValue={TeamMembershipLevel.Member}

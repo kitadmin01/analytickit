@@ -126,7 +126,7 @@ export const personsLogic = kea<personsLogicType>({
                 const showPerson = person && location.pathname.match(/\/person\/.+/)
                 const breadcrumbs: Breadcrumb[] = [
                     {
-                        name: 'Persons',
+                        name: 'Campaigns',
                         path: urls.persons(),
                     },
                 ]

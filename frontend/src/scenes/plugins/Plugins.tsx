@@ -81,7 +81,7 @@ export function Plugins(): JSX.Element | null {
                 <TabPane
                     tab={
                         <>
-                            History <BetaTag />{' '}
+                            History{' '}
                         </>
                     }
                     key={PluginTab.History}

@@ -8,11 +8,11 @@ export function ErrorProjectUnavailable(): JSX.Element {
 
     return (
         <div>
-            <PageHeader title="Project Unavailable" />
+            <PageHeader title="Campaign Unavailable" />
             <p>
                 {isProjectCreationForbidden
-                    ? "Switch to a project that you have access to. If you need a new project or access to an existing one that's private, ask a team member with administrator permissions."
-                    : 'You can create a new project.'}
+                    ? "Switch to a campaign that you have access to. If you need a new campaign or access to an existing one that's private, ask a team member with administrator permissions."
+                    : 'You can create a new campaign.'}
             </p>
         </div>
     )

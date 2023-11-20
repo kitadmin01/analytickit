@@ -45,7 +45,7 @@ export function CreateProjectModal({
             createTeam(name)
             closeModal()
         } else {
-            setErrorMessage('Your project needs a name!')
+            setErrorMessage('Your campaign needs a name!')
         }
     }
 
@@ -53,11 +53,11 @@ export function CreateProjectModal({
         <p>
             Projects are a way of tracking multiple products under the umbrella of a single organization.
             <br />
-            All organization members will be able to access the new project upon creation, but you can make it private
+            All organization members will be able to access the new campaign upon creation, but you can make it private
             in its settings to restrict access.
             <br />
             <a href="https://analytickit.com/docs/user-guides/organizations-and-projects" target="_blank" rel="noopener">
-                Learn more about projects in Docs.
+                Learn more about campaigns in Docs.
             </a>
         </p>
     )
@@ -66,8 +66,8 @@ export function CreateProjectModal({
         <Modal
             title={
                 currentOrganization
-                    ? `You cannot create a project in ${currentOrganization.name}`
-                    : 'You cannot create a project'
+                    ? `You cannot create a campaign in ${currentOrganization.name}`
+                    : 'You cannot create a campaign'
             }
             okButtonProps={onClose ? undefined : { style: { display: 'none' } }}
             onCancel={closeModal}
@@ -76,7 +76,7 @@ export function CreateProjectModal({
             wrapProps={isVisible && !mask ? { style: { pointerEvents: 'none' } } : undefined}
             closeIcon={null}
         >
-            Your organization access level is insufficient for creating a new project.
+            Your organization access level is insufficient for creating a new campaign.
             <br />
             Project creation requires administrator access.
         </Modal>
@@ -84,9 +84,9 @@ export function CreateProjectModal({
         <Modal
             title={
                 title ||
-                (currentOrganization ? `Creating a project in ${currentOrganization.name}` : 'Creating a project')
+                (currentOrganization ? `Creating a campaign in ${currentOrganization.name}` : 'Creating a campaign')
             }
-            okText="Create project"
+            okText="Create campaign"
             cancelButtonProps={onClose ? undefined : { style: { display: 'none' } }}
             onOk={handleSubmit}
             onCancel={closeModal}
@@ -97,13 +97,13 @@ export function CreateProjectModal({
         >
             {caption || defaultCaption}
             <div className="input-set">
-                <label htmlFor="projectName">Project Name</label>
+                <label htmlFor="campaignName">Campaign Name</label>
                 <Input
                     ref={inputRef}
                     placeholder='for example "Web app", "Mobile app", "Production", "Landing website"'
                     maxLength={64}
                     autoFocus
-                    name="projectName"
+                    name="campaignName"
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             handleSubmit()

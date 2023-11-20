@@ -79,7 +79,7 @@ export function Annotations(): JSX.Element {
                 return annotation.scope === AnnotationScope.Insight ? (
                     <Tag color="blue">Insight</Tag>
                 ) : annotation.scope === AnnotationScope.Project ? (
-                    <Tag color="purple">Project</Tag>
+                    <Tag color="purple">Campaign</Tag>
                 ) : annotation.scope === AnnotationScope.Organization ? (
                     <Tag color="pink">Organization</Tag>
                 ) : (

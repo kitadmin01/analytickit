@@ -200,27 +200,10 @@ export function EventDefinitionsTable(): JSX.Element {
     return (
         <div data-attr="manage-events-table">
             <PageHeader
-                title="Data Management"
+                title="Data Organizer"
                 caption="Use data management to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
                 tabbedPage
-                buttons={shouldSimplifyActions && <NewActionButton />}
             />
-            {shouldSimplifyActions && (
-                <Alert
-                    style={{ marginBottom: 16, display: 'flex', alignItems: 'center' }}
-                    message="Actions have moved to the Events tab"
-                    description={
-                        <>
-                            Actions are now called calculated events and can be found in the events tab. You can create
-                            a new calculated event (formerly known as an Action) by clicking the "New calculated event"
-                            button.
-                        </>
-                    }
-                    type="info"
-                    showIcon
-                    closable
-                />
-            )}
             <DataManagementPageTabs tab={DataManagementTab.EventDefinitions} />
             {preflight && !preflight?.is_event_property_usage_enabled && (
                 <UsageDisabledWarning tab="Event Definitions" />

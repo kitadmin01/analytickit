@@ -154,7 +154,7 @@ function AppScene(): JSX.Element | null {
     return (
         <>
             <Navigation>{protectedBoundActiveScene}</Navigation>
-            {toastContainer}
+            {/* {toastContainer} */}
             <UpgradeModal />
         </>
     )

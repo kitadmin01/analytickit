@@ -14,13 +14,14 @@ export const scene: SceneExport = {
 }
 
 export function Billing(): JSX.Element {
-    const { billing } = useValues(billingLogic)
+    const { billing, subscriptionExpiredMessage } = useValues(billingLogic)
 
     return (
         <div className="billing-page">
             <PageHeader title="Billing &amp; usage information" />
             <CurrentUsage />
             {billing?.plan ? <CurrentPlan plan={billing.plan} /> : <BillingEnrollment />}
+            {subscriptionExpiredMessage && <div>{subscriptionExpiredMessage}</div>}
             <div style={{ marginBottom: 128 }} />
         </div>
     )

@@ -168,6 +168,21 @@ export const billingLogic = kea<billingLogicType>({
                 }
             },
         ],
+        subscriptionExpiredMessage: [
+            (s) => [s.billing],
+            (billing: BillingType) => {
+                if (billing && !billing.is_billing_active) {
+                    return 'Please subscribe to one of the below plans.'
+                } else if (billing && billing.billing_period_ends) {
+                    const billingPeriodEndsDate = new Date(billing.billing_period_ends)
+                    const today = new Date()
+                    if (today > billingPeriodEndsDate) {
+                        return `Your subscription expired on ${billing.billing_period_ends}. Please subscribe to one of the below plans.`
+                    }
+                }
+                return null
+            },
+        ],
     },
     events: ({ actions }) => ({
         afterMount: () => {

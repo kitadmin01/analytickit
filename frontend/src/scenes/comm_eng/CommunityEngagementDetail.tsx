@@ -1,9 +1,9 @@
-import React from 'react';
-import { CommunityEngagement } from './CommunityEngagementModel';
+import React from 'react'
+// import { CommunityEngagement } from './CommunityEngagementModel';
 
 interface Props {
-    campaign: CommunityEngagement | null; // Allow campaign to be null
-    onEdit: () => void;
+    campaign: any // Allow campaign to be null
+    onEdit: () => void
 }
 
 const CommunityEngagementDetail: React.FC<Props> = ({ campaign, onEdit }) => {
@@ -11,14 +11,14 @@ const CommunityEngagementDetail: React.FC<Props> = ({ campaign, onEdit }) => {
         return <div>Error: Invalid campaign data</div>
     }
 
-    const formatDate = (date?: Date):string => {
+    const formatDate = (date?: Date): string => {
         // Check if date is defined and is a valid date
         if (date && !isNaN(new Date(date).getTime())) {
-            return new Date(date).toLocaleDateString();
+            return new Date(date).toLocaleDateString()
         } else {
-            return "N/A"; // Or any placeholder for invalid/undefined dates
+            return 'N/A' // Or any placeholder for invalid/undefined dates
         }
-    };
+    }
 
     return (
         <div>
@@ -33,4 +33,4 @@ const CommunityEngagementDetail: React.FC<Props> = ({ campaign, onEdit }) => {
     )
 }
 
-export default CommunityEngagementDetail;
+export default CommunityEngagementDetail

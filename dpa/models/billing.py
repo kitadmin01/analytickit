@@ -1,6 +1,9 @@
 from django.db import models
 from datetime import date, timedelta
 
+def billing_period_ends_default():
+        return date.today() + timedelta(days=365)
+
 class Billing(models.Model):
     user = models.ForeignKey("analytickit.User", on_delete=models.CASCADE, related_name="billing_info")
 
@@ -14,6 +17,9 @@ class Billing(models.Model):
     # Billing cycle details
     billing_period_starts = models.DateField(default=date.today)
     billing_period_ends = models.DateField(default=lambda: date.today() + timedelta(days=365))
+    billing_period_ends = models.DateField(default=billing_period_ends_default)
+
+    
 
     # Usage details
     current_usage = models.PositiveIntegerField(default=0)  # Number of events used so far
@@ -35,6 +41,8 @@ class Billing(models.Model):
     should_setup_billing = models.BooleanField(default=True)
     is_billing_active = models.BooleanField(default=False)
     should_display_current_bill = models.BooleanField(default=False)
+
+
 
     class Meta:
         verbose_name = "Billing"

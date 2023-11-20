@@ -28,7 +28,7 @@ export function PersonsTable({
 }: PersonsTableType): JSX.Element {
     const columns: LemonTableColumns<PersonType> = [
         {
-            title: 'Person',
+            title: 'Visitor',
             key: 'person',
             render: function Render(_, person: PersonType) {
                 return <PersonHeader withIcon person={person} />
@@ -37,14 +37,14 @@ export function PersonsTable({
         {
             title: 'ID',
             key: 'id',
-            render: function Render(_, person: PersonType) {
+            render: function Render(_, person: PersonType) { 
                 return (
                     <div style={{ overflow: 'hidden' }}>
                         {person.distinct_ids.length && (
                             <CopyToClipboardInline
                                 explicitValue={person.distinct_ids[0]}
                                 iconStyle={{ color: 'var(--primary)' }}
-                                description="person distinct ID"
+                                description="visitor distinct ID"
                             >
                                 {person.distinct_ids[0]}
                             </CopyToClipboardInline>
@@ -93,13 +93,13 @@ export function PersonsTable({
                     return Object.keys(properties).length ? (
                         <PropertiesTable properties={properties} />
                     ) : (
-                        'This person has no properties.'
+                        'This visitor has no properties.'
                     )
                 },
             }}
             dataSource={people}
-            emptyState="No persons"
-            nouns={['person', 'persons']}
+            emptyState="No visitors"
+            nouns={['visitor', 'visitors']}
         />
     )
 }

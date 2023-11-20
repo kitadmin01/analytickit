@@ -469,7 +469,7 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                           ]),
                     {
                         icon: UserOutlined,
-                        display: 'Go to Persons',
+                        display: 'Go to Campaigns',
                         synonyms: ['people'],
                         executor: () => {
                             push(urls.persons())

@@ -67,7 +67,7 @@ function Pages(): JSX.Element {
             <div className="SideBar__heading">Project</div>
             <PageButton
                 data-tooltip="project-button"
-                title={currentTeam?.name ?? 'Choose project'}
+                title={currentTeam?.name ?? 'Choose campaign'}
                 icon={<Lettermark name={currentOrganization?.name} />}
                 identifier={Scene.ProjectHomepage}
                 to={urls.projectHomepage()}
@@ -152,11 +152,7 @@ function Pages(): JSX.Element {
                         identifier={Scene.SessionRecordings}
                         to={urls.sessionRecordings()}
                     />
-                    <PageButton icon={<IconFlag />} identifier={Scene.FeatureFlags} to={urls.featureFlags()} />
-                    {(hasAvailableFeature(AvailableFeature.EXPERIMENTATION) ||
-                        !preflight?.instance_preferences?.disable_paid_fs) && (
-                        <PageButton icon={<IconExperiment />} identifier={Scene.Experiments} to={urls.experiments()} />
-                    )}
+
                     {featureFlags[FEATURE_FLAGS.WEB_PERFORMANCE] && (
                         <PageButton
                             icon={<IconCoffee />}
@@ -180,10 +176,9 @@ function Pages(): JSX.Element {
                         icon={<IconPerson />}
                         identifier={Scene.Persons}
                         to={urls.persons()}
-                        title={`Persons${showGroupsOptions ? ' & Groups' : ''}`}
+                        title={'Visitor'}
                     />
                     <PageButton icon={<IconCohort />} identifier={Scene.Cohorts} to={urls.cohorts()} />
-                    <PageButton icon={<IconComment />} identifier={Scene.Annotations} to={urls.annotations()} />
                     {featureFlags[FEATURE_FLAGS.FRONTEND_APPS] ? (
                         <>
                             {canViewPlugins(currentOrganization) || Object.keys(frontendApps).length > 0 ? (
@@ -210,56 +205,6 @@ function Pages(): JSX.Element {
                             )}
                         </>
                     )}
-
-                    <PageButton
-                        icon={<IconTools />}
-                        identifier={Scene.ToolbarLaunch}
-                        to={urls.toolbarLaunch()}
-                        sideAction={{
-                            identifier: 'toolbar-launch',
-                            tooltip: 'Launch toolbar',
-                            onClick: () => setIsToolbarLaunchShown((state) => !state),
-                            popup: {
-                                visible: isToolbarLaunchShown,
-                                onClickOutside: () => setIsToolbarLaunchShown(false),
-                                onClickInside: hideSideBarMobile,
-                                overlay: (
-                                    <div className="SideBar__side-actions" data-attr="sidebar-launch-toolbar">
-                                        <h5>TOOLBAR URLS</h5>
-                                        <LemonDivider />
-                                        {appUrls.map((appUrl, index) => (
-                                            <LemonButton
-                                                className="LaunchToolbarButton"
-                                                status="stealth"
-                                                fullWidth
-                                                key={index}
-                                                onClick={() => setIsToolbarLaunchShown(false)}
-                                                href={launchUrl(appUrl)}
-                                                sideIcon={
-                                                    <Tooltip title="Launch toolbar">
-                                                        <IconOpenInApp />
-                                                    </Tooltip>
-                                                }
-                                            >
-                                                <Typography.Text ellipsis={true} title={appUrl}>
-                                                    {appUrl}
-                                                </Typography.Text>
-                                            </LemonButton>
-                                        ))}
-                                        <LemonButton
-                                            status="stealth"
-                                            data-attr="sidebar-launch-toolbar-add-new-url"
-                                            fullWidth
-                                            to={`${urls.toolbarLaunch()}?addNew=true`}
-                                            onClick={() => setIsToolbarLaunchShown(false)}
-                                        >
-                                            Add toolbar URL
-                                        </LemonButton>
-                                    </div>
-                                ),
-                            },
-                        }}
-                    />
                     <PageButton
                         icon={<IconSettings />}
                         identifier={Scene.ProjectSettings}

@@ -20,7 +20,7 @@ export function ProjectSwitcherOverlay(): JSX.Element {
 
     return (
         <div className="project-switcher-container">
-            <h5>Projects</h5>
+            <h5>Campaigns</h5>
             <LemonDivider />
             <CurrentProjectButton />
             {currentOrganization?.teams &&
@@ -35,20 +35,20 @@ export function ProjectSwitcherOverlay(): JSX.Element {
                 disabled={isProjectCreationForbidden}
                 title={
                     isProjectCreationForbidden
-                        ? "You aren't allowed to create a project. Your organization access level is probably insufficient."
+                        ? "You aren't allowed to create a campaign. Your organization access level is probably insufficient."
                         : undefined
                 }
                 onClick={() => {
                     hideProjectSwitcher()
                     guardAvailableFeature(
                         AvailableFeature.ORGANIZATIONS_PROJECTS,
-                        'multiple projects',
-                        'Projects allow you to separate data and configuration for different products or environments.',
+                        'multiple campaigns',
+                        'Campaigns allow you to separate data and configuration for different products or environments.',
                         showCreateProjectModal
                     )
                 }}
             >
-                New project
+                New campaign
             </LemonButton>
         </div>
     )
@@ -70,7 +70,7 @@ function CurrentProjectButton(): JSX.Element | null {
                     push(urls.projectSettings())
                 },
             }}
-            title={`Switch to project ${currentTeam.name}`}
+            title={`Switch to campaign ${currentTeam.name}`}
             status="stealth"
             fullWidth
         >

@@ -27,7 +27,7 @@ export function AccessControl({ isRestricted }: RestrictedComponentProps): JSX.E
             <p>
                 {projectPermissioningEnabled ? (
                     <>
-                        This project is{' '}
+                        This campaign is{' '}
                         <b>
                             <LockOutlined style={{ color: 'var(--warning)', marginRight: 5 }} />
                             private
@@ -36,7 +36,7 @@ export function AccessControl({ isRestricted }: RestrictedComponentProps): JSX.E
                     </>
                 ) : (
                     <>
-                        This project is{' '}
+                        This campaign is{' '}
                         <b>
                             <UnlockOutlined style={{ marginRight: 5 }} />
                             open
@@ -52,7 +52,7 @@ export function AccessControl({ isRestricted }: RestrictedComponentProps): JSX.E
                     guardAvailableFeature(
                         AvailableFeature.PROJECT_BASED_PERMISSIONING,
                         'project-based permissioning',
-                        'Set permissions granularly for each project. Make sure only the right people have access to protected data.',
+                        'Set permissions granularly for each campaign. Make sure only the right people have access to protected data.',
                         () => updateCurrentTeam({ access_control: checked })
                     )
                 }}
@@ -66,7 +66,7 @@ export function AccessControl({ isRestricted }: RestrictedComponentProps): JSX.E
                 }}
                 htmlFor="access-control-switch"
             >
-                Make project private
+                Make campaign private
             </label>
         </div>
     )

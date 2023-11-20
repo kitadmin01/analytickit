@@ -317,7 +317,6 @@ export function SitePopover(): JSX.Element {
                                     index={i + 2}
                                 />
                             ))}
-                            {preflight?.can_create_org && <NewOrganizationButton />}
                         </SitePopoverSection>
                     )}
                     {(!(preflight?.cloud || preflight?.demo) || user?.is_staff) && (

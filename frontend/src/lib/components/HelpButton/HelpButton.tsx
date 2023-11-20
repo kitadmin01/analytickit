@@ -77,7 +77,7 @@ export function HelpButton({
         <Popup
             overlay={
                 <>
-                    <a href={`https://analytickit.com/questions${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
+                    {/* <a href={`https://analytickit.com/questions${HELP_UTM_TAGS}`} rel="noopener" target="_blank">
                         <LemonButton
                             icon={<IconQuestionAnswer />}
                             status="stealth"
@@ -89,7 +89,7 @@ export function HelpButton({
                         >
                             Ask us a question
                         </LemonButton>
-                    </a>
+                    </a> */}
                     <a href="mailto:hey@analytickit.com" target="_blank">
                         <LemonButton
                             icon={<IconMail />}

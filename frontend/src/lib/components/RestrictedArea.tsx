@@ -36,12 +36,12 @@ export function RestrictedArea({
         let scopeAccessLevel: EitherMembershipLevel | null
         if (scope === RestrictionScope.Project) {
             if (!currentTeam) {
-                return 'Loading current project…'
+                return 'Loading current campaign…'
             }
             scopeAccessLevel = currentTeam.effective_membership_level
         } else {
             if (!currentOrganization) {
-                return 'Loading current organization…'
+                return 'Loading current businessProfile…'
             }
             scopeAccessLevel = currentOrganization.membership_level
         }

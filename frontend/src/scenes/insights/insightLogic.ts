@@ -726,7 +726,7 @@ export const insightLogic = kea<insightLogicType>({
                             insight: values.activeView,
                             scene: sceneLogic.isMounted() ? sceneLogic.values.scene : null,
                         }
-                        analytickit.capture('insight timeout message shown', tags)
+                        analytickit.capture('analytics timeout message shown', tags)
                         captureInternalMetric({ method: 'incr', metric: 'insight_timeout', value: 1, tags })
                     }
                 }, SHOW_TIMEOUT_MESSAGE_AFTER)
@@ -742,7 +742,7 @@ export const insightLogic = kea<insightLogicType>({
                 ...exception,
             }
 
-            analytickit.capture('insight aborted', { ...tags, duration })
+            analytickit.capture('analytics aborted', { ...tags, duration })
             captureInternalMetric({ method: 'timing', metric: 'insight_abort_time', value: duration, tags })
         },
         endQuery: ({ queryId, view, lastRefresh, exception }) => {
@@ -763,10 +763,10 @@ export const insightLogic = kea<insightLogicType>({
                     ...exception,
                 }
 
-                analytickit.capture('insight loaded', { ...tags, duration })
+                analytickit.capture('analytics loaded', { ...tags, duration })
                 captureInternalMetric({ method: 'timing', metric: 'insight_load_time', value: duration, tags })
                 if (values.maybeShowErrorMessage) {
-                    analytickit.capture('insight error message shown', { ...tags, duration })
+                    analytickit.capture('analytics error message shown', { ...tags, duration })
                 }
             }
         },
@@ -826,9 +826,9 @@ export const insightLogic = kea<insightLogicType>({
                 { ...savedInsight, result: savedInsight.result || values.insight.result },
                 { fromPersistentApi: true, overrideFilter: true }
             )
-            lemonToast.success(`Insight saved${dashboards?.length === 1 ? ' & added to dashboard' : ''}`, {
+            lemonToast.success(`Analytics saved${dashboards?.length === 1 ? ' & added to dashboard' : ''}`, {
                 button: {
-                    label: 'View Insights list',
+                    label: 'View analytics list',
                     action: () => router.actions.push(urls.savedInsights()),
                 },
             })

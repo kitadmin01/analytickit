@@ -84,7 +84,7 @@ export function PathsAdvanced({ insightProps }: EditorFilterProps): JSX.Element 
                         info={
                             <>
                                 Cleaning rules are an advanced feature that uses regex to normalize URLS for paths
-                                visualization. Rules can be set for all insights in the project settings, or they can be
+                                visualization. Rules can be set for all insights in the campaign settings, or they can be
                                 defined specifically for an insight.
                             </>
                         }

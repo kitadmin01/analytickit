@@ -39,7 +39,7 @@ describe('confirmOrganizationLogic', () => {
             }).toMatchValues({
                 confirmOrganizationValidationErrors: {
                     first_name: 'Please enter your name',
-                    organization_name: 'Please enter your organization name',
+                    organization_name: 'Please enter your Business Profile',
                 },
             })
         })

@@ -35,8 +35,8 @@ export enum PluginsAccessLevel {
 
 export const annotationScopeToName = new Map<string, string>([
     [AnnotationScope.Insight, 'insight'],
-    [AnnotationScope.Project, 'project'],
-    [AnnotationScope.Organization, 'organization'],
+    [AnnotationScope.Project, 'campaign'],
+    [AnnotationScope.Organization, 'businessProfile'],
 ])
 
 /** Collaboration restriction level (which is a dashboard setting). Sync with DashboardPrivilegeLevel. */

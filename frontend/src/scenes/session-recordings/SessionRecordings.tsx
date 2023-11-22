@@ -18,8 +18,8 @@ export function SessionsRecordings(): JSX.Element {
             {currentTeam && !currentTeam?.session_recording_opt_in ? (
                 <Alert
                     style={{ marginBottom: 16, display: 'flex', alignItems: 'center' }}
-                    message="Recordings are not yet enabled for this project"
-                    description="To use this feature, please go to your project settings and enable it."
+                    message="Recordings are not yet enabled for this campaign"
+                    description="To use this feature, please go to your campaign settings and enable it."
                     type="info"
                     showIcon
                     action={

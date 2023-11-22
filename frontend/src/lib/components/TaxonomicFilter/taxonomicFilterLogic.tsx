@@ -349,15 +349,15 @@ export const taxonomicFilterLogic = kea<taxonomicFilterLogicType>({
                         getPopupHeader: () => `Person`,
                     },
                     {
-                        name: 'Insights',
-                        searchPlaceholder: 'insights',
+                        name: 'Analytics',
+                        searchPlaceholder: 'analytics',
                         type: TaxonomicFilterGroupType.Insights,
                         endpoint: combineUrl(`api/projects/${teamId}/insights/`, {
                             saved: true,
                         }).url,
                         getName: (insight: InsightModel) => insight.name,
                         getValue: (insight: InsightModel) => insight.short_id,
-                        getPopupHeader: () => `Insights`,
+                        getPopupHeader: () => `Analytics`,
                     },
                     {
                         name: 'Feature Flags',

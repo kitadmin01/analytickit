@@ -45,7 +45,7 @@ export const actionLogic = kea<actionLogicType>({
                 ...(shouldSimplifyActions
                     ? [
                           {
-                              name: `Data Management`,
+                              name: `Data Organizer`,
                               path: urls.eventDefinitions(),
                           },
                           {
@@ -55,7 +55,7 @@ export const actionLogic = kea<actionLogicType>({
                       ]
                     : [
                           {
-                              name: 'Data Management',
+                              name: 'Data Organizer',
                               path: urls.actions(),
                           },
                       ]),

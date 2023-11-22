@@ -186,10 +186,10 @@ export function Signup(): JSX.Element | null {
                                 </Form.Item>
                                 <Form.Item
                                     name="organization_name"
-                                    label="Organization name"
+                                    label="Business Profile name"
                                     rules={
                                         formSubmitted
-                                            ? requiredRule('Please enter the name of your organization')
+                                            ? requiredRule('Please enter the name of your BusinessProfile')
                                             : undefined
                                     }
                                 >

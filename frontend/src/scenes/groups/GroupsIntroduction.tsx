@@ -18,7 +18,7 @@ export function GroupsIntroduction({ access }: Props): JSX.Element {
         )
         subtext = (
             <>
-                Analyze how groups interact with your product as a whole instead of individual users (e.g. retention by
+                Analyze how groups interact with your product as a whole instead of individual users (e.g. loyalty metrics by
                 companies instead of by users)
             </>
         )
@@ -28,7 +28,7 @@ export function GroupsIntroduction({ access }: Props): JSX.Element {
     } else {
         // HasGroupTypes
         header = <>Looks like you're tracking groups!</>
-        subtext = <>Upgrade today to use groups in Insights.</>
+        subtext = <>Upgrade today to use groups in Analytics.</>
     }
 
     return (

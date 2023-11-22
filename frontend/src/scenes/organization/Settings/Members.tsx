@@ -66,7 +66,7 @@ function ActionsComponent(_: any, member: OrganizationMemberType): JSX.Element |
                                     if (listLevel === OrganizationMembershipLevel.Owner) {
                                         Modal.confirm({
                                             centered: true,
-                                            title: `Transfer organization ownership to ${member.user.first_name}?`,
+                                            title: `Transfer businessProfile ownership to ${member.user.first_name}?`,
                                             content: `You will no longer be the owner of ${user.organization?.name}. After the transfer you will become an administrator.`,
                                             icon: <SwapOutlined />,
                                             okType: 'danger',
@@ -82,7 +82,7 @@ function ActionsComponent(_: any, member: OrganizationMemberType): JSX.Element |
                                 data-test-level={listLevel}
                             >
                                 {listLevel === OrganizationMembershipLevel.Owner ? (
-                                    <>Transfer organization ownership</>
+                                    <>Transfer businessProfile ownership</>
                                 ) : listLevel > member.level ? (
                                     <>Upgrade to {membershipLevelToName.get(listLevel)}</>
                                 ) : (
@@ -118,7 +118,7 @@ function ActionsComponent(_: any, member: OrganizationMemberType): JSX.Element |
                                 }}
                                 fullWidth
                             >
-                                {member.user.uuid !== user.uuid ? 'Remove from organization' : 'Leave organization'}
+                                {member.user.uuid !== user.uuid ? 'Remove from businessProfile' : 'Leave businessProfile'}
                             </LemonButton>
                         </>
                     ) : null}

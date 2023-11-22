@@ -23,7 +23,7 @@ export const getSlackEventsUri = (): string =>
 export const getSlackAppManifest = (): any => ({
     display_information: {
         name: 'analytickit',
-        description: 'Product Insights right where you need them',
+        description: 'Product aAalytics right where you need them',
         background_color: '#f54e00',
     },
     features: {

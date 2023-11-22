@@ -52,7 +52,7 @@ prompts: [
 {
 step: 0,
 type: 'tooltip',
-text: "In analytickit, you analyse data with Insights which can be added to Dashboards to aid collaboration.Let's create a new Dashboard by selecting 'New Dashboard'.",
+text: "In analytickit, you analyse data with Analytics which can be added to Dashboards to aid collaboration.Let's create a new Dashboard by selecting 'New Dashboard'.",
 placement: 'top-start',
 icon: 'dashboard',
 reference: 'tooltip-test',

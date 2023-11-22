@@ -201,7 +201,7 @@ export function EventDefinitionsTable(): JSX.Element {
         <div data-attr="manage-events-table">
             <PageHeader
                 title="Data Organizer"
-                caption="Use data management to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
+                caption="Use data Organizer to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
                 tabbedPage
             />
             <DataManagementPageTabs tab={DataManagementTab.EventDefinitions} />

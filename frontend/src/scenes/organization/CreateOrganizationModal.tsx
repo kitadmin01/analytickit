@@ -29,8 +29,8 @@ export function CreateOrganizationModal({
 
     return (
         <Modal
-            title="Creating an organization"
-            okText="Create organization"
+            title="Creating an businessProfile"
+            okText="Create businessProfile"
             cancelButtonProps={onClose ? undefined : { style: { display: 'none' } }}
             onOk={() => {
                 const name = inputRef.current?.state.value?.trim()
@@ -39,7 +39,7 @@ export function CreateOrganizationModal({
                     createOrganization(name)
                     closeModal()
                 } else {
-                    setErrorMessage('Your organization needs a name!')
+                    setErrorMessage('Your businessProfile needs a name!')
                 }
             }}
             okButtonProps={{
@@ -54,14 +54,14 @@ export function CreateOrganizationModal({
             back
         >
             <p>
-                Organizations gather people building products together.
+            BusinessProfiles gather people building products together.
                 <br />
                 <a
                     href="https://analytickit.com/docs/user-guides/organizations-and-projects"
                     target="_blank"
                     rel="noopener"
                 >
-                    Learn more about organizations in Docs.
+                    Learn more about BusinessProfiles in Docs.
                 </a>
             </p>
             <Input

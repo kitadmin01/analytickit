@@ -77,18 +77,18 @@ Minimal.args = {
 
 export const Customised = Template.bind({})
 Customised.args = {
-    title: 'Are you sure you want to delete “FakeOrganization”?',
+    title: 'Are you sure you want to delete “FakeBusinessProfiles”?',
     description: (
         <>
-            This action cannot be undone. If you opt to delete the organization and its corresponding events, the events
+            This action cannot be undone. If you opt to delete the businessProfile and its corresponding events, the events
             will not be immediately removed. Instead these events will be deleted on a set schedule during non-peak
             usage times. <Link href="https://analytickit.com">Learn more</Link>
         </>
     ),
     primaryButton: {
-        children: 'Delete organization',
+        children: 'Delete businessProfile',
         status: 'danger',
-        onClick: () => alert('Organization Deleted!'),
+        onClick: () => alert('businessProfile Deleted!'),
     },
 
     secondaryButton: {
@@ -97,8 +97,8 @@ Customised.args = {
     },
 
     tertiaryButton: {
-        children: 'Delete organization and all corresponding events',
+        children: 'Delete businessProfile and all corresponding events',
         status: 'danger',
-        onClick: () => alert('Organization and all events deleted!'),
+        onClick: () => alert('businessProfile and all events deleted!'),
     },
 }

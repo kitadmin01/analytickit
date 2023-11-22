@@ -41,7 +41,7 @@ export function AccessControl({ isRestricted }: RestrictedComponentProps): JSX.E
                             <UnlockOutlined style={{ marginRight: 5 }} />
                             open
                         </b>
-                        . Any member of the organization can access it. To enable granular access control, make it
+                        . Any member of the businessProfile can access it. To enable granular access control, make it
                         private.
                     </>
                 )}

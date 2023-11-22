@@ -65,7 +65,7 @@ export function BillingAlerts(): JSX.Element | null {
         isAlert = true
         message = (
             <p>
-                <b>Alert!</b> The monthly limit of events or billing limit for your organization has been exceeded.{' '}
+                <b>Alert!</b> The monthly limit of events or billing limit for your businessProfile has been exceeded.{' '}
                 <Link to="/organization/billing" data-attr="alert_usage_limit_exceeded">
                     {billing?.plan?.custom_setup_billing_message ||
                         'To avoid losing data or access to it, increase your billing limit now.'}

@@ -46,7 +46,7 @@ function DisplayName({ isRestricted }: RestrictedComponentProps): JSX.Element {
                 disabled={isRestricted || !name || !currentOrganization || name === currentOrganization.name}
                 loading={currentOrganizationLoading}
             >
-                Rename Organization
+                Rename BusinessProfile
             </Button>
         </div>
     )
@@ -92,8 +92,8 @@ export function OrganizationSettings(): JSX.Element {
     return (
         <>
             <PageHeader
-                title="Organization Settings"
-                caption="View and manage your organization here. Build an even better product together."
+                title="BusinessProfile Settings"
+                caption="View and manage your businessProfile here. Build an even better product together."
             />
             <Card>
                 <RestrictedArea Component={DisplayName} minimumAccessLevel={OrganizationMembershipLevel.Admin} />

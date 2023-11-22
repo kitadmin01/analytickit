@@ -91,7 +91,7 @@ describe('the activity log logic', () => {
                     after: {
                         period: 'Week',
                         display: 'ActionsTable',
-                        insight: 'RETENTION',
+                        insight: 'LOYALTYMETRICS',
                         properties: [],
                         target_entity: {
                             id: '$pageview',

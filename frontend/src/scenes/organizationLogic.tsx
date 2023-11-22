@@ -68,7 +68,7 @@ export const organizationLogic = kea<organizationLogicType>({
                 createOrganization: async (name: string) => await api.create('api/organizations/', { name }),
                 updateOrganization: async (payload: OrganizationUpdatePayload) => {
                     if (!values.currentOrganization) {
-                        throw new Error('Current organization has not been loaded yet.')
+                        throw new Error('Current BusinessProfile has not been loaded yet.')
                     }
                     const updatedOrganization = await api.update(
                         `api/organizations/${values.currentOrganization.id}`,
@@ -98,7 +98,7 @@ export const organizationLogic = kea<organizationLogicType>({
             }
         },
         deleteOrganizationSuccess: () => {
-            lemonToast.success('Organization has been deleted')
+            lemonToast.success('BusinessProfile has been deleted')
         },
     }),
     events: ({ actions }) => ({

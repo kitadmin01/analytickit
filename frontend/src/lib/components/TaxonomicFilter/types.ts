@@ -69,7 +69,7 @@ export enum TaxonomicFilterGroupType {
     // Types for searching
     Persons = 'persons',
     FeatureFlags = 'feature_flags',
-    Insights = 'insights',
+    Insights = 'analytics',
     Experiments = 'experiments',
     Plugins = 'plugins',
     Dashboards = 'dashboards',

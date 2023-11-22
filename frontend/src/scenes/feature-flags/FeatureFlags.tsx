@@ -110,7 +110,7 @@ function OverViewTab(): JSX.Element {
                                     data-attr="usage"
                                     fullWidth
                                 >
-                                    Try out in Insights
+                                    Try out in Analytics
                                 </LemonButton>
                                 <LemonDivider />
                                 {featureFlag.id && (

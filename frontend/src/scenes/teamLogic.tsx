@@ -150,7 +150,7 @@ export const teamLogic = kea<teamLogicType>([
 
             const switchedTeam = appContext?.switched_team
             if (switchedTeam) {
-                lemonToast.info(<>You've switched to&nbsp;project {contextualTeam?.name}</>, {
+                lemonToast.info(<>You've switched to&nbsp;campaign {contextualTeam?.name}</>, {
                     button: {
                         label: 'Switch back',
                         action: () => userLogic.actions.updateCurrentTeam(switchedTeam),

@@ -78,7 +78,7 @@ export function ChartFilter({ filters, onChange, disabled }: ChartFilterProps): 
                   [FunnelVizType.Trends]: {
                       label: (
                           <Label icon={<LineChartOutlined />}>
-                              Trends
+                              Traffic Trends
                               <LemonTag type="warning" style={{ marginLeft: 6, lineHeight: '1.4em' }}>
                                   BETA
                               </LemonTag>

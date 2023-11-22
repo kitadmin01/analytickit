@@ -103,7 +103,7 @@ function ErrorView(): JSX.Element | null {
                         {user ? (
                             <span>
                                 You can either log out and create a new account under the new email address or ask the
-                                organization admin to send a{' '}
+                                BusinessProfile admin to send a{' '}
                                 <b>new invite to the email address on your account, {user?.email}</b>.
                             </span>
                         ) : (
@@ -171,7 +171,7 @@ function AuthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite }): 
                     </Row>
                 )}
                 <Row>
-                    You can change organizations at any time by clicking on the dropdown at the top right corner of the
+                    You can change BusinessProfiles at any time by clicking on the dropdown at the top right corner of the
                     navigation bar.
                 </Row>
                 <div>

@@ -42,7 +42,7 @@ export const confirmOrganizationLogic = kea<confirmOrganizationLogicType>([
             defaults: {} as ConfirmOrganizationFormValues,
             errors: ({ organization_name, first_name }) => ({
                 first_name: !first_name ? 'Please enter your name' : undefined,
-                organization_name: !organization_name ? 'Please enter your organization name' : undefined,
+                organization_name: !organization_name ? 'Please enter your businessProfile name' : undefined,
             }),
 
             submit: async (formValues) => {
@@ -52,7 +52,7 @@ export const confirmOrganizationLogic = kea<confirmOrganizationLogicType>([
                     })
                     location.href = response.success_url || '/'
                 } catch (error: any) {
-                    lemonToast.error(error.detail || 'Failed to create organization')
+                    lemonToast.error(error.detail || 'Failed to create businessProfile')
                 }
             },
         },

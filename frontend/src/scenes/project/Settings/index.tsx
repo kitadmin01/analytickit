@@ -84,7 +84,7 @@ export function ProjectSettings(): JSX.Element {
     return (
         <div>
             <PageHeader
-                title="Project settings"
+                title="Campaign settings"
                 caption={`Organize your analytics within the campaign. These settings only apply to ${
                     currentTeam?.name ?? 'the current campaign'
                 }.`}
@@ -162,12 +162,12 @@ export function ProjectSettings(): JSX.Element {
                     stored with analytickit, so it's safe to use in public apps.
                 </p>
                 <h3 id="project-id" className="l3 mt-4">
-                    Project ID
+                    Camapaign ID
                 </h3>
                 <p>
                     You can use this ID to reference your campaign in our <a href="https://analytickit.com/docs/api">API</a>.
                 </p>
-                <CodeSnippet copyDescription="project ID">{String(currentTeam?.id || '')}</CodeSnippet>
+                <CodeSnippet copyDescription="campaign ID">{String(currentTeam?.id || '')}</CodeSnippet>
                 <LemonDivider className="my-6" />
                 <h2 className="subtitle" id="timezone">
                     Timezone
@@ -315,7 +315,8 @@ export function ProjectSettings(): JSX.Element {
                 </p>
                 <SessionRecording />
                 <LemonDivider className="my-6" />
-                <GroupAnalytics />
+                {/* <GroupAnalytics />  commented for now*/}
+                
                 <RestrictedArea Component={AccessControl} minimumAccessLevel={OrganizationMembershipLevel.Admin} />
                 <LemonDivider className="my-6" />
                 {currentTeam?.access_control && hasAvailableFeature(AvailableFeature.PROJECT_BASED_PERMISSIONING) && (

@@ -27,12 +27,12 @@ export function ConfirmOrganization(): JSX.Element {
         <div className="bridge-page ConfirmOrganization">
             <WelcomeLogo view="org-creation-confirmation" />
             <div className="ConfirmOrganization__container-box">
-                <p className="ConfirmOrganization__title text-center">Create a new organization</p>
+                <p className="ConfirmOrganization__title text-center">Create a new BusinessProfile</p>
                 <div className="ConfirmOrganization__help-box">
                     <div style={{ flex: 1 }}>
                         <p>
                             <strong>
-                                Trying to join an existing organization?{' '}
+                                Trying to join an existing BusinessProfile?{' '}
                                 {!showNewOrgWarning && (
                                     <a
                                         onClick={() => {
@@ -48,7 +48,7 @@ export function ConfirmOrganization(): JSX.Element {
                             <div>
                                 <div style={{ height: '0.5rem' }} />
                                 <p>
-                                    If you're trying to join an existing organization, you should not create a new one.
+                                    If you're trying to join an existing BusinessProfile, you should not create a new one.
                                     Some reasons that you may accidentally end up here are:
                                     <ul style={{ paddingInlineStart: '1rem', marginBottom: 0, marginBlockEnd: 0 }}>
                                         <li>You're logging in with the wrong email address</li>
@@ -77,8 +77,8 @@ export function ConfirmOrganization(): JSX.Element {
 
                     <Field
                         name="organization_name"
-                        label="Organization name"
-                        help="You can always rename your organization later"
+                        label="Busienss Profile name"
+                        help="You can always rename your BusinessProfile later"
                     >
                         <LemonInput className="ph-ignore-input" placeholder="Hogflix Movies" />
                     </Field>
@@ -91,7 +91,7 @@ export function ConfirmOrganization(): JSX.Element {
                         type="primary"
                         loading={isConfirmOrganizationSubmitting}
                     >
-                        Create organization
+                        Create businessProfile
                     </LemonButton>
 
                     <LemonButton

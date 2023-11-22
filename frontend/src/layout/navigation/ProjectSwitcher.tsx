@@ -35,7 +35,7 @@ export function ProjectSwitcherOverlay(): JSX.Element {
                 disabled={isProjectCreationForbidden}
                 title={
                     isProjectCreationForbidden
-                        ? "You aren't allowed to create a campaign. Your organization access level is probably insufficient."
+                        ? "You aren't allowed to create a campaign. Your businessProfile access level is probably insufficient."
                         : undefined
                 }
                 onClick={() => {
@@ -97,7 +97,7 @@ function OtherProjectButton({ team }: { team: TeamBasicType }): JSX.Element {
                     updateCurrentTeam(team.id, '/project/settings')
                 },
             }}
-            title={`Switch to project ${team.name}`}
+            title={`Switch to campaign ${team.name}`}
             status="stealth"
             fullWidth
             disabled={!team.effective_membership_level}

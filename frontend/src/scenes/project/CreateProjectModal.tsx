@@ -51,9 +51,9 @@ export function CreateProjectModal({
 
     const defaultCaption = (
         <p>
-            Projects are a way of tracking multiple products under the umbrella of a single organization.
+            Campaigns are a way of tracking multiple products under the umbrella of a single businessProfile.
             <br />
-            All organization members will be able to access the new campaign upon creation, but you can make it private
+            All businessProfile members will be able to access the new campaign upon creation, but you can make it private
             in its settings to restrict access.
             <br />
             <a href="https://analytickit.com/docs/user-guides/organizations-and-projects" target="_blank" rel="noopener">
@@ -76,9 +76,9 @@ export function CreateProjectModal({
             wrapProps={isVisible && !mask ? { style: { pointerEvents: 'none' } } : undefined}
             closeIcon={null}
         >
-            Your organization access level is insufficient for creating a new campaign.
+            Your businessProfile access level is insufficient for creating a new campaign.
             <br />
-            Project creation requires administrator access.
+            Campaign creation requires administrator access.
         </Modal>
     ) : (
         <Modal

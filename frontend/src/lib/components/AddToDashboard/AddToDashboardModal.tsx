@@ -57,7 +57,7 @@ const DashboardRelationRow = ({
         >
             <Link to={urls.dashboard(dashboard.id)}>{dashboard.name || 'Untitled'}</Link>
             {isPrimary && (
-                <Tooltip title="Primary dashboards are shown on the project home page">
+                <Tooltip title="Primary dashboards are shown on the campaign home page">
                     <IconCottage className="text-warning text-base" />
                 </Tooltip>
             )}

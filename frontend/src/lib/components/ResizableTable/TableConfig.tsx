@@ -74,7 +74,7 @@ function ColumnConfigurator({ immutableColumns, defaultColumns }: TableConfigPro
     function SaveColumnsAsDefault({ isRestricted }: RestrictedComponentProps): JSX.Element {
         return (
             <LemonCheckbox
-                label="Save as default for all project members"
+                label="Save as default for all campaign members"
                 className="mt-2"
                 data-attr="events-table-save-columns-as-default-toggle"
                 bordered

@@ -39,8 +39,8 @@ export function DeleteOrganizationModal({
             visible={isVisible}
         >
             <p>
-                Organization deletion <b>cannot be undone</b>. You will lose all data, <b>including all events</b>,
-                related to all projects within this organization.
+                BusinessProfile deletion <b>cannot be undone</b>. You will lose all data, <b>including all events</b>,
+                related to all projects within this businessProfile.
             </p>
             <p>
                 Please type{' '}

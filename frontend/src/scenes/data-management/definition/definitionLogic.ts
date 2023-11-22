@@ -105,7 +105,7 @@ export const definitionLogic = kea<definitionLogicType>([
             (definition, isEvent): Breadcrumb[] => {
                 return [
                     {
-                        name: `Data Management`,
+                        name: `Data Organizer`,
                         path: isEvent ? urls.eventDefinitions() : urls.eventPropertyDefinitions(),
                     },
                     {

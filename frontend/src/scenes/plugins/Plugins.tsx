@@ -48,14 +48,14 @@ export function Plugins(): JSX.Element | null {
     return (
         <div className="plugins-scene">
             <PageHeader
-                title="Apps"
+                title="Integration Hub"
                 caption={
                     <>
-                        Apps enable you to extend analytickit's core data processing functionality.
+                        Integration Hub enable you to extend analytickit's core data processing functionality.
                         <br />
-                        Make use of verified apps from the{' '}
+                        Make use of verified Apps from the{' '}
                         <a href="https://analytickit.com/apps" target="_blank">
-                            App Library
+                        Integration Hub Library
                         </a>{' '}
                         – or{' '}
                         <a href="https://analytickit.com/docs/apps/build" target="_blank">

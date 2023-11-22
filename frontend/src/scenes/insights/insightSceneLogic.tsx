@@ -70,7 +70,7 @@ export const insightSceneLogic = kea<insightSceneLogicType>([
             (s) => [s.insight],
             (insight): Breadcrumb[] => [
                 {
-                    name: 'Insights',
+                    name: 'Analytics',
                     path: urls.savedInsights(),
                 },
                 {

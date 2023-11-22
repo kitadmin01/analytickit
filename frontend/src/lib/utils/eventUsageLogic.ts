@@ -527,8 +527,8 @@ export const eventUsageLogic = kea<eventUsageLogicType>({
             analytickit.capture('person viewed', properties)
         },
         reportInsightCreated: async ({ insight }, breakpoint) => {
-            await breakpoint(500) // Debounce to avoid multiple quick "New insight" clicks being reported
-            analytickit.capture('insight created', { insight })
+            await breakpoint(500) // Debounce to avoid multiple quick "New Analytics" clicks being reported
+            analytickit.capture('Analytics created', { insight })
         },
         reportInsightViewed: ({
             insightModel,

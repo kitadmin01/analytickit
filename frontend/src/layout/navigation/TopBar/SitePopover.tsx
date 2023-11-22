@@ -293,7 +293,7 @@ export function SitePopover(): JSX.Element {
                     <SitePopoverSection title="Signed in as">
                         <AccountInfo />
                     </SitePopoverSection>
-                    <SitePopoverSection title="Current organization">
+                    <SitePopoverSection title="Current businessProfile">
                         {currentOrganization && <CurrentOrganization organization={currentOrganization} />}
                         {preflight?.cloud && (
                             <LemonButton
@@ -309,7 +309,7 @@ export function SitePopover(): JSX.Element {
                         <InviteMembersButton />
                     </SitePopoverSection>
                     {(otherOrganizations.length > 0 || preflight?.can_create_org) && (
-                        <SitePopoverSection title="Other organizations">
+                        <SitePopoverSection title="Other businessProfiles">
                             {otherOrganizations.map((otherOrganization, i) => (
                                 <OtherOrganizationButton
                                     key={otherOrganization.id}

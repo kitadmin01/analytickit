@@ -54,8 +54,8 @@ export function NewOrganizationButton(): JSX.Element {
             onClick={() =>
                 guardAvailableFeature(
                     AvailableFeature.ORGANIZATIONS_PROJECTS,
-                    'multiple organizations',
-                    'Organizations group people building products together. An organization can then have multiple projects.',
+                    'multiple businessProfiles',
+                    'businessProfiles group people building products together. An businessProfile can then have multiple campaigns.',
                     () => {
                         closeSitePopover()
                         showCreateOrganizationModal()

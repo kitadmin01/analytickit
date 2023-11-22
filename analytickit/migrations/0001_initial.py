@@ -736,7 +736,7 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        default="Default Project",
+                        default="Default Campaign",
                         max_length=200,
                         validators=[django.core.validators.MinLengthValidator(1, "Project must have a name!")],
                     ),

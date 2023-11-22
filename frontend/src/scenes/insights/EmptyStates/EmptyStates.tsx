@@ -230,15 +230,15 @@ export function FunnelInvalidExclusionState(): JSX.Element {
 
 const SAVED_INSIGHTS_COPY = {
     [`${SavedInsightsTabs.All}`]: {
-        title: 'There are no insights $CONDITION.',
+        title: 'There are no analytics $CONDITION.',
         description: 'Once you create an insight, it will show up here.',
     },
     [`${SavedInsightsTabs.Yours}`]: {
-        title: "You haven't created insights $CONDITION.",
+        title: "You haven't created analytics $CONDITION.",
         description: 'Once you create an insight, it will show up here.',
     },
     [`${SavedInsightsTabs.Favorites}`]: {
-        title: 'There are no favorited insights $CONDITION.',
+        title: 'There are no favorited analytics $CONDITION.',
         description: 'Once you favorite an insight, it will show up here.',
     },
 }
@@ -277,7 +277,7 @@ export function SavedInsightsEmptyState(): JSX.Element {
                             icon={<PlusCircleOutlined />}
                             className="add-insight-button"
                         >
-                            New Insight
+                            New Analytics
                         </Button>
                     </Link>
                 )}

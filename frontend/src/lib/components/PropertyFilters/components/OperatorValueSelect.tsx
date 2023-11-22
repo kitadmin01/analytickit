@@ -47,7 +47,7 @@ function getValidationError(operator: PropertyOperator, value: any, property?: s
         let message = `Range operators only work with numeric values`
         if (dayjs(value).isValid()) {
             const propertyReference = property ? `property ${property}` : 'this property'
-            message += `. If you'd like to compare dates and times, make sure ${propertyReference} is typed as DateTime in Data Management. You will then be able to use operators "before" and "after"`
+            message += `. If you'd like to compare dates and times, make sure ${propertyReference} is typed as DateTime in Data Organizer. You will then be able to use operators "before" and "after"`
         }
         return message
     }

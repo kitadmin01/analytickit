@@ -54,8 +54,8 @@ export interface InsightTypeMetadata {
 
 export const INSIGHT_TYPES_METADATA: Record<InsightType, InsightTypeMetadata> = {
     [InsightType.TRENDS]: {
-        name: 'Trends',
-        description: 'Visualize and break down how actions or events vary over time',
+        name: 'TrafficTrends',
+        description: 'Visualize and break down how visitor events vary over time',
         icon: InsightsTrendsIcon,
         inMenu: true,
     },
@@ -66,26 +66,26 @@ export const INSIGHT_TYPES_METADATA: Record<InsightType, InsightTypeMetadata> = 
         inMenu: true,
     },
     [InsightType.RETENTION]: {
-        name: 'Retention',
+        name: 'Loyalty Metrics',
         description: 'See how many users return on subsequent days after an intial action',
         icon: InsightsRetentionIcon,
         inMenu: true,
     },
     [InsightType.PATHS]: {
-        name: 'Paths',
-        description: 'Trace the journeys users take within your product and where they drop off',
+        name: 'Trail',
+        description: 'Trace the journeys visitors  take within your product and where they drop off',
         icon: InsightsPathsIcon,
         inMenu: true,
     },
     [InsightType.STICKINESS]: {
-        name: 'Stickiness',
-        description: 'See what keeps users coming back by viewing the interval between repeated actions',
+        name: 'Loyalty Lens',
+        description: 'See what keeps visitors coming back by viewing the interval between repeated actions',
         icon: InsightsStickinessIcon,
         inMenu: true,
     },
     [InsightType.LIFECYCLE]: {
-        name: 'Lifecycle',
-        description: 'Understand growth by breaking down new, resurrected, returning and dormant users',
+        name: 'Growth Monitor',
+        description: 'Understand growth by breaking down new, resurrected, returning and dormant visitors',
         icon: InsightsLifecycleIcon,
         inMenu: true,
     },
@@ -158,7 +158,7 @@ function NewInsightButton(): JSX.Element {
             }}
             data-attr="saved-insights-new-insight-button"
         >
-            New insight
+            New analytic
         </LemonButtonWithSideAction>
     )
 }
@@ -341,15 +341,15 @@ export function SavedInsights(): JSX.Element {
 
     return (
         <div className="saved-insights">
-            <PageHeader title="Insights" buttons={<NewInsightButton />} />
+            <PageHeader title="Analytics" buttons={<NewInsightButton />} />
 
             <Tabs
                 activeKey={tab}
                 style={{ borderColor: '#D9D9D9' }}
                 onChange={(t) => setSavedInsightsFilters({ tab: t as SavedInsightsTabs })}
             >
-                <TabPane tab="All Insights" key={SavedInsightsTabs.All} />
-                <TabPane tab="Your Insights" key={SavedInsightsTabs.Yours} />
+                <TabPane tab="All Analytics" key={SavedInsightsTabs.All} />
+                <TabPane tab="Your Analytics" key={SavedInsightsTabs.Yours} />
                 <TabPane tab="Favorites" key={SavedInsightsTabs.Favorites} />
                 <TabPane tab="History" key={SavedInsightsTabs.History} />
             </Tabs>
@@ -437,7 +437,7 @@ export function SavedInsights(): JSX.Element {
                                 ? `${startCount}${endCount - startCount > 1 ? '-' + endCount : ''} of ${count} insight${
                                       count === 1 ? '' : 's'
                                   }`
-                                : 'No insights yet'}
+                                : 'No analytics yet'}
                         </span>
                         <div>
                             <Radio.Group
@@ -477,7 +477,7 @@ export function SavedInsights(): JSX.Element {
                                     }
                                     rowKey="id"
                                     loadingSkeletonRows={15}
-                                    nouns={['insight', 'insights']}
+                                    nouns={['analytic', 'analytics']}
                                 />
                             ) : (
                                 <SavedInsightsGrid />

@@ -36,7 +36,7 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     },
     [Scene.Insight]: {
         projectBased: true,
-        name: 'Insights',
+        name: 'Analytics',
     },
     [Scene.Cohorts]: {
         projectBased: true,
@@ -52,27 +52,27 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     },
     [Scene.DataManagement]: {
         projectBased: true,
-        name: 'Data Management',
+        name: 'Data Organizer',
     },
     [Scene.Actions]: {
         projectBased: true,
-        name: 'Data Management',
+        name: 'Data Organizer',
     },
     [Scene.EventDefinitions]: {
         projectBased: true,
-        name: 'Data Management',
+        name: 'Data Organizer',
     },
     [Scene.EventDefinition]: {
         projectBased: true,
-        name: 'Data Management',
+        name: 'Data Organizer',
     },
     [Scene.EventPropertyDefinitions]: {
         projectBased: true,
-        name: 'Data Management',
+        name: 'Data Organizer',
     },
     [Scene.EventPropertyDefinition]: {
         projectBased: true,
-        name: 'Data Management',
+        name: 'Data Organizer',
     },
     [Scene.WebPerformance]: {
         projectBased: true,
@@ -84,11 +84,11 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     },
     [Scene.Person]: {
         projectBased: true,
-        name: 'Person',
+        name: 'Visitor',
     },
     [Scene.Persons]: {
         projectBased: true,
-        name: 'Persons & Groups',
+        name: 'Visitors & Groups',
     },
     [Scene.Action]: {
         projectBased: true,
@@ -96,11 +96,11 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     },
     [Scene.Groups]: {
         projectBased: true,
-        name: 'Persons & Groups',
+        name: 'Visitors & Groups',
     },
     [Scene.Group]: {
         projectBased: true,
-        name: 'Persons & Groups',
+        name: 'Visitors & Groups',
     },
     [Scene.Experiments]: {
         projectBased: true,
@@ -123,15 +123,15 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     },
     [Scene.Plugins]: {
         projectBased: true,
-        name: 'Apps',
+        name: 'Integration Hub',
     },
     [Scene.FrontendAppScene]: {
         projectBased: true,
-        name: 'App',
+        name: 'Integration Hub',
     },
     [Scene.SavedInsights]: {
         projectBased: true,
-        name: 'Insights',
+        name: 'Analytics',
     },
     [Scene.ProjectHomepage]: {
         projectBased: true,
@@ -140,7 +140,7 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     [Scene.ProjectSettings]: {
         projectBased: true,
         hideDemoWarnings: true,
-        name: 'Project settings',
+        name: 'Campaign settings',
     },
     [Scene.IntegrationsRedirect]: {
         name: 'Integrations Redirect',
@@ -155,10 +155,10 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     },
     // Organization-based routes
     [Scene.OrganizationCreateFirst]: {
-        name: 'Organization creation',
+        name: 'BusinessProfile creation',
     },
     [Scene.OrganizationCreationConfirm]: {
-        name: 'Confirm organization creation',
+        name: 'Confirm BusinessProfile creation',
         onlyUnauthenticated: true,
     },
     [Scene.OrganizationSettings]: {

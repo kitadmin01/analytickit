@@ -688,14 +688,14 @@ describe('insightLogic', () => {
         logic.mount()
 
         await expectLogic(logic, () => {
-            logic.actions.saveAsNamingSuccess('New Insight (copy)')
+            logic.actions.saveAsNamingSuccess('New Analytics (copy)')
         })
             .toDispatchActions(['setInsight'])
             .toDispatchActions(savedInsightsLogic, ['loadInsights'])
             .toMatchValues({
                 savedInsight: partial({ filters: partial({ insight: InsightType.FUNNELS }) }),
                 filters: partial({ insight: InsightType.FUNNELS }),
-                insight: partial({ id: 12, short_id: Insight12, name: 'New Insight (copy)' }),
+                insight: partial({ id: 12, short_id: Insight12, name: 'New Analytics (copy)' }),
                 insightChanged: false,
             })
 

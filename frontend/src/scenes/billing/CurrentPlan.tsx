@@ -39,7 +39,7 @@ export function CurrentPlan({ plan }: { plan: PlanInterface }): JSX.Element {
                     icon={<WarningOutlined />}
                 />
             ) : (
-                <Card title="Organization billing plan">
+                <Card title="BusinessProfile billing plan">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div>
                             <img src={plan.image_url || defaultImg} alt="" height={100} width={100} />

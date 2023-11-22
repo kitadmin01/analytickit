@@ -124,7 +124,7 @@ export function Licenses(): JSX.Element {
                 return (
                     <Tooltip
                         placement="right"
-                        title="Maximum number of team members that you can have across all organizations with your current license."
+                        title="Maximum number of team members that you can have across all BusinessProfiles with your current license."
                     >
                         Max # of team members
                         <InfoCircleOutlined className="info-indicator" />

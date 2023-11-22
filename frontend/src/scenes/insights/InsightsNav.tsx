@@ -28,7 +28,7 @@ export function InsightsNav(): JSX.Element {
     const tabs: Tab[] = useMemo(
         () => [
             {
-                label: 'Trends',
+                label: 'TrafficTrends',
                 type: InsightType.TRENDS,
                 dataAttr: 'insight-trends-tab',
             },
@@ -39,22 +39,22 @@ export function InsightsNav(): JSX.Element {
                 ref: funnelTab,
             },
             {
-                label: 'Retention',
+                label: 'Loyalty Metrics',
                 type: InsightType.RETENTION,
                 dataAttr: 'insight-retention-tab',
             },
             {
-                label: 'User Paths',
+                label: 'Trail',
                 type: InsightType.PATHS,
                 dataAttr: 'insight-path-tab',
             },
             {
-                label: 'Stickiness',
+                label: 'Loyalty Lens',
                 type: InsightType.STICKINESS,
                 dataAttr: 'insight-stickiness-tab',
             },
             {
-                label: 'Lifecycle',
+                label: 'Growth Monitor',
                 type: InsightType.LIFECYCLE,
                 dataAttr: 'insight-lifecycle-tab',
             },

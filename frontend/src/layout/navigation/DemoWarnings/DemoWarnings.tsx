@@ -30,10 +30,10 @@ export function DemoWarnings(): JSX.Element | null {
     const WARNINGS: WarningsInterface = {
         demo_project: {
             message: "You're viewing demo data.",
-            description: <span>This is a demo project with dummy data.</span>,
+            description: <span>This is a demo campaign with dummy data.</span>,
         },
         real_project_with_no_events: {
-            message: 'This project has no events yet.',
+            message: 'This campaign has no events yet.',
             description: (
                 <>
                     We haven't received any events on this project. Go to the{' '}

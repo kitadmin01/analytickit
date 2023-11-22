@@ -72,7 +72,7 @@ export function CurrentUsage(): JSX.Element | null {
                 <h3 className="l3 mt-4">Current event usage</h3>
                 {usage !== null ? (
                     <>
-                        Your organization has used{' '}
+                        Your BusinessProfile has used{' '}
                         <Tooltip title={`${usage.toLocaleString()} events`}>
                             <b>{compactNumber(usage)}</b>
                         </Tooltip>{' '}

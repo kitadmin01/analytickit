@@ -181,7 +181,7 @@ def custom_postprocessing_hook(result, generator, request, public):
                         "name": "project_id",
                         "required": True,
                         "schema": {"type": "string"},
-                        "description": "Project ID of the project you're trying to access. To find the ID of the project, make a call to /api/projects/.",
+                        "description": "Campaign ID of the project you're trying to access. To find the ID of the project, make a call to /api/projects/.",
                     }
                     if param["name"] == "project_id"
                     else param

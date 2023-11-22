@@ -196,13 +196,13 @@ export function AnnotationMarker({
                                                 </i>
                                                 {data.scope === AnnotationScope.Project ? (
                                                     <Tooltip
-                                                        title={`This annotation is shown on all charts in project ${currentTeam?.name}`}
+                                                        title={`This annotation is shown on all charts in campaign ${currentTeam?.name}`}
                                                     >
                                                         <ProjectOutlined />
                                                     </Tooltip>
                                                 ) : data.scope === AnnotationScope.Organization ? (
                                                     <Tooltip
-                                                        title={`This annotation is shown on all charts in organization ${currentOrganization?.name}`}
+                                                        title={`This annotation is shown on all charts in businessProfile ${currentOrganization?.name}`}
                                                     >
                                                         <DeploymentUnitOutlined />
                                                     </Tooltip>

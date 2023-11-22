@@ -49,7 +49,7 @@ export function CompactList_({ loading }: { loading: boolean }): JSX.Element {
                     title="Recordings"
                     viewAllURL={urls.sessionRecordings()}
                     emptyMessage={{
-                        title: 'There are no recordings for this project',
+                        title: 'There are no recordings for this campaign',
                         description: 'Make sure you have the javascript snippet setup in your website.',
                         buttonText: 'Learn more',
                         buttonHref: 'https://analytickit.com/docs/user-guides/recordings',

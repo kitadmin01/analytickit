@@ -21,7 +21,7 @@ export function ComputationTimeWithRefresh(): JSX.Element | null {
             <Tooltip
                 title={
                     <>
-                        Insights can be refreshed
+                        Analytics can be refreshed
                         <br />
                         every {REFRESH_INTERVAL_MINUTES} minutes.
                     </>

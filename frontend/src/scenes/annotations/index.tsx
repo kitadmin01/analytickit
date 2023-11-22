@@ -81,7 +81,7 @@ export function Annotations(): JSX.Element {
                 ) : annotation.scope === AnnotationScope.Project ? (
                     <Tag color="purple">Campaign</Tag>
                 ) : annotation.scope === AnnotationScope.Organization ? (
-                    <Tag color="pink">Organization</Tag>
+                    <Tag color="pink">BusinessProfile</Tag>
                 ) : (
                     <Tag>Unknown ({annotation.scope})</Tag>
                 )
@@ -98,7 +98,7 @@ export function Annotations(): JSX.Element {
         <div>
             <PageHeader
                 title="Annotations"
-                caption="Here you can add organization- and project-wide annotations. Dashboard-specific ones can be added directly in the dashboard."
+                caption="Here you can add BusinessProfile- and campaign-wide annotations. Dashboard-specific ones can be added directly in the dashboard."
                 buttons={
                     <LemonButton
                         type="primary"

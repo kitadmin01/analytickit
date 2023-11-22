@@ -412,14 +412,14 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                     },
                     {
                         icon: RiseOutlined,
-                        display: 'Go to Insights',
+                        display: 'Go to Analytics',
                         executor: () => {
                             push(urls.savedInsights())
                         },
                     },
                     {
                         icon: RiseOutlined,
-                        display: 'Go to Trends',
+                        display: 'Go to Traffic Trends',
                         executor: () => {
                             // TODO: Don't reset insight on change
                             push(urls.insightNew({ insight: InsightType.TRENDS }))
@@ -435,7 +435,7 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                     },
                     {
                         icon: GatewayOutlined,
-                        display: 'Go to Retention',
+                        display: 'Go to Loyalty Metrics',
                         executor: () => {
                             // TODO: Don't reset insight on change
                             push(urls.insightNew({ insight: InsightType.RETENTION }))
@@ -507,14 +507,14 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
                     },
                     {
                         icon: HomeOutlined,
-                        display: 'Go to project homepage',
+                        display: 'Go to campaign homepage',
                         executor: () => {
                             push(urls.projectHomepage())
                         },
                     },
                     {
                         icon: ProjectOutlined,
-                        display: 'Go to Project settings',
+                        display: 'Go to Campaign settings',
                         executor: () => {
                             push(urls.projectSettings())
                         },

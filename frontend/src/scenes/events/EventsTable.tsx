@@ -381,7 +381,7 @@ export function EventsTable({
                                             fullWidth
                                             data-attr="events-table-usage"
                                         >
-                                            Try out in Insights
+                                            Try out in Analytics
                                         </LemonButton>
                                     )}
                                 </>
@@ -468,7 +468,7 @@ export function EventsTable({
                     </div>
                 </div>
             ) : null}
-            <EventBufferNotice additionalInfo=" - this helps ensure accuracy of insights grouped by unique users" />
+            <EventBufferNotice additionalInfo=" - this helps ensure accuracy of analytics grouped by unique users" />
             <LemonTable
                 data-tooltip={dataTooltip}
                 dataSource={eventsFormatted}

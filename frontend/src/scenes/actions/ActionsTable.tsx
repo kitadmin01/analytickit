@@ -172,7 +172,7 @@ export function ActionsTable(): JSX.Element {
                                     }
                                     fullWidth
                                 >
-                                    Try out in Insights
+                                    Try out in Analytics
                                 </LemonButton>
                                 <LemonDivider />
                                 <LemonButton
@@ -206,8 +206,8 @@ export function ActionsTable(): JSX.Element {
     return (
         <div data-attr="manage-events-table">
             <PageHeader
-                title="Data Management"
-                caption="Use data management to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
+                title="Data Organizer"
+                caption="Use data Organizer to organize events that come into analytickit. Reduce noise, clarify usage, and help collaborators get the most value from your data."
                 tabbedPage
             />
             <DataManagementPageTabs tab={DataManagementTab.Actions} />

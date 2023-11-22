@@ -90,7 +90,7 @@ function TaxonomyIntroductionSection(): JSX.Element {
                     data-attr="taxonomy-learn-more"
                     style={{ fontWeight: 600, marginTop: 8 }}
                 >
-                    Learn more about Data Management
+                    Learn more about Data Organizer
                     <IconOpenInNew style={{ marginLeft: 8 }} />
                 </Link>
             </DefinitionPopup.Section>

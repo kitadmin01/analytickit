@@ -85,7 +85,7 @@ export function Dashboards(): JSX.Element {
                                 </Tooltip>
                             )}
                             {isPrimary && (
-                                <Tooltip title="Primary dashboards are shown on the project home page">
+                                <Tooltip title="Primary dashboards are shown on the campaign home page">
                                     <IconCottage
                                         style={{
                                             marginLeft: 6,
@@ -165,7 +165,7 @@ export function Dashboards(): JSX.Element {
                                 <LemonRow icon={<IconCottage className="text-warning" />} fullWidth status="warning">
                                     <span className="text-muted">
                                         Change the default dashboard on the{' '}
-                                        <Link to={urls.projectHomepage()}>project home page</Link>.
+                                        <Link to={urls.projectHomepage()}>campaign home page</Link>.
                                     </span>
                                 </LemonRow>
                                 <LemonDivider />

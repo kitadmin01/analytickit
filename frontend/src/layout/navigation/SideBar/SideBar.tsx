@@ -64,7 +64,7 @@ function Pages(): JSX.Element {
 
     return (
         <ul>
-            <div className="SideBar__heading">Project</div>
+            <div className="SideBar__heading">Campaign</div>
             <PageButton
                 data-tooltip="project-button"
                 title={currentTeam?.name ?? 'Choose campaign'}
@@ -72,7 +72,7 @@ function Pages(): JSX.Element {
                 identifier={Scene.ProjectHomepage}
                 to={urls.projectHomepage()}
                 sideAction={{
-                    'aria-label': 'switch project',
+                    'aria-label': 'switch campaign',
                     onClick: () => toggleProjectSwitcher(),
                     popup: {
                         visible: isProjectSwitcherShown,
@@ -142,7 +142,7 @@ function Pages(): JSX.Element {
                         sideAction={{
                             icon: <IconPlus />,
                             to: urls.insightNew(),
-                            tooltip: 'New insight',
+                            tooltip: 'New analytic',
                             identifier: Scene.Insight,
                             onClick: hideSideBarMobile,
                         }}

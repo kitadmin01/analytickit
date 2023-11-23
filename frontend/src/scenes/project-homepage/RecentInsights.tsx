@@ -49,13 +49,13 @@ export function RecentInsights(): JSX.Element {
     return (
         <>
             <CompactList
-                title="Your recently viewed insights"
+                title="Your recently viewed analytics"
                 viewAllURL={urls.savedInsights()}
                 loading={recentInsightsLoading}
                 emptyMessage={{
-                    title: 'You have no recently viewed insights',
-                    description: "Explore this project's insights by clicking below.",
-                    buttonText: 'View insights',
+                    title: 'You have no recently viewed analytics',
+                    description: "Explore this campaign's analytics by clicking below.",
+                    buttonText: 'View analytics',
                     buttonTo: urls.savedInsights(),
                 }}
                 items={recentInsights.slice(0, 5)}

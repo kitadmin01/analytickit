@@ -40,11 +40,11 @@ export function NewlySeenPersons(): JSX.Element {
 
     return (
         <CompactList
-            title="Newly seen persons"
+            title="Newly seen visitors"
             viewAllURL={urls.persons()}
             loading={personsLoading}
             emptyMessage={{
-                title: 'There are no newly seen persons',
+                title: 'There are no newly seen visitors',
                 description: 'Learn more about identifying persons and ingesting data in the documentation.',
                 buttonText: 'Documentation',
                 buttonTo: 'https://analytickit.com/docs/integrate/identifying-users',

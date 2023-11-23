@@ -39,14 +39,14 @@ DASHBOARD_COLORS: List[str] = ["white", "blue", "green", "purple", "black"]
 def _create_default_app_items(dashboard: Dashboard) -> None:
     insight = Insight.objects.create(
         team=dashboard.team,
-        name="Daily active users (DAUs)",
+        name="Daily active visitors (DAVs)",
         filters={
             TREND_FILTER_TYPE_EVENTS: [{"id": "$pageview", "math": "dau", "type": TREND_FILTER_TYPE_EVENTS}],
             INTERVAL: "day",
             INSIGHT: INSIGHT_TRENDS,
         },
         last_refresh=now(),
-        description="Shows the number of unique users that use your app every day.",
+        description="Shows the number of unique visitors that use your app every day.",
     )
     DashboardTile.objects.create(
         insight=insight,
@@ -60,14 +60,14 @@ def _create_default_app_items(dashboard: Dashboard) -> None:
 
     insight = Insight.objects.create(
         team=dashboard.team,
-        name="Weekly active users (WAUs)",
+        name="Weekly active visitors (WAVs)",
         filters={
             TREND_FILTER_TYPE_EVENTS: [{"id": "$pageview", "math": "weekly_active", "type": TREND_FILTER_TYPE_EVENTS}],
             INTERVAL: "week",
             INSIGHT: INSIGHT_TRENDS,
         },
         last_refresh=now(),
-        description="Shows the number of unique users that use your app every week.",
+        description="Shows the number of unique visitors that use your app every week.",
     )
     DashboardTile.objects.create(
         insight=insight,
@@ -81,7 +81,7 @@ def _create_default_app_items(dashboard: Dashboard) -> None:
 
     insight = Insight.objects.create(
         team=dashboard.team,
-        name="Retention",
+        name="Loyalty Metrics",
         filters={
             TARGET_ENTITY: {"id": "$pageview", "type": TREND_FILTER_TYPE_EVENTS},
             RETURNING_ENTITY: {"id": "$pageview", "type": TREND_FILTER_TYPE_EVENTS},
@@ -90,7 +90,7 @@ def _create_default_app_items(dashboard: Dashboard) -> None:
             INSIGHT: INSIGHT_RETENTION,
         },
         last_refresh=now(),
-        description="Weekly retention of your users.",
+        description="Weekly Loyalty Metrics of your visitors.",
     )
     DashboardTile.objects.create(
         insight=insight,
@@ -114,7 +114,7 @@ def _create_default_app_items(dashboard: Dashboard) -> None:
             DATE_FROM: "-30d",
         },
         last_refresh=now(),
-        description="How many of your users are new, returning, resurrecting, or dormant each week.",
+        description="How many of your visitors are new, returning, resurrecting, or dormant each week.",
     )
     DashboardTile.objects.create(
         insight=insight,
@@ -139,7 +139,7 @@ def _create_default_app_items(dashboard: Dashboard) -> None:
             BREAKDOWN_TYPE: "event",
         },
         last_refresh=now(),
-        description="Shows the most common referring domains for your users over the past 14 days.",
+        description="Shows the most common referring domains for your visitors over the past 14 days.",
     )
     DashboardTile.objects.create(
         insight=insight,
@@ -171,7 +171,7 @@ def _create_default_app_items(dashboard: Dashboard) -> None:
         },
         last_refresh=now(),
         is_sample=True,
-        description="This example funnel shows how many of your users have completed 3 page views, broken down by browser.",
+        description="This example funnel shows how many of your visitors have completed 3 page views, broken down by browser.",
     )
     DashboardTile.objects.create(
         insight=insight,

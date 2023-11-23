@@ -29,7 +29,8 @@ export function ProjectSwitcherOverlay(): JSX.Element {
                     .sort((teamA, teamB) => teamA.name.localeCompare(teamB.name))
                     .map((team) => <OtherProjectButton key={team.id} team={team} />)}
 
-            <LemonButton
+            {/* Commented out the New campaign button so that customer can't create new campaign */}
+            {/* <LemonButton
                 icon={<IconPlus />}
                 fullWidth
                 disabled={isProjectCreationForbidden}
@@ -49,7 +50,7 @@ export function ProjectSwitcherOverlay(): JSX.Element {
                 }}
             >
                 New campaign
-            </LemonButton>
+            </LemonButton> */}
         </div>
     )
 }

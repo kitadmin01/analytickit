@@ -35,5 +35,8 @@ export interface CommunityEngagement {
 
 // Modify the CommunityEngagementCreatePayload type
 export type CommunityEngagementCreatePayload = Omit<CommunityEngagement, 'team' | 'last_modified'> & {
-    team_id: number;  // Use team_id when creating a CommunityEngagement
+    // Explicitly define start_date and end_date as string | undefined
+    start_date: string | undefined;
+    end_date: string | undefined;
+    team_id: number; // Use team_id when creating a CommunityEngagement
 };

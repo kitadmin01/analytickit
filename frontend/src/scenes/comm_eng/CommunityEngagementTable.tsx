@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CommunityEngagement } from './CommunityEngagementModel';
-import {LemonTable} from '../../lib/components/LemonTable/LemonTable';
+import { LemonTable } from '../../lib/components/LemonTable/LemonTable';
 import './CommunityEngagement.scss';
+
 
 const CommunityEngagementTable: React.FC = () => {
     const [data, setData] = useState<CommunityEngagement[]>([]);
@@ -23,19 +24,20 @@ const CommunityEngagementTable: React.FC = () => {
         }
     };
 
-    const handleEdit = (campaign: CommunityEngagement): void => {
-        // Your edit logic here
-    };
+    // Uncomment and implement these functions when needed
+    // const handleEdit = (campaign: CommunityEngagement): void => {
+    //     // Your edit logic here
+    // };
 
-    const handleDelete = (id: number): void => {
-        // Your delete logic here
-    };
+    // const handleDelete = (id: number): void => {
+    //     // Your delete logic here
+    // };
 
     const columns = [
         {
             title: 'Campaign Name',
             dataIndex: 'campaign_name',
-            sorter: (a: CommunityEngagement, b: CommunityEngagement) => a.campaign_name.localeCompare(b.campaign_name),
+            sorter: (a: CommunityEngagement, b: CommunityEngagement) => (a.campaign_name || '').localeCompare(b.campaign_name || ''),
         },
         {
             title: 'Start Date',
@@ -50,8 +52,9 @@ const CommunityEngagementTable: React.FC = () => {
             dataIndex: 'actions',
             render: (record: CommunityEngagement) => (
                 <>
-                    <button onClick={() => handleEdit(record)}>Edit</button>
-                    <button onClick={() => handleDelete(record.id)}>Delete</button>
+                    {/* Uncomment these buttons when handleEdit and handleDelete are implemented */}
+                    {/* <button onClick={() => handleEdit(record)}>Edit</button>
+                    <button onClick={() => handleDelete(record.id)}>Delete</button> */}
                 </>
             ),
         },

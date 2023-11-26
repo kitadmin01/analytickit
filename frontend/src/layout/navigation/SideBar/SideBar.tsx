@@ -21,6 +21,7 @@ import {
     IconSettings,
     IconTools,
     UnverifiedEvent,
+    IconCrypto,
 } from 'lib/components/icons'
 import { LemonDivider } from 'lib/components/LemonDivider'
 import { Lettermark } from 'lib/components/Lettermark/Lettermark'
@@ -211,7 +212,16 @@ function Pages(): JSX.Element {
                         to={urls.projectSettings()}
                     />
                 </>
+
             )}
+            {/* Add the LemonDivider and new PageButton */}
+            <LemonDivider />
+            <PageButton
+                icon={<IconCrypto />}
+                identifier={Scene.ComEng} // Replace with the correct identifier for your Scene
+                to={urls.comEng()} // Replace with the correct URL for your Scene
+                title="Community Engagement" // Replace with the desired title
+            />
         </ul>
     )
 }

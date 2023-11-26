@@ -1,61 +1,50 @@
+import { kea, loaders } from 'kea'
 import { CommunityEngagement, CommunityEngagementCreatePayload } from './CommunityEngagementModel'
+import api from 'lib/api' // Assuming 'lib/api' is similar to the one used in inviteLogic
+import { lemonToast } from 'lib/components/lemonToast' // For user notifications
+
+import type { communityEngagementLogicType } from './CommunityEngagementServiceType'
 
 const API_ENDPOINT = '/api/campaign'
 
-export const fetchAllCommunityEngagements = async (): Promise<CommunityEngagement[]> => {
-    const response = await fetch(API_ENDPOINT)
-    if (!response.ok) {
-        throw new Error('Failed to fetch Community Engagements')
-    }
-    return await response.json()
-}
+export const communityEngagementLogic = kea<communityEngagementLogicType>({
+    path: ['scenes', 'comm_eng', 'CommunityEngagementService'],
 
-export const fetchCommunityEngagementById = async (id: number): Promise<CommunityEngagement> => {
-    const response = await fetch(`${API_ENDPOINT}/${id}`)
-    if (!response.ok) {
-        throw new Error(`Failed to fetch Community Engagement with ID: ${id}`)
-    }
-    return await response.json()
-}
-
-export const createCommunityEngagement = async (
-    payload: CommunityEngagementCreatePayload
-): Promise<CommunityEngagement> => {
-    const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-    if (!response.ok) {
-        throw new Error('Failed to create Community Engagement')
-    }
-    return await response.json()
-}
-
-export const updateCommunityEngagement = async (
-    id: number,
-    payload: CommunityEngagement
-): Promise<CommunityEngagement> => {
-    const response = await fetch(`${API_ENDPOINT}/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-    if (!response.ok) {
-        throw new Error(`Failed to update Community Engagement with ID: ${id}`)
-    }
-    return await response.json()
-}
-
-export const deleteCommunityEngagement = async (id: number): Promise<void> => {
-    const response = await fetch(`${API_ENDPOINT}/${id}`, {
-        method: 'DELETE',
-    })
-    if (!response.ok) {
-        throw new Error(`Failed to delete Community Engagement with ID: ${id}`)
-    }
-}
+    // Additional actions, selectors, listeners, etc.
+    loaders: () => ({
+        engagements: [
+            [] as CommunityEngagement[],
+            {
+                fetchAllEngagements: async () => {
+                    try {
+                        const response = await api.get(API_ENDPOINT)
+                        return response.results
+                    } catch (error) {
+                        lemonToast.error('Failed to fetch Community Engagements')
+                        throw error
+                    }
+                },
+                fetchEngagementById: async (id: number) => {
+                    try {
+                        const response = await api.get(`${API_ENDPOINT}/${id}`)
+                        return response
+                    } catch (error) {
+                        lemonToast.error(`Failed to fetch Community Engagement with ID: ${id}`)
+                        throw error
+                    }
+                },
+                createEngagement: async (payload: CommunityEngagementCreatePayload) => {
+                    try {
+                        const response = await api.create(API_ENDPOINT, payload)
+                        lemonToast.success('Community Engagement created successfully')
+                        return response
+                    } catch (error) {
+                        lemonToast.error('Failed to create Community Engagement')
+                        throw error
+                    }
+                },
+                // ... other loaders
+            },
+        ],
+    }),
+})

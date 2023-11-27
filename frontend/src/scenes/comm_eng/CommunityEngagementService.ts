@@ -43,7 +43,17 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
                         throw error
                     }
                 },
-                // ... other loaders
+                updateEngagement: async (payload: { id: number; data: CommunityEngagementCreatePayload }) => {
+                    const { id, data } = payload;
+                    try {
+                        const response = await api.update(`${API_ENDPOINT}/${id}`, data);
+                        lemonToast.success('Community Engagement updated successfully');
+                        return response;
+                    } catch (error) {
+                        lemonToast.error('Failed to update Community Engagement');
+                        throw error;
+                    }
+                },
             },
         ],
     }),

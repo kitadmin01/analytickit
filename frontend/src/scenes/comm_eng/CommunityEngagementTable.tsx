@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Modal, Input } from 'antd'; // Import necessary components from antd
+import { Button, Modal, Input } from 'antd';
 import { CommunityEngagement } from './CommunityEngagementModel';
 import { LemonTable } from '../../lib/components/LemonTable/LemonTable';
 import './CommunityEngagement.scss';
 
-const CommunityEngagementTable: React.FC = () => {
+interface CommunityEngagementTableProps {
+    onEditCampaign?: (campaign: CommunityEngagement) => void;
+}
+
+const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onEditCampaign }) => {
     const [data, setData] = useState<CommunityEngagement[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [isEditVisible, setIsEditVisible] = useState<boolean>(false);
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [editingCampaign, setEditingCampaign] = useState<CommunityEngagement | null>(null);
 
     useEffect(() => {
@@ -28,13 +32,16 @@ const CommunityEngagementTable: React.FC = () => {
 
     const handleEdit = (campaign: CommunityEngagement): void => {
         setEditingCampaign(campaign);
-        setIsEditVisible(true);
+        setIsModalVisible(true);
+        if (onEditCampaign) {
+            onEditCampaign(campaign);
+        }
     };
 
-    // Implement handleDelete if needed
-    // const handleDelete = (id: number): void => {
-    //     // Your delete logic here
-    // };
+    const handleNewCampaign = (): void => {
+        setEditingCampaign(null);
+        setIsModalVisible(true);
+    };
 
     const columns = [
         {
@@ -64,8 +71,7 @@ const CommunityEngagementTable: React.FC = () => {
             render: (text: any, record: CommunityEngagement) => (
                 <>
                     <button onClick={() => handleEdit(record)}>Edit</button>
-                    {/* Implement and uncomment if delete functionality is needed */}
-                    {/* <button onClick={() => handleDelete(record.id)}>Delete</button> */}
+                    {/* ... other actions */}
                 </>
             ),
         },
@@ -73,23 +79,19 @@ const CommunityEngagementTable: React.FC = () => {
 
     return (
         <>
+            <Button type="primary" onClick={handleNewCampaign}>
+                New Campaign
+            </Button>
             <LemonTable
                 columns={columns}
                 dataSource={data}
                 loading={loading}
-                // Additional props as per your use-case
             />
-            {editingCampaign && (
-                <EditCampaignModal
-                    isVisible={isEditVisible}
-                    campaign={editingCampaign}
-                    onClose={() => {
-                        setIsEditVisible(false);
-                        setEditingCampaign(null);
-                    }}
-                    // Add any other props you need
-                />
-            )}
+            <EditCampaignModal
+                isVisible={isModalVisible}
+                campaign={editingCampaign}
+                onClose={() => setIsModalVisible(false)}
+            />
         </>
     );
 };
@@ -97,23 +99,27 @@ const CommunityEngagementTable: React.FC = () => {
 // EditCampaignModal component
 const EditCampaignModal: React.FC<{
     isVisible: boolean;
-    campaign: CommunityEngagement;
+    campaign: CommunityEngagement | null;
     onClose: () => void;
 }> = ({ isVisible, campaign, onClose }) => {
-    const [campaignName, setCampaignName] = useState<string>(campaign.campaign_name);
-    const [startDate, setStartDate] = useState<string>(campaign.start_date);
-    const [endDate, setEndDate] = useState<string>(campaign.end_date);
-    const [contractAddress, setContractAddress] = useState<string>(campaign.contract_address);
-    const [tokenAddress, setTokenAddress] = useState<string>(campaign.token_address);
-    const [contractType, setContractType] = useState<'ERC-20' | 'ERC-721' | 'ERC-777'>(campaign.contract_type);
+    // Initialize state with campaign data or defaults
+    const [campaignName, setCampaignName] = useState<string>(campaign?.campaign_name || '');
+    const [startDate, setStartDate] = useState<string>(campaign?.start_date || '');
+    const [endDate, setEndDate] = useState<string>(campaign?.end_date || '');
+    const [contractAddress, setContractAddress] = useState<string>(campaign?.contract_address || '');
+    const [tokenAddress, setTokenAddress] = useState<string>(campaign?.token_address || '');
+    const [contractType, setContractType] = useState<'ERC-20' | 'ERC-721' | 'ERC-777'>(campaign?.contract_type || 'ERC-20');
+
 
 
     useEffect(() => {
-        setCampaignName(campaign.campaign_name);
-        setStartDate(campaign.start_date);
-        setEndDate(campaign.end_date);
-        setContractAddress(campaign.contract_address);
-        setTokenAddress(campaign.token_address);
+        if (campaign) {
+            setCampaignName(campaign.campaign_name);
+            setStartDate(campaign.start_date);
+            setEndDate(campaign.end_date);
+            setContractAddress(campaign.contract_address);
+            setTokenAddress(campaign.token_address);
+        }
     }, [campaign]);
 
     const handleSubmit = async () => {

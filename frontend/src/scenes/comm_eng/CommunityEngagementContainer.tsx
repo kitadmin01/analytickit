@@ -3,7 +3,7 @@ import CommunityEngagementTable from './CommunityEngagementTable';
 import { communityEngagementLogic } from './CommunityEngagementService';
 import { CommunityEngagement } from './CommunityEngagementModel';
 import './CommunityEngagement.scss'; 
-import NewCampaignModal from './NewCampaignModal';
+import CampaignModal from './CampaignModal';
 
 const CommunityEngagementContainer: React.FC = () => {
     const [, setData] = useState<CommunityEngagement[]>([]);
@@ -51,7 +51,7 @@ const CommunityEngagementContainer: React.FC = () => {
                 <CommunityEngagementTable />
             </div>
             {isModalVisible && (
-                <NewCampaignModal 
+                <CampaignModal 
                     isVisible={isModalVisible} // Ensure this prop is passed
                     onClose={handleModalClose}
                     // other props as needed

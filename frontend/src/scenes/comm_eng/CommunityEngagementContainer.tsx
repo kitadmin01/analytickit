@@ -10,6 +10,8 @@ const CommunityEngagementContainer: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [selectedCampaign, setSelectedCampaign] = useState<CommunityEngagement | null>(null);
+
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
@@ -25,7 +27,13 @@ const CommunityEngagementContainer: React.FC = () => {
         fetchData();
     }, []);
 
-    const handleNewCampaignClick = ():void => {
+    const handleNewCampaignClick = (): void => {
+        setSelectedCampaign(null); // Reset selected campaign for new campaign
+        setIsModalVisible(true);
+    };
+
+    const handleEditCampaignClick = (campaign: CommunityEngagement): void => {
+        setSelectedCampaign(campaign); // Set the campaign to be edited
         setIsModalVisible(true);
     };
 
@@ -42,19 +50,15 @@ const CommunityEngagementContainer: React.FC = () => {
 
     return (
         <div className="community-engagement">
-            <div className="header">
-                <h1>Community Engagement</h1>
-
-                <button onClick={handleNewCampaignClick}>New Campaign</button>
-            </div>
+            {/* ... other components */}
             <div className="table-container">
-                <CommunityEngagementTable />
+                <CommunityEngagementTable onEditCampaign={handleEditCampaignClick} />
             </div>
             {isModalVisible && (
                 <CampaignModal 
-                    isVisible={isModalVisible} // Ensure this prop is passed
+                    isVisible={isModalVisible}
                     onClose={handleModalClose}
-                    // other props as needed
+                    campaign={selectedCampaign} // Pass the selected campaign
                 />
             )}
         </div>

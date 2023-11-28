@@ -134,3 +134,17 @@ class CommunityEngagementViewSet(viewsets.ModelViewSet):
         
         is_eligible = CommunityEngagement.is_engagement_eligible_for_team(team_id)
         return Response({"is_eligible": is_eligible})
+    
+    def destroy(self, request, *args, **kwargs):
+        """
+        Deletes a CommunityEngagement instance.
+        """
+        instance = get_object_or_404(self.get_queryset(), pk=kwargs.get('pk'))
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        """
+        Perform the destruction of the instance.
+        """
+        instance.delete()

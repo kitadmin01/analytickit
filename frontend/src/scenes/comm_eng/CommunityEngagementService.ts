@@ -1,6 +1,6 @@
 import { kea, loaders } from 'kea'
 import { CommunityEngagement, CommunityEngagementCreatePayload } from './CommunityEngagementModel'
-import api from 'lib/api' // Assuming 'lib/api' is similar to the one used in inviteLogic
+import api from 'lib/api' 
 import { lemonToast } from 'lib/components/lemonToast' // For user notifications
 
 import type { communityEngagementLogicType } from './CommunityEngagementServiceType'
@@ -54,6 +54,25 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
                         throw error;
                     }
                 },
+                deleteEngagement: async (id: number) => {
+                    try {
+                        await api.delete(`${API_ENDPOINT}/${id}`);
+                        lemonToast.success('Community Engagement deleted successfully');
+                    } catch (error) {
+                        lemonToast.error('Failed to delete Community Engagement');
+                        throw error;
+                    }
+                },
+            },
+        ],
+    }),
+    reducers: () => ({
+        lastUpdated: [
+            0, // Initial state
+            {
+                createEngagement: () => new Date().getTime(),
+                updateEngagement: () => new Date().getTime(),
+                deleteEngagement: () => new Date().getTime(),
             },
         ],
     }),

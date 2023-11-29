@@ -54,7 +54,6 @@ class CampaignAnalyticSerializer(serializers.ModelSerializer):
             "total_contract_calls",
             "function_calls_count",
             "tot_tokens_transferred",
-            "referral_count",
             "last_modified",
             "tot_txns",
             "ave_gas_used",

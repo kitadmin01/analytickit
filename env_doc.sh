@@ -1,4 +1,9 @@
 #!/bin/bash
+# Use this to run Djano DB Migration
+# 1. run source env_doc.sh
+# 2. run . env_doc.sh
+# 3. run ./bin/migrate
+
    export SECRET_KEY="6b01eee4f945ca25045b5aab440b953461faf08693a9abbf1166dc7c6b9772da"
    export DATABASE_URL="postgres://analytickit:analytickit@localhost:5432/analytickit"
    export REDIS_URL="redis://localhost"

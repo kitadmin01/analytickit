@@ -59,7 +59,6 @@ def test_perform_campaign_analysis(txn_analyzer):
         average_gas_used=10000,
         function_calls_count={"transfer": 10},
         tot_tokens_transferred=100,
-        referral_count=5,
         tot_txns=10,
         ave_gas_used=10000,
         transaction_value_distribution={"0-10": 5},

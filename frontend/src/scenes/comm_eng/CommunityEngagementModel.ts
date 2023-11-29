@@ -16,7 +16,6 @@ export interface CommunityEngagement {
     average_gas_used?: number;
     function_calls_count?: Record<string, number>;
     tot_tokens_transferred?: number;
-    referral_count?: number;
     last_modified?: Date;
     tot_txns?: number;
     ave_gas_used?: number;

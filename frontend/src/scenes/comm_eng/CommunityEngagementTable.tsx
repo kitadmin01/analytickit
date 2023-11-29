@@ -6,6 +6,7 @@ import { LemonButton } from '../../lib/components/LemonButton';
 import CampaignModal from './CampaignModal';
 import { useActions, useValues } from 'kea';
 import { communityEngagementLogic } from './CommunityEngagementService'; // Import the logic file
+import CampaignAnalyticsComponent from './graph//CampaignAnalyticsComponent'; // Import the component
 
 
 
@@ -18,10 +19,15 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
     const [loading, setLoading] = useState<boolean>(true);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [editingCampaign, setEditingCampaign] = useState<CommunityEngagement | null>(null);
+    const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
+
 
     // Use Kea's useActions hook to get the actions from the logic
     const { fetchAllEngagements, deleteEngagement } = useActions(communityEngagementLogic);
     const { engagements, lastUpdated } = useValues(communityEngagementLogic);
+    const handleViewAnalytics = (campaignId: number): void => {
+        setSelectedCampaignId(campaignId);
+    };
 
     useEffect(() => {
         fetchCampaigns();
@@ -103,6 +109,8 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
                 <>
                     <button onClick={() => handleEdit(record)}>Edit</button>
                     <button onClick={() => handleDelete(record.id)}>Delete</button>
+                    <button onClick={() => handleViewAnalytics(record.id)}>View</button>
+
                     {/* ... other actions */}
                 </>
             ),
@@ -124,6 +132,9 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
                 onClose={() => setIsModalVisible(false)}
                 campaign={editingCampaign}
             />
+            {selectedCampaignId && (
+                <CampaignAnalyticsComponent campaignId={selectedCampaignId} />
+            )}
         </>
     );
     

@@ -58,7 +58,7 @@ class TxnAnalyzer:
         filtered_keys = [
             key for key in s3_keys 
             # for now get previous 10 days worh of data from S3, instead of going and getting all the data since 2015.
-            if datetime.strptime(key.split('date=')[1].split('/')[0], "%Y-%m-%d").date() >= (date.today() - timedelta(days=1))
+            if datetime.strptime(key.split('date=')[1].split('/')[0], "%Y-%m-%d").date() >= (date.today() - timedelta(days=30))
 
         ]
         s3_keys = filtered_keys

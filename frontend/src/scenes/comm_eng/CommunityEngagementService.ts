@@ -63,7 +63,18 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
                         throw error;
                     }
                 },
-            },
+
+                // New loader function to fetch campaign analytics
+                fetchCampaignAnalytic: async (id: number) => {
+                    try {
+                        const response = await api.get(`${API_ENDPOINT}/${id}/analytic`);
+                        return response;
+                    } catch (error) {
+                        lemonToast.error(`Failed to fetch Campaign Analytic with ID: ${id}`);
+                        throw error;
+                    }
+                },
+},
         ],
     }),
     reducers: () => ({

@@ -11,9 +11,11 @@ interface CampaignModalProps {
     isVisible: boolean;
     onClose?: () => void;
     campaign?: CommunityEngagement; // Optional campaign data for editing
+    isModalVisible: boolean; 
 }
 
-const CampaignModal: React.FC<CampaignModalProps> = ({ isVisible, onClose, campaign }) => {
+const CampaignModal: React.FC<CampaignModalProps> = ({ isVisible, onClose, campaign, isModalVisible }) => {
+
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [campaignName, setCampaignName] = useState<string>('');
     const [tokenAddress, setTokenAddress] = useState<string>('');
@@ -31,6 +33,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isVisible, onClose, campa
     // Pre-fill form fields if editing
     useEffect(() => {
         if (isEditMode && campaign) {
+            console.log("Pre-filling form with:", campaign); // Add this line to check the campaign data
             setCampaignName(campaign.campaign_name);
             setTokenAddress(campaign.token_address);
             setContractAddress(campaign.contract_address);
@@ -39,6 +42,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isVisible, onClose, campa
             setEndDate(campaign.end_date);
         }
     }, [campaign, isEditMode]);
+    
 
     const closeModal = () => {
         setErrorMessage(null);
@@ -46,6 +50,15 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isVisible, onClose, campa
             onClose();
         }
     };
+    
+    useEffect(() => {
+        if (!isModalVisible) {
+            // Perform actions after the modal is closed
+            // For example, reset form fields or fetch updated data
+        }
+    }, [isModalVisible]);
+    
+    
 
     const handleSubmit = async () => {
         console.log('handleSubmit called, campaign:', campaign);
@@ -85,7 +98,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isVisible, onClose, campa
     return (
         <Modal
             title={isEditMode ? "Edit Campaign" : "Create New Campaign"}
-            visible={isVisible}
+            visible={isVisible} // This should be controlled by the parent component
             onOk={handleSubmit}
             onCancel={closeModal}
             okText={isEditMode ? "Save Changes" : "Create Campaign"}

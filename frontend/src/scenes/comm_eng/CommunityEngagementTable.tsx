@@ -83,19 +83,33 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
         }
     };
 
+    const handleEdit = (campaign: CommunityEngagement): void => {
+        console.log("Editing campaign:", campaign); // Add this line to check the campaign data
+        setEditingCampaign(campaign);
+        setIsModalVisible(true);
+    };
+    
+
+    // Add a function to handle closing the modal
+    const handleCloseModal = () => {
+        setIsModalVisible(false);
+    };
+    
     const handleViewAnalytics = (campaignId: number) => {
         setSelectedCampaignId(campaignId);
         setIsLoadingAnalytics(true);
         fetchCampaignAnalytic(campaignId); // This triggers the loader
-        setIsAnalyticsModalVisible(true); // Open the analytics modal
+        toggleAnalyticsModalVisibility(); // Use a function to toggle analytics modal visibility
     };
-    
-    const handleEdit = (campaign: CommunityEngagement): void => {
-        setEditingCampaign(campaign);
-        setIsModalVisible(true); // Open the edit modal
-        if (onEditCampaign) {
-            onEditCampaign(campaign);
-        }
+
+    // Function to toggle the edit modal visibility
+    const toggleModalVisibility = () => {
+        setIsModalVisible(prevState => !prevState);
+    };
+
+    // Function to toggle the analytics modal visibility
+    const toggleAnalyticsModalVisibility = () => {
+        setIsAnalyticsModalVisible(prevState => !prevState);
     };
 
     const handleDelete = async (id: number): Promise<void> => {
@@ -165,14 +179,15 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
             />
             <CampaignModal
                 isVisible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
+                onClose={handleCloseModal}
                 campaign={editingCampaign}
+                isModalVisible={isModalVisible} // Pass this down to the modal
             />
             {/* Campaign Analytics Modal */}
             {selectedCampaignId && isAnalyticsModalVisible && (
-                <CampaignAnalyticsComponent
-                    data={campaignAnalyticsData}
-                />
+            <CampaignAnalyticsComponent
+                data={campaignAnalyticsData}
+            />
             )}
 
             </>

@@ -1,31 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { ActiveUsersOverTime } from './ActiveUsersOverTime';
-import { ApiResponse } from './CryptoType';
-import { communityEngagementLogic } from '../CommunityEngagementService';
-import { useActions } from 'kea';
+import React from 'react';
+import { GenericTimeSeriesGraph } from './GenericTimeSeriesGraph';
+import { CampaignAnalytic } from './CryptoType';
 
-const CryptoDashboard = () => {
-  const [analyticsData, setAnalyticsData] = useState<ApiResponse>([]);
-  const { fetchCampaignAnalytic } = useActions(communityEngagementLogic);
+interface DashboardProps {
+  campaignAnalytics: CampaignAnalytic[]; // Array of campaign analytics data
+}
 
-  const fetchData = async () => {
-    try {
-      const response: ApiResponse = await fetchCampaignAnalytic(1); // Replace 1 with the actual campaign ID
-      setAnalyticsData(response);
-    } catch (error) {
-      console.error('Error fetching campaign analytics:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+const CryptoDashboard: React.FC<DashboardProps> = ({ campaignAnalytics }) => {
+  // Transform data for each graph
+  const activeUsersData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.active_users }));
+  const totalContractCallsData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.total_contract_calls }));
+  // ... other data transformations for different graphs
 
   return (
     <div>
-      <h1>Crypto Dashboard</h1>
-      {/* Render the Active Users Over Time graph with the fetched data */}
-      <ActiveUsersOverTime data={analyticsData} />
+      <h1>Analytics Dashboard</h1>
+      <GenericTimeSeriesGraph 
+        data={activeUsersData}
+        title="Active Users Over Time"
+        yAxisLabel="Active Users"
+      />
+
+      {/* Add more GenericTimeSeriesGraph components for other graphs */}
     </div>
   );
 };

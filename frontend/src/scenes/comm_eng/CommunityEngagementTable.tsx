@@ -1,13 +1,12 @@
-import { CommunityEngagement } from './CommunityEngagementModel';
+import React, { useEffect, useState } from 'react';
 import { LemonTable } from '../../lib/components/LemonTable/LemonTable';
-import './CommunityEngagement.scss';
 import { LemonButton } from '../../lib/components/LemonButton';
-import CampaignModal from './CampaignModal';
 import { useActions, useValues } from 'kea';
 import { communityEngagementLogic } from './CommunityEngagementService';
-import CampaignAnalyticsComponent from './graph/CampaignAnalyticsComponent';
-import { CampaignAnalytic } from './graph/CryptoType';
-import React, { useEffect, useState } from 'react';
+import { CommunityEngagement } from './CommunityEngagementModel';
+import CampaignModal from './CampaignModal';
+import CryptoDashboard from './graph/CryptoDashboard'; // Import the CryptoDashboard component
+
 
 
 
@@ -99,18 +98,9 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
         setSelectedCampaignId(campaignId);
         setIsLoadingAnalytics(true);
         fetchCampaignAnalytic(campaignId); // This triggers the loader
-        toggleAnalyticsModalVisibility(); // Use a function to toggle analytics modal visibility
+        setIsAnalyticsModalVisible(true); // Open the analytics modal
     };
 
-    // Function to toggle the edit modal visibility
-    const toggleModalVisibility = () => {
-        setIsModalVisible(prevState => !prevState);
-    };
-
-    // Function to toggle the analytics modal visibility
-    const toggleAnalyticsModalVisibility = () => {
-        setIsAnalyticsModalVisible(prevState => !prevState);
-    };
 
     const handleDelete = async (id: number): Promise<void> => {
         try {
@@ -157,10 +147,9 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
             dataIndex: 'actions',
             render: (text: any, record: CommunityEngagement) => (
                 <>
-                    <button onClick={() => handleEdit(record)}>Edit</button>
-                    <button onClick={() => handleDelete(record.id)}>Delete</button>
-                    <button onClick={() => handleViewAnalytics(record.id)}>View</button>
-
+                <LemonButton onClick={() => handleEdit(record)}>Edit</LemonButton>
+                <LemonButton onClick={() => handleDelete(record.id)}>Delete</LemonButton>
+                <LemonButton onClick={() => handleViewAnalytics(record.id)}>View</LemonButton>
                     {/* ... other actions */}
                 </>
             ),
@@ -183,12 +172,12 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
                 campaign={editingCampaign}
                 isModalVisible={isModalVisible} // Pass this down to the modal
             />
-            {/* Campaign Analytics Modal */}
+            {/* Crypto Dashboard Modal */}
             {selectedCampaignId && isAnalyticsModalVisible && (
-            <CampaignAnalyticsComponent
-                data={campaignAnalyticsData}
-            />
-            )}
+                    <CryptoDashboard
+                        campaignAnalytics={campaignAnalyticsData}
+                    />
+                )}
 
             </>
     );

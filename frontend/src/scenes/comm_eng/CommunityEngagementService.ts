@@ -63,18 +63,25 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
                         throw error;
                     }
                 },
-
-                // New loader function to fetch campaign analytics
+                                
+                
+},
+        ],
+        campaignAnalytics: [
+            {}, // Initial state as an empty object
+            {
                 fetchCampaignAnalytic: async (id: number) => {
                     try {
                         const response = await api.get(`${API_ENDPOINT}/${id}/analytic`);
-                        return response;
+                        // Assuming response.data contains the analytics data
+                        console.log(`Fetched Campaign Analytic with ID: ${id}`, response.data); // Log the data for debugging purposes
+                        return { [id]: response.data }; // Update the state with the new data
                     } catch (error) {
-                        lemonToast.error(`Failed to fetch Campaign Analytic with ID: ${id}`);
-                        throw error;
+                        console.error(`Failed to fetch Campaign Analytic with ID: ${id}`, error);
+                        return { [id]: [] }; // Return an empty array for this ID in case of an error
                     }
                 },
-},
+            },
         ],
     }),
     reducers: () => ({

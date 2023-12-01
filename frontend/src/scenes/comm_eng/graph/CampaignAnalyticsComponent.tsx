@@ -1,36 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useActions } from 'kea';
-import { communityEngagementLogic } from '../CommunityEngagementService';
+import React from 'react';
 import { ActiveUsersOverTime } from './ActiveUsersOverTime';
-import { CampaignAnalytic } from './CryptoType'; // Import the type
+import { CampaignAnalytic } from './CryptoType';
 
-interface CampaignAnalyticsComponentProps {
-    campaignId: number;
-}
 
-const CampaignAnalyticsComponent: React.FC<CampaignAnalyticsComponentProps> = ({ campaignId }) => {
-    const { fetchCampaignAnalytic } = useActions(communityEngagementLogic);
-    const [campaignAnalytics, setCampaignAnalytics] = useState<CampaignAnalytic[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetchCampaignAnalytic(campaignId);
-                setCampaignAnalytics(response); // Assuming response is already in the correct format
-            } catch (error) {
-                console.error('Error fetching campaign analytics:', error);
-            }
-        };
-
-        fetchData();
-    }, [fetchCampaignAnalytic, campaignId]); // Add campaignId as a dependency
+const CampaignAnalyticsComponent: React.FC<{ data: CampaignAnalytic[] }> = ({ data }) => {
+    console.log("Analytics Data:", data); // Add this line to check the data
 
     return (
         <div>
-            {/* Render the Active Users Over Time graph with the fetched data */}
-            <ActiveUsersOverTime data={campaignAnalytics} />
+            <ActiveUsersOverTime data={data} />
         </div>
     );
 };
-
 export default CampaignAnalyticsComponent;

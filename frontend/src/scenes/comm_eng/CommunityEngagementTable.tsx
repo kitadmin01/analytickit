@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from 'react';
 import { CommunityEngagement } from './CommunityEngagementModel';
 import { LemonTable } from '../../lib/components/LemonTable/LemonTable';
 import './CommunityEngagement.scss';
 import { LemonButton } from '../../lib/components/LemonButton';
 import CampaignModal from './CampaignModal';
 import { useActions, useValues } from 'kea';
-import { communityEngagementLogic } from './CommunityEngagementService'; // Import the logic file
-import CampaignAnalyticsComponent from './graph//CampaignAnalyticsComponent'; // Import the component
+import { communityEngagementLogic } from './CommunityEngagementService';
+import CampaignAnalyticsComponent from './graph/CampaignAnalyticsComponent';
+import { CampaignAnalytic } from './graph/CryptoType';
+import React, { useEffect, useState } from 'react';
 
 
 
 interface CommunityEngagementTableProps {
     onEditCampaign?: (campaign: CommunityEngagement) => void;
+}
+
+interface TransformedData {
+    // Define the structure of the data after transformation
+    // This should match what your component expects
+    activeUsers: number;
+    totalContractCalls: number;
+    // ... other fields as needed
 }
 
 const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onEditCampaign }) => {
@@ -21,22 +30,47 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
     const [editingCampaign, setEditingCampaign] = useState<CommunityEngagement | null>(null);
     const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
 
+    // Initialize campaignAnalyticsData as an empty array
+    const [campaignAnalyticsData, setCampaignAnalyticsData] = useState<CampaignAnalytic[]>([]);
 
     // Use Kea's useActions hook to get the actions from the logic
-    const { fetchAllEngagements, deleteEngagement } = useActions(communityEngagementLogic);
-    const { engagements, lastUpdated } = useValues(communityEngagementLogic);
-    const handleViewAnalytics = (campaignId: number): void => {
-        setSelectedCampaignId(campaignId);
-    };
+    const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
+    const { fetchAllEngagements, deleteEngagement, fetchCampaignAnalytic } = useActions(communityEngagementLogic);
+    const { engagements, lastUpdated, campaignAnalytics } = useValues(communityEngagementLogic);
+   // Add a state to track the visibility of the analytics modal
+   const [isAnalyticsModalVisible, setIsAnalyticsModalVisible] = useState<boolean>(false);
+
 
     useEffect(() => {
         fetchCampaigns();
     }, []);
+    
 
     useEffect(() => {
         // Trigger a refresh whenever a campaign is added, updated, or deleted
         fetchAllEngagements();
     }, [lastUpdated]);
+
+    useEffect(() => {
+        // Update the data when engagements change
+        setData(engagements);
+    }, [engagements]);
+
+    useEffect(() => {
+        if (campaignAnalytics && selectedCampaignId) {
+            const analyticsData = campaignAnalytics[selectedCampaignId];
+            if (analyticsData) {
+                setCampaignAnalyticsData(analyticsData);
+                setIsAnalyticsModalVisible(true); // Open the analytics modal
+            } else {
+                console.log("No analytics data found for campaign ID:", selectedCampaignId);
+                setCampaignAnalyticsData([]);
+            }
+            setIsLoadingAnalytics(false);
+        }
+    }, [campaignAnalytics, selectedCampaignId]);
+    
+
 
     const fetchCampaigns = async (): Promise<void> => {
         setLoading(true);
@@ -49,14 +83,16 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
         }
     };
 
-    useEffect(() => {
-        // Update the data when engagements change
-        setData(engagements);
-    }, [engagements]);
-
+    const handleViewAnalytics = (campaignId: number) => {
+        setSelectedCampaignId(campaignId);
+        setIsLoadingAnalytics(true);
+        fetchCampaignAnalytic(campaignId); // This triggers the loader
+        setIsAnalyticsModalVisible(true); // Open the analytics modal
+    };
+    
     const handleEdit = (campaign: CommunityEngagement): void => {
         setEditingCampaign(campaign);
-        setIsModalVisible(true);
+        setIsModalVisible(true); // Open the edit modal
         if (onEditCampaign) {
             onEditCampaign(campaign);
         }
@@ -116,7 +152,7 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
             ),
         },
     ];
-
+    console.log("Campaign Analytics Data:", campaignAnalyticsData);
     return (
         <>
             <LemonButton type="primary" onClick={handleNewCampaign}>
@@ -132,15 +168,16 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
                 onClose={() => setIsModalVisible(false)}
                 campaign={editingCampaign}
             />
-            {selectedCampaignId && (
-                <CampaignAnalyticsComponent campaignId={selectedCampaignId} />
+            {/* Campaign Analytics Modal */}
+            {selectedCampaignId && isAnalyticsModalVisible && (
+                <CampaignAnalyticsComponent
+                    data={campaignAnalyticsData}
+                />
             )}
-        </>
+
+            </>
     );
-    
 };
 
-    
-
-
 export default CommunityEngagementTable;
+

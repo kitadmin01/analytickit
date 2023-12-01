@@ -123,7 +123,7 @@ class CommunityEngagementViewSet(viewsets.ModelViewSet):
         # Use the reverse relation to get associated CampaignAnalytic objects
         campaign_analytics = engagement.campaignanalytic_set.all()
         serializer = CampaignAnalyticSerializer(campaign_analytics, many=True)
-        return response.Response(serializer.data)
+        return response.Response({'data': serializer.data})
 
     @action(detail=False, methods=['GET'], url_path='check-eligibility')
     def check_eligibility(self, request):

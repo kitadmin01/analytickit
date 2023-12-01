@@ -16,11 +16,13 @@ interface ActiveUsersOverTimeProps {
 }
 
 export const ActiveUsersOverTime: React.FC<ActiveUsersOverTimeProps> = ({ data }) => {
-  if (!data || data.length === 0) {
+  console.log("Received data in ActiveUsersOverTime:", data); // Add this line
+
+  if (!Array.isArray(data) || data.length === 0) {
     return <div>No data available</div>;
   }
 
-  const sortedData = data.sort((a, b) => new Date(a.creation_ts).getTime() - new Date(b.creation_ts).getTime());
+  const sortedData = [...data].sort((a, b) => new Date(a.creation_ts).getTime() - new Date(b.creation_ts).getTime());
 
   const chartData = {
     labels: sortedData.map(d => new Date(d.creation_ts).toLocaleDateString()),

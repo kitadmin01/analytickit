@@ -1,11 +1,13 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import CrosshairPlugin from 'chartjs-plugin-crosshair';
+import './CryptoDashboard.scss'; // Import the SCSS file
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface TimeSeriesDataPoint {
-  timestamp: string; // Assuming timestamp is a string that can be converted to a Date
+  timestamp: string;
   value: number;
 }
 
@@ -13,12 +15,19 @@ interface GenericTimeSeriesGraphProps {
   data: TimeSeriesDataPoint[];
   title: string;
   yAxisLabel: string;
-  lineColor?: string; // Optional color for the line
+  lineColor?: string;
+  useCrosshair?: boolean;
 }
 
-export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({ data, title, yAxisLabel, lineColor = 'rgb(75, 192, 192)' }) => {
+export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({
+  data, title, yAxisLabel, lineColor = 'rgb(75, 192, 192)', useCrosshair = false
+}) => {
   if (!Array.isArray(data) || data.length === 0) {
-    return <div>No data available</div>;
+    return <div className="no-data">No data available</div>;
+  }
+
+  if (useCrosshair) {
+    ChartJS.register(CrosshairPlugin);
   }
 
   const sortedData = [...data].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -45,7 +54,10 @@ export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({ 
       },
       legend: {
         display: false
-      }
+      },
+      crosshair: useCrosshair ? {
+        // Configure the crosshair plugin here
+      } : false
     },
     scales: {
       y: {
@@ -59,7 +71,7 @@ export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({ 
   };
 
   return (
-    <div>
+    <div className="time-series-graph">
       <h2>{title}</h2>
       <Line data={chartData} options={options} />
     </div>

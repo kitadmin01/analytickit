@@ -6,7 +6,7 @@ import { communityEngagementLogic } from './CommunityEngagementService';
 import { CommunityEngagement } from './CommunityEngagementModel';
 import CampaignModal from './CampaignModal';
 import CryptoDashboard from './graph/CryptoDashboard'; // Import the CryptoDashboard component
-
+import GenericDistributionGraph from './graph/GenericDistributionGraph';
 
 
 

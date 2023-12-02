@@ -1,0 +1,58 @@
+// CryptoDashboard.scss
+@import '../../../styles/vars.scss'; // Import global variables
+@import '../../../styles/mixins.scss'; // Import mixins
+
+
+
+
+
+.crypto-dashboard {
+    // Base styles for the dashboard
+    background-color:  #f2f2f2; // Example of using a variable
+    padding: 20px;
+
+    h1 {
+        // Styles for the main title
+        color: #1d4aff;
+        margin-bottom: 20px;
+    }
+    .graph-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); // Creates two columns
+      grid-gap: 20px; // Adjust as needed for spacing between graphs
+
+      .time-series-graph {
+        // Styles for each time series graph
+        margin-bottom: 30px;
+        padding: 15px;
+        background-color:  #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        h2 {
+            // Styles for graph titles
+            color: #2d2d2d;
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            max-width: 90%;
+            max-height: 80%;
+        }
+        canvas:hover {
+            cursor: default !important;
+        }
+    }
+ }
+
+    // Add more specific styles as needed
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+      .graph-container {
+          grid-template-columns: 1fr; // Switches to a single column on smaller screens
+      }
+}
+
+

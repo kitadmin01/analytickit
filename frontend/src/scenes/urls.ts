@@ -92,6 +92,8 @@ export const urls = {
     integrationsRedirect: (kind: string): string => `/integrations/${kind}/redirect`,
     comEng: (): string => '/campaign',
     comEngDetail: (id: string): string => `/campaign/${id}`,
+    cryptoDashboard: (campaignId: string): string => `/crypto-dashboard/${campaignId}`,
+
 
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {

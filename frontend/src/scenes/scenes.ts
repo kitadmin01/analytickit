@@ -4,6 +4,7 @@ import { ErrorNetwork as ErrorNetworkComponent } from '~/layout/ErrorNetwork'
 import { ErrorProjectUnavailable as ErrorProjectUnavailableComponent } from '~/layout/ErrorProjectUnavailable'
 import { urls } from 'scenes/urls'
 import { InsightShortId } from '~/types'
+import { CryptoDashboard } from './graph/CryptoDashboard';
 
 export const emptySceneParams = { params: {}, searchParams: {}, hashParams: {} }
 
@@ -232,7 +233,13 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Community Engagement Detail',
     },
+
+    [Scene.ComDashBoard]: {
+        projectBased: true,
+        name: 'Community Engagement Dashboard',
+    },
 }
+
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
     '/': urls.projectHomepage(),
@@ -321,4 +328,7 @@ export const routes: Record<string, Scene> = {
     [urls.integrationsRedirect(':kind')]: Scene.IntegrationsRedirect,
     [urls.comEng()]: Scene.ComEng,
     [urls.comEngDetail(':id')]: Scene.ComEngDetail,
+    [urls.cryptoDashboard(':campaignId')]: Scene.ComDashBoard,
+    
+    
 }

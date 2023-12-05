@@ -58,4 +58,5 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.IntegrationsRedirect]: () => import('./IntegrationsRedirect/IntegrationsRedirect'),
     [Scene.ComEng]: () => import('./comm_eng/CommunityEngagementContainer'),
     [Scene.ComEngDetail]: () => import('./comm_eng/CommunityEngagementDetail'),
+    [Scene.ComDashBoard]: () => import('./comm_eng/graph/CryptoDashboard'),
 }

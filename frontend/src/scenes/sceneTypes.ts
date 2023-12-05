@@ -62,6 +62,7 @@ export enum Scene {
     //crypto
     ComEng = 'ComEng',
     ComEngDetail = 'ComEngDetail',
+    ComDashBoard = "ComDashBoard",
 }
 
 export type SceneProps = Record<string, any>

@@ -7,8 +7,8 @@ import { CommunityEngagement } from './CommunityEngagementModel';
 import CampaignModal from './CampaignModal';
 import CryptoDashboard from './graph/CryptoDashboard'; // Import the CryptoDashboard component
 import GenericDistributionGraph from './graph/GenericDistributionGraph';
-
-
+import {router} from 'kea-router'
+import {urls} from 'scenes/urls'
 
 interface CommunityEngagementTableProps {
     onEditCampaign?: (campaign: CommunityEngagement) => void;
@@ -94,12 +94,21 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
         setIsModalVisible(false);
     };
     
-    const handleViewAnalytics = (campaignId: number) => {
+    /*const handleViewAnalytics = (campaignId: number) => {
         setSelectedCampaignId(campaignId);
         setIsLoadingAnalytics(true);
         fetchCampaignAnalytic(campaignId); // This triggers the loader
         setIsAnalyticsModalVisible(true); // Open the analytics modal
+    };*/
+
+    const handleViewAnalytics = async (campaignId: number) => {
+        setIsLoadingAnalytics(true);
+        await fetchCampaignAnalytic(campaignId);
+        setIsLoadingAnalytics(false);
+        router.actions.push(urls.cryptoDashboard(campaignId));
     };
+      
+
 
 
     const handleDelete = async (id: number): Promise<void> => {
@@ -174,9 +183,7 @@ const CommunityEngagementTable: React.FC<CommunityEngagementTableProps> = ({ onE
             />
             {/* Crypto Dashboard Modal */}
             {selectedCampaignId && isAnalyticsModalVisible && (
-                    <CryptoDashboard
-                        campaignAnalytics={campaignAnalyticsData}
-                    />
+                <CryptoDashboard campaignId={selectedCampaignId} />
                 )}
 
             </>

@@ -1,25 +1,29 @@
-import React from 'react';
-import { GenericTimeSeriesGraph } from './GenericTimeSeriesGraph';
+import React, { useEffect, useState } from 'react';
+import { useActions, useValues } from 'kea';
+import { communityEngagementLogic } from '../CommunityEngagementService';
+import GenericTimeSeriesGraph from './GenericTimeSeriesGraph';
 import GenericDistributionGraph from './GenericDistributionGraph';
 import GenericNetworkGraph from './GenericNetworkGraph';
-import { CampaignAnalytic } from './CryptoType';
+import GenericHeatmap from './GenericHeatmap';
 import './CryptoDashboard.scss';
-import React, { useEffect, useState } from 'react';
 
+interface DashboardProps {
+  campaignId: number;
+}
 
 //fn aggreages most_active_token_addresses for all the days 
-const aggregateMostActiveTokens = (campaignAnalytics) => {
+const aggregateMostActiveTokens = (campaignData) => {
   const aggregatedData = {};
 
   // Ensure campaignAnalytics is an array and has elements
-  if (!Array.isArray(campaignAnalytics) || campaignAnalytics.length === 0) {
+  if (!Array.isArray(campaignData) || campaignData.length === 0) {
       console.log("No data in campaignAnalytics");
       return aggregatedData;
   }else{
-    console.log("got campaignAnalytics=",campaignAnalytics);
+    console.log("got campaignAnalytics=",campaignData);
   }
 
-  campaignAnalytics.forEach(campaign => {
+  campaignData.forEach(campaign => {
       // Check if most_active_token_addresses exists and is an object
       if (campaign.most_active_token_addresses && typeof campaign.most_active_token_addresses === 'object') {
           Object.entries(campaign.most_active_token_addresses).forEach(([address, activity]) => {
@@ -34,8 +38,8 @@ const aggregateMostActiveTokens = (campaignAnalytics) => {
   return aggregatedData;
 };
 
-const aggregateTokenFlow = (campaignAnalytics) => {
-  const aggregated = campaignAnalytics.reduce((acc, analytic) => {
+const aggregateTokenFlow = (campaignData) => {
+  const aggregated = campaignData.reduce((acc, analytic) => {
       if (Array.isArray(analytic.token_flow)) {
           return acc.concat(analytic.token_flow);
       }
@@ -46,49 +50,61 @@ const aggregateTokenFlow = (campaignAnalytics) => {
   console.log("Aggregated Token Flow:", aggregated);
   return aggregated;
 };
-interface DashboardProps {
-  campaignAnalytics: CampaignAnalytic[];
-}
-
-const CryptoDashboard: React.FC<DashboardProps> = ({ campaignAnalytics }) => {
-  const [aggregatedMostActiveTokens, setAggregatedMostActiveTokens] = useState({});
+const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
+  const { campaignAnalytics } = useValues(communityEngagementLogic);
+  const { fetchCampaignAnalytic } = useActions(communityEngagementLogic);
+  const [isLoading, setIsLoading] = useState(true);
   const [aggregatedTokenFlow, setAggregatedTokenFlow] = useState([]);
+  const [aggregatedMostActiveTokens, setAggregatedMostActiveTokens] = useState({});
 
-  // Aggregate data when campaignAnalytics is updated
+
+
   useEffect(() => {
-    if (campaignAnalytics && campaignAnalytics.length > 0) {
-      setAggregatedMostActiveTokens(aggregateMostActiveTokens(campaignAnalytics));
-      setAggregatedTokenFlow(aggregateTokenFlow(campaignAnalytics));
+    const fetchData = async () => {
+      if (!campaignAnalytics[campaignId]) {
+        await fetchCampaignAnalytic(campaignId);
+      }
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [campaignId, campaignAnalytics, fetchCampaignAnalytic]);
+
+  useEffect(() => {
+    if (campaignAnalytics[campaignId]) {
+      const campaignData = campaignAnalytics[campaignId];
+      setAggregatedTokenFlow(aggregateTokenFlow(campaignData));
+      setAggregatedMostActiveTokens(aggregateMostActiveTokens(campaignData));
     }
-  }, [campaignAnalytics]); // Dependency array ensures this runs when campaignAnalytics changes
-  
+  }, [campaignAnalytics, campaignId]); // This effect runs when campaignAnalytics or campaignId changes
 
-  //for time series graph
-  const activeUsersData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.active_users }));
-  const totalContractCallsData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.total_contract_calls }));
-  const totalTokenTransferData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.tot_tokens_transferred }));
-  const aveGasUsedData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.ave_gas_used }));
-  const totalTxnData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.tot_txns }));
-  const totalTokTransferData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.tot_tokens_transferred }));
-  const totalTokTransferValueData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.token_transfer_value }));
-  const aveTokTransferValueData = campaignAnalytics.map(item => ({ timestamp: item.creation_ts, value: item.ave_token_transfer_value }));
+
+  if (isLoading || !campaignAnalytics[campaignId]) {
+    return <div>Loading...</div>;
+  }
+
+  const campaignData = campaignAnalytics[campaignId];
+
+  // Aggregate and prepare data for graphs
+  const activeUsersData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.active_users }));
+  const totalContractCallsData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.total_contract_calls }));
+  const totalTokenTransferData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.tot_tokens_transferred }));
+  const aveGasUsedData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.ave_gas_used }));
+  const totalTxnData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.tot_txns }));
+  const totalTokTransferData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.tot_tokens_transferred }));
+  const totalTokTransferValueData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.token_transfer_value }));
+  const aveTokTransferValueData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.ave_token_transfer_value }));
   //for distribution graph
-  const txnValDist = campaignAnalytics.length > 0 ? campaignAnalytics[0].transaction_value_distribution : {};
-  const tokenTransferValDist = campaignAnalytics.length > 0 ? campaignAnalytics[0].token_transfer_value_distribution : {};
-
-  
-  // Aggregate most active token addresses for network graph
-  const [aggregatedData, setAggregatedData] = useState({});
-
-  useEffect(() => {
-    const aggregated = aggregateMostActiveTokens(campaignAnalytics);
-    setAggregatedData(aggregated);
-    console.log("Aggregated Data: ", aggregated);
-  }, [campaignAnalytics]); // Re-run this effect when campaignAnalytics changes
+  const txnValDist = campaignData.length > 0 ? campaignData[0].transaction_value_distribution : {};
+  const tokenTransferValDist = campaignData.length > 0 ? campaignData[0].token_transfer_value_distribution : {};
 
 
+  // Prepare data for heatmap
+  const xLabels = campaignData.map(item => item.creation_ts.split('T')[0]); // Dates as x-labels
+  const yLabels = ['Active Users', 'Total Contract Calls']; // Two y-labels
+  const heatmapData = campaignData.map(item => [item.active_users, item.total_contract_calls]);
 
-  
+
 
   return (
     <div className="crypto-dashboard">
@@ -153,7 +169,9 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignAnalytics }) => {
           data={tokenTransferValDist} 
           graphType="bar" // or "pie" based on your preference
         />
-        {/* Network Graph for Most Active Token Addresses */}
+        {/* Network Graph for Most Active Token Addresses 
+        The aggregateMostActiveTokens function provides data to visually represent the nodes in the graph, possibly indicating which addresses are most active.
+        The aggregateTokenFlow function provides data for the edges, showing how tokens move between these addresses.*/}
         <GenericNetworkGraph 
           tokenFlow={aggregatedTokenFlow}
           mostActiveTokenAddresses={aggregatedMostActiveTokens}
@@ -161,6 +179,10 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignAnalytics }) => {
           width={400} // Adjust as needed
           height={400} // Adjust as needed
         />
+        {/*heatmp */}
+        <div>
+          <GenericHeatmap data={heatmapData} xLabels={xLabels} yLabels={yLabels} />
+        </div>
       </div>
       {/* Add more graphs wrapped in div.graph-container */}
     </div>

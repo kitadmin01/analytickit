@@ -5,14 +5,15 @@ import 'chart.js/auto';
 interface GenericDistributionGraphProps {
     data: { [key: string]: number }; // The structure of transaction_value_distribution
     graphType: 'pie' | 'bar'; // Type of graph to display
+    title: string; // Title of the graph
 }
 
-const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ data, graphType }) => {
+const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ data, graphType, title }) => {
     const chartData = {
         labels: Object.keys(data),
         datasets: [
             {
-                label: 'Transaction Value Distribution',
+                label: title, // Use the title prop here
                 data: Object.values(data),
                 backgroundColor: [
                     // Define colors for each slice or bar here
@@ -41,7 +42,7 @@ const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ dat
             },
             title: {
                 display: true,
-                text: 'Transaction Value Distribution',
+                text: title, // Use the title prop here
             },
         },
     };

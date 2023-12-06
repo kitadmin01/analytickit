@@ -164,10 +164,12 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
         <GenericDistributionGraph 
           data={txnValDist} 
           graphType="bar" // or "pie" based on your preference
+          title="Transaction Value Distribution"
         />
         <GenericDistributionGraph 
           data={tokenTransferValDist} 
           graphType="bar" // or "pie" based on your preference
+          title="Token Value Distribution"
         />
         {/* Network Graph for Most Active Token Addresses 
         The aggregateMostActiveTokens function provides data to visually represent the nodes in the graph, possibly indicating which addresses are most active.
@@ -181,7 +183,7 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
         />
         {/*heatmp */}
         <div>
-          <GenericHeatmap data={heatmapData} xLabels={xLabels} yLabels={yLabels} />
+          <GenericHeatmap data={heatmapData} xLabels={xLabels} yLabels={yLabels} title="Engagement Heatmap: Users and Contracts Daily" />
         </div>
       </div>
       {/* Add more graphs wrapped in div.graph-container */}

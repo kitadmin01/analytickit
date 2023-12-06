@@ -72,7 +72,7 @@ export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({
 
   return (
     <div className="time-series-graph">
-      <h2>{title}</h2>
+      <h4>{title}</h4>
       <Line data={chartData} options={options} />
     </div>
   );

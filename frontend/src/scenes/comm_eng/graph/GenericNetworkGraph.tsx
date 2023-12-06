@@ -29,9 +29,10 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, width
 
             // Create D3 force simulation
             const simulation = d3.forceSimulation(nodeData)
-                .force("link", d3.forceLink(links).id(d => d.id))
-                .force("charge", d3.forceManyBody())
-                .force("center", d3.forceCenter(100, 100));
+            .force("link", d3.forceLink(links).id(d => d.id).distance(100)) // Increase link distance
+            .force("charge", d3.forceManyBody().strength(-50)) // Adjust charge for more spacing
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
 
             // Add lines for every link in the dataset
             const link = svg.append("g")
@@ -53,12 +54,12 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, width
 
             // Add circles for every node in the dataset
             const node = svg.append("g")
-                .attr("class", "nodes")
-                .selectAll("circle")
-                .data(nodeData)
-                .enter().append("circle")
-                .attr("r", 5) // Radius of node
-                .style("fill", d => d.activity > 0 ? "red" : "blue");
+            .attr("class", "nodes")
+            .selectAll("circle")
+            .data(nodeData)
+            .enter().append("circle")
+            .attr("r", d => 5 + (d.activity / 100000)) // Example scaling, adjust as needed
+            .style("fill", d => d.activity > 0 ? "red" : "blue");
 
             // Add labels for each node
             const nodeText = svg.append("g")
@@ -72,13 +73,40 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, width
                 .attr("dx", 12)
                 .attr("dy", ".35em");
 
+            // Define drag handler functions
+            const dragstarted = (event, d) => {
+                  if (!event.active) simulation.alphaTarget(0.3).restart();
+                  d.fx = d.x;
+                  d.fy = d.y;
+            };
+
+            const dragged = (event, d) => {
+                  d.fx = event.x;
+                  d.fy = event.y;
+            };
+
+            const dragended = (event, d) => {
+                  if (!event.active) simulation.alphaTarget(0);
+                  d.fx = null;
+                  d.fy = null;
+            };
+
             // Add graph title
             svg.append("text")
                 .attr("x", width / 3)
                 .attr("y", width/8)
                 .attr("text-anchor", "middle")
-                .style("font-size", "10px")
+                .style("font-size", "12px")
                 .text(title);
+
+            // Implement zoom and pan functionality
+            const zoomHandler = d3.zoom()
+                  .on("zoom", (event) => {
+                  svg.attr("transform", event.transform);
+            });
+
+            svg.call(zoomHandler)
+                  .call(zoomHandler.transform, d3.zoomIdentity);
 
             // Update positions each tick
             simulation.on("tick", () => {
@@ -91,6 +119,12 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, width
                 node
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y);
+
+                  // Apply drag handlers to nodes
+                  node.call(d3.drag()
+                  .on("start", dragstarted)
+                  .on("drag", dragged)
+                  .on("end", dragended));
 
                 nodeText
                     .attr("x", d => d.x)

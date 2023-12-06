@@ -16,10 +16,19 @@
         color: #1d4aff;
         margin-bottom: 20px;
     }
+
     .graph-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr); // Creates two columns
-      grid-gap: 20px; // Adjust as needed for spacing between graphs
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); // Keeps two graphs per row
+        grid-gap: 20px; // Spacing between graphs
+
+        > div { // Targeting each graph container directly
+            border: 1px solid #ccc; // Adds a border to each graph container
+            padding: 10px; // Adds some padding inside the container
+            background-color: #f9f9f9; // A light background color for the container
+            border-radius: 5px; // Optional: rounded corners for the container
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Optional: adds a subtle shadow
+        }
 
       .time-series-graph {
         // Styles for each time series graph
@@ -44,6 +53,14 @@
         }
     }
  }
+
+ .graph-description {
+    font-size: 14px; // Adjust as needed
+    color: #666; // Adjust as needed
+    margin-top: 5px;
+    margin-bottom: 15px;
+    white-space: pre-line; // Ensures that newline characters are respected
+}
 
  .crypto-dashboard .network-container {
     display: flex;

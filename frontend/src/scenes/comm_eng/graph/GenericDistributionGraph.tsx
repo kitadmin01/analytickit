@@ -6,9 +6,10 @@ interface GenericDistributionGraphProps {
     data: { [key: string]: number }; // The structure of transaction_value_distribution
     graphType: 'pie' | 'bar'; // Type of graph to display
     title: string; // Title of the graph
+    description: string;
 }
 
-const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ data, graphType, title }) => {
+const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ data, graphType, title, description }) => {
     const chartData = {
         labels: Object.keys(data),
         datasets: [
@@ -49,6 +50,8 @@ const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ dat
 
     return (
         <div>
+            <h4>{title}</h4>
+            <p className="graph-description">{description}</p> {/* Add this line */}
             {graphType === 'pie' ? (
                 <Pie data={chartData} options={options} />
             ) : (

@@ -14,13 +14,14 @@ interface TimeSeriesDataPoint {
 interface GenericTimeSeriesGraphProps {
   data: TimeSeriesDataPoint[];
   title: string;
+  description: string;
   yAxisLabel: string;
   lineColor?: string;
   useCrosshair?: boolean;
 }
 
 export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({
-  data, title, yAxisLabel, lineColor = 'rgb(75, 192, 192)', useCrosshair = false
+  data, title, description, yAxisLabel, lineColor = 'rgb(75, 192, 192)', useCrosshair = false
 }) => {
   if (!Array.isArray(data) || data.length === 0) {
     return <div className="no-data">No data available</div>;
@@ -73,6 +74,7 @@ export const GenericTimeSeriesGraph: React.FC<GenericTimeSeriesGraphProps> = ({
   return (
     <div className="time-series-graph">
       <h4>{title}</h4>
+      <h4>{description}</h4>
       <Line data={chartData} options={options} />
     </div>
   );

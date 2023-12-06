@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import './CryptoDashboard.scss'; // Import the SCSS file
 
 
-const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, width, height }) => {
+const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, description, width, height }) => {
       const d3Container = useRef(null);
 
     useEffect(() => {
@@ -98,6 +98,15 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, width
                 .attr("text-anchor", "middle")
                 .style("font-size", "12px")
                 .text(title);
+
+            // Add graph description
+            svg.append("text")
+            .attr("x", width / 3)
+            .attr("y", (width / 8) + 20) // Adjust the Y position as needed
+            .attr("text-anchor", "middle")
+            .style("font-size", "10px")
+            .style("fill", "#666") // Style for the description
+            .text(description);
 
             // Implement zoom and pan functionality
             const zoomHandler = d3.zoom()

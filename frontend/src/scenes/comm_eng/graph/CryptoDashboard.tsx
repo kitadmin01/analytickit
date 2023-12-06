@@ -114,62 +114,74 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
           data={activeUsersData}
           title="Active Users Over Time"
           yAxisLabel="Active Users"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalContractCallsData}
           title="Total Contract Calls Over Time"
           yAxisLabel="Contract Calls"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalTokenTransferData}
           title="Total Token Transfers Over Time"
           yAxisLabel="Token Transfers"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={aveGasUsedData}
           title="Average Gas Used Over Time"
           yAxisLabel="Ave Gas Used"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalTxnData}
           title="Total Transactions Over Time"
           yAxisLabel="Total Transactions"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalTxnData}
           title="Total Transactions Over Time"
           yAxisLabel="Total Transactions"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalTokTransferData}
           title="Total Token Transfers Over Time"
           yAxisLabel="Total Token Transfers"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalTokTransferData}
           title="Total Token Transfers Over Time"
           yAxisLabel="Total Token Transfers"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={totalTokTransferValueData}
           title="Total Token Transfer Value Over Time"
           yAxisLabel="Total Token Transfer Value"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 
           data={aveTokTransferValueData}
           title="Average Token Transfer Value Over Time"
           yAxisLabel="Ave Token Transfer Value"
+          description="This graph shows... \nSecond line of description."
         />
           {/* Distribution Graph */}
         <GenericDistributionGraph 
           data={txnValDist} 
           graphType="bar" // or "pie" based on your preference
           title="Transaction Value Distribution"
+          description="This graph shows... \nSecond line of description."
         />
         <GenericDistributionGraph 
           data={tokenTransferValDist} 
           graphType="bar" // or "pie" based on your preference
           title="Token Value Distribution"
+          description="This graph shows... \nSecond line of description."
         />
         {/* Network Graph for Most Active Token Addresses 
         The aggregateMostActiveTokens function provides data to visually represent the nodes in the graph, possibly indicating which addresses are most active.
@@ -178,12 +190,18 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
           tokenFlow={aggregatedTokenFlow}
           mostActiveTokenAddresses={aggregatedMostActiveTokens}
           title="Token flow between addresses" 
+          description="This graph visualizes... \nSecond line of description."
           width={400} // Adjust as needed
           height={400} // Adjust as needed
         />
         {/*heatmp */}
         <div>
-          <GenericHeatmap data={heatmapData} xLabels={xLabels} yLabels={yLabels} title="Engagement Heatmap: Users and Contracts Daily" />
+          <GenericHeatmap data={heatmapData} 
+              xLabels={xLabels} 
+              yLabels={yLabels} 
+              title="Engagement Heatmap: Users and Contracts Daily" 
+              description="This heatmap shows... \nSecond line of description."
+          />
         </div>
       </div>
       {/* Add more graphs wrapped in div.graph-container */}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const GenericHeatmap = ({ data, xLabels, yLabels, title }) => {
+const GenericHeatmap = ({ data, xLabels, yLabels, title, description }) => {
    const d3Container = useRef(null);
 
   // Function to transform the data into the required format
@@ -77,6 +77,15 @@ const GenericHeatmap = ({ data, xLabels, yLabels, title }) => {
       .style("font-size", "12px")
       .text(title);
 
+      // Append description under the title
+      svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", 20 - margin.top / 2) // Adjust the y-coordinate as needed
+      .attr("text-anchor", "middle")
+      .style("font-size", "12px")
+      .style("fill", "#666") // Optional: style for the description text
+      .text(description);
+
       svg.selectAll()
         .data(transformedData)
         .enter()
@@ -87,7 +96,7 @@ const GenericHeatmap = ({ data, xLabels, yLabels, title }) => {
         .attr("height", y.bandwidth())
         .style("fill", function(d) { return myColor(Math.log(d.normalizedValue + 1)); }); // Adding 1 to avoid log(0)
     }
-  }, [data, xLabels, yLabels, title]);
+  }, [data, xLabels, yLabels, title, description]);
 
   return (
     <div ref={d3Container} />

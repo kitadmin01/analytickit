@@ -102,7 +102,6 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
   const totalTokenTransferData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.tot_tokens_transferred }));
   const aveGasUsedData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.ave_gas_used }));
   const totalTxnData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.tot_txns }));
-  const totalTokTransferData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.tot_tokens_transferred }));
   const totalTokTransferValueData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.token_transfer_value }));
   const aveTokTransferValueData = campaignData.map(item => ({ timestamp: item.creation_ts, value: item.ave_token_transfer_value }));
   //for distribution graph
@@ -127,68 +126,65 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
           data={activeUsersData}
           title="Active Users Over Time"
           yAxisLabel="Active Users"
-          description="This graph shows... \nSecond line of description."
+          description="This graph displays the number of active users interacting with the contract or token, plotted daily.
+          It helps in understanding user engagement trends and peak activity periods."
         />
         <GenericTimeSeriesGraph 
           data={totalContractCallsData}
           title="Total Contract Calls Over Time"
           yAxisLabel="Contract Calls"
-          description="This graph shows... \nSecond line of description."
+          description="Shows the daily count of contract calls, indicating how frequently the contract is being interacted with.
+          Useful for gauging contract usage and identifying periods of high or low activity."
         />
         <GenericTimeSeriesGraph 
           data={totalTokenTransferData}
           title="Total Token Transfers Over Time"
           yAxisLabel="Token Transfers"
-          description="This graph shows... \nSecond line of description."
+          description="Tracks the total number of token transfers each day, reflecting the token's circulation and usage.
+          Helps in analyzing the token's popularity and transaction trends over time."
         />
         <GenericTimeSeriesGraph 
           data={aveGasUsedData}
           title="Average Gas Used Over Time"
           yAxisLabel="Ave Gas Used"
-          description="This graph shows... \nSecond line of description."
+          description="Illustrates the daily average gas used for transactions, indicating the cost of contract interactions.
+          Useful for understanding the efficiency and cost-effectiveness of contract operations."
         />
         <GenericTimeSeriesGraph 
           data={totalTxnData}
           title="Total Transactions Over Time"
           yAxisLabel="Total Transactions"
-          description="This graph shows... \nSecond line of description."
-        />
-        <GenericTimeSeriesGraph 
-          data={totalTokTransferData}
-          title="Total Token Transfers Over Time"
-          yAxisLabel="Total Token Transfers"
-          description="This graph shows... \nSecond line of description."
-        />
-        <GenericTimeSeriesGraph 
-          data={totalTokTransferData}
-          title="Total Token Transfers Over Time"
-          yAxisLabel="Total Token Transfers"
-          description="This graph shows... \nSecond line of description."
+          description="Displays the total number of transactions per day, encompassing all types of contract interactions.
+          Aids in assessing overall network activity and the contract's transaction volume."
         />
         <GenericTimeSeriesGraph 
           data={totalTokTransferValueData}
           title="Total Token Transfer Value Over Time"
           yAxisLabel="Total Token Transfer Value"
-          description="This graph shows... \nSecond line of description."
+          description="Shows the total value of tokens transferred each day, indicating the financial volume of token movements.
+          Essential for financial analysis and understanding the economic impact of token transfers."
         />
         <GenericTimeSeriesGraph 
           data={aveTokTransferValueData}
           title="Average Token Transfer Value Over Time"
           yAxisLabel="Ave Token Transfer Value"
-          description="This graph shows... \nSecond line of description."
+          description="Depicts the average value of token transfers per day, offering insights into the typical transaction size.
+          Helps in understanding the scale of transactions and user behavior in terms of token value."
         />
           {/* Distribution Graph */}
         <GenericDistributionGraph 
           data={txnValDist} 
           graphType="bar" // or "pie" based on your preference
           title="Transaction Value Distribution"
-          description="This graph shows... \nSecond line of description."
+          description="This graph breaks down transactions into different value ranges, such as 1-10 ETH, showing the distribution of transaction sizes.
+          Useful for understanding the range and commonality of transaction values within the network."
         />
         <GenericDistributionGraph 
           data={tokenTransferValDist} 
           graphType="bar" // or "pie" based on your preference
           title="Token Value Distribution"
-          description="This graph shows... \nSecond line of description."
+          description="Illustrates how token values are distributed across different ranges, providing insights into the diversity of token transactions.
+          Helps in analyzing the spread of token values and identifying common transaction brackets."
         />
         {/* Network Graph for Most Active Token Addresses 
         The aggregateMostActiveTokens function provides data to visually represent the nodes in the graph, possibly indicating which addresses are most active.
@@ -197,7 +193,9 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
           tokenFlow={aggregatedTokenFlow}
           mostActiveTokenAddresses={aggregatedMostActiveTokens}
           title="Token flow between addresses" 
-          description="This graph visualizes... \nSecond line of description."
+          description="A network graph showing addresses 
+          as nodes and the value of tokens 
+          transferred as edges between nodes."
           width={400} // Adjust as needed
           height={400} // Adjust as needed
         />
@@ -207,7 +205,8 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
               xLabels={xLabels} 
               yLabels={yLabels} 
               title="Engagement Heatmap: Users and Contracts Daily" 
-              description="This heatmap shows... \nSecond line of description."
+              description="This heatmap displays total contract calls and active user counts against dates, showing activity patterns.
+              Helps in identifying trends, peak activity days, and correlations between user engagement and contract calls."
           />
         </div>
       </div>

@@ -48,9 +48,10 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, descr
                 .selectAll("text")
                 .data(links)
                 .enter().append("text")
-                .text(d => d.value)
+                .text(d => Math.round(d.value)) // Round the value to the nearest whole number
                 .style("fill", "#555")
                 .style("font-size", 10);
+
 
             // Add circles for every node in the dataset
             const node = svg.append("g")
@@ -90,6 +91,7 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, descr
                   d.fx = null;
                   d.fy = null;
             };
+            
 
             // Add graph title
             svg.append("text")
@@ -100,13 +102,20 @@ const GenericNetworkGraph = ({ tokenFlow, mostActiveTokenAddresses, title, descr
                 .text(title);
 
             // Add graph description
-            svg.append("text")
-            .attr("x", width / 3)
-            .attr("y", (width / 8) + 20) // Adjust the Y position as needed
-            .attr("text-anchor", "middle")
-            .style("font-size", "10px")
-            .style("fill", "#666") // Style for the description
-            .text(description);
+            // Split the description into lines
+            const descriptionLines = description.split('\n');
+
+            // Add graph description
+            descriptionLines.forEach((line, index) => {
+                svg.append("text")
+                    .attr("x", width / 3)
+                    .attr("y", (width / 8) + 20 + (index * 20)) // Increase the line spacing
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "12px")
+                    .style("fill", "#666")
+                    .text(line);
+            });
+            
 
             // Implement zoom and pan functionality
             const zoomHandler = d3.zoom()

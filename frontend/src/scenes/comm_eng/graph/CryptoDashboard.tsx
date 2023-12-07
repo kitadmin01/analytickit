@@ -56,6 +56,7 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [aggregatedTokenFlow, setAggregatedTokenFlow] = useState([]);
   const [aggregatedMostActiveTokens, setAggregatedMostActiveTokens] = useState({});
+  const [dashboardTitle, setDashboardTitle] = useState('');
 
 
 
@@ -73,10 +74,20 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
   useEffect(() => {
     if (campaignAnalytics[campaignId]) {
       const campaignData = campaignAnalytics[campaignId];
+  
+      // Check if campaignData is not empty and has the required nested structure
+      if (campaignData.length > 0 && campaignData[0].community_engagement) {
+        const campaignName = campaignData[0].community_engagement.campaign_name;
+        setDashboardTitle(`Community Engagement Campaign: ${campaignName}`);
+      } else {
+        setDashboardTitle('Community Engagement Campaign: Unknown');
+      }
+  
       setAggregatedTokenFlow(aggregateTokenFlow(campaignData));
       setAggregatedMostActiveTokens(aggregateMostActiveTokens(campaignData));
     }
-  }, [campaignAnalytics, campaignId]); // This effect runs when campaignAnalytics or campaignId changes
+  }, [campaignAnalytics, campaignId]);
+  
 
 
   if (isLoading || !campaignAnalytics[campaignId]) {
@@ -108,6 +119,8 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
 
   return (
     <div className="crypto-dashboard">
+      <h1>{dashboardTitle}</h1> {/* Display the dynamic dashboard title */}
+
 
       <div className="graph-container">
         <GenericTimeSeriesGraph 
@@ -132,12 +145,6 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
           data={aveGasUsedData}
           title="Average Gas Used Over Time"
           yAxisLabel="Ave Gas Used"
-          description="This graph shows... \nSecond line of description."
-        />
-        <GenericTimeSeriesGraph 
-          data={totalTxnData}
-          title="Total Transactions Over Time"
-          yAxisLabel="Total Transactions"
           description="This graph shows... \nSecond line of description."
         />
         <GenericTimeSeriesGraph 

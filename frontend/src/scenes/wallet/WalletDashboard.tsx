@@ -14,6 +14,8 @@ interface DashboardProps {
   teamId: number;
 }
 
+
+
 const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
   const { walletAnalytics } = useValues(communityEngagementLogic);
   const { fetchWalletAnalytic } = useActions(communityEngagementLogic);
@@ -45,6 +47,7 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
     crossContractMostActiveTokenAddresses: {}
   });
   const [whaleTrackingData, setWhaleTrackingData] = useState({});
+
 
 
 
@@ -203,22 +206,40 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
 
   }, [walletAnalytics, teamId]);
 
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
+  // Utility function to shorten Ethereum addresses
+  const shortenAddress = (address) => `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+
+  // Function to prepare data with shortened addresses
+  const prepareDataWithShortenedAddresses = (data) => {
+    const newData = {};
+    Object.keys(data).forEach(key => {
+      newData[shortenAddress(key)] = data[key];
+    });
+    return newData;
+  };
+  
+  // Inside WalletDashboard component, before rendering the graphs
+  const shortenedTransactionVolumeData = prepareDataWithShortenedAddresses(transactionVolumeData);
+  const shortenedGasUsageData = prepareDataWithShortenedAddresses(gasUsageData);
+  // ... similarly for other datasets
+
   return (
     <div className="crypto-dashboard">
       <h1>Wallet Analytics Dashboard</h1>
-
-      {Object.keys(transactionVolumeData).length > 0 && (
-        <GenericDistributionGraph 
-          data={transactionVolumeData}
-          graphType="bar"
-          title="Transaction Volume Distribution"
-          description="Distribution of transaction volumes."
-        />
-      )}
+      <div className="graph-container"> 
+        {Object.keys(transactionVolumeData).length > 0 && (
+          <GenericDistributionGraph 
+            data={transactionVolumeData}
+            graphType="bar"
+            title="Transaction Volume Distribution"
+            description="Distribution of transaction volumes."
+          />
+        )}
 
       {Object.keys(gasUsageData).length > 0 && (
         <GenericDistributionGraph 
@@ -228,12 +249,14 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
           description="Distribution of gas usage across addresses."
         />
       )}
+
       {/* Render the Dual Axis Bar Graph for Gas Usage and Costs */}
       <DualAxisBarGraph 
       data={gasUsageAndCostData}
       title="Gas Usage and Costs"
       description="Comparison of gas usage and costs across addresses."
-    />
+      />
+
       {/* Render the Heatmap */}
       <GenericHeatmap 
       data={heatmapData}
@@ -243,6 +266,7 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
       description="This heatmap displays total contract calls and active user counts against dates, showing activity patterns.
       Helps in identifying trends, peak activity days, and correlations between user engagement and contract calls."
     />
+
     {/* Render the Network Graph */}
     <GenericNetworkGraph 
     tokenFlow={networkGraphData.tokenFlow}
@@ -289,6 +313,7 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
         label1="Transaction Volume"
         label2="Total Value"
       />
+      </div>
     </div>
   );
 };

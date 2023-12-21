@@ -10,12 +10,19 @@ PYTHONPATH="./"
 export PYTHONPATH=$PYTHONPATH:.
 #export DEBUG=1
 
-#sleep 60
-echo "Starting python script"
+echo "Starting python script -- Community Engagement job"
 
-# Path to your python script
-SCRIPT_PATH=./analytickit/crypto/txn_anz.py
+# Job 1 - Path to your python script to run Community Engagement job
+COMM_ENG_SCRIPT_PATH=./analytickit/crypto/txn_anz.py
 
-# Run the python script
-$PYTHON_PATH $SCRIPT_PATH
+# Job 2 - Path to your python script to run Wallet Address job
+WALL_ADD_SCRIPT_PATH=./analytickit/crypto/wallet_address_job.py
+
+# Run the python script for Community Engagement job
+$PYTHON_PATH $COMM_ENG_SCRIPT_PATH
+
+echo "Starting python script -- Wallet Address job"
+
+# Run the python script for Wallet Address job
+$PYTHON_PATH $WALL_ADD_SCRIPT_PATH
  

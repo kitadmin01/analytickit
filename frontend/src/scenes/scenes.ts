@@ -4,7 +4,7 @@ import { ErrorNetwork as ErrorNetworkComponent } from '~/layout/ErrorNetwork'
 import { ErrorProjectUnavailable as ErrorProjectUnavailableComponent } from '~/layout/ErrorProjectUnavailable'
 import { urls } from 'scenes/urls'
 import { InsightShortId } from '~/types'
-import { CryptoDashboard } from './graph/CryptoDashboard';
+
 
 export const emptySceneParams = { params: {}, searchParams: {}, hashParams: {} }
 
@@ -329,6 +329,6 @@ export const routes: Record<string, Scene> = {
     [urls.comEng()]: Scene.ComEng,
     [urls.comEngDetail(':id')]: Scene.ComEngDetail,
     [urls.cryptoDashboard(':campaignId')]: Scene.ComDashBoard,
-    
+    [urls.walletAddress(':teamId')]: Scene.WalletAddress,
     
 }

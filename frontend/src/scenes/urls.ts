@@ -93,6 +93,7 @@ export const urls = {
     comEng: (): string => '/campaign',
     comEngDetail: (id: string): string => `/campaign/${id}`,
     cryptoDashboard: (campaignId: string): string => `/crypto-dashboard/${campaignId}`,
+    walletAddress: (teamId: string): string => `/wallet-dashboard/${teamId}`,
 
 
     shared: (token: string, exportOptions?: ExportOptions): string =>

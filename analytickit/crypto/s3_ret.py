@@ -162,8 +162,84 @@ class S3Retriever:
                         logger.error(f"Unexpected error: {e}")
     
 
+    '''
+    Following functions are implemented for WalletAddressJob
+    '''
+    def get_data_for_wallet_address(self, wallet_address: str, target_date: datetime) -> Dict[str, List[Dict]]:
+            """
+            Retrieves data that matches the given wallet address for token transfer and transaction data.
+            """
+            # Get S3 keys for the date
+            s3_keys = self.fetch_keys_for_date(target_date)
 
+            # Filter data for the specific wallet address
+            return self.get_blockchain_data_for_wallet_address(wallet_address, s3_keys)
 
+    def get_blockchain_data_for_wallet_address(self, wallet_address: str, s3_keys: List[str]) -> Dict[str, List[Dict]]:
+        bucket = 'aws-public-blockchain'
+        results = {}
+
+        BATCH_SIZE = 10  # Adjust batch size according to your memory capability.
+        s3_keys_batches = [s3_keys[i:i + BATCH_SIZE] for i in range(0, len(s3_keys), BATCH_SIZE)]
+        
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            future_to_batch = {executor.submit(self.get_data_for_wallet_address_batch, batch, bucket, wallet_address): batch for batch in s3_keys_batches}
+            
+            for future in as_completed(future_to_batch):
+                orig_batch = future_to_batch[future]
+                try:
+                    data_generators = future.result()
+                    for data_generator in data_generators:
+                        key, value = data_generator
+                        logger.debug(f"Key: {key}, Value: {value}")
+                        
+                        if not isinstance(value, dict):
+                            logger.warning(f'S3 SQL didn’t find record in key {key}: {orig_batch}')
+                            continue
+                        results.setdefault(key, []).append(value)
+                except Exception as exc:
+                    logger.error(f"Exception with batch {orig_batch}: {exc}", exc_info=True)
+
+        gc.collect()
+        return results
+
+    def get_data_for_wallet_address_batch(self, key_batch, bucket, wallet_address):
+        for key in key_batch:
+            yield from self.get_data_for_wallet_address_key(key, bucket, wallet_address)
+
+    def get_data_for_wallet_address_key(self, key, bucket, wallet_address):
+        s3 = boto3.client('s3')
+        categories = ['token_transfers', 'transactions']
+        category_key = next((category for category in categories if category in key), None)
+
+        if not category_key:
+            return
+        
+        logger.info("Processing file: %s", key)
+
+        query = f"SELECT * FROM S3Object s WHERE s.from_address = '{wallet_address}' OR s.to_address = '{wallet_address}'"
+        content_response = s3.select_object_content(
+            Bucket=bucket,
+            Key=key,
+            Expression=query,
+            ExpressionType='SQL',
+            InputSerialization={'Parquet': {}},
+            OutputSerialization={'JSON': {}}
+        )
+
+        buffer = ""
+        for event in content_response['Payload']:
+            if 'Records' in event:
+                buffer += event['Records']['Payload'].decode('utf-8')
+                while '\n' in buffer:
+                    record, buffer = buffer.split('\n', 1)
+                    try:
+                        record_dict = json.loads(record, parse_float=str)
+                        yield (key, record_dict)
+                    except json.JSONDecodeError as je:
+                        logger.error(f"Error decoding JSON: {je}, Raw record: {record}")
+                    except Exception as e:
+                        logger.error(f"Unexpected error: {e}")
 
 
 

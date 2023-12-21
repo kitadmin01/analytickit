@@ -22,6 +22,7 @@ import {
     IconTools,
     UnverifiedEvent,
     IconCrypto,
+    IconCryptoWallet,
 } from 'lib/components/icons'
 import { LemonDivider } from 'lib/components/LemonDivider'
 import { Lettermark } from 'lib/components/Lettermark/Lettermark'
@@ -62,6 +63,10 @@ function Pages(): JSX.Element {
 
     const [arePinnedDashboardsShown, setArePinnedDashboardsShown] = useState(false)
     const [isToolbarLaunchShown, setIsToolbarLaunchShown] = useState(false)
+
+
+    const teamId = currentTeam?.id; // Extract teamId from currentTeam
+
 
     return (
         <ul>
@@ -222,6 +227,14 @@ function Pages(): JSX.Element {
                 to={urls.comEng()} // Replace with the correct URL for your Scene
                 title="Community Engagement" // Replace with the desired title
             />
+            {teamId !== undefined && (
+                <PageButton
+                    icon={<IconCryptoWallet />}
+                    identifier={Scene.WalletAddress} 
+                    to={urls.walletAddress(String(teamId))} // Convert teamId to string and ensure it's not undefined
+                    title="Wallet Analytic" 
+                />
+            )}
         </ul>
     )
 }

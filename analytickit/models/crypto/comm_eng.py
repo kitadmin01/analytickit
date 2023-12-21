@@ -10,7 +10,6 @@ from django.utils import timezone
 from datetime import datetime, timedelta, date
 from django.utils.timezone import make_aware
 
-
 class S3File(models.Model):
     key_name = models.TextField(unique=True)  # Assuming that each keyname is unique.
     creation_ts = models.DateTimeField(auto_now_add=True)  # The date and time when the filename was added to the database.
@@ -206,5 +205,4 @@ class CampaignAnalytic(models.Model):
             campaign_analytic = cls.objects.create(community_engagement=community_engagement)
         
         return campaign_analytic
-
 

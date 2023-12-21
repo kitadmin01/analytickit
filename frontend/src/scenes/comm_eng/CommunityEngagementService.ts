@@ -6,6 +6,7 @@ import { lemonToast } from 'lib/components/lemonToast' // For user notifications
 import type { communityEngagementLogicType } from './CommunityEngagementServiceType'
 
 const API_ENDPOINT = '/api/campaign'
+const WALLET_API_ENDPOINT = '/api/wallet-address-metrics'
 
 export const communityEngagementLogic = kea<communityEngagementLogicType>({
     path: ['scenes', 'comm_eng', 'CommunityEngagementService'],
@@ -83,6 +84,22 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
                 },
             },
         ],
+        walletAnalytics: [
+            {}, // Initial state as an empty object
+            {
+                fetchWalletAnalytic: async (teamId: number) => {
+                    try {
+                        const response = await api.get(`${WALLET_API_ENDPOINT}?team_id=${teamId}`);
+                        console.log(`Fetched Wallet Analytic with Team ID: ${teamId}`, response.data);
+                        return { [teamId]: response.data }; // Update the state with the new data
+                    } catch (error) {
+                        console.error(`Failed to fetch Wallet Analytic with Team ID: ${teamId}`, error);
+                        return { [teamId]: {} }; // Return an empty object for this ID in case of an error
+                    }
+                },
+            },
+        ],
+
     }),
     reducers: () => ({
         lastUpdated: [

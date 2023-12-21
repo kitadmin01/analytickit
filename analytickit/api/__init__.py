@@ -1,7 +1,10 @@
 from rest_framework import decorators, exceptions
+from .crypto import wall_add
 
 from analytickit.api.routing import DefaultRouterPlusPlus
 from analytickit.settings import EE_AVAILABLE
+
+
 
 from . import (
     annotation,
@@ -156,5 +159,9 @@ project_insights_router.register(
 
 # crypto
 from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
-
 router.register(r"campaign", CommunityEngagementViewSet)
+
+from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
+router.register(r'wallet-address-metrics', VisitorWallatAddressModelViewSet, basename='wallet-address-metrics')
+
+

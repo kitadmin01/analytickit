@@ -29,6 +29,7 @@ from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
 from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
+from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
 
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
@@ -167,11 +168,8 @@ urlpatterns = [
         ),
         name="campaign-detail",
     ),
-    path(
-    "api/campaign/<int:pk>/analytic/",
-    CommunityEngagementViewSet.as_view({"get": "analytic"}),
-    name="analytic",
-    ),
+    path('api/wallet-address-metrics/', VisitorWallatAddressModelViewSet.as_view({'get': 'get_metrics'}), name='wallet-address-metrics'),
+
 
 
 ]

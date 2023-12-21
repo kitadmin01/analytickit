@@ -59,4 +59,5 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.ComEng]: () => import('./comm_eng/CommunityEngagementContainer'),
     [Scene.ComEngDetail]: () => import('./comm_eng/CommunityEngagementDetail'),
     [Scene.ComDashBoard]: () => import('./comm_eng/graph/CryptoDashboard'),
+    [Scene.WalletAddress]: () => import('./wallet/WalletDashboard'),
 }

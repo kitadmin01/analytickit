@@ -1604,4 +1604,16 @@ export function IconCrypto(props: SvgIconProps): JSX.Element {
     );
 }
 
+export function IconCryptoWallet(props: SvgIconProps): JSX.Element {
+    return (
+        <SvgIcon viewBox="0 0 24 24" {...props}>
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M3,12 L6,12 L6,14 L3,14 L3,12 Z M21,5 L21,19 L9,19 L9,21 L21,21 C22.1045695,21 23,20.1045695 23,19 L23,5 C23,3.8954305 22.1045695,3 21,3 L3,3 C1.8954305,3 1,3.8954305 1,5 L1,11 L3,11 L3,5 L21,5 Z M17,7 L7,7 C5.8954305,7 5,7.8954305 5,9 L5,15 C5,16.1045695 5.8954305,17 7,17 L17,17 C18.1045695,17 19,16.1045695 19,15 L19,9 C19,7.8954305 18.1045695,7 17,7 Z M17,15 L7,15 L7,9 L17,9 L17,15 Z"
+                fill="currentColor"
+            />
+        </SvgIcon>
+    )
+}
 

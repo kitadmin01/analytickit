@@ -51,7 +51,7 @@ const GenericDistributionGraph: React.FC<GenericDistributionGraphProps> = ({ dat
     return (
         <div>
             <h4>{title}</h4>
-            <p className="graph-description">{description}</p> {/* Add this line */}
+            <p className="graph-description">{description}</p> 
             {graphType === 'pie' ? (
                 <Pie data={chartData} options={options} />
             ) : (

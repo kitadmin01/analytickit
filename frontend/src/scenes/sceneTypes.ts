@@ -63,6 +63,7 @@ export enum Scene {
     ComEng = 'ComEng',
     ComEngDetail = 'ComEngDetail',
     ComDashBoard = "ComDashBoard",
+    WalletAddress = "WalletAddress",
 }
 
 export type SceneProps = Record<string, any>

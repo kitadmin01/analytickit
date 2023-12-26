@@ -1,0 +1,9 @@
+<svg width="256" height="253" viewBox="0 0 256 253" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="0" width="240" height="253" rx="12" fill="#2196F3"/>
+    <rect x="48" y="53" width="160" height="160" rx="12" fill="white"/>
+    <path d="M68 93H188" stroke="#2196F3" stroke-width="2"/>
+    <path d="M68 123H188" stroke="#2196F3" stroke-width="2"/>
+    <path d="M68 153H188" stroke="#2196F3" stroke-width="2"/>
+    <circle cx="128" cy="173" r="15" fill="#2196F3"/>
+    <text x="50%" y="230" text-anchor="middle" fill="#FFFFFF" font-size="20" font-family="Arial" dy=".3em">Enterprise Plan</text>
+</svg>

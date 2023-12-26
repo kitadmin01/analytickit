@@ -25,4 +25,10 @@ echo "Starting python script -- Wallet Address job"
 
 # Run the python script for Wallet Address job
 $PYTHON_PATH $WALL_ADD_SCRIPT_PATH
+
+# Call the database backup script
+echo "Starting database backup"
+./bin/db_backup.sh
+
+echo "All tasks completed"
  

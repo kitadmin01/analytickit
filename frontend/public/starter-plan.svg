@@ -1,0 +1,8 @@
+<svg width="256" height="253" viewBox="0 0 256 253" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="0" width="240" height="253" rx="12" fill="#6ECF73"/>
+    <circle cx="128" cy="126.5" r="80" fill="#FFFFFF"/>
+    <path d="M128 46.5C91.318 46.5 61 76.818 61 113.5C61 150.182 91.318 180.5 128 180.5C164.682 180.5 195 150.182 195 113.5C195 76.818 164.682 46.5 128 46.5ZM128 170.5C95.624 170.5 68 142.876 68 113.5C68 84.124 95.624 56.5 128 56.5C160.376 56.5 188 84.124 188 113.5C188 142.876 160.376 170.5 128 170.5Z" fill="#6ECF73"/>
+    <path d="M128 113.5H188" stroke="#6ECF73" stroke-width="2"/>
+    <path d="M128 113.5L149.5 92" stroke="#6ECF73" stroke-width="2"/>
+    <text x="50%" y="230" text-anchor="middle" fill="#FFFFFF" font-size="20" font-family="Arial" dy=".3em">Starter Plan</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg width="256" height="253" viewBox="0 0 256 253" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="0" width="240" height="253" rx="12" fill="#FFA726"/>
+    <path d="M48 203H208V43H48V203Z" fill="white" stroke="#FFA726" stroke-width="2"/>
+    <path d="M68 183V63" stroke="#FFA726" stroke-width="2"/>
+    <path d="M88 183V103" stroke="#FFA726" stroke-width="2"/>
+    <path d="M108 183V123" stroke="#FFA726" stroke-width="2"/>
+    <path d="M128 183V83" stroke="#FFA726" stroke-width="2"/>
+    <path d="M148 183V143" stroke="#FFA726" stroke-width="2"/>
+    <path d="M168 183V163" stroke="#FFA726" stroke-width="2"/>
+    <path d="M188 183V143" stroke="#FFA726" stroke-width="2"/>
+    <text x="50%" y="230" text-anchor="middle" fill="#FFFFFF" font-size="20" font-family="Arial" dy=".3em">Growth Plan</text>
+</svg>

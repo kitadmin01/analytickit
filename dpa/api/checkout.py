@@ -11,7 +11,7 @@ import structlog
 from dpa.models import Billing
 from analytickit.models.user import User
 from analytickit.settings.utils import get_from_env, str_to_bool
-
+from django.shortcuts import redirect
 
 
 logger = structlog.get_logger(__name__)
@@ -20,12 +20,13 @@ logger = structlog.get_logger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-class SuccessView(TemplateView):
-    template_name = "success.html"
+class SuccessView(View):
+    def get(self, request, *args, **kwargs):
+        return redirect('/success')  # Redirect to React route for success
 
-
-class CancelView(TemplateView):
-    template_name = "cancel.html"
+class CancelView(View):
+    def get(self, request, *args, **kwargs):
+        return redirect('/cancel')  # Redirect to React route for cancel
 
 
 class Plan(Enum):
@@ -38,24 +39,24 @@ PLAN_DETAILS = {
         "name": "Starter Plan",
         "price": 118800,  # in cents, e.g., $118800.00
         "url": "https://example.com/starter-product-url",
-        "image_url": "https://example.com/starter-image-url"
+        "image_url": "http://localhost:8000/static/starter-plan.svg"
     },
     Plan.GROWTH_PLAN.value: {
         "name": "Growth Plan",
         "price": 358800,  # in cents, e.g., $3588.00
         "url": "https://example.com/growth-product-url",
-        "image_url": "https://example.com/starter-image-url"
+        "image_url": "http://localhost:8000/static/growth-plan.svg"
     },
     Plan.ENTERPRISE_PLAN.value: {
         "name": "Enterprise Plan",
         "price": 598800,  # in cents, e.g., $5988.00
         "url": "https://example.com/enterprise-product-url",
-        "image_url": "https://example.com/starter-image-url"
+        "image_url": "http://localhost:8000/static/enterprise-plan.svg"
     }
 }
 
 def serialize_plan(plan_enum):
-    plan_data = PLAN_DETAILS[plan_enum]
+    plan_data = PLAN_DETAILS[plan_enum.value]
     return {
         "key": plan_enum.name,
         "name": plan_data["name"],
@@ -63,6 +64,7 @@ def serialize_plan(plan_enum):
         "url": plan_data["url"],
         "image_url": plan_data["image_url"]
     }
+
 
 
 DEBUG = get_from_env("DEBUG", False, type_cast=str_to_bool)
@@ -74,12 +76,10 @@ if not DEBUG:
 
 
 def get_available_plans(request):
-    '''
-    This Django view returns a list of available plans.
-    The list is returned as JSON.
-    '''
-    plans = [{"key": plan.name, "name": plan.name, "price_string": str(plan.value)} for plan in Plan]
+    plans = [serialize_plan(plan) for plan in Plan]
     return JsonResponse(plans, safe=False)
+
+
 
 class ProductLandingPageView(TemplateView):
     '''
@@ -112,6 +112,7 @@ class CreateCheckoutSessionView(View):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
+            print("data=",data)
             plan_key = data.get("plan").get("key")
             plan_id = Plan[plan_key].value
 
@@ -141,6 +142,7 @@ class CreateCheckoutSessionView(View):
                 cancel_url=HOST + '/cancel/',
                
             )
+            print("checkout_session==========",checkout_session)
             return JsonResponse({
                 'id': checkout_session.id,
                 'result':"Success"

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Skeleton} from 'antd';
+import { Button, Card, Col, Row, Skeleton } from 'antd';
 import { useValues } from 'kea';
 import { billingLogic } from './billingLogic';
 import defaultImg from 'public/plan-default.svg';
@@ -46,25 +46,6 @@ export function BillingEnrollment(): JSX.Element | null {
     const [availablePlans, setAvailablePlans] = useState<PlanType[]>([]);
     const { plansLoading, billingSubscriptionLoading } = useValues(billingLogic);
 
-    /**const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
-
-    const showPaymentModal = (plan: PlanType):void => {
-        setSelectedPlan(plan);
-        setIsModalVisible(true);
-    };
-
-    const handleConfirmPayment = ():void => {
-        if (selectedPlan) {
-            handleBillingSubscribe(selectedPlan);
-        }
-        setIsModalVisible(false);
-    };
-
-    const handleCancelPayment = ():void => {
-        setIsModalVisible(false);
-    };*/
-
     useEffect(() => {
         fetch('/api/plans/')
             .then(response => response.json())
@@ -74,14 +55,13 @@ export function BillingEnrollment(): JSX.Element | null {
     const STRIPE_PUBLIC_KEY = "pk_test_51MCCGYFtMel7myQSEOfWiBOkj5xiGIBFWurBvRQuk9NmMCl6KyidtoGLobYwWd84ADPNwUBS71VS1GVC7vm9P9Jx00QxCLxtJ4";
     const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
-    const handleBillingSubscribe = (plan: PlanType):void => {
+    const handleBillingSubscribe = (plan: PlanType): void => {
         (async () => {
             try {
                 const response = await api.create('api/checkout/', { plan });
                 
                 if (response.error) {
                     console.error(response.error);
-                    // Display the error to the user using a modal, toast, or any other UI component
                     return;
                 }
     
@@ -101,8 +81,6 @@ export function BillingEnrollment(): JSX.Element | null {
             }
         })();
     };
-    
-    
 
     return (
         <>
@@ -114,18 +92,18 @@ export function BillingEnrollment(): JSX.Element | null {
             ) : (
                 <Card title="Billing Plan Enrollment">
                     <Row gutter={16} className="space-top" style={{ display: 'flex', justifyContent: 'center' }}>
-                    {availablePlans.map((plan) => (
-                    <Col sm={8} key={plan.key} className="text-center">
-                        {billingSubscriptionLoading ? (
-                            <Spinner />
-                        ) : (
-                            <Plan plan={plan} onSubscribe={handleBillingSubscribe} />
-                        )}
-                    </Col>
-                ))}
+                        {availablePlans.map((plan) => (
+                            <Col sm={8} key={plan.key} className="text-center">
+                                {billingSubscriptionLoading ? (
+                                    <Spinner />
+                                ) : (
+                                    <Plan plan={plan} onSubscribe={handleBillingSubscribe} />
+                                )}
+                            </Col>
+                        ))}
                     </Row>
                 </Card>
             )}
         </>
-    )
+    );
 }

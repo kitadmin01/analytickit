@@ -238,6 +238,16 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Community Engagement Dashboard',
     },
+
+    [Scene.BillingSuccess]: {
+        projectBased: true,
+        name: 'Billing Success',
+
+    },
+      [Scene.BillingCancel]: {
+        projectBased: true,
+        name: 'Billing Cancel',
+    },
 }
 
 
@@ -330,5 +340,8 @@ export const routes: Record<string, Scene> = {
     [urls.comEngDetail(':id')]: Scene.ComEngDetail,
     [urls.cryptoDashboard(':campaignId')]: Scene.ComDashBoard,
     [urls.walletAddress(':teamId')]: Scene.WalletAddress,
+    [urls.billingSuccess()]: Scene.BillingSuccess,
+    [urls.billingCancel()]: Scene.BillingCancel,
+
     
 }

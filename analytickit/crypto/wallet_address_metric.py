@@ -3,37 +3,41 @@ from analytickit.models.crypto.wallet_address import VisitorWalletAddress
 import json
 from collections import defaultdict
 from datetime import datetime
+from decimal import Decimal
+import structlog
+
+logger = structlog.get_logger(__name__)
 
 class WalletAddressMetricCal:
       def __init__(self, team_id):
             self.team_id = team_id
 
-      def calculate_transaction_volume_and_value(self):
-            # Query the VisitorWalletAddress model for the specified team_id
-            wallet_addresses = VisitorWalletAddress.objects.filter(team_id=self.team_id)
 
-            # Initialize a dictionary to store the results
+
+      def calculate_transaction_volume_and_value(self):
+            wallet_addresses = VisitorWalletAddress.objects.filter(team_id=self.team_id)
             results = {}
 
-            # Iterate over each wallet address and calculate the metrics
             for wallet_address in wallet_addresses:
-                  # Assuming txn_data contains fields 'value' and 'transaction_hash'
                   transactions = wallet_address.txn_data
-
-                  # Calculate total volume (number of transactions)
                   total_volume = len(transactions)
+                  
+                  total_value = Decimal('0')
+                  for txn in transactions:
+                        try:
+                              if 'value' in txn:
+                                    total_value += Decimal(str(txn['value']))
+                        except Exception as e:
+                              logger.error(f"Unexpected error in calculate_transaction_volume_and_value: {e}")
 
-                  # Calculate total value (sum of 'value' in each transaction)
-                  total_value = sum([float(txn['value']) for txn in transactions if 'value' in txn and txn['value'].isdigit()])
-
-                  # Store the results in the dictionary
                   results[wallet_address.visitor_wallet_address] = {
                         'total_volume': total_volume,
-                        'total_value': total_value
+                        # Convert Decimal to a string for serialization
+                        'total_value': str(total_value)
                   }
 
-            # Return the results as JSON
             return json.dumps(results)
+
 
       def calculate_token_holdings_and_transfers(self):
             # Query the VisitorWalletAddress model for the specified team_id

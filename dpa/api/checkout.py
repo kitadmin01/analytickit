@@ -39,19 +39,19 @@ PLAN_DETAILS = {
         "name": "Starter Plan",
         "price": 118800,  # in cents, e.g., $118800.00
         "url": "https://example.com/starter-product-url",
-        "image_url": "http://localhost:8000/static/starter-plan.svg"
+        "image_url": "/static/starter-plan.svg"
     },
     Plan.GROWTH_PLAN.value: {
         "name": "Growth Plan",
         "price": 358800,  # in cents, e.g., $3588.00
         "url": "https://example.com/growth-product-url",
-        "image_url": "http://localhost:8000/static/growth-plan.svg"
+        "image_url": "/static/growth-plan.svg"
     },
     Plan.ENTERPRISE_PLAN.value: {
         "name": "Enterprise Plan",
         "price": 598800,  # in cents, e.g., $5988.00
         "url": "https://example.com/enterprise-product-url",
-        "image_url": "http://localhost:8000/static/enterprise-plan.svg"
+        "image_url": "/static/enterprise-plan.svg"
     }
 }
 

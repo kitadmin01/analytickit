@@ -1,26 +1,30 @@
 #!/bin/bash
 # Script to backup PostgreSQL and ClickHouse databases and upload to S3
 
+# Install PostgreSQL client, ClickHouse client, and AWS CLI
+apt-get update && apt-get install -y postgresql-client clickhouse-client awscli
+
+
 # Set environment variables for local test
 if [ "$DEBUG" = "1" ]; then
     # Set environment variables for local testing
     echo "setting envs"
     export AWS_ACCESS_KEY_ID=""
     export AWS_SECRET_ACCESS_KEY=""
-    export PGHOST="localhost"
-    export PGPORT="5432"
-    export PGUSER="analytickit"
-    export PGDATABASE="analytickit"
-    export PGPASSWORD="analytickit"
+    export ANALYTICKIT_POSTGRES_HOST="localhost"
+    export ANALYTICKIT_POSTGRES_PORT="5432"
+    export ANALYTICKIT_DB_USER="analytickit"
+    export ANALYTICKIT_DB_NAME="analytickit"
+    export ANALYTICKIT_DB_PASSWORD="analytickit"
     export CLICKHOUSE_HOST="localhost"
     export CLICKHOUSE_PORT="9000"
     export CLICKHOUSE_USER="default"
     export CLICKHOUSE_PASSWORD=""
-    export CLICKHOUSE_DB="default"
+    export CLICKHOUSE_DATABASE="default"
 fi
 
 # Ensure all required variables are set
-required_vars=(PGHOST PGPORT PGUSER PGDATABASE PGPASSWORD CLICKHOUSE_HOST CLICKHOUSE_PORT CLICKHOUSE_USER CLICKHOUSE_PASSWORD CLICKHOUSE_DB)
+required_vars=(ANALYTICKIT_POSTGRES_HOST ANALYTICKIT_POSTGRES_PORT ANALYTICKIT_DB_USER ANALYTICKIT_DB_NAME ANALYTICKIT_DB_PASSWORD CLICKHOUSE_HOST CLICKHOUSE_PORT CLICKHOUSE_USER CLICKHOUSE_PASSWORD CLICKHOUSE_DATABASE)
 for var in "${required_vars[@]}"; do
     if [ -z "${!var}" ]; then
         echo "Error: $var is not set. Exiting."
@@ -31,7 +35,7 @@ done
 # Backup PostgreSQL Database
 echo "Starting PostgreSQL backup"
 PG_BACKUP_FILE="postgres_backup_$(date +%F).sql"
-pg_dump -h $PGHOST -p $PGPORT -U $PGUSER $PGDATABASE > $PG_BACKUP_FILE
+pg_dump -h $ANALYTICKIT_POSTGRES_HOST -p $ANALYTICKIT_POSTGRES_PORT -U $ANALYTICKIT_DB_USER $ANALYTICKIT_DB_NAME > $PG_BACKUP_FILE
 echo "Ending PostgreSQL backup"
 
 
@@ -47,15 +51,15 @@ if [[ -z "$CLICKHOUSE_BACKUP_FILE" ]]; then
 fi
 
 # Get a list of tables
-TABLES=$(clickhouse-client --host $CLICKHOUSE_HOST --port $CLICKHOUSE_PORT --user $CLICKHOUSE_USER --query "SHOW TABLES FROM $CLICKHOUSE_DB")
+TABLES=$(clickhouse-client --host $CLICKHOUSE_HOST --port $CLICKHOUSE_PORT --user $CLICKHOUSE_USER --query "SHOW TABLES FROM $CLICKHOUSE_DATABASE")
 
 # Backup each table
 for TABLE in $TABLES; do
     # Check if the table is a Kafka engine table
-    ENGINE=$(clickhouse-client --host $CLICKHOUSE_HOST --port $CLICKHOUSE_PORT --user $CLICKHOUSE_USER --query "SELECT engine FROM system.tables WHERE database = '$CLICKHOUSE_DB' AND name = '$TABLE'")
+    ENGINE=$(clickhouse-client --host $CLICKHOUSE_HOST --port $CLICKHOUSE_PORT --user $CLICKHOUSE_USER --query "SELECT engine FROM system.tables WHERE database = '$CLICKHOUSE_DATABASE' AND name = '$TABLE'")
     if [[ $ENGINE != *"Kafka"* ]]; then
         echo "Backing up $TABLE"
-        clickhouse-client --host $CLICKHOUSE_HOST --port $CLICKHOUSE_PORT --user $CLICKHOUSE_USER --database $CLICKHOUSE_DB --query "SELECT * FROM $TABLE FORMAT TSV" >> $CLICKHOUSE_BACKUP_FILE
+        clickhouse-client --host $CLICKHOUSE_HOST --port $CLICKHOUSE_PORT --user $CLICKHOUSE_USER --database $CLICKHOUSE_DATABASE --query "SELECT * FROM $TABLE FORMAT TSV" >> $CLICKHOUSE_BACKUP_FILE
     else
         echo "Skipping $TABLE (Kafka table)"
     fi

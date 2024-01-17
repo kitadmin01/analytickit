@@ -152,7 +152,7 @@ export function EventsTable({
         }
     }
     const personColumn: LemonTableColumn<EventsTableRowItem, keyof EventsTableRowItem | undefined> = {
-        title: 'Person',
+        title: 'Visitor',
         key: 'person',
         render: function renderPerson(_, { event }: EventsTableRowItem) {
             if (!event) {

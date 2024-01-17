@@ -102,8 +102,8 @@ export function ProjectSettings(): JSX.Element {
                 following snippet in your&nbsp;website's&nbsp;HTML. Ideally, put it just above the&nbsp;
                 <code>{'</head>'}</code>&nbsp;tag.
                 <br />
-                For more guidance, including on identifying users,{' '}
-                <a href="https://analytickit.com/docs/integrations/js-integration">see analytickit Docs</a>.
+                For more guidance, including on identifying visitors,{' '}
+                <a href="https://analytickit.com/doc/setup/how-to-setup-analytickit-in-wordpress/">see analytickit Docs</a>.
                 {currentTeamLoading && !currentTeam ? loadingComponent : <JSSnippet />}
                 <p>
                     You can even test analytickit out on a live site without changing any code.
@@ -179,8 +179,8 @@ export function ProjectSettings(): JSX.Element {
                 <TimezoneConfig />
                 <LemonDivider className="my-6" />
                 <h2 className="subtitle" id="internal-users-filtering">
-                    Filter out internal and test users{' '}
-                    <Tooltip title='Events will still be ingested and saved, but they will be excluded from any queries where the "Filter out internal and test users" toggle is set.'>
+                    Filter out internal and test visitors{' '}
+                    <Tooltip title='Events will still be ingested and saved, but they will be excluded from any queries where the "Filter out internal and test visitors" toggle is set.'>
                         <IconInfo style={{ fontSize: '1em', color: 'var(--muted-alt)', marginTop: 4, marginLeft: 5 }} />
                     </Tooltip>
                 </h2>
@@ -190,7 +190,7 @@ export function ProjectSettings(): JSX.Element {
                     <strong>
                         The filters you apply here are added as extra filters when the toggle is switched on.
                     </strong>{' '}
-                    So, if you apply a cohort, it means you will only match users in that cohort.
+                    So, if you apply a cohort, it means you will only match visitors in that cohort.
                 </p>
                 <strong>Example filters</strong>
                 <ul>
@@ -263,7 +263,7 @@ export function ProjectSettings(): JSX.Element {
                 <DataAttributes />
                 <LemonDivider className="my-6" />
                 <h2 className="subtitle" id="person-display-name">
-                    Person Display Name
+                    Visitor Display Name
                 </h2>
                 <PersonDisplayNameProperties />
                 <LemonDivider className="my-6" />

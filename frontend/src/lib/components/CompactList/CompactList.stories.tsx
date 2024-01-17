@@ -24,7 +24,7 @@ export function CompactList_({ loading }: { loading: boolean }): JSX.Element {
             <div style={{ width: 350 }}>
                 <CompactList
                     loading={loading}
-                    title="Recent persons"
+                    title="Recent visitors"
                     viewAllURL={urls.persons()}
                     items={[
                         { properties: { name: 'Person 1' } },

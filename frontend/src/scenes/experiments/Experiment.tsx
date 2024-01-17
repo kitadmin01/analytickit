@@ -398,7 +398,7 @@ export function Experiment(): JSX.Element {
                                                     dropdownMatchSelectWidth={false}
                                                 >
                                                     <Select.Option key={-1} value={-1}>
-                                                        Persons
+                                                        Visitors
                                                     </Select.Option>
                                                     {groupTypes.map((groupType) => (
                                                         <Select.Option
@@ -450,7 +450,7 @@ export function Experiment(): JSX.Element {
                                                 <div className="text-muted">
                                                     {experimentInsightType === InsightType.TRENDS
                                                         ? 'Track counts of a specific event or action'
-                                                        : 'Track how many persons complete a sequence of actions and or events'}
+                                                        : 'Track how many visitors complete a sequence of actions and or events'}
                                                 </div>
                                             </div>
                                             <Select

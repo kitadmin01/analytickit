@@ -732,11 +732,11 @@ class MetricCalculator:
 
                     # safely convert value to integer in ETH
                     try:
-                        # Convert value from WEI to ETH
-                        value = Decimal(transfer.get('value', '0')) * wei_to_eth
+                        # Convert value from WEI to ETH and round to nearest whole number
+                        value = round(Decimal(transfer.get('value', '0')) * wei_to_eth)
                     except InvalidOperation as e:
                         print(f"Error converting value to Decimal: {e}")
-                        value = Decimal('0')  # or whatever default/fallback value is appropriate
+                        value = 0  # or whatever default/fallback value is appropriate
                     
                     # Use tuple (from_address, to_address) as the key, and add up the values
                     flow_key = (from_address, to_address)

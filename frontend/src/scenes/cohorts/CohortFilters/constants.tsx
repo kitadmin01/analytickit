@@ -100,7 +100,7 @@ export const FIELD_VALUES: Record<FieldOptionsType, FieldValues> = {
         type: FieldOptionsType.Actors,
         values: {
             [ActorGroupType.Person]: {
-                label: 'Persons',
+                label: 'Visitors',
             },
         },
     },
@@ -120,7 +120,7 @@ export const FIELD_VALUES: Record<FieldOptionsType, FieldValues> = {
         },
     },
     [FieldOptionsType.PersonPropertyBehavioral]: {
-        label: 'Person Properties',
+        label: 'Visitor Properties',
         type: FieldOptionsType.PersonPropertyBehavioral,
         values: {
             [BehavioralEventType.HaveProperty]: {

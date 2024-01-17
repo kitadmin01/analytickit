@@ -144,7 +144,7 @@ export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
                             </Link>
                         </AlertMessage>
                     )}
-                    <EventBufferNotice additionalInfo=", meaning it can take around 60 seconds for some flags to update for recently-identified persons" />
+                    <EventBufferNotice additionalInfo=", meaning it can take around 60 seconds for some flags to update for recently-identified visitors" />
                     <h3 className="l3 mt-4">General configuration</h3>
                     <div className="text-muted mb-4">
                         General settings for your feature flag and integration instructions.
@@ -215,9 +215,9 @@ export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
                                         />
                                         <div className="text-muted text-sm pl-7">
                                             If your feature flag is applied prior to an identify or authentication
-                                            event, use this to ensure that feature flags are not reset after a person is
-                                            identified. This ensures the experience for the anonymous person is carried
-                                            forward to the authenticated person. Currently supported for analytickit-js
+                                            event, use this to ensure that feature flags are not reset after a visitor is
+                                            identified. This ensures the experience for the anonymous visitor is carried
+                                            forward to the authenticated visitor. Currently supported for analytickit-js
                                             only.
                                         </div>
                                     </div>

@@ -118,12 +118,12 @@ export type CohortFieldProps =
 
 export enum CohortClientErrors {
 NegationCriteriaMissingOther = 'Negation criteria can only be used when matching all criteria (AND), and must be accompanied by at least one positive matching criteria.',
-NegationCriteriaCancel = 'These criteria cancel each other out, and would result in no matching persons.',
+NegationCriteriaCancel = 'These criteria cancel each other out, and would result in no matching visitors.',
 PeriodTimeMismatch = 'The lower bound period value must not be greater than the upper bound value.',
 SequentialTimeMismatch = 'The lower bound period sequential time value must not be greater than the upper bound time value.',
 EmptyEventsAndActions = 'Event or action cannot be empty.',
 EmptyEventProperties = 'Event property cannot be empty.',
-EmptyPersonPropertyValues = 'Person property value cannot be empty',
+EmptyPersonPropertyValues = 'Visitor property value cannot be empty',
 EmptyEventType = 'Event type cannot be empty.',
 EmptyNumber = 'Period values must be at least 1 day and cannot be empty.',
 EmptyNumberTicker = 'Number cannot be empty.',

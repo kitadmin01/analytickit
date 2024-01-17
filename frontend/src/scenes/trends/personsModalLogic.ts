@@ -249,7 +249,7 @@ export const personsModalLogic = kea<personsModalLogicType>({
                         ? aggregationLabel(result?.action.math_group_type_index).plural
                         : ''
                 } else {
-                    return 'persons'
+                    return 'visitors'
                 }
             },
         ],

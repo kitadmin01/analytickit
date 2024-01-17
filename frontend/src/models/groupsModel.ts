@@ -88,7 +88,7 @@ export const groupsModel = kea<groupsModelType>({
                               singular: 'user',
                               plural: 'users',
                           }
-                        : { singular: 'person', plural: 'persons' }
+                        : { singular: 'visitor', plural: 'visitors' }
                 },
         ],
         

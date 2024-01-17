@@ -57,7 +57,7 @@ export const groupsListLogic = kea<groupsListLogicType>({
             (s) => [s.currentTab, s.groupTypes, s.aggregationLabel],
             (currentTab, groupTypes, aggregationLabel): string =>
                 currentTab === '-1'
-                    ? 'Persons'
+                    ? 'Visitors'
                     : groupTypes?.length
                     ? capitalizeFirstLetter(aggregationLabel(parseInt(currentTab)).singular)
                     : '',
@@ -66,7 +66,7 @@ export const groupsListLogic = kea<groupsListLogicType>({
             (s) => [s.currentTab, s.aggregationLabel],
             (currentTab, aggregationLabel): { singular: string; plural: string } =>
                 currentTab === '-1'
-                    ? { singular: 'person', plural: 'persons' }
+                    ? { singular: 'visitor', plural: 'visitors' }
                     : aggregationLabel(parseInt(currentTab)),
         ],
         breadcrumbs: [

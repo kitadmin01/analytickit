@@ -74,7 +74,7 @@ export function CorrelationConfig(): JSX.Element {
                 <>
                     <h3 style={{ display: 'flex', alignItems: 'center', color: 'var(--muted-alt)' }}>
                         <IconSelectProperties style={{ marginRight: 4, fontSize: '1.2em' }} />
-                        Excluded person properties
+                        Excluded visitor properties
                     </h3>
                     <PersonPropertySelect
                         onChange={(properties) => handleChange(properties)}

@@ -257,7 +257,7 @@ export function PersonsModal({
                                         columns={
                                             [
                                                 {
-                                                    title: 'Person',
+                                                    title: 'Visitor',
                                                     key: 'person',
                                                     render: function Render(_, actor: ActorType) {
                                                         return <ActorRow actor={actor} />

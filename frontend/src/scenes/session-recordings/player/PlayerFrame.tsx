@@ -26,25 +26,28 @@ export const PlayerFrame = React.forwardRef<HTMLDivElement>(function PlayerFrame
         updatePlayerDimensions(replayDimensionRef.current)
     }
 
-    // :TRICKY: Scale down the iframe and try to position it vertically
     const updatePlayerDimensions = (replayDimensions: viewportResizeDimension | undefined): void => {
         if (!replayDimensions || !frameRef?.current?.parentElement || !player?.replayer) {
             return
         }
-
+    
         replayDimensionRef.current = replayDimensions
         const { width, height } = frameRef.current.parentElement.getBoundingClientRect()
-
+    
         const scale = Math.min(width / replayDimensions.width, height / replayDimensions.height, 1)
-
-        player.replayer.wrapper.style.transform = `scale(${scale})`
-        frameRef.current.style.paddingLeft = `${(width - replayDimensions.width * scale) / 2}px`
-        frameRef.current.style.paddingTop = `${(height - replayDimensions.height * scale) / 2}px`
-        frameRef.current.style.marginBottom = `-${height - replayDimensions.height * scale}px`
-
+        const translateY = -(height * 0.8); // Calculate the translation distance
+    
+        player.replayer.wrapper.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+        player.replayer.wrapper.style.transformOrigin = 'top left';
+        frameRef.current.style.position = 'relative';
+        frameRef.current.style.overflow = 'hidden';
+        frameRef.current.style.width = `${replayDimensions.width}px`;
+        frameRef.current.style.height = `${replayDimensions.height}px`;
+    
         setScale(scale)
     }
-
+    
+    
     const renderPlayerState = (): JSX.Element | null => {
         if (currentPlayerState === SessionPlayerState.BUFFER) {
             return <div className="rrweb-overlay">Buffering...</div>
@@ -63,9 +66,13 @@ export const PlayerFrame = React.forwardRef<HTMLDivElement>(function PlayerFrame
     }
 
     return (
-        <div className="rrweb-player" onClick={togglePlayPause}>
-            <div ref={ref} />
-            <div className="rrweb-overlay-container">{renderPlayerState()}</div>
+        <div className="rrweb-player" ref={ref} onClick={togglePlayPause}>
+            <div className="replayer-wrapper">
+                {/* Browser content goes here */}
+            </div>
+            <div className="rrweb-overlay-container">
+                {renderPlayerState()}
+            </div>
         </div>
     )
 })

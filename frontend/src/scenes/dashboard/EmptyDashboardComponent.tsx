@@ -88,7 +88,7 @@ export function EmptyDashboardComponent({ loading }: { loading: boolean }): JSX.
                         <p>This dashboard sure would look better with some graphs!</p>
                         <div className="mt-4 text-center">
                             <Link to={urls.insightNew(undefined, dashboard?.id)}>
-                                <LemonButton data-attr="dashboard-add-graph-header">Add insight</LemonButton>
+                                <LemonButton data-attr="dashboard-add-graph-header">Add analytic</LemonButton>
                             </Link>
                         </div>
                     </Card>

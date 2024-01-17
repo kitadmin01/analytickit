@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof PayCard> = (args) => {
 export const PayCard_ = Template.bind({})
 PayCard_.args = {
     identifier: AvailableFeature.PATHS_ADVANCED,
-    title: 'Get a deeper understanding of your users',
+    title: 'Get a deeper understanding of your visitors',
     caption:
         'Advanced features such as interconnection with funnels, grouping & wildcarding and exclusions can help you gain deeper insights.',
     docsLink: 'https://analytickit.com/docs/user-guides/paths',

@@ -22,8 +22,8 @@ export function PersonDisplayNameProperties(): JSX.Element {
     return (
         <>
             <p>
-                Choose which properties of an identified Person will be used for their <b>Display Name</b>. The first
-                property to be found on the Person will be used. Drag the items to re-order the priority.
+                Choose which properties of an identified Visitor will be used for their <b>Display Name</b>. The first
+                property to be found on the Visitor will be used. Drag the items to re-order the priority.
             </p>
             <div>
                 <PersonPropertySelect

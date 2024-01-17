@@ -39,7 +39,7 @@ function CompactPropertyFiltersDisplay({
                         {subIndex === 0 ? (embedded ? 'where ' : 'Where ') : 'and '}
                         {subFilter.type === 'cohort' ? (
                             <>
-                                person belongs to cohort
+                                visitor belongs to cohort
                                 <span className="SeriesDisplay__raw-name">
                                     {formatPropertyLabel(
                                         subFilter,

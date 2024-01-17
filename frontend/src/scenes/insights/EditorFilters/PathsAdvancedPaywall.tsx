@@ -7,7 +7,7 @@ export function PathsAdvancedPaywall({}: EditorFilterProps): JSX.Element {
     return (
         <PayCard
             identifier={AvailableFeature.PATHS_ADVANCED}
-            title="Get a deeper understanding of your users"
+            title="Get a deeper understanding of your visitors"
             caption="Advanced features such as interconnection with funnels, grouping &amp; wildcarding and exclusions can help you gain deeper insights."
             docsLink="https://analytickit.com/docs/user-guides/paths"
             dismissable={false}

@@ -193,7 +193,7 @@ export function CohortEdit({ id }: CohortLogicProps): JSX.Element {
                     <>
                         <Divider />
                         <div>
-                            <h3 className="l3">Persons in this cohort</h3>
+                            <h3 className="l3">Visitors in this cohort</h3>
                             {cohort.is_calculating ? (
                                 <div className="cohort-recalculating flex items-center">
                                     <Spinner size="sm" style={{ marginRight: 4 }} />

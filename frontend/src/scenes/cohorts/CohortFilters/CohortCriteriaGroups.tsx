@@ -45,7 +45,7 @@ export function CohortCriteriaGroups(logicProps: CohortLogicProps): JSX.Element 
                                         <Row align="middle" wrap={false} className="px-4">
                                             <Lettermark name={alphabet[groupIndex]} color={LettermarkColor.Gray} />
                                             <AndOrFilterSelect
-                                                prefix="Match persons against"
+                                                prefix="Match visitors against"
                                                 suffix="criteria"
                                                 onChange={(value) => setInnerGroupType(value, groupIndex)}
                                                 value={group.type}

@@ -68,7 +68,7 @@ export const cohortFieldLogic = kea<cohortFieldLogicType>([
                         type: FieldOptionsType.Actors,
                         values: {
                             [ActorGroupType.Person]: {
-                                label: 'Persons',
+                                label: 'Visitors',
                             },
                             ...Object.fromEntries(
                                 groupTypes.map((type) => [

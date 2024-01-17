@@ -69,7 +69,7 @@ export function SessionRecordingsTable({ personUUID, isPersonPage = false }: Ses
             },
         },
         {
-            title: 'Person',
+            title: 'Visitor',
             key: 'person',
             render: function RenderPersonLink(_: any, sessionRecording: SessionRecordingType) {
                 return <PersonHeader withIcon person={sessionRecording.person} />

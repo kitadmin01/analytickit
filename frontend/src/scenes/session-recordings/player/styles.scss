@@ -82,67 +82,29 @@
     }
 
     .rrweb-player {
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        background-color: var(--bg-depth);
-
         position: relative;
-
-        .replayer-wrapper {
-            transform-origin: top left;
-        }
-
-        iframe {
-            border: 0px;
-            background-color: white;
-        }
-
-        .rrweb-overlay-container {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            z-index: 10;
-
-            .rrweb-overlay {
-                transition: all 200ms;
-                position: absolute;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                height: 100%;
-                width: 100%;
-
-                background-color: var(--bg-overlay);
-                opacity: 0.2;
-
-                font-size: 40px;
-                color: white;
-                cursor: pointer;
-
-                &:hover {
-                    opacity: 0.5;
-                }
-
-                .rrweb-overlay-play-icon {
-                    svg {
-                        width: 5rem;
-                        height: 5rem;
-                    }
-                }
-            }
-        }
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
     }
+    
+    .replayer-wrapper {
+        width: 100%;
+        height: 100%;
+        // Ensure this is below the overlay container
+        z-index: 1; 
+    }
+    
+    .rrweb-overlay-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10; // Higher than .replayer-wrapper
+    }
+    
+    
 
     .rrweb-timestamp {
         white-space: nowrap;
@@ -314,3 +276,4 @@
         padding: 1rem;
     }
 }
+

@@ -239,7 +239,7 @@ export function DashboardHeader(): JSX.Element | null {
                             {canEditDashboard && (
                                 <Link to={urls.insightNew(undefined, dashboard?.id)}>
                                     <LemonButton type="primary" data-attr="dashboard-add-graph-header">
-                                        Add insight
+                                        Add analytic
                                     </LemonButton>
                                 </Link>
                             )}

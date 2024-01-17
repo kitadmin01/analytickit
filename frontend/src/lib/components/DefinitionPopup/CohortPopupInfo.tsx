@@ -37,7 +37,7 @@ export function CohortPopupInfo({ cohort }: { cohort: CohortType }): JSX.Element
                     isCohortCriteriaGroup(cohortGroup) && (
                         <DefinitionPopup.Section key={cohortGroupIndex}>
                             <DefinitionPopup.Card
-                                title={`Match persons against ${
+                                title={`Match visitors against ${
                                     cohortGroup.type === FilterLogicalOperator.Or ? 'any' : 'all'
                                 } criteria`}
                                 value={
@@ -102,7 +102,7 @@ export function CohortPopupInfo({ cohort }: { cohort: CohortType }): JSX.Element
                     <DefinitionPopup.Section key={index}>
                         {'action_id' in group ? (
                             <DefinitionPopup.Card
-                                title="Match persons who performed"
+                                title="Match visitors who performed"
                                 value={
                                     <ul>
                                         <li>
@@ -117,7 +117,7 @@ export function CohortPopupInfo({ cohort }: { cohort: CohortType }): JSX.Element
                             />
                         ) : (
                             <DefinitionPopup.Card
-                                title="Match persons with properties"
+                                title="Match visitors with properties"
                                 value={
                                     <ul>
                                         {group.properties &&

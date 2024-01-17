@@ -27,7 +27,7 @@ export function TestAccountFilter({
             bordered
             label={
                 <div className="flex items-center">
-                    <span>Filter out internal and test users</span>
+                    <span>Filter out internal and test visitors</span>
                     <LemonButton
                         icon={<IconSettings className="text-xs" />}
                         to="/project/settings#internal-users-filtering"

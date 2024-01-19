@@ -126,7 +126,7 @@ export function Person(): JSX.Element | null {
                                 status="danger"
                                 data-attr="delete-person"
                             >
-                                Delete person
+                                Delete visitor
                             </LemonButton>
                         </Popconfirm>
                         <LemonButton

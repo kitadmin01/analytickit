@@ -9,7 +9,6 @@ import { pluralize } from 'lib/utils'
 import { Tooltip } from '../Tooltip'
 
 interface EditableFieldProps {
-    /** What this field stands for. */
     name: string
     value: string
     onChange?: (value: string) => void
@@ -20,15 +19,11 @@ interface EditableFieldProps {
     autoFocus?: boolean
     multiline?: boolean
     compactButtons?: boolean
-    /** Whether this field should be gated behind a "paywall". */
-    paywall?: boolean
-    /** Controlled mode. */
     mode?: 'view' | 'edit'
     className?: string
     style?: React.CSSProperties
     'data-attr'?: string
     saveButtonText?: string
-    /** Extra information shown next to the field. */
     notice?: {
         icon: React.ReactElement
         tooltip: string
@@ -46,7 +41,6 @@ export function EditableField({
     autoFocus = true,
     multiline = false,
     compactButtons = false,
-    paywall = false,
     mode,
     className,
     style,
@@ -73,13 +67,12 @@ export function EditableField({
         setLocalIsEditing(false)
     }
 
-    const isEditing = !paywall && (mode === 'edit' || localIsEditing)
+    const isEditing = mode === 'edit' || localIsEditing
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>): void => {
         if (isEditing) {
-            // Cmd/Ctrl are required in addition to Enter if newlines are permitted
             if (isSaveable && e.key === 'Enter' && (!multiline || e.metaKey || e.ctrlKey)) {
-                save() // Save on Enter press
+                save()
                 e.stopPropagation()
                 e.preventDefault()
             } else if (e.key === 'Escape') {
@@ -103,11 +96,7 @@ export function EditableField({
         >
             <Tooltip
                 placement="right"
-                title={
-                    paywall
-                        ? "This field is part of analytickit's collaboration feature set and requires a premium plan."
-                        : undefined
-                }
+                title={undefined}
             >
                 <div className="EditableField--highlight">
                     {isEditing ? (
@@ -178,7 +167,6 @@ export function EditableField({
                                     size={compactButtons ? 'small' : undefined}
                                     onClick={() => setLocalIsEditing(true)}
                                     data-attr={`edit-prop-${name}`}
-                                    disabled={paywall}
                                 />
                             )}
                         </>

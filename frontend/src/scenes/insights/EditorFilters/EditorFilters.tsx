@@ -261,18 +261,20 @@ export function EditorFilters({ insightProps, showing }: EditorFiltersProps): JS
                           component: TrendsFormula,
                       }
                     : null,
-                isPaths &&
-                    (hasPathsAdvanced
-                        ? {
-                              key: 'paths-advanced',
-                              component: PathsAdvanced,
-                          }
-                        : !preflight?.instance_preferences?.disable_paid_fs
-                        ? {
-                              key: 'paths-paywall',
-                              component: PathsAdvancedPaywall,
-                          }
-                        : undefined),
+                    // Commenting out PathsAdvancedPaywall to prevent it from rendering
+                    // isPaths &&
+                    //     (hasPathsAdvanced
+                    //         ? {
+                    //               key: 'paths-advanced',
+                    //               component: PathsAdvanced,
+                    //           }
+                    //         : !preflight?.instance_preferences?.disable_paid_fs
+                    //         ? {
+                    //               key: 'paths-paywall',
+                    //               component: PathsAdvancedPaywall,
+                    //           }
+                    //         : undefined),
+
                 isFunnels && {
                     key: 'funnels-advanced',
                     component: FunnelsAdvanced,

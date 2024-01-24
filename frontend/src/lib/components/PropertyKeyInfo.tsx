@@ -229,7 +229,7 @@ export const keyMapping: KeyMappingInterface = {
         },
         $identify: {
             label: 'Identify',
-            description: 'A user has been identified with properties',
+            description: 'A visitor has been identified with properties',
         },
         $groupidentify: {
             label: 'Group Identify',
@@ -284,7 +284,7 @@ export const keyMapping: KeyMappingInterface = {
         },
         $rageclick: {
             label: 'Rageclick',
-            description: 'A user has rapidly and repeatedly clicked in a single place',
+            description: 'A visitor has rapidly and repeatedly clicked in a single place',
         },
         $set: {
             label: 'Set',

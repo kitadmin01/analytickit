@@ -51,7 +51,7 @@ export function ProjectHomepage(): JSX.Element {
                 }}
                 type="secondary"
             >
-                New insight
+                New analytic
             </LemonButton>
         </div>
     )

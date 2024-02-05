@@ -33,7 +33,9 @@ const GenericHeatmap = ({ data, xLabels, yLabels, title, description }) => {
         d.normalizedValue = d.value / maxValuesByVariable[d.variable];
       });
 
-      const margin = { top: 50, right: 30, bottom: 50, left: 100 };
+
+      const margin = { top: 50, right: 30, bottom: 50, left: 250 }; // Increase left margin
+
       const width = 450 - margin.left - margin.right;
       const height = 450 - margin.top - margin.bottom;
 

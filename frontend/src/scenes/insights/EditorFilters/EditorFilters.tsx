@@ -165,7 +165,7 @@ export function EditorFilters({ insightProps, showing }: EditorFiltersProps): JS
                 isLifecycle
                     ? {
                           key: 'toggles',
-                          label: 'Lifecycle Toggles',
+                          label: 'Growth Monitor Toggles',
                           position: 'right',
                           component: LifecycleToggles,
                       }

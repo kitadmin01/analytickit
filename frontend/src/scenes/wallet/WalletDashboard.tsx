@@ -263,8 +263,7 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
       xLabels={xLabels}
       yLabels={yLabels}
       title="Engagement Heatmap: Users and Contracts Daily"
-      description="This heatmap displays total contract calls and active user counts against dates, showing activity patterns.
-      Helps in identifying trends, peak activity days, and correlations between user engagement and contract calls."
+      description="Displays total contract calls and active user counts against dates, showing activity patterns."
     />
 
     {/* Render the Network Graph */}

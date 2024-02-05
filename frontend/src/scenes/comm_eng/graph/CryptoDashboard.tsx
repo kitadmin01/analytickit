@@ -196,8 +196,8 @@ const CryptoDashboard: React.FC<DashboardProps> = ({ campaignId }) => {
           description="A network graph showing addresses 
           as nodes and the value of tokens 
           transferred as edges between nodes."
-          width={400} // Adjust as needed
-          height={400} // Adjust as needed
+          width={600} // Adjust as needed
+          height={600} // Adjust as needed
         />
         {/*heatmp */}
         <div>

@@ -132,7 +132,7 @@ describe('Insights', () => {
     it('Lifecycle graph', () => {
         cy.get('[data-attr=trend-line-graph]').should('exist') // Wait until components are loaded
         cy.get('.ant-tabs-tab').contains('Lifecycle').click()
-        cy.get('div').contains('Lifecycle Toggles').should('exist')
+        cy.get('div').contains('Growth Monitor Toggles').should('exist')
         cy.get('[data-attr=trend-line-graph]').should('exist')
         cy.get('[data-attr=add-breakdown-button]').should('not.exist') // Can't do breakdown on this graph
         cy.get('[data-attr=add-action-event-button]').should('not.exist') // Can't add multiple series

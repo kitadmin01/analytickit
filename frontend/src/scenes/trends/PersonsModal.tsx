@@ -179,7 +179,7 @@ export function PersonsModal({
             >
                 <LemonInput
                     type="search"
-                    placeholder="Search for persons by email, name, or ID"
+                    placeholder="Search for visitors by email, name, or ID"
                     fullWidth
                     onChange={(value) => {
                         setSearchTerm(value)

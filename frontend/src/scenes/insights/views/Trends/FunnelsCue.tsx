@@ -33,7 +33,7 @@ export function FunnelsCue({ tooltipPosition }: { tooltipPosition?: number }): J
                         data-attr="funnel-cue-7301"
                         tag={<Button style={{ color: 'var(--primary)', fontWeight: 500 }} />}
                     >
-                        Try this insight as a funnel
+                        Try this analytic as a funnel
                     </Link>
                 </div>
             </InlineMessage>

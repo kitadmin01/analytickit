@@ -89,7 +89,8 @@ class WalletAddressJob:
     
 
     def insert_wallet_login_events():
-        events_json = WalletAddressJob.get_wallet_login_events(testing=True, start_of_day_test='2023-02-09 00:00:00', end_of_day_test='2024-01-09 00:00:00')
+        # events_json = WalletAddressJob.get_wallet_login_events(testing=True, start_of_day_test='2023-02-09 00:00:00', end_of_day_test='2024-01-09 00:00:00')
+        events_json = WalletAddressJob.get_wallet_login_events()
         events = json.loads(events_json)
 
         s3_retriever = S3Retriever("")  # Initialize with appropriate config

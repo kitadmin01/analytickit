@@ -1,5 +1,6 @@
 import os
 import django
+from django.db import transaction
 import sys
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'analytickit.settings')
@@ -21,15 +22,25 @@ from wallet_address_metric import WalletAddressMetricCal
 
 class WalletAddressJob:
 
-    def get_wallet_login_events():
+
+    def get_wallet_login_events(testing=False, start_of_day_test=None, end_of_day_test=None):
         """
         This method returns unique crypto_wallet_public_address that are sent from the browser to Clickhouse DB along with 
-        tiemstamp, and team_id. team_id represents the logged in user's Project/Campaign. 
+        timestamp, and team_id. team_id represents the logged in user's Project/Campaign. 
+
+        Args:
+        - testing (bool): If true, the function uses the custom timestamp range provided.
+        - start_of_day_test (datetime): The custom start timestamp for testing.
+        - end_of_day_test (datetime): The custom end timestamp for testing.
         """
-        # Calculate the previous day's date
-        previous_day = timezone.now().date() - datetime.timedelta(days=51)
-        start_of_day = datetime.datetime.combine(previous_day, datetime.time.min, tzinfo=timezone.utc)
-        end_of_day = datetime.datetime.combine(previous_day, datetime.time.max, tzinfo=timezone.utc)
+        if testing and start_of_day_test is not None and end_of_day_test is not None:
+            start_of_day = start_of_day_test
+            end_of_day = end_of_day_test
+        else:
+            # Calculate the previous day's date
+            previous_day = timezone.now().date() - datetime.timedelta(days=1)
+            start_of_day = datetime.datetime.combine(previous_day, datetime.time.min, tzinfo=timezone.utc)
+            end_of_day = datetime.datetime.combine(previous_day, datetime.time.max, tzinfo=timezone.utc)
 
         # SQL query to select relevant data
         query = """
@@ -43,7 +54,7 @@ class WalletAddressJob:
             AND timestamp <= %(end_of_day)s
         """
 
-        # Execute the query
+        # Assume sync_execute is defined elsewhere and executes the SQL query
         results = sync_execute(
             query,
             {"start_of_day": start_of_day, "end_of_day": end_of_day}
@@ -63,6 +74,7 @@ class WalletAddressJob:
         result_json = json.dumps(unique_results)
 
         return result_json
+
     
     def get_team_instance(team_id):
         """
@@ -77,58 +89,52 @@ class WalletAddressJob:
     
 
     def insert_wallet_login_events():
-        events_json = WalletAddressJob.get_wallet_login_events()
+        events_json = WalletAddressJob.get_wallet_login_events(testing=True, start_of_day_test='2023-02-09 00:00:00', end_of_day_test='2024-01-09 00:00:00')
         events = json.loads(events_json)
 
-        # Retrieve S3 data for a specific wallet address
         s3_retriever = S3Retriever("")  # Initialize with appropriate config
         date = timezone.now().date() - datetime.timedelta(days=1)
-        s3_results = s3_retriever.get_data_for_wallet_address("0x17fb866f05d0798fd73f0d3e373e1f9d07e14e25", date)
 
         for event in events:
+            wallet_address = event['crypto_wallet_public_address']
+            s3_results = s3_retriever.get_data_for_wallet_address(wallet_address, date)
             timestamp = datetime.datetime.fromisoformat(event['timestamp'])
             team_id = event['team_id']
-            wallet_address = event['crypto_wallet_public_address']
+            team = WalletAddressJob.get_team_instance(team_id)
 
-            # Assuming you have a method to get the team instance from team_id
-            team = WalletAddressJob.get_team_instance(team_id)  
-
-            # Initialize empty lists for transaction and token transfer data
             txn_data = []
             token_transfer_data = []
 
-            # Aggregate data from s3_results
             for key, value in s3_results.items():
                 if 'transactions' in key:
                     txn_data.extend(value)
                 elif 'token_transfers' in key:
                     token_transfer_data.extend(value)
-            # Create or update the VisitorWalletAddress instance
-            VisitorWalletAddress.objects.update_or_create(
-                visitor_wallet_address=wallet_address,
-                visitor_wallet_address_ts=timestamp,
-                defaults={
-                    'team': team,
-                    'txn_data': txn_data,
-                    'token_transfer_data': token_transfer_data
-                }
-            )
+
+            # Only proceed if txn_data or token_transfer_data is not empty
+            if txn_data or token_transfer_data:
+                obj, created = VisitorWalletAddress.objects.get_or_create(
+                    visitor_wallet_address=wallet_address,
+                    defaults={
+                        'visitor_wallet_address_ts': timestamp,
+                        'team': team,
+                        'txn_data': txn_data if txn_data else ['placeholder to avoid null'],  # Provide default non-null value
+                        'token_transfer_data': token_transfer_data if token_transfer_data else ['placeholder to avoid null']  # Provide default non-null value
+                    }
+                )
+                if not created:
+                    obj.visitor_wallet_address_ts = timestamp
+                    obj.team = team
+                    obj.txn_data = txn_data if txn_data else obj.txn_data  # Preserve existing data if no new data
+                    obj.token_transfer_data = token_transfer_data if token_transfer_data else obj.token_transfer_data  # Preserve existing data if no new data
+                    obj.save()
 
 
 if __name__ == "__main__":
-
+    print("started WalletAddressJob")
     wallet_job = WalletAddressJob
     wallet_job.insert_wallet_login_events()
+    print("completed WalletAddressJob")
 
-
-    #events_json = wallet_job.get_wallet_login_events()
-    #print(events_json)
-
-    #public address 0x17fb866f05d0798fd73f0d3e373e1f9d07e14e25 on date=2023-12-13 in S3
-    s3_retriever = S3Retriever("")
-    date =  timezone.now().date() - datetime.timedelta(days=1)
-    print("date=",date)
-    results = s3_retriever.get_data_for_wallet_address("0x17fb866f05d0798fd73f0d3e373e1f9d07e14e25", date)
-    print("results=",results)
 
 

@@ -111,6 +111,9 @@ class WalletAddressMetricCal:
       
       
       def calculate_active_periods(self):
+            '''
+            Shows the active days on various colors on the heatmap graph
+            '''
             # Query the VisitorWalletAddress model for the specified team_id
             wallet_addresses = VisitorWalletAddress.objects.filter(team_id=self.team_id)
 

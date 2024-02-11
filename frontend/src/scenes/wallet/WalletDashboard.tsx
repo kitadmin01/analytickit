@@ -250,31 +250,33 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
         />
       )}
 
-      {/* Render the Dual Axis Bar Graph for Gas Usage and Costs */}
-      <DualAxisBarGraph 
-      data={gasUsageAndCostData}
-      title="Gas Usage and Costs"
-      description="Comparison of gas usage and costs across addresses."
+          {/* Render the Dual Axis Bar Graph for Gas Usage and Costs from fn  metric_calculator.calculate_gas_usage_and_costs()*/}
+          <DualAxisBarGraph 
+          data={gasUsageAndCostData}
+          title="Gas Usage and Costs"
+          description="Comparison of gas usage and costs across addresses."
+          />
+
+          {/* Render the Heatmap from fn metric_calculator.calculate_active_periods()*/}
+          <GenericHeatmap 
+          data={heatmapData}
+          xLabels={xLabels}
+          yLabels={yLabels}
+          title="Engagement Heatmap: Users and Contracts Daily"
+          description="Displays total contract calls and active user counts against dates, showing activity patterns."
+        />
+
+        {/* Render the Network Graph  from fn metric_calculator.calculate_smart_contract_interactions()*/}
+        <GenericNetworkGraph 
+        tokenFlow={networkGraphData.tokenFlow}
+        mostActiveTokenAddresses={networkGraphData.mostActiveTokenAddresses}
+        title="Smart Contract Interactions"
+        description="Network graph showing interactions between smart contracts."
+        width={600} // Adjust as needed
+        height={400} // Adjust as needed
       />
 
-      {/* Render the Heatmap */}
-      <GenericHeatmap 
-      data={heatmapData}
-      xLabels={xLabels}
-      yLabels={yLabels}
-      title="Engagement Heatmap: Users and Contracts Daily"
-      description="Displays total contract calls and active user counts against dates, showing activity patterns."
-    />
-
-    {/* Render the Network Graph */}
-    <GenericNetworkGraph 
-    tokenFlow={networkGraphData.tokenFlow}
-    mostActiveTokenAddresses={networkGraphData.mostActiveTokenAddresses}
-    title="Smart Contract Interactions"
-    description="Network graph showing interactions between smart contracts."
-    width={600} // Adjust as needed
-    height={400} // Adjust as needed
-  />
+      {/* Render the Network Analysis Graph  from fn metric_calculator.calculate_network_analysis()*/}
       <GenericNetworkGraph 
         tokenFlow={networkAnalysisData.networkAnaltokenFlow}
         mostActiveTokenAddresses={networkAnalysisData.netoworkMostActiveTokenAddresses}
@@ -284,19 +286,21 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
         height={400} // Adjust as needed
       />
 
-      {/* Render Time Series Graphs */}
+      {/* Render Time Series Graphs  from fn metric_calculator.calculate_transaction_volume_and_value()*/}
       <GenericTimeSeriesGraph 
         data={historicalTrendsData.volumeData}
         title="Historical Volume Trends"
         yAxisLabel="Volume"
         description="This graph displays the historical volume trends."
       />
+      {/* Render Time Series Graphs  from fn metric_calculator.calculate_transaction_volume_and_value()*/}
       <GenericTimeSeriesGraph 
         data={historicalTrendsData.valueData}
         title="Historical Value Trends"
         yAxisLabel="Value"
         description="This graph displays the historical value trends."
       />
+      {/* Render the Cross Contract Network Graph  from fn metric_calculator.calculate_cross_contract_analysis()*/}
       <GenericNetworkGraph 
         tokenFlow={crossContractAnalysisData.crossContractTokenFlow}
         mostActiveTokenAddresses={crossContractAnalysisData.crossContractMostActiveTokenAddresses}
@@ -305,6 +309,7 @@ const WalletDashboard: React.FC<DashboardProps> = ({ teamId }) => {
         width={600} // Adjust as needed
         height={400} // Adjust as needed
       />
+      {/* Render the Whale Tracking Analysis  from fn metric_calculator.calculate_whale_tracking()*/}
       <GenericBarGraph 
         data={whaleTrackingData}
         title="Whale Tracking Analysis"

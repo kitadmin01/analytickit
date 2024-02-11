@@ -298,6 +298,10 @@ class MetricCalculator:
         # Extract the 'receipt_effective_gas_price' from each transaction
         gas_prices = [transaction.get('receipt_effective_gas_price', 0) for transaction in transactions_data]
         
+        # Handle case where gas_prices is empty
+        if not gas_prices or all(price == 0 for price in gas_prices):
+            return {}  # Return an empty dictionary or any other default value you see fit
+        
         # Find the range of gas prices
         min_gas_price = min(gas_prices)
         max_gas_price = max(gas_prices)
@@ -318,6 +322,7 @@ class MetricCalculator:
 
         converted_data = {f"{k[0]}_{k[1]}": v for k, v in histogram.items()}            
         return converted_data
+
 
 
 

@@ -137,7 +137,11 @@ class S3Retriever:
         
         logger.info("Processing file: %s", key)
 
-        query = f"SELECT * FROM S3Object s WHERE s.receipt_contract_address = '{contract_address}' OR s.from_address = '{contract_address}' OR s.to_address = '{contract_address}' OR s.token_address = '{token_address}' "
+        # Convert addresses to lowercase before executing the query
+        contract_address_lower = contract_address.lower()
+        token_address_lower = token_address.lower()
+
+        query = f"SELECT * FROM S3Object s WHERE s.receipt_contract_address = '{contract_address_lower}' OR s.from_address = '{contract_address_lower}' OR s.to_address = '{contract_address_lower}' OR s.token_address = '{token_address_lower}' "
         content_response = s3.select_object_content(
             Bucket=bucket,
             Key=key,
@@ -146,7 +150,7 @@ class S3Retriever:
             InputSerialization={'Parquet': {}},
             OutputSerialization={'JSON': {}}
         )
-
+        
         buffer = ""
         for event in content_response['Payload']:
             if 'Records' in event:

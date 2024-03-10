@@ -104,6 +104,8 @@ CLICKHOUSE_ALLOW_PER_SHARD_EXECUTION = get_from_env(
     "CLICKHOUSE_ALLOW_PER_SHARD_EXECUTION", False, type_cast=str_to_bool
 )
 
+
+
 _clickhouse_http_protocol = "http://"
 _clickhouse_http_port = "8123"
 if CLICKHOUSE_SECURE:
@@ -179,3 +181,4 @@ if TEST:
     CACHES["default"] = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
+

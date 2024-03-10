@@ -11,7 +11,7 @@ from logger_config import logger
 import datetime
 from collections import defaultdict
 from typing import Tuple
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, getcontext, ROUND_DOWN, localcontext
 from collections import Counter
 from datetime import datetime, timedelta
 from decimal import Decimal, InvalidOperation
@@ -31,59 +31,59 @@ class MetricCalculator:
         self.contract_address = contract_address
         self.token_address = token_address
 
+    
 
     def average_effective_gas_price(self):
         '''
-        Calculate average effective gas price using receipt_effective_gas_price and return
-        the value in wei, 1 Gwei = 10^9 Wei
+        Calculate the average effective gas price using receipt_effective_gas_price and return
+        the value in Gwei. 1 Gwei = 10^9 Wei.
+
+        The function iterates over all transactions, sums their effective gas prices,
+        calculates the average, and converts this average to Gwei by dividing by 10^9.
+
+        Returns:
+            float: The average effective gas price in Gwei, or 0 if there's no transaction data.
         '''
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
 
-        # Check if there's any data
         if not transactions_data:
-            return 0
+            return Decimal('0')
 
-        # Extracting the 'receipt_effective_gas_price' from each transaction and converting to Gwei
-        total_gas_price = sum(transaction.get('receipt_effective_gas_price', 0) for transaction in transactions_data)
-
-        # Calculating the average and converting to Gwei
-        avg_gas_price = total_gas_price / len(transactions_data) / 1e9
+        total_gas_price = sum(Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data)
+        avg_gas_price = (total_gas_price / Decimal(len(transactions_data)) / Decimal('1e9')).quantize(Decimal('0.00000'), rounding=ROUND_DOWN)
 
         return avg_gas_price
-    
 
     
+
+
     def median_effective_gas_price(self):
-        '''
-        Calculate median effective gas price using receipt_effective_gas_price and return
-        the value in Gwei, 1 Gwei = 10^9 Wei
-        '''
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
 
-        # Check if there's any data
+         # Check if there's any data
         if not transactions_data:
-            return 0
+            return Decimal('0')
 
-        # Extracting the 'receipt_effective_gas_price' for each transaction
-        sorted_gas_prices = sorted([transaction.get('receipt_effective_gas_price', 0) for transaction in transactions_data])
 
-        median_gas_price = 0
+        # Extracting the 'receipt_effective_gas_price' for each transaction and converting to Decimal
+        sorted_gas_prices = sorted([Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data])
         num_transactions = len(sorted_gas_prices)
 
         # If there's an even number of transactions, find the average of the two middle values
         if num_transactions % 2 == 0:
             mid1 = sorted_gas_prices[(num_transactions // 2) - 1]
             mid2 = sorted_gas_prices[num_transactions // 2]
-            median_gas_price = (mid1 + mid2) / 2
-        # If there's an odd number of transactions, find the middle value
+            median_gas_price = (mid1 + mid2) / Decimal('2')
         else:
+            # If there's an odd number of transactions, find the middle value
             median_gas_price = sorted_gas_prices[num_transactions // 2]
 
-        # Convert to Gwei
-        median_gas_price = median_gas_price / 1e9
+        # Convert to Gwei using Decimal for precision
+        median_gas_price = (median_gas_price / Decimal('1e9')).quantize(Decimal('0.00000'), rounding=ROUND_DOWN)
 
         return median_gas_price
-    
+
+
 
     def gas_price_range(self):
         '''
@@ -105,6 +105,28 @@ class MetricCalculator:
         max_gas_price = max(gas_prices) / 1e9
 
         return (min_gas_price, max_gas_price)
+    
+
+    def gas_price_range(self):
+        '''
+        Calculate daily gas price range using receipt_effective_gas_price and return
+        the range as (min, max) both in Gwei, 1 Gwei = 10^9 Wei.
+        If no transactions data available, it returns (0, 0)
+        '''
+        transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
+
+        if not transactions_data:
+            return (Decimal('0'), Decimal('0'))
+
+        # Convert gas prices to Decimal and in Gwei
+        gas_prices = [Decimal(transaction.get('receipt_effective_gas_price', '0')) / Decimal('1e9') for transaction in transactions_data]
+
+        # Calculate min and max gas price, ensuring they fit the model field's constraints
+        min_gas_price = min(gas_prices).quantize(Decimal('0.00000'), rounding=ROUND_DOWN)
+        max_gas_price = max(gas_prices).quantize(Decimal('0.00000'), rounding=ROUND_DOWN)
+
+        return (min_gas_price, max_gas_price)
+
     
     
     def total_daily_fees(self):
@@ -236,51 +258,83 @@ class MetricCalculator:
         return {"above": above_count, "below": below_count}
 
 
+
+
     def daily_standard_deviation(self):
         '''
         Calculate the daily standard deviation of the gas prices using receipt_effective_gas_price. 
-        The result is given in Gwei.
+        The result is given in Gwei, with improved precision using the Decimal class.
+        Transactions data is iterated to extract 'receipt_effective_gas_price', convert it to Decimal,
+        and then to Gwei by dividing by 1e9. The mean of these gas prices is calculated, followed by 
+        the variance, and finally, the standard deviation using Decimal's sqrt() method.
         '''
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
 
-        # Check if there's any data
         if not transactions_data:
-            return 0
+            return Decimal('0')
 
-        # Extracting the 'receipt_effective_gas_price' from each transaction and converting to Gwei
-        gas_prices = [transaction.get('receipt_effective_gas_price', 0) / 1e9 for transaction in transactions_data]
+        # Ensure the decimal context is sufficient for sqrt operation
+        getcontext().prec = 28
 
-        # Calculate mean gas price
-        mean_gas_price = sum(gas_prices) / len(gas_prices)
+        gas_prices = [Decimal(transaction.get('receipt_effective_gas_price', '0')) / Decimal('1e9') for transaction in transactions_data]
+        mean_gas_price = sum(gas_prices) / Decimal(len(gas_prices))
+        variance = sum((price - mean_gas_price) ** 2 for price in gas_prices) / Decimal(len(gas_prices))
+        std_dev = variance.sqrt()  # Calculate square root for standard deviation
 
-        # Calculate the variance
-        variance = sum((price - mean_gas_price) ** 2 for price in gas_prices) / len(gas_prices)
-
-        # Calculate the standard deviation
-        std_dev = variance ** 0.5
-
-        return std_dev
+        # Quantize the result to ensure it matches the database field's decimal places
+        return std_dev.quantize(Decimal('0.00000'))
 
 
     def cumulative_gas_used(self):
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
         return sum(transaction.get('gas', 0) for transaction in transactions_data)
 
-    def cumulative_transaction_fees(self):
+
+    def calculate_cumulative_transaction_fees_adjusted(self):
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
-        return sum(transaction.get('gas', 0) * transaction.get('receipt_effective_gas_price', 0) for transaction in transactions_data)
+        if not transactions_data:
+            return Decimal('0')
+
+        # Calculate the sum of all transaction fees
+        total_fees = sum(Decimal(transaction.get('gas', 0)) * Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data)
+
+        # Ensure the total fees do not exceed the max allowed value for the field's precision
+        max_value_exponent = 20 - 10  # max_digits (30) - decimal_places (10)
+        max_value = Decimal('9' * max_value_exponent + '.' + '9' * 10)  # Constructing max possible value based on field definition
+
+        if total_fees > max_value:
+            # If total fees exceed max value, adjust to max allowed value
+            total_fees = max_value
+        else:
+            # If within range, ensure it adheres to the decimal place constraint
+            scale = '0.0000000000'  # 10 decimal places
+            total_fees = total_fees.quantize(Decimal(scale))
+
+        return total_fees
+
+
+
+
 
     def cumulative_avg_gas_price(self):
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
-        total_gas_price = sum(transaction.get('receipt_effective_gas_price', 0) for transaction in transactions_data)
+        if not transactions_data:
+            return Decimal('0')
+
+        total_gas_price = sum(Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data)
         total_transactions = len(transactions_data)
-        return total_gas_price / total_transactions if total_transactions > 0 else 0
+
+        # Calculate the average, ensuring precision and rounding down to match field constraints.
+        avg_gas_price = (total_gas_price / Decimal(total_transactions)).quantize(Decimal('0.00000'), rounding=ROUND_DOWN)
+
+        return avg_gas_price
+
+
 
     def cumulative_transactions_count(self):
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
         return len(transactions_data)
     
-
 
     def gas_price_histogram(self, bins=10):
         '''
@@ -298,16 +352,23 @@ class MetricCalculator:
         # Extract the 'receipt_effective_gas_price' from each transaction
         gas_prices = [transaction.get('receipt_effective_gas_price', 0) for transaction in transactions_data]
         
-        # Handle case where gas_prices is empty
+        # Handle case where gas_prices is empty or all prices are 0
         if not gas_prices or all(price == 0 for price in gas_prices):
             return {}  # Return an empty dictionary or any other default value you see fit
         
         # Find the range of gas prices
-        min_gas_price = min(gas_prices)
-        max_gas_price = max(gas_prices)
+        try:
+            min_gas_price = min(gas_prices)
+            max_gas_price = max(gas_prices)
+        except ValueError:
+            return {}  # Return an empty dictionary if gas_prices is empty
         
         # Determine the width of each bin
-        bin_width = (max_gas_price - min_gas_price) / bins
+        bin_width = (max_gas_price - min_gas_price) / bins if min_gas_price != max_gas_price else 1
+        
+        # Adjust for case where all gas prices are the same
+        if bin_width == 0:
+            bin_width = 1  # or any small value to avoid division by zero later
         
         # Create the bins and initialize their counts to 0
         bin_edges = [min_gas_price + i * bin_width for i in range(bins + 1)]
@@ -322,6 +383,7 @@ class MetricCalculator:
 
         converted_data = {f"{k[0]}_{k[1]}": v for k, v in histogram.items()}            
         return converted_data
+
 
 
 
@@ -364,27 +426,16 @@ class MetricCalculator:
         Calculate and return the average gas used per transaction based on the input S3 data.
         - self.data: Dictionary with s3 keys as keys and transaction data as values.
 
-        Gas-Related Fields in transaction data
-        gas:The amount of gas units that a transaction is allowed to consume.
-        Note: Transactions specify the maximum amount of gas they are willing to consume, and unused gas is refunded.
+        Gas-Related Fields in transaction data:
+        - gas: The amount of gas units that a transaction is allowed to consume.
+        - gas_price: The price (in wei) that the sender is willing to pay per unit of gas.
+        - max_fee_per_gas: The maximum fee per gas unit the sender is willing to pay.
+        - max_priority_fee_per_gas: The maximum fee per gas unit to be sent to the miner, in case of congestion.
+        - receipt_gas_used: Actual amount of gas units consumed by the transaction.
+        - receipt_cumulative_gas_used: The total amount of gas used in the block when this transaction was processed.
+        - receipt_effective_gas_price: The effective gas price paid by the sender.
 
-        gas_price:The price (in wei, where 1 ether = 10^18 wei) that the sender is willing to pay per unit of gas.
-        Note: This is typical for legacy transactions (type 0x0). The user specifies a gas price, and the total transaction fee is gas_price * gas_used.
-        
-        max_fee_per_gas: The maximum fee per gas unit the sender is willing to pay.
-        Note: Used in EIP-1559 transactions, where the user specifies a maximum they are willing to pay per gas unit.
-        
-        max_priority_fee_per_gas:The maximum fee per gas unit to be sent to the miner, in case of congestion.
-        Note: Also used in EIP-1559 transactions, to determine how much of the total fee goes to the miner.
-
-        receipt_gas_used:Actual amount of gas units consumed by the transaction.
-        Note: At the end of execution, the actual gas used is calculated. The remaining (if any) of gas - receipt_gas_used is refunded.
-        
-        receipt_cumulative_gas_used:The total amount of gas used in the block when this transaction was processed.
-        Note: Shows the accumulative gas used in the block up to and including this transaction.
-        
-        receipt_effective_gas_price:The effective gas price paid by the sender, considering base fee and priority fee.
-        Note: Especially relevant in EIP-1559 transactions.
+        Returns the average gas used per transaction, rounded to a maximum of five decimal places.
         """
 
         # Extract 'transactions' data from s3_data
@@ -397,18 +448,23 @@ class MetricCalculator:
 
         # If there are no transactions, return 0 to avoid division by zero
         if not transactions_data:
-            return 0
+            return 0.0
 
         # Sum up all the 'receipt_gas_used' values
         try:
             total_gas_used = sum(int(txn.get('receipt_gas_used', 0)) for txn in transactions_data)
         except ValueError:
             # Handle cases where 'receipt_gas_used' cannot be converted to an integer
-            # Depending on your use case, you might log an error, raise an exception, or perhaps use a default value
             raise ValueError("Encountered an invalid 'receipt_gas_used' value")
 
-        # Return the average gas used per transaction
-        return total_gas_used / len(transactions_data)
+        # Calculate the average gas used per transaction and round to five decimal places
+        average_gas_used = round(total_gas_used / len(transactions_data), 5)
+
+        # Ensure the result's absolute value is less than 10^15
+        if abs(average_gas_used) >= 10**15:
+            raise ValueError("Average gas used exceeds the maximum value allowed by the database field")
+
+        return average_gas_used
 
 
 
@@ -467,15 +523,17 @@ class MetricCalculator:
 
 
 
+
     def calculate_average_transaction_fee(self):
         """
-        Calculate the average transaction fee from transaction data.
+        Calculate the average transaction fee from transaction data, ensuring the result
+        does not exceed the maximum allowed value for fields with precision 20 and scale 5.
         
         Returns:
-            float: The average transaction fee or 0 if there's no transaction data.
-            gas_price is calculated in Gwei and returned as Gwei. Not converted to ETH
+            Decimal: The average transaction fee rounded to five decimal places or 0 if there's no transaction data.
+            The fee is calculated in Gwei and not converted to ETH.
         """
-        total_fee = 0
+        total_fee = Decimal('0')
         total_transactions = 0
         
         # Loop through all data keys (file paths/identifiers)
@@ -484,19 +542,28 @@ class MetricCalculator:
             for txn in self.data[data_key]:
                 try:
                     # Add to the total_fee the product of gas_price and receipt_gas_used for this txn
-                    total_fee += int(float(txn.get('gas_price', 0))) * int(float(txn.get('receipt_gas_used', 0)))
+                    total_fee += Decimal(txn.get('gas_price', 0)) * Decimal(txn.get('receipt_gas_used', 0))
                     
                     # Increment total transaction count
                     total_transactions += 1
                     
-                except ValueError as e:
-                    # Optionally: Log this error to a file or monitoring system
+                except (ValueError, InvalidOperation) as e:
+                    # Log this error
                     print(f"Error calculating fee for a transaction: {e}")
-                    # Decide: whether to continue, return, or break. Using continue to skip to the next iteration.
                     continue
 
-        # Return average or 0 if no transactions were processed
-        return total_fee / total_transactions if total_transactions > 0 else 0
+        if total_transactions > 0:
+            # Calculate the average
+            average_fee = total_fee / Decimal(total_transactions)
+            
+            # Ensure the result fits within the database constraints
+            max_allowed_value = Decimal('10') ** 15 - Decimal('1e-5')
+            average_fee = min(average_fee, max_allowed_value).quantize(Decimal('1.00000'), rounding=ROUND_DOWN)
+            
+            return average_fee
+        else:
+            return Decimal('0')
+
 
 
     def calculate_total_transactions_from_address(self) -> dict:
@@ -591,24 +658,6 @@ class MetricCalculator:
     
 
 
-    def calculate_token_transfer_volume(self):
-        total_volume = Decimal('0')
-        
-        # Conversion factor from WEI to ETH
-        wei_to_eth = Decimal('1e-18')
-        
-        # Iterating over each key-value pair in the data dictionary
-        for key, transfers in self.data.items():
-            for transfer in transfers:
-                try:
-                    # Convert value from WEI to ETH and add to the total volume
-                    total_volume += Decimal(transfer.get('value', '0')) * wei_to_eth
-                except InvalidOperation as e:     
-                    logger.error(f"Invalid value for transfer: {transfer}")
-
-        return total_volume
-
-
     def most_active_token_addresses(self):
         # The counter will automatically keep track of counts for each address
         address_counts = Counter()
@@ -638,7 +687,6 @@ class MetricCalculator:
 
     def calculate_token_transfer_volume(self):
         total_volume_wei = Decimal('0')
-        total_volume_eth = Decimal('0')
         
         # Conversion factor from WEI to ETH
         wei_to_eth = Decimal('1e-18')
@@ -655,51 +703,50 @@ class MetricCalculator:
         # Convert the total volume to ETH
         total_volume_eth = total_volume_wei * wei_to_eth
 
-        return total_volume_eth
+        # Quantize the result to fit the max_digits and decimal_places constraints
+        # Ensures that total_volume_eth has no more than 10 decimal places
+        quantized_volume_eth = total_volume_eth.quantize(Decimal('0.0000000000'), rounding=ROUND_DOWN)
+
+        # Ensure that the quantized value doesn't exceed the overall max_digits constraint
+        # This step might not be strictly necessary if total_volume_wei is known to be within a reasonable range,
+        # but it's included here for completeness and to ensure compliance with the field constraints.
+        max_value_str = '9' * (30 - 10) + '.' + '9' * 10  # Constructs a string with 20 nines before the decimal point and 10 nines after
+        max_allowed_value = Decimal(max_value_str)
+        if quantized_volume_eth > max_allowed_value:
+            # Handle cases where even after quantization, the value exceeds the maximum allowed value
+            # This could involve logging a warning and adjusting the value or raising an error
+            quantized_volume_eth = max_allowed_value  # Adjust as necessary
+
+        return quantized_volume_eth
+
 
 
     def calculate_average_token_transfer_value(self):
-        # Initialize variables
-        total_value = 0
+        total_value = Decimal('0')
         total_count = 0
         
-        # Iterate through all partitions in the data
         for partition, token_transfers_data in self.data.items():
-            # Sum up all the token transfer values
-            try:
-                total_value += sum(int(float(transfer.get('value', 0)))
-                                for transfer in token_transfers_data)
-                # Keep track of the total number of token transfers
-                total_count += len(token_transfers_data)
-            except ValueError as ve:
-                print(f"Error converting value to int in partition {partition}: {ve}")
+            for transfer in token_transfers_data:
+                total_value += Decimal(transfer.get('value', '0'))
+                total_count += 1
         
-        # Calculate the average value and convert from Wei to ETH
-        ave_token_transfer_value = (total_value / total_count) / 1e18 if total_count > 0 else 0
+        ave_token_transfer_value = (total_value / Decimal(total_count) * Decimal('1e-18')).quantize(Decimal('0.0000000000'), rounding=ROUND_DOWN) if total_count > 0 else Decimal('0')
         
         return ave_token_transfer_value
 
 
+
     def calculate_token_transfer_value(self):
-        # Initialize a variable to hold the total value in WEI
         total_value_wei = Decimal('0')
-        
-        # Conversion factor from WEI to ETH
         wei_to_eth = Decimal('1e-18')
 
-        # Iterate over each key-value pair in self.data
         for key, token_transfers_data in self.data.items():
             for transfer in token_transfers_data:
-                try:
-                    # Convert string to Decimal and accumulate the total value
-                    total_value_wei += Decimal(transfer.get('value', '0'))
-                except InvalidOperation as e:
-                    logger.error(f"Invalid value for transfer: {transfer}, error: {str(e)}")
+                total_value_wei += Decimal(transfer.get('value', '0'))
 
-        # Convert total value to ETH from WEI
-        total_value_eth = total_value_wei * wei_to_eth
-            
+        total_value_eth = (total_value_wei * wei_to_eth).quantize(Decimal('0.0000000000'), rounding=ROUND_DOWN)
         return total_value_eth
+
 
 
     # Function to reformat the address

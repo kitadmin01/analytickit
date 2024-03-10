@@ -132,10 +132,10 @@ class WalletAddressJob:
 
 
 if __name__ == "__main__":
-    print("started WalletAddressJob")
+    print("Started WalletAddressJob")
     wallet_job = WalletAddressJob
     wallet_job.insert_wallet_login_events()
-    print("completed WalletAddressJob")
+    print("Completed WalletAddressJob")
 
 
 

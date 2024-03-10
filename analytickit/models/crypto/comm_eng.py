@@ -9,6 +9,9 @@ from django.db import models
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 from django.utils.timezone import make_aware
+from django.core.exceptions import ValidationError
+from decimal import Decimal
+
 
 class S3File(models.Model):
     key_name = models.TextField(unique=True)  # Assuming that each keyname is unique.
@@ -206,3 +209,21 @@ class CampaignAnalytic(models.Model):
         
         return campaign_analytic
 
+    
+    def save(self, *args, **kwargs):
+        for field in self._meta.fields:
+            if isinstance(field, models.DecimalField):
+                value = getattr(self, field.name)
+                # Convert value to string to check total digits and scale
+                value_str = str(value)
+                total_digits = len(value_str.replace('.', ''))
+                decimal_places = value_str[::-1].find('.')
+                
+                # Check total digits and decimal places against field's constraints
+                if total_digits > field.max_digits or decimal_places > field.decimal_places:
+                    raise ValidationError(f"{field.name} value {value} exceeds maximum allowed precision or scale.")
+                # Additional check for overall value size
+                if value >= Decimal('1E15'):
+                    raise ValidationError(f"{field.name} value {value} exceeds maximum allowed value of 10^15 for its precision.")
+
+        super().save(*args, **kwargs)

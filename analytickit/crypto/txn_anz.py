@@ -30,6 +30,7 @@ import datetime
 from datetime import datetime, timedelta, date
 from django.utils.timezone import make_aware
 
+
 class TxnAnalyzer:
    
 
@@ -143,7 +144,7 @@ class TxnAnalyzer:
                 camp_analytic.gas_price_histogram_data = met_cal.gas_price_histogram()
                 camp_analytic.daily_standard_deviation = met_cal.daily_standard_deviation()
                 camp_analytic.cumulative_gas_used = met_cal.cumulative_gas_used()
-                camp_analytic.cumulative_transaction_fees = met_cal.cumulative_transaction_fees()
+                camp_analytic.cumulative_transaction_fees = met_cal.calculate_cumulative_transaction_fees_adjusted()
                 camp_analytic.cumulative_avg_gas_price = met_cal.cumulative_avg_gas_price()
                 camp_analytic.cumulative_transactions_count = met_cal.cumulative_transactions_count()
     
@@ -225,13 +226,19 @@ class TxnAnalyzer:
             # Log or print information about fetched files.
             print(f"{len(new_files)} files fetched and stored for date {missing_date}.")
         
-        return f"{fetched_files_count} files fetched and stored for missing dates."              
+        return f"{fetched_files_count} files fetched and stored for missing dates."     
+
+
+
+
+      
 
 
 
 
 if __name__ == "__main__":
     analyzer = TxnAnalyzer("")
+    print("Starting community engagement job...")
 
     if S3File.any_record_exists() is not True:
         # if no signle S3File record exist, fetch all the keys from S3
@@ -243,3 +250,5 @@ if __name__ == "__main__":
 
     # start the campaign analysis
     analyzer.perform_campaign_analysis()
+
+    print("Ending community engagement job...")

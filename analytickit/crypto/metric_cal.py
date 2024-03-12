@@ -28,8 +28,8 @@ class MetricCalculator:
 
     def __init__(self, data: dict, contract_address: str, token_address: str):
         self.data = data
-        self.contract_address = contract_address
-        self.token_address = token_address
+        self.contract_address = contract_address.lower()
+        self.token_address = token_address.lower()
 
     
 
@@ -131,21 +131,21 @@ class MetricCalculator:
     
     def total_daily_fees(self):
         '''
-        Calculate the total fees paid in a day using receipt_effective_gas_price multiplied by gas_used.
-        Return the value in Ether, 1 Ether = 10^18 Wei.
+        Calculate the total fees paid in a day using receipt_effective_gas_price multiplied by receipt_gas_used.
+        Return the value in Ether, 1 Ether = 10^18 Wei, rounded to 10 decimal places.
         If no transactions data available, it returns 0.
         '''
         transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
 
         # Check if there's any data
         if not transactions_data:
-            return 0
+            return Decimal('0.0')
 
-        # Calculate total fees for each transaction and sum them up
-        total_fees = sum(transaction.get('receipt_effective_gas_price', 0) * transaction.get('gas_used', 0) for transaction in transactions_data)
+        # Calculate total fees for each transaction and sum them up, using Decimal for precision
+        total_fees = sum(Decimal(transaction.get('receipt_effective_gas_price', 0)) * Decimal(transaction.get('receipt_gas_used', 0)) for transaction in transactions_data)
 
-        # Convert total fees from Wei to Ether
-        total_fees_in_ether = total_fees / 1e18
+        # Convert total fees from Wei to Ether and round to 10 decimal places
+        total_fees_in_ether = (total_fees / Decimal('1e18')).quantize(Decimal('.0000000001'), rounding=ROUND_DOWN)
 
         return total_fees_in_ether
 
@@ -286,8 +286,11 @@ class MetricCalculator:
 
 
     def cumulative_gas_used(self):
-        transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
-        return sum(transaction.get('gas', 0) for transaction in transactions_data)
+            transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
+            cumulative_gas_used = sum(transaction.get('gas', 0) for transaction in transactions_data)
+            return cumulative_gas_used
+
+
 
 
     def calculate_cumulative_transaction_fees_adjusted(self):
@@ -295,23 +298,20 @@ class MetricCalculator:
         if not transactions_data:
             return Decimal('0')
 
-        # Calculate the sum of all transaction fees
-        total_fees = sum(Decimal(transaction.get('gas', 0)) * Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data)
+        # Calculate the sum of all transaction fees (in wei, converted to Ether within the calculation)
+        total_fees = sum(Decimal(transaction.get('gas', 0)) * Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data) / Decimal('1e18')
 
-        # Ensure the total fees do not exceed the max allowed value for the field's precision
-        max_value_exponent = 20 - 10  # max_digits (30) - decimal_places (10)
-        max_value = Decimal('9' * max_value_exponent + '.' + '9' * 10)  # Constructing max possible value based on field definition
+        # Define the maximum value based on field constraints (30 digits total, 10 of which can be after the decimal)
+        max_value = Decimal('9' * (30 - 10)) + Decimal('0.' + '9' * 10)
 
+        # Adjust total fees to not exceed the max value and to adhere to the decimal place constraint
         if total_fees > max_value:
-            # If total fees exceed max value, adjust to max allowed value
             total_fees = max_value
         else:
-            # If within range, ensure it adheres to the decimal place constraint
-            scale = '0.0000000000'  # 10 decimal places
-            total_fees = total_fees.quantize(Decimal(scale))
+            # Ensure the total fees adhere to the decimal place constraint of 10 decimal places
+            total_fees = total_fees.quantize(Decimal('0.0000000001'), rounding=ROUND_DOWN)
 
         return total_fees
-
 
 
 
@@ -324,10 +324,17 @@ class MetricCalculator:
         total_gas_price = sum(Decimal(transaction.get('receipt_effective_gas_price', '0')) for transaction in transactions_data)
         total_transactions = len(transactions_data)
 
-        # Calculate the average, ensuring precision and rounding down to match field constraints.
-        avg_gas_price = (total_gas_price / Decimal(total_transactions)).quantize(Decimal('0.00000'), rounding=ROUND_DOWN)
+        # Calculate the average in wei, ensuring precision
+        avg_gas_price_wei = total_gas_price / Decimal(total_transactions)
 
-        return avg_gas_price
+        # Convert average gas price from wei to "scaled ether" and adjust rounding to match DB field constraints.
+        # Here, we scale the result by a factor of 10^6 for storage.
+        scale_factor = Decimal('1e6')
+        avg_gas_price_scaled = ((avg_gas_price_wei / Decimal('1e18')) * scale_factor).quantize(Decimal('0.00001'), rounding=ROUND_DOWN)
+
+        return avg_gas_price_scaled
+
+
 
 
 

@@ -121,7 +121,7 @@ export function ConfirmOrganization(): JSX.Element {
                 <LemonDivider thick dashed className="my-6" />
                 <div className="text-center terms-and-conditions-text mt-4 text-muted">
                     Have questions?{' '}
-                    <a href={`https://analytickit.com/support`} target="_blank" rel="noopener">
+                    <a href={`https://analytickit.com/contact-us`} target="_blank" rel="noopener">
                         Visit support
                     </a>{' '}
                     or{' '}

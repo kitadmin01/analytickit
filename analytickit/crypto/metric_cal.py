@@ -443,6 +443,9 @@ class MetricCalculator:
         - receipt_effective_gas_price: The effective gas price paid by the sender.
 
         Returns the average gas used per transaction, rounded to a maximum of five decimal places.
+
+        Average Gas Used over time graph is shown from the data returned by this function
+        
         """
 
         # Extract 'transactions' data from s3_data
@@ -727,7 +730,9 @@ class MetricCalculator:
         return quantized_volume_eth
 
 
-
+    """
+    The values you're seeing on the y-axis of your plot (0.0005, 0.0010, 0.0015, etc.) represent the average token transfer value in ether
+    """
     def calculate_average_token_transfer_value(self):
         total_value = Decimal('0')
         total_count = 0

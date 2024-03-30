@@ -103,7 +103,7 @@ export function ProjectSettings(): JSX.Element {
                 <code>{'</head>'}</code>&nbsp;tag.
                 <br />
                 For more guidance, including on identifying visitors,{' '}
-                <a href="https://analytickit.com/doc/setup/how-to-setup-analytickit-in-wordpress/">see analytickit Docs</a>.
+                <a href="https://analytickit.com/doc/" target="_blank">see analytickit Docs</a>.
                 {currentTeamLoading && !currentTeam ? loadingComponent : <JSSnippet />}
                 <p>
                     You can even test analytickit out on a live site without changing any code.
@@ -120,7 +120,7 @@ export function ProjectSettings(): JSX.Element {
                 <h2 id="custom-events" className="subtitle">
                     Send custom events
                 </h2>
-                To send custom events <a href="https://analytickit.com/docs/integrations">visit analytickit Docs</a> and
+                To send custom events <a href="https://analytickit.com/doc/" target="_blank"> visit analytickit Docs</a> and
                 integrate the library for the specific language or platform you're using. We support Python, Ruby, Node,
                 Go, PHP, iOS, Android, and more.
                 <LemonDivider className="my-6" />
@@ -132,7 +132,7 @@ export function ProjectSettings(): JSX.Element {
                 </h3>
                 <p>
                     You can use this write-only key in any one of{' '}
-                    <a href="https://analytickit.com/docs/integrations">our libraries</a>.
+                    <a href="https://analytickit.com/doc/" target="_blank">our libraries</a>.
                 </p>
                 <CodeSnippet
                     actions={[
@@ -165,7 +165,7 @@ export function ProjectSettings(): JSX.Element {
                     Camapaign ID
                 </h3>
                 <p>
-                    You can use this ID to reference your campaign in our <a href="https://analytickit.com/docs/api">API</a>.
+                    You can use this ID to reference your campaign in our <a href="https://analytickit.com/docs">API</a>.
                 </p>
                 <CodeSnippet copyDescription="campaign ID">{String(currentTeam?.id || '')}</CodeSnippet>
                 <LemonDivider className="my-6" />
@@ -298,7 +298,7 @@ export function ProjectSettings(): JSX.Element {
                     Please note <b>your website needs to have</b> the <a href="#snippet">analytickit snippet</a> or the
                     latest version of{' '}
                     <a
-                        href="https://analytickit.com/docs/integrations/js-integration?utm_campaign=session-recording&utm_medium=in-product"
+                        href="https://analytickit.com/docs/"
                         target="_blank"
                     >
                         analytickit-js
@@ -306,7 +306,7 @@ export function ProjectSettings(): JSX.Element {
                     <b>directly</b> installed, and the domains you wish to record must be set in{' '}
                     <a href="#authorized-urls">Authorized URLs</a>. For more details, check out our{' '}
                     <a
-                        href="https://analytickit.com/docs/user-guides/recordings?utm_campaign=session-recording&utm_medium=in-product"
+                        href="https://analytickit.com/docs/"
                         target="_blank"
                     >
                         docs

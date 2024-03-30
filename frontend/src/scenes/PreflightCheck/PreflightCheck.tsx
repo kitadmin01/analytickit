@@ -213,7 +213,7 @@ export function PreflightCheck(): JSX.Element {
 
                             <p className="text-center mt-4 mb-0">
                                 Need help? Take a look at our{' '}
-                                <a href="https://analytickit.com/docs/self-host/deploy/troubleshooting" target="_blank">
+                                <a href="https://analytickit.com/docs/" target="_blank">
                                     documentation
                                 </a>{' '}
                                 or{' '}

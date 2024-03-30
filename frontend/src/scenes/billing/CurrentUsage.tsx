@@ -63,7 +63,7 @@ export function CurrentUsage(): JSX.Element | null {
                 ) : (
                     <>
                         We can't show your current bill amount right now. Please check back again in a few minutes or{' '}
-                        <a href="https://analytickit.com/support/" target="_blank">
+                        <a href="https://analytickit.com/contact-us/" target="_blank">
                             contact us
                         </a>{' '}
                         if this message does not disappear.
@@ -94,7 +94,7 @@ export function CurrentUsage(): JSX.Element | null {
                     <div>
                         Currently we do not have information about the number of billed events. Please check back again
                         in a few minutes or{' '}
-                        <a href="https://analytickit.com/support/" target="_blank">
+                        <a href="https://analytickit.com/contact-us/" target="_blank">
                             contact us
                         </a>{' '}
                         if this message does not disappear.

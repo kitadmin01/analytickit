@@ -85,9 +85,13 @@ class CommunityEngagementViewSet(viewsets.ModelViewSet):
     ordering_fields = ['creation_ts', 'update_ts']
     pagination_class = StandardResultsSetPagination
 
+    # returns all the community engagements for the current team_id
+    #url /campaign/team_id
     def get_queryset(self):
         # You can add filters here if needed
-        return super().get_queryset()
+        # add fiter request.user.current_team_id
+        return CommunityEngagement.objects.filter(team_id=self.request.user.current_team_id)
+        # return super().get_queryset()
 
     
     def create(self, request, *args, **kwargs):

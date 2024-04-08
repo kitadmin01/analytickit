@@ -52,7 +52,7 @@ export function BillingEnrollment(): JSX.Element | null {
             .then(data => setAvailablePlans(data));
     }, []);
 
-    const STRIPE_PUBLIC_KEY = "pk_test_51MCCGYFtMel7myQSEOfWiBOkj5xiGIBFWurBvRQuk9NmMCl6KyidtoGLobYwWd84ADPNwUBS71VS1GVC7vm9P9Jx00QxCLxtJ4";
+    const STRIPE_PUBLIC_KEY = "pk_live_51MCCGYFtMel7myQSKeJgrsPhqGWyVzt2eEt032NldI3OYpeHlQJ5GSapMVZFTt5PJfyLB8ejLUhpt8SGMsZ53uOQ003ViGi8rw";
     const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
     const handleBillingSubscribe = (plan: PlanType): void => {

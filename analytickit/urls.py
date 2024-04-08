@@ -157,7 +157,7 @@ urlpatterns = [
         name="check-eligibility",
     ),
     path(
-        "api/campaign/",
+        "api/campaign/<int:pk>/",
         CommunityEngagementViewSet.as_view({"get": "list", "post": "create"}),
         name="campaign-list-create",
     ),

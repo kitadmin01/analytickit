@@ -16,25 +16,26 @@ class WalletAddressMetricCal:
 
       def calculate_transaction_volume_and_value(self):
             wallet_addresses = VisitorWalletAddress.objects.filter(team_id=self.team_id)
-            results = {}
+            results = defaultdict(lambda: {'total_volume': 0, 'total_value': Decimal('0')})
 
             for wallet_address in wallet_addresses:
                   transactions = wallet_address.txn_data
-                  total_volume = len(transactions)
-                  
-                  total_value = Decimal('0')
+                  wallet_key = wallet_address.visitor_wallet_address
+
+                  # Update total volume for this wallet address
+                  results[wallet_key]['total_volume'] += len(transactions)
+
+                  # Update total value for this wallet address
                   for txn in transactions:
                         try:
                               if 'value' in txn:
-                                    total_value += Decimal(str(txn['value']))
+                                    results[wallet_key]['total_value'] += Decimal(str(txn['value']))
                         except Exception as e:
                               logger.error(f"Unexpected error in calculate_transaction_volume_and_value: {e}")
 
-                  results[wallet_address.visitor_wallet_address] = {
-                        'total_volume': total_volume,
-                        # Convert Decimal to a string for serialization
-                        'total_value': str(total_value)
-                  }
+            # Convert all Decimal values to strings for serialization
+            for key, value in results.items():
+                  value['total_value'] = str(value['total_value'])
 
             return json.dumps(results)
 

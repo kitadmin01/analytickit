@@ -97,6 +97,11 @@ export const urls = {
     billingSuccess: (): string => '/success',
     billingCancel: (): string => '/cancel',
 
+    // new Crypto Dashboard URLs
+    web3Dashboards: (): string => '/web3-dashboard',
+    web3Dashboard: (id: string): string => `/web3-dashboard-detail/${id}`,
+
+
 
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {

@@ -248,6 +248,8 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Billing Cancel',
     },
+
+    
 }
 
 
@@ -342,6 +344,8 @@ export const routes: Record<string, Scene> = {
     [urls.walletAddress(':teamId')]: Scene.WalletAddress,
     [urls.billingSuccess()]: Scene.BillingSuccess,
     [urls.billingCancel()]: Scene.BillingCancel,
+    [urls.web3Dashboards()]: Scene.Web3Dashboard,
+    [urls.web3Dashboard(':id')]: Scene.Web3Dashboard,
 
     
 }

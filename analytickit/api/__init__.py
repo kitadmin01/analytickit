@@ -164,4 +164,10 @@ router.register(r"campaign", CommunityEngagementViewSet)
 from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
 router.register(r'wallet-address-metrics', VisitorWallatAddressModelViewSet, basename='wallet-address-metrics')
 
+from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
+router.register(r'web3-dashboard', CryptoDashboardsViewSet, basename='web3-dashboard')
+
+from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
+router.register(r'web3-dashboard-detail', CryptoDashboardsViewSet, basename='web3-dashboard-detail')
+
 

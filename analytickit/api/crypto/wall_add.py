@@ -48,7 +48,10 @@ class VisitorWallatAddressModelViewSet(viewsets.ModelViewSet):
         else:
             return Response({"message": "Please specify a team_id to view metrics."})
 
-
+    '''
+    This method is called when /api/wallet-address-metrics is called from UI due to ViewSet and the data
+    is used on the WalletDashboard UI
+    '''
     def get_metrics(self, request):
         team_id = request.query_params.get('team_id')
         if not team_id:

@@ -1,1 +1,6 @@
 from analytickit.models.crypto.wallet_address import VisitorWalletAddress
+from analytickit.models.crypto.crypto_analytic import CryptoAnalytic
+from analytickit.models.crypto.crypto_analytic import CryptoInsightViewed
+from analytickit.models.crypto.crypto_dashboard import CryptoDashboard
+from analytickit.models.crypto.crypto_tile import CryptoDashboardTile
+

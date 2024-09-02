@@ -30,6 +30,8 @@ from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
 from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
+from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
+
 
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
@@ -169,6 +171,10 @@ urlpatterns = [
         name="campaign-detail",
     ),
     path('api/wallet-address-metrics/', VisitorWallatAddressModelViewSet.as_view({'get': 'get_metrics'}), name='wallet-address-metrics'),
+
+    # Crypto dashboard URLs
+    path("api/web3-dashboard/", CryptoDashboardsViewSet.as_view({"get": "list", "post": "create"}), name="web3-dashboard"),
+    path("api/web3-dashboard/<int:pk>/",CryptoDashboardsViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}), name="web3-dashboard-detail"),
 
 
 

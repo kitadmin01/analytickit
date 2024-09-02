@@ -5,7 +5,7 @@ import { delay, idToKey, isUserLoggedIn } from 'lib/utils'
 import { DashboardEventSource, eventUsageLogic } from 'lib/utils/eventUsageLogic'
 import React from 'react'
 import type { dashboardsModelType } from './dashboardsModelType'
-import { InsightModel, DashboardType, InsightShortId } from '~/types'
+import { InsightModel, DashboardType, InsightShortId, CryptoDashboardType } from '~/types'
 import { urls } from 'scenes/urls'
 import { teamLogic } from 'scenes/teamLogic'
 import { lemonToast } from 'lib/components/lemonToast'
@@ -13,20 +13,14 @@ import { lemonToast } from 'lib/components/lemonToast'
 export const dashboardsModel = kea<dashboardsModelType>({
     path: ['models', 'dashboardsModel'],
     actions: () => ({
-        delayedDeleteDashboard: (id: number) => ({ id }),
+        delayedDeleteDashboard: (id: string) => ({ id }),
         setDiveSourceId: (id: InsightShortId | null) => ({ id }),
-        setLastDashboardId: (id: number) => ({ id }),
-        addDashboardSuccess: (dashboard: DashboardType) => ({ dashboard }),
-        // this is moved out of dashboardLogic, so that you can click "undo" on a item move when already
-        // on another dashboard - both dashboards can listen to and share this event, even if one is not yet mounted
-        // can provide dashboard ids if not all listeners will choose to respond to this action
-        // not providing a dashboard id is a signal that all listeners should respond
-        updateDashboardItem: (item: InsightModel, dashboardIds?: Array<DashboardType['id']>) => ({
+        setLastDashboardId: (id: string) => ({ id }),
+        addDashboardSuccess: (dashboard: DashboardType | CryptoDashboardType) => ({ dashboard }),
+        updateDashboardItem: (item: InsightModel, dashboardIds?: Array<string>) => ({
             item,
             dashboardIds,
         }),
-        // a side effect on this action exists in dashboardLogic so that individual refresh statuses can be bubbled up
-        // to dashboard items in dashboards
         updateDashboardRefreshStatus: (
             shortId: string | undefined | null,
             refreshing: boolean | null,
@@ -36,89 +30,133 @@ export const dashboardsModel = kea<dashboardsModelType>({
             refreshing,
             last_refresh,
         }),
-        pinDashboard: (id: number, source: DashboardEventSource) => ({ id, source }),
-        unpinDashboard: (id: number, source: DashboardEventSource) => ({ id, source }),
+        pinDashboard: (id: string, source: DashboardEventSource) => ({ id, source }),
+        unpinDashboard: (id: string, source: DashboardEventSource) => ({ id, source }),
         loadDashboards: true,
-        duplicateDashboard: ({ id, name, show }: { id: number; name?: string; show?: boolean }) => ({
-            id: id,
+        duplicateDashboard: ({ id, name, show }: { id: string; name?: string; show?: boolean }) => ({
+            id,
             name: name || `#${id}`,
             show: show || false,
         }),
     }),
     loaders: ({ values }) => ({
         rawDashboards: [
-            {} as Record<string, DashboardType>,
+            {} as Record<string, DashboardType | CryptoDashboardType>,
             {
                 loadDashboards: async (_, breakpoint) => {
-                    // looking at a fully exported dashboard, return its contents
                     const exportedDashboard = window.ANALYTICKIT_EXPORTED_DATA?.dashboard
                     if (exportedDashboard?.id && exportedDashboard?.items) {
-                        return { [exportedDashboard.id]: exportedDashboard }
+                        return { [`web2-${exportedDashboard.id}`]: exportedDashboard }
                     }
 
                     await breakpoint(50)
 
                     if (!isUserLoggedIn()) {
-                        // If user is anonymous (i.e. viewing a shared dashboard logged out), don't load authenticated stuff
                         return {}
                     }
-                    const { results } = await api.get(
+
+                    // Fetch Web2 dashboards
+                    const { results: web2Dashboards } = await api.get(
                         `api/projects/${teamLogic.values.currentTeamId}/dashboards/?limit=300`
                     )
-                    return idToKey(results ?? [])
+
+                    // Add type "Web2" and prefix ID
+                    const web2DashboardsWithType = web2Dashboards.map((dashboard: DashboardType) => ({
+                        ...dashboard,
+                        id: `web2-${dashboard.id}`,
+                        type: 'Web2',
+                    }))
+
+                    // Fetch Crypto dashboards
+                    const { results: cryptoDashboards } = await api.get(
+                        `api/web3-dashboard/?limit=300`
+                    )
+
+                    // Add type "Web3" and prefix ID
+                    const cryptoDashboardsWithType = cryptoDashboards.map((dashboard: CryptoDashboardType) => ({
+                        ...dashboard,
+                        id: `web3-${dashboard.id}`,
+                        type: 'Web3',
+                    }))
+
+                    // Combine both Web2 and Web3 dashboards
+                    const allDashboards = [...web2DashboardsWithType, ...cryptoDashboardsWithType]
+
+                    return idToKey(allDashboards ?? [])
                 },
             },
         ],
-        // We're not using this loader as a reducer per se, but just calling it `dashboard`
-        // to have the right payload ({ dashboard }) in the Success actions
         dashboard: {
-            __default: null as null | DashboardType,
+            __default: null as null | DashboardType | CryptoDashboardType,
             updateDashboard: async ({ id, ...payload }, breakpoint) => {
                 if (!Object.entries(payload).length) {
                     return
                 }
                 await breakpoint(700)
-                const response = (await api.update(
-                    `api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}`,
-                    payload
-                )) as DashboardType
-                const updatedAttribute = Object.keys(payload)[0]
-                if (updatedAttribute === 'name' || updatedAttribute === 'description' || updatedAttribute === 'tags') {
-                    eventUsageLogic.actions.reportDashboardFrontEndUpdate(
-                        updatedAttribute,
-                        values.rawDashboards[id]?.[updatedAttribute]?.length || 0,
-                        payload[updatedAttribute].length
-                    )
-                }
+
+                const [prefix, dashboardId] = id.split('-')
+                const url =
+                    prefix === 'web2'
+                        ? `api/projects/${teamLogic.values.currentTeamId}/dashboards/${dashboardId}`
+                        : `api/web3-dashboard-detail/${dashboardId}`
+
+                const response = (await api.update(url, payload)) as DashboardType | CryptoDashboardType
                 return response
             },
-            deleteDashboard: async ({ id }) =>
-                (await api.update(`api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}`, {
+            deleteDashboard: async ({ id }) => {
+                const [prefix, dashboardId] = id.split('-')
+                const url =
+                    prefix === 'web2'
+                        ? `api/projects/${teamLogic.values.currentTeamId}/dashboards/${dashboardId}`
+                        : `api/web3-dashboard-detail/${dashboardId}`
+                return (await api.update(url, {
                     deleted: true,
-                })) as DashboardType,
-            restoreDashboard: async ({ id }) =>
-                (await api.update(`api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}`, {
+                })) as DashboardType | CryptoDashboardType
+            },
+            restoreDashboard: async ({ id }) => {
+                const [prefix, dashboardId] = id.split('-')
+                const url =
+                    prefix === 'web2'
+                        ? `api/projects/${teamLogic.values.currentTeamId}/dashboards/${dashboardId}`
+                        : `api/crypto-dashboard/${dashboardId}`
+                return (await api.update(url, {
                     deleted: false,
-                })) as DashboardType,
+                })) as DashboardType | CryptoDashboardType
+            },
             pinDashboard: async ({ id, source }) => {
-                const response = (await api.update(`api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}`, {
+                const [prefix, dashboardId] = id.split('-')
+                const url =
+                    prefix === 'web2'
+                        ? `api/projects/${teamLogic.values.currentTeamId}/dashboards/${dashboardId}`
+                        : `api/crypto-dashboard/${dashboardId}`
+                const response = (await api.update(url, {
                     pinned: true,
-                })) as DashboardType
+                })) as DashboardType | CryptoDashboardType
                 eventUsageLogic.actions.reportDashboardPinToggled(true, source)
                 return response
             },
             unpinDashboard: async ({ id, source }) => {
-                const response = (await api.update(`api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}`, {
+                const [prefix, dashboardId] = id.split('-')
+                const url =
+                    prefix === 'web2'
+                        ? `api/projects/${teamLogic.values.currentTeamId}/dashboards/${dashboardId}`
+                        : `api/crypto-dashboard/${dashboardId}`
+                const response = (await api.update(url, {
                     pinned: false,
-                })) as DashboardType
+                })) as DashboardType | CryptoDashboardType
                 eventUsageLogic.actions.reportDashboardPinToggled(false, source)
                 return response
             },
             duplicateDashboard: async ({ id, name, show }) => {
-                const result = (await api.create(`api/projects/${teamLogic.values.currentTeamId}/dashboards/`, {
-                    use_dashboard: id,
+                const [prefix, dashboardId] = id.split('-')
+                const url =
+                    prefix === 'web2'
+                        ? `api/projects/${teamLogic.values.currentTeamId}/dashboards/`
+                        : `api/crypto-dashboard/`
+                const result = (await api.create(url, {
+                    use_dashboard: dashboardId,
                     name: `${name} (Copy)`,
-                })) as DashboardType
+                })) as DashboardType | CryptoDashboardType
                 if (show) {
                     router.actions.push(urls.dashboard(result.id))
                 }
@@ -136,9 +174,6 @@ export const dashboardsModel = kea<dashboardsModelType>({
             },
         ],
         rawDashboards: {
-            // NB! kea-typegen assignes the type of the reducer to the abcSuccess actions.
-            // This means we must get rid of the `| null` manually until it's fixed:
-            // https://github.com/keajs/kea-typegen/issues/10
             addDashboardSuccess: (state, { dashboard }) => ({ ...state, [dashboard.id]: dashboard }),
             restoreDashboardSuccess: (state, { dashboard }) => ({ ...state, [dashboard.id]: dashboard }),
             updateDashboardSuccess: (state, { dashboard }) =>
@@ -148,7 +183,6 @@ export const dashboardsModel = kea<dashboardsModelType>({
                 [dashboard.id]: { ...state[dashboard.id], deleted: true },
             }),
             delayedDeleteDashboard: (state, { id }) => {
-                // This gives us time to leave the /dashboard/:deleted_id page
                 const { [id]: _discard, ...rest } = state
                 return rest
             },
@@ -160,7 +194,7 @@ export const dashboardsModel = kea<dashboardsModelType>({
             }),
         },
         lastDashboardId: [
-            null as null | number,
+            null as null | string,
             { persist: true },
             {
                 setLastDashboardId: (_, { id }) => id,
@@ -177,7 +211,6 @@ export const dashboardsModel = kea<dashboardsModelType>({
                 )
             },
         ],
-        /** Display dashboards are additionally sorted by pin status: pinned first. */
         pinSortedDashboards: [
             () => [selectors.nameSortedDashboards],
             (nameSortedDashboards) => {
@@ -263,7 +296,7 @@ export const dashboardsModel = kea<dashboardsModelType>({
     urlToAction: ({ actions }) => ({
         '/dashboard/:id': ({ id }) => {
             if (id) {
-                actions.setLastDashboardId(parseInt(id))
+                actions.setLastDashboardId(id)
             }
         },
     }),

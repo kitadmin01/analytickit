@@ -42,6 +42,7 @@ export interface DashboardLogicProps {
     id?: number
     dashboard?: DashboardType
     placement?: DashboardPlacement
+    isCrypto?: boolean
 }
 
 export interface RefreshStatus {
@@ -66,7 +67,7 @@ export const dashboardLogic = kea<dashboardLogicType>({
         if (typeof props.id === 'string') {
             throw Error('Must init dashboardLogic with a numeric key')
         }
-        return props.id ?? 'new'
+        return `${props.isCrypto ? 'crypto' : 'web'}-${props.id ?? 'new'}`
     },
 
     actions: {
@@ -74,15 +75,10 @@ export const dashboardLogic = kea<dashboardLogicType>({
             receivedErrors,
         }),
         loadExportedDashboard: (dashboard: DashboardType | null) => ({ dashboard }),
-        loadDashboardItems: ({
-            refresh,
-        }: {
-            refresh?: boolean
-        } = {}) => ({
+        loadDashboardItems: ({ refresh }: { refresh?: boolean } = {}) => ({
             refresh,
         }),
         triggerDashboardUpdate: (payload) => ({ payload }),
-        /** The current state in which the dashboard is being viewed, see DashboardMode. */
         setDashboardMode: (mode: DashboardMode | null, source: DashboardEventSource | null) => ({ mode, source }),
         updateLayouts: (layouts: Layouts) => ({ layouts }),
         updateContainerWidth: (containerWidth: number, columns: number) => ({ containerWidth, columns }),
@@ -103,13 +99,12 @@ export const dashboardLogic = kea<dashboardLogicType>({
         setRefreshStatus: (shortId: InsightShortId, loading = false) => ({ shortId, loading }),
         setRefreshStatuses: (shortIds: InsightShortId[], loading = false) => ({ shortIds, loading }),
         setRefreshError: (shortId: InsightShortId) => ({ shortId }),
-        reportDashboardViewed: true, // Reports `viewed dashboard` and `dashboard analyzed` events
-        setShouldReportOnAPILoad: (shouldReport: boolean) => ({ shouldReport }), // See reducer for details
+        reportDashboardViewed: true,
+        setShouldReportOnAPILoad: (shouldReport: boolean) => ({ shouldReport }),
         setSubscriptionMode: (enabled: boolean, id?: number | 'new') => ({ enabled, id }),
     },
 
     loaders: ({ actions, props, values }) => ({
-        // TODO this is a terrible name... it is "dashboard" but there's a "dashboard" reducer ¯\_(ツ)_/¯
         allItems: [
             null as DashboardType | null,
             {
@@ -122,8 +117,13 @@ export const dashboardLogic = kea<dashboardLogicType>({
                     }
 
                     try {
-                        const apiUrl = values.apiUrl(refresh)
+                        const apiUrl = props.isCrypto
+                            ? `api/web3-dashboard/${props.id}/?${toParams({ refresh })}`
+                            : `api/projects/${values.currentTeamId}/dashboards/${props.id}/?${toParams({ refresh })}`
+
+                        console.log('Loaded apiUrl:', apiUrl)
                         const dashboard = await api.get(apiUrl)
+
                         actions.setDates(dashboard.filters.date_from, dashboard.filters.date_to, false)
                         return dashboard
                     } catch (error: any) {
@@ -137,6 +137,7 @@ export const dashboardLogic = kea<dashboardLogicType>({
             },
         ],
     }),
+
     reducers: ({ props }) => ({
         receivedErrorsFromAPI: [
             false,
@@ -191,7 +192,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
                 },
                 [dashboardsModel.actionTypes.updateDashboardItem]: (state, { item, dashboardIds }) => {
                     if (dashboardIds && props.id && !dashboardIds.includes(props.id)) {
-                        // this update is not for this dashboard
                         return state
                     }
 
@@ -219,7 +219,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
                     state,
                     { shortId, refreshing, last_refresh }
                 ) => {
-                    // If not a dashboard item, don't do anything.
                     if (!shortId) {
                         return state
                     }
@@ -323,10 +322,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
             },
         ],
         shouldReportOnAPILoad: [
-            /* Whether to report viewed/analyzed events after the API is loaded (and this logic is mounted).
-            We need this because the DashboardView component might be mounted (and subsequent `useEffect`) before the API request
-            to `loadDashboardItems` is completed (e.g. if you open PH directly to a dashboard)
-            */
             false,
             {
                 setShouldReportOnAPILoad: (_, { shouldReport }) => shouldReport,
@@ -347,15 +342,18 @@ export const dashboardLogic = kea<dashboardLogicType>({
             },
         ],
     }),
+
     selectors: () => ({
         placement: [() => [(_, props) => props.placement], (placement) => placement ?? DashboardPlacement.Dashboard],
         apiUrl: [
             () => [(_, props) => props.id],
             (id) => {
                 return (refresh?: boolean) =>
-                    `api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}/?${toParams({
-                        refresh,
-                    })}`
+                    props.isCrypto
+                        ? `api/web3-dashboard/${id}/?${toParams({ refresh })}`
+                        : `api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}/?${toParams({
+                              refresh,
+                          })}`
             },
         ],
         items: [(s) => [s.allItems], (allItems) => allItems?.items?.filter((i) => !i.deleted)],
@@ -400,7 +398,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
             (dashboard) => !!dashboard && dashboard.effective_privilege_level >= DashboardPrivilegeLevel.CanEdit,
         ],
         canRestrictDashboard: [
-            // Sync conditions with backend can_user_restrict
             (s) => [s.dashboard, userLogic.selectors.user, teamLogic.selectors.currentTeam],
             (dashboard, user, currentTeam): boolean =>
                 !!dashboard &&
@@ -420,7 +417,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
         layouts: [
             (s) => [s.items],
             (items) => {
-                // The dashboard redesign includes constraints on the size of dashboard items
                 const minW = MIN_ITEM_WIDTH_UNITS
                 const minH = MIN_ITEM_HEIGHT_UNITS
 
@@ -456,10 +452,8 @@ export const dashboardLogic = kea<dashboardLogicType>({
 
                     const cleanLayouts = layouts?.filter(({ y }) => y !== Infinity)
 
-                    // array of -1 for each column
                     const lowestPoints = Array.from(Array(BREAKPOINT_COLUMN_COUNTS[col])).map(() => -1)
 
-                    // set the lowest point for each column
                     cleanLayouts?.forEach(({ x, y, w, h }) => {
                         for (let i = x; i <= x + w - 1; i++) {
                             lowestPoints[i] = Math.max(lowestPoints[i], y + h - 1)
@@ -469,7 +463,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
                     layouts
                         ?.filter(({ y }) => y === Infinity)
                         .forEach(({ i, w, h }) => {
-                            // how low are things in "w" consecutive of columns
                             const segmentCount = BREAKPOINT_COLUMN_COUNTS[col] - w + 1
                             const lowestSegments = Array.from(Array(segmentCount)).map(() => -1)
                             for (let k = 0; k < segmentCount; k++) {
@@ -544,6 +537,7 @@ export const dashboardLogic = kea<dashboardLogicType>({
             ],
         ],
     }),
+
     events: ({ actions, cache, props }) => ({
         afterMount: () => {
             if (props.id) {
@@ -563,6 +557,7 @@ export const dashboardLogic = kea<dashboardLogicType>({
             }
         },
     }),
+
     sharedListeners: ({ values, props }) => ({
         reportRefreshTiming: ({ shortId }) => {
             const refreshStatus = values.refreshStatus[shortId]
@@ -574,7 +569,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
         },
         reportLoadTiming: () => {
             if (!props.id) {
-                // what even is loading?!
                 return
             }
             if (values.loadTimer) {
@@ -583,6 +577,7 @@ export const dashboardLogic = kea<dashboardLogicType>({
             }
         },
     }),
+
     listeners: ({ actions, values, cache, props, sharedListeners }) => ({
         setRefreshError: sharedListeners.reportRefreshTiming,
         setRefreshStatuses: sharedListeners.reportRefreshTiming,
@@ -599,11 +594,9 @@ export const dashboardLogic = kea<dashboardLogicType>({
         saveLayouts: async (_, breakpoint) => {
             await breakpoint(300)
             if (!isUserLoggedIn()) {
-                // If user is anonymous (i.e. viewing a shared dashboard logged out), we don't save any layout changes.
                 return
             }
             if (!props.id) {
-                // what are we saving layouts against?!
                 return
             }
             await api.update(`api/projects/${values.currentTeamId}/dashboards/${props.id}`, {
@@ -620,7 +613,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
         },
         updateItemColor: async ({ insightNumericId, color }) => {
             if (!props.id) {
-                // what are we saving colors against?!
                 return
             }
 
@@ -629,25 +621,25 @@ export const dashboardLogic = kea<dashboardLogicType>({
             })
         },
         removeItem: async ({ insight }) => {
-            return api.update(`api/projects/${values.currentTeamId}/insights/${insight.id}`, {
+            const apiUrl = props.isCrypto
+                ? `api/crypto_analytics/${insight.id}`
+                : `api/projects/${values.currentTeamId}/insights/${insight.id}`
+            return api.update(apiUrl, {
                 dashboards: insight.dashboards?.filter((id) => id !== props.id) ?? [],
             } as Partial<InsightModel>)
         },
         refreshAllDashboardItemsManual: () => {
-            // reset auto refresh interval
             actions.resetInterval()
             actions.refreshAllDashboardItems()
         },
         refreshAllDashboardItems: async ({ items: _items }, breakpoint) => {
             if (!props.id) {
-                // what are we loading the insight card on?!
                 return
             }
             const dashboardId: number = props.id
 
             const items = _items || values.items || []
 
-            // Don't do anything if there's nothing to refresh
             if (items.length === 0) {
                 return
             }
@@ -658,7 +650,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
                 true
             )
 
-            // array of functions that reload each item
             const fetchItemFunctions = items.map((dashboardItem) => async () => {
                 try {
                     breakpoint()
@@ -666,12 +657,11 @@ export const dashboardLogic = kea<dashboardLogicType>({
                     const refreshedDashboardItem = await api.get(
                         `api/projects/${values.currentTeamId}/insights/${dashboardItem.id}/?${toParams({
                             refresh: true,
-                            from_dashboard: dashboardId, // needed to load insight in correct context
+                            from_dashboard: dashboardId,
                         })}`
                     )
                     breakpoint()
 
-                    // reload the cached results inside the insight's logic
                     if (dashboardItem.filters.insight) {
                         const itemResultLogic = insightLogic?.findMounted({
                             dashboardItemId: dashboardItem.short_id,
@@ -695,7 +685,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
                 }
             })
 
-            // run 4 item reloaders in parallel
             function loadNextPromise(): void {
                 if (!breakpointTriggered && fetchItemFunctions.length > 0) {
                     fetchItemFunctions.shift()?.().then(loadNextPromise)
@@ -709,7 +698,10 @@ export const dashboardLogic = kea<dashboardLogicType>({
         },
         updateAndRefreshDashboard: async (_, breakpoint) => {
             await breakpoint(200)
-            await api.update(`api/projects/${values.currentTeamId}/dashboards/${props.id}`, {
+            const apiUrl = props.isCrypto
+                ? `api/web3-dashboard/${props.id}`
+                : `api/projects/${values.currentTeamId}/dashboards/${props.id}`
+            await api.update(apiUrl, {
                 filters: values.filters,
             })
             actions.refreshAllDashboardItems()
@@ -725,7 +717,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
             eventUsageLogic.actions.reportDashboardPropertiesChanged()
         },
         setDashboardMode: async ({ mode, source }) => {
-            // Edit mode special handling
             if (mode === DashboardMode.Fullscreen) {
                 document.body.classList.add('fullscreen-scroll')
             } else {
@@ -757,7 +748,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
         loadDashboardItemsSuccess: function (...args) {
             sharedListeners.reportLoadTiming(...args)
 
-            // Initial load of actual data for dashboard items after general dashboard is fetched
             if (values.lastRefreshed && values.lastRefreshed.isBefore(now().subtract(3, 'hours'))) {
                 actions.refreshAllDashboardItems()
             } else {
@@ -772,12 +762,10 @@ export const dashboardLogic = kea<dashboardLogicType>({
             }
         },
         reportDashboardViewed: async (_, breakpoint) => {
-            // Caching `allItems`, as the dashboard might have unmounted after the breakpoint,
-            // and "values.allItems" will then fail
             const { allItems, lastRefreshed } = values
             if (allItems) {
                 eventUsageLogic.actions.reportDashboardViewed(allItems, lastRefreshed)
-                await breakpoint(IS_TEST_MODE ? 1 : 10000) // Tests will wait for all breakpoints to finish
+                await breakpoint(IS_TEST_MODE ? 1 : 10000)
                 if (
                     router.values.location.pathname === urls.dashboard(allItems.id) ||
                     router.values.location.pathname === urls.projectHomepage() ||
@@ -786,7 +774,6 @@ export const dashboardLogic = kea<dashboardLogicType>({
                     eventUsageLogic.actions.reportDashboardViewed(allItems, lastRefreshed, 10)
                 }
             } else {
-                // allItems has not loaded yet, report after API request is completed
                 actions.setShouldReportOnAPILoad(true)
             }
         },

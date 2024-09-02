@@ -7,7 +7,7 @@ import { Link } from 'lib/components/Link'
 import { AppstoreAddOutlined, PushpinFilled, PushpinOutlined, ShareAltOutlined } from '@ant-design/icons'
 import { NewDashboardModal } from 'scenes/dashboard/NewDashboardModal'
 import { PageHeader } from 'lib/components/PageHeader'
-import { AvailableFeature, DashboardMode, DashboardType } from '~/types'
+import { AvailableFeature, DashboardType, CryptoDashboardType, DashboardMode, DashboardPlacement } from '~/types'
 import { ObjectTags } from 'lib/components/ObjectTags/ObjectTags'
 import { userLogic } from 'scenes/userLogic'
 import { DashboardEventSource } from 'lib/utils/eventUsageLogic'
@@ -43,7 +43,14 @@ export function Dashboards(): JSX.Element {
     const { currentTeam } = useValues(teamLogic)
     const { closePrompts } = useActions(inAppPromptLogic)
 
-    const columns: LemonTableColumns<DashboardType> = [
+    const getDashboardUrl = (id: string | number, type: string) => {
+        const strippedId = id.toString().replace(/^web2-|^web3-/, '')
+        const prefix = type === 'Web3' ? 'web3-' : 'web2-'
+        const prefixedId = `${prefix}${strippedId}`
+        return type === 'Web3' ? urls.web3Dashboard(prefixedId) : urls.dashboard(prefixedId)
+    }
+
+    const columns: LemonTableColumns<DashboardType | CryptoDashboardType> = [
         {
             width: 0,
             dataIndex: 'pinned',
@@ -65,14 +72,15 @@ export function Dashboards(): JSX.Element {
             title: 'Name',
             dataIndex: 'name',
             width: '40%',
-            render: function Render(name, { id, description, _highlight, is_shared, effective_privilege_level }) {
+            render: function Render(name, { id, description, _highlight, is_shared, effective_privilege_level, type }) {
+                const strippedId = id.toString().replace(/^web2-|^web3-/, '')
                 const isPrimary = id === currentTeam?.primary_dashboard
                 const canEditDashboard = effective_privilege_level >= DashboardPrivilegeLevel.CanEdit
                 return (
                     <div className={_highlight ? 'highlighted' : undefined} style={{ display: 'inline-block' }}>
                         <div className="row-name">
-                            <Link data-attr="dashboard-name" to={urls.dashboard(id)}>
-                                {name || 'Untitled'}
+                            <Link data-attr="dashboard-name" to={getDashboardUrl(id, type)}>
+                                {name || 'Untitled'} ({type === 'Web3' ? 'Crypto' : 'Web'})
                             </Link>
                             {!canEditDashboard && (
                                 <Tooltip title="You don't have edit permissions for this dashboard.">
@@ -120,21 +128,35 @@ export function Dashboards(): JSX.Element {
         createdByColumn<DashboardType>() as LemonTableColumn<DashboardType, keyof DashboardType | undefined>,
         createdAtColumn<DashboardType>() as LemonTableColumn<DashboardType, keyof DashboardType | undefined>,
         {
+            title: 'Type',
+            dataIndex: 'type',
+            render: function RenderType(type) {
+                return type === 'Web3' ? 'Crypto' : 'Web'
+            },
+        },
+        {
             width: 0,
-            render: function RenderActions(_, { id, name }: DashboardType) {
+            render: function RenderActions(_, { id, name, type }: DashboardType) {
+                const strippedId = id.toString().replace(/^web2-|^web3-/, '')
+
                 return (
                     <More
                         overlay={
                             <div style={{ maxWidth: 250 }}>
                                 <LemonButton
                                     status="stealth"
-                                    to={urls.dashboard(id)}
+                                    to={getDashboardUrl(id, type)}
                                     onClick={() => {
-                                        dashboardLogic({ id }).mount()
-                                        dashboardLogic({ id }).actions.setDashboardMode(
-                                            null,
-                                            DashboardEventSource.DashboardsList
-                                        )
+                                        dashboardLogic({
+                                            id: strippedId,
+                                            isCrypto: type === 'Web3',
+                                            placement: DashboardPlacement.ProjectHomepage,
+                                        }).mount()
+                                        dashboardLogic({
+                                            id: strippedId,
+                                            isCrypto: type === 'Web3',
+                                            placement: DashboardPlacement.ProjectHomepage,
+                                        }).actions.setDashboardMode(null, DashboardEventSource.DashboardsList)
                                     }}
                                     fullWidth
                                 >
@@ -142,13 +164,18 @@ export function Dashboards(): JSX.Element {
                                 </LemonButton>
                                 <LemonButton
                                     status="stealth"
-                                    to={urls.dashboard(id)}
+                                    to={getDashboardUrl(id, type)}
                                     onClick={() => {
-                                        dashboardLogic({ id }).mount()
-                                        dashboardLogic({ id }).actions.setDashboardMode(
-                                            DashboardMode.Edit,
-                                            DashboardEventSource.DashboardsList
-                                        )
+                                        dashboardLogic({
+                                            id: strippedId,
+                                            isCrypto: type === 'Web3',
+                                            placement: DashboardPlacement.ProjectHomepage,
+                                        }).mount()
+                                        dashboardLogic({
+                                            id: strippedId,
+                                            isCrypto: type === 'Web3',
+                                            placement: DashboardPlacement.ProjectHomepage,
+                                        }).actions.setDashboardMode(DashboardMode.Edit, DashboardEventSource.DashboardsList)
                                     }}
                                     fullWidth
                                 >

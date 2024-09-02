@@ -6,7 +6,7 @@ import { DateFilter } from 'lib/components/DateFilter/DateFilter'
 import { CalendarOutlined } from '@ant-design/icons'
 import './Dashboard.scss'
 import { useKeyboardHotkeys } from 'lib/hooks/useKeyboardHotkeys'
-import { DashboardPlacement, DashboardMode, DashboardType } from '~/types'
+import { DashboardPlacement, DashboardMode, DashboardType, CryptoDashboardType } from '~/types'
 import { DashboardEventSource } from 'lib/utils/eventUsageLogic'
 import { TZIndicator } from 'lib/components/TimezoneAware'
 import { EmptyDashboardComponent } from './EmptyDashboardComponent'
@@ -20,22 +20,31 @@ import { LemonDivider } from '@analytickit/lemon-ui'
 
 interface Props {
     id?: string
-    dashboard?: DashboardType
+    dashboard?: DashboardType | CryptoDashboardType
     placement?: DashboardPlacement
 }
 
 export const scene: SceneExport = {
     component: DashboardScene,
     logic: dashboardLogic,
-    paramsToProps: ({ params: { id, placement } }: { params: Props }): DashboardLogicProps => ({
-        id: id ? parseInt(id) : undefined,
-        placement,
-    }),
+    paramsToProps: ({ params: { id, placement } }: { params: Props }): DashboardLogicProps => {
+        const parsedId = id ? parseInt(id.replace(/^web2-|^web3-/, '')) : undefined // Strip prefix to get the actual ID
+        const isCrypto = id?.toString().startsWith('web3-') || false // Determine if the ID indicates a Web3 dashboard
+
+        return {
+            id: parsedId,
+            placement,
+            isCrypto,
+        }
+    },
 }
 
 export function Dashboard({ id, dashboard, placement }: Props = {}): JSX.Element {
+    const parsedId = id ? parseInt(id.replace(/^web2-|^web3-/, '')) : undefined
+    const isCrypto = id?.toString().startsWith('web3-') || false // Determine if the ID indicates a Web3 dashboard
+
     return (
-        <BindLogic logic={dashboardLogic} props={{ id: id ? parseInt(id) : undefined, placement, dashboard }}>
+        <BindLogic logic={dashboardLogic} props={{ id: parsedId, placement, dashboard, isCrypto }}>
             <DashboardScene />
         </BindLogic>
     )
@@ -79,7 +88,6 @@ function DashboardScene(): JSX.Element {
                       disabled: dashboardMode !== null && dashboardMode !== DashboardMode.Fullscreen,
                   },
                   escape: {
-                      // Exit edit mode with Esc. Full screen mode is also exited with Esc, but this behavior is native to the browser.
                       action: () => setDashboardMode(null, DashboardEventSource.Hotkey),
                       disabled: dashboardMode !== DashboardMode.Edit,
                   },

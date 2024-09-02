@@ -846,6 +846,29 @@ export interface DashboardType {
     tags?: string[]
     /** Purely local value to determine whether the dashboard should be highlighted, e.g. as a fresh duplicate. */
     _highlight?: boolean
+    type: "Web2" /** type added for crypto */
+}
+
+/** added for Crypto Dashboard */
+export interface CryptoDashboardType {
+    id: number
+    name: string
+    description: string
+    pinned: boolean
+    items: InsightModel[]
+    created_at: string
+    created_by: UserBasicType | null
+    is_shared: boolean
+    deleted: boolean
+    filters: Record<string, any>
+    creation_mode: 'default' | 'template' | 'duplicate'
+    restriction_level: DashboardRestrictionLevel
+    effective_restriction_level: DashboardRestrictionLevel
+    effective_privilege_level: DashboardPrivilegeLevel
+    tags?: string[]
+    /** Purely local value to determine whether the dashboard should be highlighted, e.g. as a fresh duplicate. */
+    _highlight?: boolean
+    type: "Web3" /** type added for crypto */
 }
 
 export type DashboardLayoutSize = 'sm' | 'xs'

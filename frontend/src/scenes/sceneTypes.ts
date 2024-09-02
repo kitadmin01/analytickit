@@ -67,6 +67,8 @@ export enum Scene {
     WalletAddress = "WalletAddress",
     BillingCancel = "BillingCancel",
     BillingSuccess = "BillingSuccess",
+    CryptoDashboard = 'CryptoDashboard',
+    Web3Dashboard = 'Web3Dashboard',
 
 }
 

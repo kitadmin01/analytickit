@@ -11,6 +11,7 @@ import { LemonTextArea } from 'lib/components/LemonTextArea/LemonTextArea'
 import { DASHBOARD_RESTRICTION_OPTIONS } from './DashboardCollaborators'
 import { LemonModal } from 'lib/components/LemonModal'
 import { Form } from 'kea-forms'
+import { LemonCheckbox } from 'lib/components/LemonCheckbox/LemonCheckbox'
 
 export function NewDashboardModal(): JSX.Element {
     const { hideNewDashboardModal, createAndGoToDashboard } = useActions(newDashboardLogic)
@@ -63,9 +64,15 @@ export function NewDashboardModal(): JSX.Element {
                 enableFormOnSubmit
                 className="space-y-2"
             >
-                <p>Use dashboards to compose multiple insights into a single view.</p>
                 <Field name="name" label="Name">
                     <LemonInput autoFocus={true} data-attr="dashboard-name-input" className="ph-ignore-input" />
+                </Field>
+                <Field name="crypto">
+                    <LemonCheckbox
+                        label="Crypto"
+                        name="crypto"
+                        className="ml-2"
+                    />
                 </Field>
                 <Field name="description" label="Description" showOptional>
                     <LemonTextArea data-attr="dashboard-description-input" className="ph-ignore-input" />

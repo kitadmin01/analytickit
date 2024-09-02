@@ -170,7 +170,7 @@ export const insightLogic = kea<insightLogicType>({
                     if (!Object.entries(insight).length) {
                         return values.insight
                     }
-
+                
                     if ('filters' in insight && emptyFilters(insight.filters)) {
                         const error = new Error('Will not override empty filters in updateInsight.')
                         Sentry.captureException(error, {
@@ -182,7 +182,7 @@ export const insightLogic = kea<insightLogicType>({
                         })
                         throw error
                     }
-
+                
                     const response = await api.update(
                         `api/projects/${teamLogic.values.currentTeamId}/insights/${values.insight.id}`,
                         insight
@@ -193,13 +193,16 @@ export const insightLogic = kea<insightLogicType>({
                         result: response.result || values.insight.result,
                     }
                     callback?.(updatedInsight)
-
+                
                     savedInsightsLogic.findMounted()?.actions.loadInsights()
                     for (const id of updatedInsight.dashboards ?? []) {
-                        dashboardLogic.findMounted({ id })?.actions.loadDashboardItems()
+                        const isCryptoDashboard = /* Add your logic here to determine if the dashboard is a Web3 dashboard */true;
+                        dashboardLogic.findMounted({ id, isCrypto: isCryptoDashboard })?.actions.loadDashboardItems()
                     }
+                    
                     return updatedInsight
                 },
+                
                 setInsightMetadata: async ({ metadata }, breakpoint) => {
                     const editMode =
                         insightSceneLogic.isMounted() &&
@@ -238,27 +241,17 @@ export const insightLogic = kea<insightLogicType>({
                 },
                 // using values.filters, query for new insight results
                 loadResults: async ({ refresh, queryId }, breakpoint) => {
-                    // fetch this now, as it might be different when we report below
-                    const scene = sceneLogic.isMounted() ? sceneLogic.values.scene : null
-
-                    // If a query is in progress, debounce before making the second query
-                    if (cache.abortController) {
-                        await breakpoint(300)
-                        cache.abortController.abort()
-                    }
-                    cache.abortController = new AbortController()
-
                     const { filters } = values
-
+                
                     const insight = (filters.insight as InsightType | undefined) || InsightType.TRENDS
                     const params = { ...filters, ...(refresh ? { refresh: true } : {}) }
-
+                
                     const dashboardItemId = props.dashboardItemId
                     actions.startQuery(queryId)
                     if (dashboardItemId && dashboardsModel.isMounted()) {
                         dashboardsModel.actions.updateDashboardRefreshStatus(dashboardItemId, true, null)
                     }
-
+                
                     let response
                     const { currentTeamId } = values
                     if (!currentTeamId) {
@@ -269,35 +262,15 @@ export const insightLogic = kea<insightLogicType>({
                             values.savedInsight?.id &&
                             objectsEqual(cleanFilters(filters), cleanFilters(values.savedInsight.filters ?? {}))
                         ) {
-                            // Instead of making a search for filters, reload the insight via its id if possible.
-                            // This makes sure we update the insight's cache key if we get new default filters.
                             response = await api.get(
                                 `api/projects/${currentTeamId}/insights/${values.savedInsight.id}/?refresh=true`,
                                 cache.abortController.signal
                             )
-                        } else if (
-                            insight === InsightType.TRENDS ||
-                            insight === InsightType.STICKINESS ||
-                            insight === InsightType.LIFECYCLE
-                        ) {
-                            response = await api.get(
-                                `api/projects/${currentTeamId}/insights/trend/?${toParams(
-                                    filterTrendsClientSideParams(params)
-                                )}`,
-                                cache.abortController.signal
-                            )
-                        } else if (insight === InsightType.RETENTION) {
-                            response = await api.get(
-                                `api/projects/${currentTeamId}/insights/retention/?${toParams(params)}`,
-                                cache.abortController.signal
-                            )
-                        } else if (insight === InsightType.FUNNELS) {
-                            response = await pollFunnel(currentTeamId, params)
-                        } else if (insight === InsightType.PATHS) {
-                            response = await api.create(`api/projects/${currentTeamId}/insights/path`, params)
                         } else {
-                            throw new Error(`Cannot load insight of type ${insight}`)
+                            const isCryptoDashboard = true/* Add logic here to determine if filters indicate a Web3 dashboard */;
+                            dashboardLogic.findMounted({ id: dashboardItemId, isCrypto: isCryptoDashboard })?.actions.loadDashboardItems()
                         }
+                        
                     } catch (e: any) {
                         if (e.name === 'AbortError') {
                             actions.abortQuery(queryId, insight, scene, e)
@@ -308,42 +281,15 @@ export const insightLogic = kea<insightLogicType>({
                         if (dashboardItemId && dashboardsModel.isMounted()) {
                             dashboardsModel.actions.updateDashboardRefreshStatus(dashboardItemId, false, null)
                         }
-                        if (filters.insight === InsightType.FUNNELS) {
-                            eventUsageLogic.actions.reportFunnelCalculated(
-                                filters.events?.length || 0,
-                                filters.actions?.length || 0,
-                                filters.interval || '',
-                                filters.funnel_viz_type,
-                                false,
-                                e.message
-                            )
-                        }
                         throw e
                     }
                     breakpoint()
                     cache.abortController = null
-                    actions.endQuery(
-                        queryId,
-                        (values.filters.insight as InsightType) || InsightType.TRENDS,
-                        response.last_refresh
-                    )
+                    actions.endQuery(queryId, (values.filters.insight as InsightType) || InsightType.TRENDS, response.last_refresh)
                     if (dashboardItemId && dashboardsModel.isMounted()) {
-                        dashboardsModel.actions.updateDashboardRefreshStatus(
-                            dashboardItemId,
-                            false,
-                            response.last_refresh
-                        )
+                        dashboardsModel.actions.updateDashboardRefreshStatus(dashboardItemId, false, response.last_refresh)
                     }
-                    if (filters.insight === InsightType.FUNNELS) {
-                        eventUsageLogic.actions.reportFunnelCalculated(
-                            filters.events?.length || 0,
-                            filters.actions?.length || 0,
-                            filters.interval || '',
-                            filters.funnel_viz_type,
-                            true
-                        )
-                    }
-
+                
                     return {
                         ...values.insight,
                         result: response.result,
@@ -351,7 +297,8 @@ export const insightLogic = kea<insightLogicType>({
                         timezone: response.timezone,
                         filters,
                     } as Partial<InsightModel>
-                },
+                }
+                
             },
         ],
     }),

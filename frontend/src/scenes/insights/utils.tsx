@@ -95,29 +95,32 @@ export function findInsightFromMountedLogic(
     dashboardId: number | undefined
 ): Partial<InsightModel> | null {
     if (dashboardId) {
-        const insightOnDashboard = dashboardLogic
-            .findMounted({ id: dashboardId })
-            ?.values.allItems?.items?.find((item) => item.short_id === insightShortId)
-        if (insightOnDashboard) {
-            return insightOnDashboard
-        } else {
-            const dashboards = dashboardsModel.findMounted()?.values.rawDashboards
-            let foundOnModel: Partial<InsightModel> | undefined
-            for (const dashModelId of Object.keys(dashboards || {})) {
-                foundOnModel = dashboardLogic
-                    .findMounted({ id: parseInt(dashModelId) })
-                    ?.values.allItems?.items?.find((item) => item.short_id === insightShortId)
+        const dashboardLogicInstance = dashboardLogic.findMounted({ id: dashboardId });
+        if (dashboardLogicInstance) {
+            const insightOnDashboard = dashboardLogicInstance.values.allItems?.items?.find((item) => item.short_id === insightShortId);
+            if (insightOnDashboard) {
+                return insightOnDashboard;
             }
-            return foundOnModel || null
         }
+
+        const dashboards = dashboardsModel.findMounted()?.values.rawDashboards;
+        if (dashboards) {
+            for (const dashModelId of Object.keys(dashboards)) {
+                const dashboardLogicInstance = dashboardLogic.findMounted({ id: parseInt(dashModelId) });
+                if (dashboardLogicInstance) {
+                    const insightOnModel = dashboardLogicInstance.values.allItems?.items?.find((item) => item.short_id === insightShortId);
+                    if (insightOnModel) {
+                        return insightOnModel;
+                    }
+                }
+            }
+        }
+        return null;
     } else {
-        return (
-            savedInsightsLogic
-                .findMounted()
-                ?.values.insights?.results?.find((item) => item.short_id === insightShortId) || null
-        )
+        return savedInsightsLogic.findMounted()?.values.insights?.results?.find((item) => item.short_id === insightShortId) || null;
     }
 }
+
 
 export async function getInsightId(shortId: InsightShortId): Promise<number | undefined> {
     const insightId = insightLogic.findMounted({ dashboardItemId: shortId })?.values?.insight?.id

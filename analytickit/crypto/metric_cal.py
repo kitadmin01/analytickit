@@ -21,6 +21,28 @@ import numpy
 import collections
 
 
+# Assuming TOKEN_SIGNATURES is imported or defined in the same file
+# Define it here if necessary:
+TOKEN_SIGNATURES = {
+    "ERC-721": ['80ac58cd', '5b5e139f', '95d89b41', '6352211e'],
+    "ERC-1155": ['d9b67a26', '0e89341c', '4e2312e0'],
+    "ERC-998": ['a2a8c703', 'ed81cdda', 'eadb80b8'],
+    "ERC-165": ['01ffc9a7'],
+    "ERC-20": ['a9059cbb', '23b872dd', '095ea7b3'],
+    "ERC-777": ['dd62ed3e', 'a457c2d7', 'eac0d0f6'],
+    "ERC-4626": ['e9fad8ee', '2e1a7d4d', 'a2b90d68', 'd0e30db0'],
+    "ERC-223": ['a9059cbb', 'c0ee0b8a'],
+    "ERC-827": ['f2fde38b', 'd7cdc6d5', 'e7af8c77'],
+    "ERC-1400": ['e94a0102', 'c42cf535', 'f3e94b2a'],
+    "ERC-3525": ['f242a358', '1d26f864', 'a0712d68'],
+    "ERC-2981": ['2a55205a', '6ef1f7b3'],
+    "ERC-1404": ['75b238fc', 'cdab563a'],
+    "ERC-1410": ['e94a0102', 'c42cf535', '7b9a5e73'],
+    "ERC-1594": ['a1caff6a', '6f5f8833', '6ef91c5e'],
+    "ERC-2309": ['8462151c']
+}
+
+
 class MetricCalculator:
     """
     This class is used to calculate the metrics for the given data.
@@ -878,5 +900,65 @@ class MetricCalculator:
                             print(f"Could not convert date: {e}")
 
         return dict(freq_by_day)
+    
+    """
+    This function classifies tokens based on their function signature.
+    It checks the function signature against a predefined list of signatures
+    """
+    def classify_token_from_input(self, input_data):
+        function_signature = input_data[2:10]  # Extract function signature
+        for token_type, signatures in TOKEN_SIGNATURES.items():
+            if function_signature in signatures:
+                return token_type
+        return "Unknown"
+
+    '''
+    Classify tokens based on transfer data
+    '''
+    def classify_token_from_transfer(self, transfer_data):
+        value_str = transfer_data.get('value')
+        
+        if value_str is None:
+            return "Unknown"
+        
+        try:
+            # Convert the value to a float for comparison
+            value = float(value_str)
+        except ValueError:
+            logger.error(f"Value conversion error for {value_str}")
+            return "Unknown"
+        
+        if value > 1e16:
+            return "ERC-20"
+        elif value == 1:
+            return "ERC-721"
+        else:
+            return "Unknown"
+
+
+    '''
+    Calculate token type counts
+    '''
+    def calculate_token_type_counts(self):
+        token_type_counts = defaultdict(int)
+
+        # Extract all the 'transactions' and 'token_transfers' data
+        transactions_data = [item for key, value in self.data.items() if 'transactions' in key for item in value]
+        token_transfers_data = [item for key, value in self.data.items() if 'token_transfers' in key for item in value]
+
+        # Classify tokens from transactions
+        for record in transactions_data:
+            input_data = record.get('input')
+            if input_data:
+                token_type = self.classify_token_from_input(input_data)
+                token_type_counts[token_type] += 1
+
+        # Classify tokens from token transfers
+        for record in token_transfers_data:
+            token_type = self.classify_token_from_transfer(record)
+            token_type_counts[token_type] += 1
+
+        return dict(token_type_counts)
+
 
 

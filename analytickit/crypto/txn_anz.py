@@ -148,6 +148,7 @@ class TxnAnalyzer:
                 camp_analytic.cumulative_transaction_fees = met_cal.calculate_cumulative_transaction_fees_adjusted()
                 camp_analytic.cumulative_avg_gas_price = met_cal.cumulative_avg_gas_price()
                 camp_analytic.cumulative_transactions_count = met_cal.cumulative_transactions_count()
+                camp_analytic.token_types_count = met_cal.calculate_token_type_counts()
     
 
 

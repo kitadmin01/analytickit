@@ -101,6 +101,17 @@ export const urls = {
     web3Dashboards: (): string => '/web3-dashboard',
     web3Dashboard: (id: string): string => `/web3-dashboard-detail/${id}`,
 
+    // Graph URLs for comm engagement
+    ActiveUsersGraphPage: (campaignId: string): string => `/graphs/active-users/${campaignId}`,
+    totalContractCallsGraph: (): string => '/graphs/total-contract-calls',
+    tokensTransferredGraph: (): string => '/graphs/tokens-transferred',
+    gasUsedGraph: (): string => '/graphs/gas-used',
+    transactionsGraph: (): string => '/graphs/transactions',
+    tokenTransferVolumeGraph: (): string => '/graphs/token-transfer-volume',
+    transactionValueDistributionGraph: (): string => '/graphs/transaction-value-distribution',
+    tokenTransferValueDistributionGraph: (): string => '/graphs/token-transfer-value-distribution',
+    tokenFlowGraph: (): string => '/graphs/token-flow',
+
 
 
     shared: (token: string, exportOptions?: ExportOptions): string =>

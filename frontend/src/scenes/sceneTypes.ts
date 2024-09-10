@@ -69,6 +69,7 @@ export enum Scene {
     BillingSuccess = "BillingSuccess",
     CryptoDashboard = 'CryptoDashboard',
     Web3Dashboard = 'Web3Dashboard',
+    Graph = 'Graph',  // Single scene for all graph types
 
 }
 

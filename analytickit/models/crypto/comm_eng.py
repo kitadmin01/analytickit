@@ -172,6 +172,9 @@ class CampaignAnalytic(models.Model):
     cumulative_avg_gas_price = models.DecimalField(max_digits=20, decimal_places=5, default=0)
     cumulative_transactions_count = models.IntegerField(default=0)
 
+    # New field to store token types and their counts
+    token_types_count = models.JSONField(default=dict)
+
 
 
     @classmethod

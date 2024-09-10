@@ -346,6 +346,16 @@ export const routes: Record<string, Scene> = {
     [urls.billingCancel()]: Scene.BillingCancel,
     [urls.web3Dashboards()]: Scene.Web3Dashboard,
     [urls.web3Dashboard(':id')]: Scene.Web3Dashboard,
+    // all comm eng graphs
+    [urls.ActiveUsersGraphPage(':campaignId')]: Scene.Graph,  // All graph routes map to Scene.Graph
+    [urls.totalContractCallsGraph()]: Scene.Graph,
+    [urls.tokensTransferredGraph()]: Scene.Graph,
+    [urls.gasUsedGraph()]: Scene.Graph,
+    [urls.transactionsGraph()]: Scene.Graph,
+    [urls.tokenTransferVolumeGraph()]: Scene.Graph,
+    [urls.transactionValueDistributionGraph()]: Scene.Graph,
+    [urls.tokenTransferValueDistributionGraph()]: Scene.Graph,
+    [urls.tokenFlowGraph()]: Scene.Graph,
 
     
 }

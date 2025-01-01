@@ -198,10 +198,9 @@ function SavedInsightsGrid(): JSX.Element {
 export function SavedInsights(): JSX.Element {
     const { loadInsights, updateFavoritedInsight, renameInsight, duplicateInsight, setSavedInsightsFilters } =
         useActions(savedInsightsLogic)
-    const { insights, count, insightsLoading, filters, sorting, pagination } = useValues(savedInsightsLogic)
+    const { insights, count, insightsLoading, filters, sorting, pagination, meFirstMembers = [] } = useValues(savedInsightsLogic)
     const { hasDashboardCollaboration } = useValues(organizationLogic)
     const { currentTeamId } = useValues(teamLogic)
-    const { meFirstMembers } = useValues(membersLogic)
     const { aggregationLabel } = useValues(groupsModel)
     const { cohortsById } = useValues(cohortsModel)
     const { mathDefinitions } = useValues(mathsLogic)
@@ -339,6 +338,21 @@ export function SavedInsights(): JSX.Element {
         },
     ]
 
+    const userOptions = {
+        'All users': { label: 'All Users' },
+        ...(meFirstMembers?.reduce(
+            (acc, x) => ({
+                ...acc,
+                [x.user.id]: { label: x.user.first_name },
+            }),
+            {}
+        ) || {})
+    } as LemonSelectOptions
+
+    if (!insights) {
+        return insightsLoading ? <div>Loading...</div> : <div>No insights found</div>
+    }
+
     return (
         <div className="saved-insights">
             <PageHeader title="Analytics" buttons={<NewInsightButton />} />
@@ -405,21 +419,9 @@ export function SavedInsights(): JSX.Element {
                             {tab !== SavedInsightsTabs.Yours ? (
                                 <div className="flex items-center gap-2">
                                     <span>Created by:</span>
-                                    {/* TODO: Fix issues with user name order due to numbers having priority */}
                                     <LemonSelect
                                         size="small"
-                                        options={
-                                            {
-                                                'All users': { label: 'All Users' },
-                                                ...meFirstMembers.reduce(
-                                                    (acc, x) => ({
-                                                        ...acc,
-                                                        [x.user.id]: { label: x.user.first_name },
-                                                    }),
-                                                    {}
-                                                ),
-                                            } as LemonSelectOptions
-                                        }
+                                        options={userOptions}
                                         value={createdBy}
                                         onChange={(v: any): void => {
                                             setSavedInsightsFilters({ createdBy: v })

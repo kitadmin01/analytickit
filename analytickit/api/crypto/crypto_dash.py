@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional, Type, cast
 from django.db.models import Prefetch, QuerySet, Subquery, OuterRef, Count
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
-from rest_framework import exceptions, response, serializers, viewsets
+from rest_framework import exceptions, response, serializers, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
 from rest_framework.request import Request
@@ -17,6 +17,9 @@ from analytickit.models.crypto.crypto_dashboard import CryptoDashboard
 from analytickit.models.crypto.crypto_tile import CryptoDashboardTile
 from analytickit.permissions import ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission
 from analytickit.api.shared import UserBasicSerializer
+from analytickit.models.crypto.comm_eng import CampaignAnalytic
+
+logger = logging.getLogger(__name__)
 
 
 class CanEditCryptoDashboard(BasePermission):
@@ -116,14 +119,13 @@ class CryptoAnalyticBasicSerializer(serializers.ModelSerializer):
             "description",
             "last_refresh",
             "saved",
-            "updated_at",
             "created_by",
             "created_at",
             "last_modified_at",
             "dashboard",
             "dive_dashboard",  # Add dive_dashboard here
         ]
-        read_only_fields = ("short_id", "updated_at", "last_refresh")
+        read_only_fields = ("short_id", "last_refresh")
 
 
 class CryptoAnalyticSerializer(CryptoAnalyticBasicSerializer):
@@ -150,7 +152,6 @@ class CryptoAnalyticSerializer(CryptoAnalyticBasicSerializer):
             "created_at",
             "created_by",
             "description",
-            "updated_at",
             "last_modified_at",
             "last_modified_by",
             "effective_privilege_level",
@@ -163,7 +164,6 @@ class CryptoAnalyticSerializer(CryptoAnalyticBasicSerializer):
             "last_modified_at",
             "last_modified_by",
             "short_id",
-            "updated_at",
             "effective_privilege_level",
         )
 
@@ -197,58 +197,234 @@ class CryptoAnalyticSerializer(CryptoAnalyticBasicSerializer):
     def get_effective_privilege_level(self, crypto_analytic: CryptoAnalytic):
         # Logic to return the privilege level
         return None
+    
+    def validate_filters(self, value):
+            """
+            Validate the filters JSON to ensure it conforms to the expected structure and ranges.
+            """
+            expected_filters = {
+                "token_type": {
+                    "type": "string",
+                    "required": False,
+                    "allowed_values": [
+                        "Active",
+                        "Inactive",
+                        "ERC20",
+                        "ERC721",
+                        # Add other token types as needed
+                    ],
+                },
+                "active_users": {
+                    "type": "integer",
+                    "required": False,
+                    "ranges": [
+                        {"label": "Low Activity", "min": 0, "max": 1000},
+                        {"label": "Medium Activity", "min": 1001, "max": 5000},
+                        {"label": "High Activity", "min": 5001, "max": 10000},
+                        {"label": "Very High Activity", "min": 10001, "max": None},
+                    ],
+                },
+                # Define other filter categories similarly...
+                # Example for ave_gas_used
+                "ave_gas_used": {
+                    "type": "integer",
+                    "required": False,
+                    "ranges": [
+                        {"label": "Low Gas Usage", "min": 0, "max": 20000},
+                        {"label": "Medium Gas Usage", "min": 20001, "max": 50000},
+                        {"label": "High Gas Usage", "min": 50001, "max": 100000},
+                        {"label": "Very High Gas Usage", "min": 100001, "max": None},
+                    ],
+                },
+                # Add all other filter categories as per your requirements
+            }
+
+            for filter_key, filter_rules in expected_filters.items():
+                if filter_key in value:
+                    filter_value = value[filter_key]
+                    if filter_rules["type"] == "string":
+                        if filter_rules.get("allowed_values") and filter_value not in filter_rules["allowed_values"]:
+                            raise serializers.ValidationError(
+                                f"Invalid value for {filter_key}. Allowed values are: {filter_rules['allowed_values']}"
+                            )
+                    elif filter_rules["type"] == "integer":
+                        if not isinstance(filter_value, int):
+                            raise serializers.ValidationError(f"{filter_key} must be an integer.")
+                        # Additional range validations can be implemented here if needed
+            return value
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        user = request.user if request else None
+        validated_data["created_by"] = user
+        validated_data["last_modified_by"] = user
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        request = self.context.get("request")
+        user = request.user if request else None
+        instance.last_modified_by = user
+        return super().update(instance, validated_data)
+
+
+class CryptoAnalyticViewSet(viewsets.ViewSet):
+    def get_queryset(self):
+        return CryptoAnalytic.objects.filter(
+            team_id=self.request.user.current_team_id
+        )
+
+    def create(self, request):
+        data = request.data
+        analytic = CryptoAnalytic.objects.create(
+            team_id=request.user.current_team_id,
+            title=data.get('title'),
+            description=data.get('description'),
+            metric_type=data.get('metric'),
+            date_range=data.get('date_range'),
+            day_range=data.get('day_range'),
+            campaign_id=data.get('campaign_id', 2)  # Default to 2 for now
+        )
+        return Response({'id': analytic.id}, status=201)
+
+    def get_graph_data(self, request):
+        campaign_id = request.query_params.get('campaign_id', 2)
+        # Get graph data from CampaignAnalytic
+        analytics = CampaignAnalytic.objects.filter(
+            community_engagement_id=campaign_id
+        ).order_by('creation_ts')
+        
+        return Response({
+            'data': list(analytics.values('creation_ts', 'active_users'))
+        })
+
+
+class CryptoDashboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CryptoAnalytic
+        fields = [
+            'id',
+            'name',
+            'description',
+            'filters',
+            'created_at',
+            'last_modified_at',
+            'team_id',
+            'created_by',
+            'last_modified_by'
+        ]
+        read_only_fields = ['id', 'created_at', 'last_modified_at', 'team_id']
 
 
 class CryptoDashboardsViewSet(viewsets.ModelViewSet):
-    queryset = CryptoDashboard.objects.order_by("name")
     serializer_class = CryptoDashboardSerializer
-    permission_classes = [
-        IsAuthenticated,
-        CanEditCryptoDashboard,
-        ProjectMembershipNecessaryPermissions,
-        TeamMemberAccessPermission,
-    ]
+    permission_classes = [IsAuthenticated]
 
-    def initial(self, request, *args, **kwargs):
-        self.team = self.get_team(request)
-        super().initial(request, *args, **kwargs)
+    def get_queryset(self):
+        return CryptoAnalytic.objects.filter(
+            team_id=self.request.user.current_team_id
+        ).order_by('-created_at')
 
-    def get_team(self, request):
-        return request.user.team  # Assuming the team is associated with the user
+    def list(self, request, *args, **kwargs):
+        try:
+            queryset = self.get_queryset()
+            logger.debug(f"Found {queryset.count()} dashboards")
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context["team_id"] = self.team.id
-        return context
+            return Response({
+                'results': [{
+                    'id': item.id,
+                    'name': item.name,
+                    'description': item.description or '',
+                    'pinned': False,
+                    'created_at': item.created_at.isoformat() if item.created_at else None,
+                    'created_by': {
+                        'id': request.user.id,
+                        'uuid': str(request.user.uuid),
+                        'distinct_id': request.user.distinct_id,
+                        'first_name': request.user.first_name,
+                        'email': request.user.email
+                    },
+                    'is_shared': False,
+                    'deleted': False,
+                    'filters': item.filters or {},
+                    'creation_mode': 'default',
+                    'restriction_level': 0,
+                    'effective_restriction_level': 0,
+                    'effective_privilege_level': 21,
+                    'items': [],
+                    'tags': [],
+                    'last_modified_at': item.last_modified_at.isoformat() if item.last_modified_at else None,
+                    'last_modified_by': {
+                        'id': request.user.id,
+                        'uuid': str(request.user.uuid),
+                        'distinct_id': request.user.distinct_id,
+                        'first_name': request.user.first_name,
+                        'email': request.user.email
+                    }
+                } for item in queryset],
+                'count': queryset.count(),
+                'current': 1,
+                'next': None,
+                'previous': None,
+                'total_pages': 1
+            })
+        except Exception as e:
+            logger.error(f"Error in list dashboards: {str(e)}")
+            return Response({
+                'results': [],
+                'count': 0,
+                'current': 1,
+                'next': None,
+                'previous': None,
+                'total_pages': 1
+            })
 
-    def get_queryset(self) -> QuerySet:
-        queryset = super().get_queryset()
-        if not self.action.endswith("update"):
-            queryset = queryset.filter(deleted=False)
-
-        queryset = (
-            queryset.prefetch_related("team__organization", "created_by")
-            .prefetch_related(
-                Prefetch(
-                    "crypto_insights",
-                    queryset=CryptoAnalytic.objects.filter(deleted=False).order_by("created_at")
-                )
+    def create(self, request, *args, **kwargs):
+        try:
+            data = request.data.copy()
+            analytic = CryptoAnalytic.objects.create(
+                team_id=request.user.current_team_id,
+                name=data.get('name', ''),
+                description=data.get('description', ''),
+                filters=data.get('filters', {})
             )
-        )
-        return queryset
+            
+            return Response({
+                'id': analytic.id,
+                'name': analytic.name,
+                'description': analytic.description,
+                'created_at': analytic.created_at.isoformat(),
+                'created_by': {
+                    'id': request.user.id,
+                    'uuid': str(request.user.uuid),
+                    'distinct_id': request.user.distinct_id,
+                    'first_name': request.user.first_name,
+                    'email': request.user.email
+                },
+                'pinned': False,
+                'filters': analytic.filters,
+                'creation_mode': 'default',
+                'restriction_level': 0
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error(f"Error creating dashboard: {str(e)}")
+            return Response(
+                {'detail': 'Could not create dashboard'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-    def retrieve(self, request: Request, *args: Any, **kwargs: Any) -> response.Response:
-        pk = kwargs.get("pk")
-        queryset = self.get_queryset()
-        dashboard = get_object_or_404(queryset, pk=pk)
-        dashboard.last_accessed_at = now()
-        dashboard.save(update_fields=["last_accessed_at"])
-        serializer = CryptoDashboardSerializer(dashboard, context={"view": self, "request": request})
-        return response.Response(serializer.data)
-
-    @action(methods=["POST"], detail=True)
-    def viewed(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        CryptoInsightViewed.objects.update_or_create(
-            team=self.team, user=request.user, crypto_analytic=self.get_object(), defaults={"last_viewed_at": now()}
-        )
-        return Response(status=status.HTTP_201_CREATED)
+    def retrieve(self, request, pk=None):
+        try:
+            item = self.get_queryset().get(pk=pk)
+            data = {
+                'id': item.id,
+                'name': item.name,
+                'description': item.description,
+                'created_at': item.created_at,
+                'filters': item.filters,
+                'created_by': request.user.id,
+                'last_modified_at': item.last_modified_at,
+                'last_modified_by': request.user.id,
+            }
+            return Response(data)
+        except CryptoAnalytic.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

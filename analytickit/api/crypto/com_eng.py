@@ -14,6 +14,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 
@@ -151,3 +153,26 @@ class CommunityEngagementViewSet(viewsets.ModelViewSet):
         Perform the destruction of the instance.
         """
         instance.delete()
+
+
+
+@api_view(['GET'])
+def get_active_users_data(request, campaign_id):
+    try:
+        # Get all analytics for this campaign
+        campaign_analytics = CampaignAnalytic.objects.filter(
+            community_engagement_id=campaign_id
+        ).order_by('creation_ts')
+        
+        # Transform into time series data
+        response_data = [{
+            "active_users": analytic.active_users,
+            "creation_ts": analytic.creation_ts,
+            "update_ts": analytic.update_ts
+        } for analytic in campaign_analytics]
+        
+        return Response({
+            "data": response_data
+        }, status=200)
+    except CommunityEngagement.DoesNotExist:
+        return Response({"error": "Campaign not found"}, status=404)

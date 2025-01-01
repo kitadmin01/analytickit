@@ -1,6 +1,7 @@
 from typing import Any, Callable, List, Optional, cast
 from urllib.parse import urlparse
-
+from analytickit.api.crypto.com_eng import CommunityEngagementViewSet, get_active_users_data
+from analytickit.api.crypto.crypto_dash import CryptoAnalyticViewSet
 from django.conf import settings
 from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
@@ -127,7 +128,6 @@ urlpatterns = [
         "api/reset/<str:user_uuid>/",
         authentication.PasswordResetCompleteViewSet.as_view({"get": "retrieve", "post": "create"}),
     ),
-    re_path(r"^api.+", api_not_found),
     path("authorize_and_redirect/", login_required(authorize_and_redirect)),
     path("shared_dashboard/<str:access_token>", sharing.SharingViewerPageViewSet.as_view({"get": "retrieve"})),
     path("shared/<str:access_token>", sharing.SharingViewerPageViewSet.as_view({"get": "retrieve"})),
@@ -176,9 +176,52 @@ urlpatterns = [
     path("api/web3-dashboard/", CryptoDashboardsViewSet.as_view({"get": "list", "post": "create"}), name="web3-dashboard"),
     path("api/web3-dashboard/<int:pk>/",CryptoDashboardsViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}), name="web3-dashboard-detail"),
 
+    # Crypto analytics endpoints - put these BEFORE any catch-all patterns
+    path(
+        "api/crypto-analytics/type/active_users/",  # More specific route first
+        CryptoAnalyticViewSet.as_view({'get': 'get_active_users'}),
+        name="crypto-analytic-active-users",
+    ),
+    path(
+        "api/crypto-analytics/",
+        CryptoAnalyticViewSet.as_view({
+            "get": "list",
+            "post": "create"
+        }),
+        name="crypto-analytic-list-create",
+    ),
+    path(
+        "api/crypto-analytics/<int:pk>/",
+        CryptoAnalyticViewSet.as_view({
+            "get": "retrieve",
+            "put": "update",
+            "patch": "partial_update",
+            "delete": "destroy"
+        }),
+        name="crypto-analytic-detail",
+    ),
 
+    path('api/campaign/<int:campaign_id>/active_users/', get_active_users_data, name='active_users_data'),
 
+    path('api/crypto/analytics/save/', CryptoAnalyticViewSet.as_view({'post': 'create'})),
+    path('api/crypto/analytics/graph-data/', CryptoAnalyticViewSet.as_view({'get': 'get_graph_data'})),
+    path('api/dashboards/', CryptoDashboardsViewSet.as_view({
+        'get': 'list',
+        'post': 'create'
+    }), name='dashboards-list'),
+    path('api/dashboards/<int:pk>/', CryptoDashboardsViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    }), name='dashboards-detail'),
+    path('api/web3-dashboard/', CryptoDashboardsViewSet.as_view({
+        'get': 'list',
+        'post': 'create'
+    }), name='web3-dashboards-list'),
 ]
+
+
 
 if settings.DEBUG:
     # If we have DEBUG=1 set, then let's expose the metrics for debugging. Note

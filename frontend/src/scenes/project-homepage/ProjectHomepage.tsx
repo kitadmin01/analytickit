@@ -20,9 +20,10 @@ import { RecentRecordings } from './RecentRecordings'
 import { RecentInsights } from './RecentInsights'
 import { NewlySeenPersons } from './NewlySeenPersons'
 import useSize from '@react-hook/size'
+import { dashboardLogic } from 'scenes/dashboard/dashboardLogic'
 
 export function ProjectHomepage(): JSX.Element {
-    const { dashboardLogic } = useValues(projectHomepageLogic)
+    const { dashboardLogic: mountedDashboardLogic } = useValues(dashboardLogic)
     const { currentTeam } = useValues(teamLogic)
     const { dashboard } = useValues(dashboardLogic)
     const { showInviteModal } = useActions(inviteLogic)

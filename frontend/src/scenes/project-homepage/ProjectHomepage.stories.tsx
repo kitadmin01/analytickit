@@ -16,7 +16,7 @@ export default {
             },
         }),
     ],
-    parameters: { layout: 'fullscreen', options: { showPanel: false }, viewMode: 'story' },
+    parameters: { layout: 'fullscreen', options: { showPanel: false }, viewMode: 'canvas' },
 } as Meta
 
 export const ProjectHomepage = (): JSX.Element => {

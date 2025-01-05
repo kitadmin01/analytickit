@@ -14,7 +14,7 @@ const now = DateTime.fromISO('2020-01-01T12:00:05.200Z')
 const pluginEvent: PluginEvent = {
     event: '$pageview',
     properties: {
-        foo: 'bar'
+        foo: 'bar',
     },
     timestamp: '2020-02-23T02:15:00Z',
     now: '2020-02-23T02:15:00Z',

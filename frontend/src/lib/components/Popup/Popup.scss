@@ -20,7 +20,9 @@
 }
 
 .Popup__box {
-    transition: opacity 100ms ease, transform 100ms ease;
+    transition:
+        opacity 100ms ease,
+        transform 100ms ease;
     transform-origin: top;
     box-shadow: var(--shadow-elevation);
     background: #fff;

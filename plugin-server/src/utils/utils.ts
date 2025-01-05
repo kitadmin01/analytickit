@@ -21,7 +21,10 @@ export function killGracefully(): void {
     status.error('⏲', 'Shutting plugin server down gracefully with SIGTERM...')
     process.kill(process.pid, 'SIGTERM')
     setTimeout(() => {
-        status.error('⏲', `Plugin server still running after ${GRACEFUL_EXIT_PERIOD_SECONDS} s, killing it forcefully!`)
+        status.error(
+            '⏲',
+            `Plugin server still running after ${GRACEFUL_EXIT_PERIOD_SECONDS} s, killing it forcefully!`
+        )
         process.exit(1)
     }, GRACEFUL_EXIT_PERIOD_SECONDS * 1000)
 }
@@ -367,16 +370,16 @@ export function createPostgresPool(
                   connectionString: configOrDatabaseUrl,
               }
             : configOrDatabaseUrl.DATABASE_URL
-            ? {
-                  connectionString: configOrDatabaseUrl.DATABASE_URL,
-              }
-            : {
-                  database: configOrDatabaseUrl.ANALYTICKIT_DB_NAME ?? undefined,
-                  user: configOrDatabaseUrl.ANALYTICKIT_DB_USER,
-                  password: configOrDatabaseUrl.ANALYTICKIT_DB_PASSWORD,
-                  host: configOrDatabaseUrl.ANALYTICKIT_POSTGRES_HOST,
-                  port: configOrDatabaseUrl.ANALYTICKIT_POSTGRES_PORT,
-              }
+              ? {
+                    connectionString: configOrDatabaseUrl.DATABASE_URL,
+                }
+              : {
+                    database: configOrDatabaseUrl.ANALYTICKIT_DB_NAME ?? undefined,
+                    user: configOrDatabaseUrl.ANALYTICKIT_DB_USER,
+                    password: configOrDatabaseUrl.ANALYTICKIT_DB_PASSWORD,
+                    host: configOrDatabaseUrl.ANALYTICKIT_POSTGRES_HOST,
+                    port: configOrDatabaseUrl.ANALYTICKIT_POSTGRES_PORT,
+                }
 
     const pgPool = new Pool({
         ...credentials,
@@ -477,19 +480,25 @@ export function groupBy<T extends Record<string, any>, K extends keyof T>(
     flat = false
 ): Record<T[K], T[] | T> {
     return flat
-        ? objects.reduce((grouping, currentItem) => {
-              if (currentItem[key] in grouping) {
-                  throw new Error(
-                      `Key "${String(key)}" has more than one matching value, which is not allowed in flat groupBy!`
-                  )
-              }
-              grouping[currentItem[key]] = currentItem
-              return grouping
-          }, {} as Record<T[K], T>)
-        : objects.reduce((grouping, currentItem) => {
-              ;(grouping[currentItem[key]] = grouping[currentItem[key]] || []).push(currentItem)
-              return grouping
-          }, {} as Record<T[K], T[]>)
+        ? objects.reduce(
+              (grouping, currentItem) => {
+                  if (currentItem[key] in grouping) {
+                      throw new Error(
+                          `Key "${String(key)}" has more than one matching value, which is not allowed in flat groupBy!`
+                      )
+                  }
+                  grouping[currentItem[key]] = currentItem
+                  return grouping
+              },
+              {} as Record<T[K], T>
+          )
+        : objects.reduce(
+              (grouping, currentItem) => {
+                  ;(grouping[currentItem[key]] = grouping[currentItem[key]] || []).push(currentItem)
+                  return grouping
+              },
+              {} as Record<T[K], T[]>
+          )
 }
 
 export function clamp(value: number, min: number, max: number): number {

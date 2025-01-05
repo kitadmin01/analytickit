@@ -53,14 +53,14 @@ export const dashboardsLogic = kea<dashboardsLogicType>({
             try {
                 const [web2Response, web3Response] = await Promise.all([
                     api.get('/api/dashboards/'),
-                    api.get('/api/web3-dashboard/')
+                    api.get('/api/web3-dashboard/'),
                 ])
 
                 const web2Dashboards = web2Response?.data?.results || []
                 const web3Dashboards = web3Response?.data?.results || []
 
-                const formattedWeb2Dashboards = web2Dashboards.map(d => ({ ...d, type: 'web2' }))
-                const formattedWeb3Dashboards = web3Dashboards.map(d => ({ ...d, type: 'web3' }))
+                const formattedWeb2Dashboards = web2Dashboards.map((d) => ({ ...d, type: 'web2' }))
+                const formattedWeb3Dashboards = web3Dashboards.map((d) => ({ ...d, type: 'web3' }))
 
                 actions.setWeb2Dashboards(formattedWeb2Dashboards)
                 actions.setWeb3Dashboards(formattedWeb3Dashboards)

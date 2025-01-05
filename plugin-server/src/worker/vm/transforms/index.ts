@@ -5,9 +5,7 @@ import { loopTimeout } from './loop-timeout'
 import { promiseTimeout } from './promise-timeout'
 import { replaceImports } from './replace-imports'
 
-const memoize: Record<string, string> = {
-
-}
+const memoize: Record<string, string> = {}
 
 export function transformCode(rawCode: string, server: Hub, imports?: Record<string, any>): string {
     if (process.env.NODE_ENV === 'test' && memoize[rawCode]) {

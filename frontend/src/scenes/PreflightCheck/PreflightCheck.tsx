@@ -126,7 +126,10 @@ export function PreflightCheck(): JSX.Element {
                                 <p className="Preflight__header--secondary-text">
                                     Validation happens immediately. You can rerun validation checks by clicking
                                     “validate requirements”. If you get stuck, try our{' '}
-                                    <a href="https://analytickit.com/docs/self-host/deploy/troubleshooting" target="_blank">
+                                    <a
+                                        href="https://analytickit.com/docs/self-host/deploy/troubleshooting"
+                                        target="_blank"
+                                    >
                                         troubleshooting guide
                                     </a>{' '}
                                     or our{' '}

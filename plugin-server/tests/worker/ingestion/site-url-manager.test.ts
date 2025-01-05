@@ -16,7 +16,7 @@ describe('SiteUrlManager()', () => {
 
     beforeEach(async () => {
         await resetTestDatabase()
-            ;[hub, closeHub] = await createHub()
+        ;[hub, closeHub] = await createHub()
     })
 
     afterEach(async () => {

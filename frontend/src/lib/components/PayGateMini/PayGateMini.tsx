@@ -76,8 +76,8 @@ export function PayGateMini({ feature, style, children, overrideShouldShowGate }
                     gateVariant === 'contact-sales'
                         ? `mailto:sales@analytickit.com?subject=Inquiring about ${featureSummary.umbrella}`
                         : gateVariant === 'check-licensing'
-                        ? 'https://analytickit.com/pricing'
-                        : undefined
+                          ? 'https://analytickit.com/pricing'
+                          : undefined
                 }
                 type="secondary"
                 fullWidth
@@ -86,8 +86,8 @@ export function PayGateMini({ feature, style, children, overrideShouldShowGate }
                 {gateVariant === 'add-card'
                     ? 'Upgrade now'
                     : gateVariant === 'contact-sales'
-                    ? 'Contact sales'
-                    : 'Explore license options'}
+                      ? 'Contact sales'
+                      : 'Explore license options'}
             </LemonButton>
         </div>
     ) : (

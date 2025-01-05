@@ -48,8 +48,8 @@ export function ConfirmOrganization(): JSX.Element {
                             <div>
                                 <div style={{ height: '0.5rem' }} />
                                 <p>
-                                    If you're trying to join an existing BusinessProfile, you should not create a new one.
-                                    Some reasons that you may accidentally end up here are:
+                                    If you're trying to join an existing BusinessProfile, you should not create a new
+                                    one. Some reasons that you may accidentally end up here are:
                                     <ul style={{ paddingInlineStart: '1rem', marginBottom: 0, marginBlockEnd: 0 }}>
                                         <li>You're logging in with the wrong email address</li>
                                         <li>Your analytickit account is at a different URL</li>

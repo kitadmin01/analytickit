@@ -393,15 +393,18 @@ function DefinitionEdit(): JSX.Element {
                         </div>
                     </>
                 )}
-                {definition && definition.name && !isanalytickitProp(definition.name) && 'verified' in localDefinition && (
-                    <VerifiedEventCheckbox
-                        verified={!!localDefinition.verified}
-                        onChange={(nextVerified) => {
-                            setLocalDefinition({ verified: nextVerified })
-                        }}
-                        compact
-                    />
-                )}
+                {definition &&
+                    definition.name &&
+                    !isanalytickitProp(definition.name) &&
+                    'verified' in localDefinition && (
+                        <VerifiedEventCheckbox
+                            verified={!!localDefinition.verified}
+                            onChange={(nextVerified) => {
+                                setLocalDefinition({ verified: nextVerified })
+                            }}
+                            compact
+                        />
+                    )}
                 <DefinitionPopup.HorizontalLine style={{ marginTop: 0 }} />
                 <div className="definition-popup-edit-form-buttons click-outside-block">
                     {!hideView && isViewable && type !== TaxonomicFilterGroupType.Events ? (

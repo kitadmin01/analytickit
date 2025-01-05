@@ -6,8 +6,7 @@
 <p class="text-center">
     <strong>{{ invite.created_by.first_name }}</strong> ({{ invite.created_by.email }}) has invited you to join
     <strong>{{invite.organization.name }}</strong> on analytickit. analytickit is a product analytics tool that will
-    help you
-    better understand your users. Build the best product <i>together</i>.
+    help you better understand your users. Build the best product <i>together</i>.
 </p>
 {% if invite.message %}
 <div class="invite-message">
@@ -27,9 +26,7 @@
     <a target="_blank" href="https://analytickit.com"><b>https://analytickit.com</b></a>
 </p>
 <div class="text-center">
-    <img src="{% absolute_asset_url 'email/invite-email-welcome.png' %}"/>
+    <img src="{% absolute_asset_url 'email/invite-email-welcome.png' %}" />
 </div>
 
-{% block footer %}
-{% endblock %}
-{% endblock %}{% load analytickit_filters %}
+{% block footer %} {% endblock %} {% endblock %}{% load analytickit_filters %}

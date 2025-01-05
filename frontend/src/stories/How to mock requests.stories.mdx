@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/addon-docs';
+import { Meta } from '@storybook/addon-docs'
 
 <Meta title=" How to mock requests?" />
 
@@ -8,7 +8,7 @@ import { Meta } from '@storybook/addon-docs';
 
 - We use an abstraction over [MockServiceWorker](https://mswjs.io/) to provide API mocks.
 - This abstraction along with the
-[default mocks](https://github.com/analytickit/analytickit/blob/master/frontend/src/mocks/handlers.ts#L7) are shared between storybook and jest tests.
+  [default mocks](https://github.com/analytickit/analytickit/blob/master/frontend/src/mocks/handlers.ts#L7) are shared between storybook and jest tests.
 
 ## Specifying mocks
 
@@ -28,7 +28,7 @@ export default {
     ],
 }
 
-export function Dashboard (): JSX.Element {
+export function Dashboard(): JSX.Element {
     // applies to just this story
     useStorybookMocks(MOCK_ARGUMENTS)
     return <div />

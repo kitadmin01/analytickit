@@ -185,9 +185,7 @@ export function ExperimentPreview({
                             <div className="card-secondary">Experiment variants</div>
                             <ul className="variants-list">
                                 {experiment?.parameters?.feature_flag_variants?.map(
-                                    (variant: MultivariateFlagVariant, idx: number) => (
-                                        <li key={idx}>{variant.key}</li>
-                                    )
+                                    (variant: MultivariateFlagVariant, idx: number) => <li key={idx}>{variant.key}</li>
                                 )}
                             </ul>
                         </Col>

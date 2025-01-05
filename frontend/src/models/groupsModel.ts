@@ -62,7 +62,7 @@ export const groupsModel = kea<groupsModelType>({
                 (groupTypeIndex: number | null | undefined, deferToUserWording: boolean = false) => {
                     if (groupTypeIndex != undefined && groupTypes.length > 0 && groupTypes[groupTypeIndex]) {
                         const groupType = groupTypes[groupTypeIndex]
-        
+
                         // Check if the group type is 'project' and modify the label
                         if (groupType.group_type === 'project') {
                             return {
@@ -77,7 +77,7 @@ export const groupsModel = kea<groupsModelType>({
                                 plural: 'Organization(s)',
                             }
                         }
-        
+
                         return {
                             singular: groupType.name_singular || groupType.group_type,
                             plural: groupType.name_plural || `${groupType.group_type}(s)`,
@@ -91,7 +91,6 @@ export const groupsModel = kea<groupsModelType>({
                         : { singular: 'visitor', plural: 'visitors' }
                 },
         ],
-        
     },
     events: ({ actions }) => ({
         afterMount: actions.loadAllGroupTypes,

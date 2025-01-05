@@ -62,7 +62,7 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.WalletAddress]: () => import('./wallet/WalletDashboard'),
     [Scene.BillingSuccess]: () => import('./billing/PaymentSuccess'),
     [Scene.BillingCancel]: () => import('./billing/PaymentCancel'),
-    [Scene.CryptoDashboard]: () => import('./dashboard/Dashboard'), //new one 
-    [Scene.Web3Dashboard]: () => import('./dashboard/Dashboard'), //new one 
-    [Scene.Graph]: () => import('./comm_eng/dashboard/ActiveUsersGraphPage'),  // Common component
+    [Scene.CryptoDashboard]: () => import('./dashboard/Dashboard'), //new one
+    [Scene.Web3Dashboard]: () => import('./dashboard/Dashboard'), //new one
+    [Scene.Graph]: () => import('./comm_eng/dashboard/ActiveUsersGraphPage'), // Common component
 }

@@ -86,7 +86,9 @@
 .InsightMeta--expansion-exit-active,
 .InsightMeta--expansion-enter,
 .InsightMeta--expansion-exit {
-    transition: box-shadow 200ms ease, height 200ms ease;
+    transition:
+        box-shadow 200ms ease,
+        height 200ms ease;
 }
 .InsightMeta--expansion-exit.InsightMeta--expansion-exit-active,
 .InsightMeta--expansion-exit-done,

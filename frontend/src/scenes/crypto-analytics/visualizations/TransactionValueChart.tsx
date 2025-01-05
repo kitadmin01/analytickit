@@ -14,4 +14,4 @@ export function TransactionValueChart({ data, loading }: TransactionValueChartPr
             <div>Transaction Value Chart</div>
         </BaseVisualization>
     )
-} 
+}

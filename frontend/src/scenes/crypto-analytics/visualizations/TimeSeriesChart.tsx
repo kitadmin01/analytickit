@@ -13,4 +13,4 @@ export function TimeSeriesChart({ loading, metric }: TimeSeriesChartProps): JSX.
             <div>Time Series Chart for {metric}</div>
         </BaseVisualization>
     )
-} 
+}

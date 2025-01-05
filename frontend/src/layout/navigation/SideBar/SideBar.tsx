@@ -64,9 +64,7 @@ function Pages(): JSX.Element {
     const [arePinnedDashboardsShown, setArePinnedDashboardsShown] = useState(false)
     const [isToolbarLaunchShown, setIsToolbarLaunchShown] = useState(false)
 
-
-    const teamId = currentTeam?.id; // Extract teamId from currentTeam
-
+    const teamId = currentTeam?.id // Extract teamId from currentTeam
 
     return (
         <ul>
@@ -217,7 +215,6 @@ function Pages(): JSX.Element {
                         to={urls.projectSettings()}
                     />
                 </>
-
             )}
             {/* Add the LemonDivider and new PageButton */}
             <LemonDivider />
@@ -230,9 +227,9 @@ function Pages(): JSX.Element {
             {teamId !== undefined && (
                 <PageButton
                     icon={<IconCryptoWallet />}
-                    identifier={Scene.WalletAddress} 
+                    identifier={Scene.WalletAddress}
                     to={urls.walletAddress(String(teamId))} // Convert teamId to string and ensure it's not undefined
-                    title="Wallet Analytic" 
+                    title="Wallet Analytic"
                 />
             )}
         </ul>

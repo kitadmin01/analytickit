@@ -32,6 +32,7 @@ title: Sprint 1.n.0 m/2 - Jan 1 to Jan 12
 ## Support hero this sprint
 
 <!-- https://analytickit.pagerduty.com/schedules#PPLGE4G -->
+
 Week 1:
 Week 2:
 
@@ -56,7 +57,7 @@ Team ___
 
 <!-- Talk about what went well, what didn't go well and any actions to improve next time -->
 
-- 
+-
 
 ## Hang over items from previous sprint
 

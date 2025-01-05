@@ -5,7 +5,6 @@ import { ErrorProjectUnavailable as ErrorProjectUnavailableComponent } from '~/l
 import { urls } from 'scenes/urls'
 import { InsightShortId } from '~/types'
 
-
 export const emptySceneParams = { params: {}, searchParams: {}, hashParams: {} }
 
 export const preloadedScenes: Record<string, LoadedScene> = {
@@ -242,16 +241,12 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     [Scene.BillingSuccess]: {
         projectBased: true,
         name: 'Billing Success',
-
     },
-      [Scene.BillingCancel]: {
+    [Scene.BillingCancel]: {
         projectBased: true,
         name: 'Billing Cancel',
     },
-
-    
 }
-
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
     '/': urls.projectHomepage(),
@@ -347,7 +342,7 @@ export const routes: Record<string, Scene> = {
     [urls.web3Dashboards()]: Scene.Web3Dashboard,
     [urls.web3Dashboard(':id')]: Scene.Web3Dashboard,
     // all comm eng graphs
-    [urls.ActiveUsersGraphPage(':campaignId')]: Scene.Graph,  // All graph routes map to Scene.Graph
+    [urls.ActiveUsersGraphPage(':campaignId')]: Scene.Graph, // All graph routes map to Scene.Graph
     [urls.totalContractCallsGraph()]: Scene.Graph,
     [urls.tokensTransferredGraph()]: Scene.Graph,
     [urls.gasUsedGraph()]: Scene.Graph,
@@ -356,6 +351,4 @@ export const routes: Record<string, Scene> = {
     [urls.transactionValueDistributionGraph()]: Scene.Graph,
     [urls.tokenTransferValueDistributionGraph()]: Scene.Graph,
     [urls.tokenFlowGraph()]: Scene.Graph,
-
-    
 }

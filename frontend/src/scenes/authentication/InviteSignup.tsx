@@ -171,8 +171,8 @@ function AuthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite }): 
                     </Row>
                 )}
                 <Row>
-                    You can change BusinessProfiles at any time by clicking on the dropdown at the top right corner of the
-                    navigation bar.
+                    You can change BusinessProfiles at any time by clicking on the dropdown at the top right corner of
+                    the navigation bar.
                 </Row>
                 <div>
                     {!acceptedInvite ? (
@@ -284,7 +284,9 @@ function UnauthenticatedAcceptInvite({ invite }: { invite: PrevalidatedInvite })
                         />
                         <div className="password-login">
                             <h3 className="l3 text-center">
-                                {socialAuthAvailable ? 'Or create your own password' : 'Create your analytickit account'}
+                                {socialAuthAvailable
+                                    ? 'Or create your own password'
+                                    : 'Create your analytickit account'}
                             </h3>
                             <form onSubmit={handleFormSubmit}>
                                 <div className="input-set">

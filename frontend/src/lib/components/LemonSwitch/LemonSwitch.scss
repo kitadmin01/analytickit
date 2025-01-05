@@ -77,7 +77,10 @@
     border-radius: 0.625rem;
     background-color: #fff;
     border: 2px solid var(--border);
-    transition: background-color 100ms ease, transform 100ms ease, border-color 100ms ease;
+    transition:
+        background-color 100ms ease,
+        transform 100ms ease,
+        border-color 100ms ease;
     cursor: inherit;
 
     .LemonSwitch--checked & {

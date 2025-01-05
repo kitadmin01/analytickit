@@ -15,8 +15,8 @@ export function getDefaultConfig(): PluginsServerConfig {
         DATABASE_URL: isTestEnv()
             ? 'postgres://analytickit:analytickit@localhost:5432/analytickit_test'
             : isDevEnv()
-            ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
-            : null,
+              ? 'postgres://analytickit:analytickit@localhost:5432/analytickit'
+              : null,
         ANALYTICKIT_DB_NAME: null,
         ANALYTICKIT_DB_USER: 'postgres',
         ANALYTICKIT_DB_PASSWORD: '',

@@ -75,7 +75,7 @@ export function TaxonomicPopup({
                 style={style}
             >
                 <span className="text-overflow" style={{ maxWidth: '100%' }}>
-                    {value ? renderValue?.(value) ?? String(value) : <em>{placeholder}</em>}
+                    {value ? (renderValue?.(value) ?? String(value)) : <em>{placeholder}</em>}
                 </span>
                 <div style={{ flexGrow: 1 }} />
                 <DownOutlined style={{ marginLeft: '8px', fontSize: 10 }} />

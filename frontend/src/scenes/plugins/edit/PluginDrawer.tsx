@@ -168,9 +168,9 @@ export function PluginDrawer(): JSX.Element {
                                     <Tooltip
                                         title={
                                             <>
-                                                This app can currently be used by other businessProfiles in this instance
-                                                of analytickit. This action will <b>disable and hide it</b> for all
-                                                businessProfiles other than yours.
+                                                This app can currently be used by other businessProfiles in this
+                                                instance of analytickit. This action will <b>disable and hide it</b> for
+                                                all businessProfiles other than yours.
                                             </>
                                         }
                                     >
@@ -187,8 +187,8 @@ export function PluginDrawer(): JSX.Element {
                                     <Tooltip
                                         title={
                                             <>
-                                                This action will mark this app as installed for <b>all businessProfiles</b>{' '}
-                                                in this instance of analytickit.
+                                                This action will mark this app as installed for{' '}
+                                                <b>all businessProfiles</b> in this instance of analytickit.
                                             </>
                                         }
                                     >

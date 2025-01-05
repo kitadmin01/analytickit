@@ -198,7 +198,15 @@ function SavedInsightsGrid(): JSX.Element {
 export function SavedInsights(): JSX.Element {
     const { loadInsights, updateFavoritedInsight, renameInsight, duplicateInsight, setSavedInsightsFilters } =
         useActions(savedInsightsLogic)
-    const { insights, count, insightsLoading, filters, sorting, pagination, meFirstMembers = [] } = useValues(savedInsightsLogic)
+    const {
+        insights,
+        count,
+        insightsLoading,
+        filters,
+        sorting,
+        pagination,
+        meFirstMembers = [],
+    } = useValues(savedInsightsLogic)
     const { hasDashboardCollaboration } = useValues(organizationLogic)
     const { currentTeamId } = useValues(teamLogic)
     const { aggregationLabel } = useValues(groupsModel)
@@ -346,7 +354,7 @@ export function SavedInsights(): JSX.Element {
                 [x.user.id]: { label: x.user.first_name },
             }),
             {}
-        ) || {})
+        ) || {}),
     } as LemonSelectOptions
 
     if (!insights) {

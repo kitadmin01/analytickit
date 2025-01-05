@@ -27,9 +27,10 @@ export function CryptoAnalyticsScene(): JSX.Element {
                     <Alert
                         type="error"
                         message={error?.message}
-                        description={error?.type === ErrorType.NETWORK_ERROR 
-                            ? 'Please check your internet connection and try again.'
-                            : 'An error occurred while loading the data.'
+                        description={
+                            error?.type === ErrorType.NETWORK_ERROR
+                                ? 'Please check your internet connection and try again.'
+                                : 'An error occurred while loading the data.'
                         }
                         action={<LemonButton onClick={() => retryFailedOperation()}>Retry</LemonButton>}
                         closable
@@ -42,9 +43,7 @@ export function CryptoAnalyticsScene(): JSX.Element {
                 ) : (
                     <div className="analytics-list">
                         {analyticsList.length > 0 ? (
-                            analyticsList.map((analytic) => (
-                                <AnalyticCard key={analytic.id} analytic={analytic} />
-                            ))
+                            analyticsList.map((analytic) => <AnalyticCard key={analytic.id} analytic={analytic} />)
                         ) : (
                             <p>No analytics found.</p>
                         )}
@@ -59,5 +58,5 @@ export function CryptoAnalyticsScene(): JSX.Element {
 
 export const scene: SceneExport = {
     component: CryptoAnalyticsScene,
-    logic: cryptoAnalyticsLogic
+    logic: cryptoAnalyticsLogic,
 }

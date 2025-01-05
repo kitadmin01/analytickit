@@ -213,9 +213,7 @@ export class PersonState {
             )
         }
 
-        const update: Partial<Person> = {
-
-        }
+        const update: Partial<Person> = {}
         const updatedProperties = this.updatedPersonProperties(personFound.properties || {})
 
         if (!equal(personFound.properties, updatedProperties)) {
@@ -363,9 +361,7 @@ export class PersonState {
                 const person = await this.createPerson(
                     timestamp,
                     this.eventProperties['$set'] || {},
-                    this.eventProperties['$set_once'] || {
-
-                    },
+                    this.eventProperties['$set_once'] || {},
                     teamId,
                     null,
                     shouldIdentifyPerson,

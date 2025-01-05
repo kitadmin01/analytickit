@@ -24,7 +24,9 @@
         svg {
             width: 1rem;
             height: 1rem;
-            transition: border 200ms ease, background 200ms ease;
+            transition:
+                border 200ms ease,
+                background 200ms ease;
             background: var(--bg-light);
             border: 1.5px solid var(--border-dark);
             border-radius: 3px; // Intentionally a bit smaller than --radius

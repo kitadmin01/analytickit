@@ -61,8 +61,8 @@ const Template: ComponentStory<typeof ActionFilter> = ({ ...props }: Partial<Act
                 filters.insight === InsightType.LIFECYCLE
                     ? MathAvailability.None
                     : filters.insight === InsightType.STICKINESS
-                    ? MathAvailability.ActorsOnly
-                    : MathAvailability.All
+                      ? MathAvailability.ActorsOnly
+                      : MathAvailability.All
             }
             propertiesTaxonomicGroupTypes={[
                 TaxonomicFilterGroupType.EventProperties,

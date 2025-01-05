@@ -140,10 +140,10 @@ function BoldNumberComparison({ showPersonsModal }: Pick<ChartParams, 'showPerso
         percentageDiff === null
             ? 'No data for comparison in the'
             : percentageDiff > 0
-            ? `Up ${percentage(percentageDiff)} from`
-            : percentageDiff < 0
-            ? `Down ${percentage(-percentageDiff)} from`
-            : 'No change from'
+              ? `Up ${percentage(percentageDiff)} from`
+              : percentageDiff < 0
+                ? `Down ${percentage(-percentageDiff)} from`
+                : 'No change from'
 
     return (
         <LemonRow

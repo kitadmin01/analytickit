@@ -12,25 +12,28 @@ export function CryptoAnalyticsFilters({ filters, onChange }: FilterProps): JSX.
     const handleFilterChange = (key: string, value: any) => {
         onChange({
             ...filters,
-            [key]: value
+            [key]: value,
         })
     }
 
     const renderRangeSelect = (filterKey: string) => {
         const filterConfig = FILTER_RANGES[filterKey]
-        
+
         return (
             <Form.Item label={filterConfig.label}>
                 <LemonSelect
                     value={filters[filterKey]}
                     onChange={(value) => handleFilterChange(filterKey, value)}
-                    options={filterConfig.ranges?.map(range => ({
-                        label: range.label,
-                        value: JSON.stringify({ min: range.min, max: range.max })
-                    })) || filterConfig.options?.map(option => ({
-                        label: option,
-                        value: option
-                    }))}
+                    options={
+                        filterConfig.ranges?.map((range) => ({
+                            label: range.label,
+                            value: JSON.stringify({ min: range.min, max: range.max }),
+                        })) ||
+                        filterConfig.options?.map((option) => ({
+                            label: option,
+                            value: option,
+                        }))
+                    }
                 />
             </Form.Item>
         )
@@ -39,7 +42,7 @@ export function CryptoAnalyticsFilters({ filters, onChange }: FilterProps): JSX.
     return (
         <Card title="Filters" className="crypto-analytics-filters">
             <Form layout="vertical">
-                {Object.keys(FILTER_RANGES).map(filterKey => (
+                {Object.keys(FILTER_RANGES).map((filterKey) => (
                     <>
                         {renderRangeSelect(filterKey)}
                         <Divider />

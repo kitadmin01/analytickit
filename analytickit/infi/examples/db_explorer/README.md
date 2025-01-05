@@ -15,6 +15,7 @@ ORM concepts that are demonstrated by this example:
 ## Running the code
 
 Create a virtualenv and install the required libraries:
+
 ```
 virtualenv -p python3.6 env
 source env/bin/activate
@@ -22,15 +23,19 @@ pip install -r requirements.txt
 ```
 
 Run the server and open http://127.0.0.1:5000/ in your browser:
+
 ```
 python server.py
 ```
 
 By default the server connects to ClickHouse running on http://localhost:8123/ without a username or password, but you can change this using command line arguments:
+
 ```
 python server.py http://myclickhouse:8123/
 ```
+
 or:
+
 ```
 python server.py http://myclickhouse:8123/ admin secret123
 ```

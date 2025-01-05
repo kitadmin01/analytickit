@@ -68,9 +68,7 @@ export const dashboardsModel = kea<dashboardsModelType>({
                     }))
 
                     // Fetch Crypto dashboards
-                    const { results: cryptoDashboards } = await api.get(
-                        `api/web3-dashboard/?limit=300`
-                    )
+                    const { results: cryptoDashboards } = await api.get(`api/web3-dashboard/?limit=300`)
 
                     // Add type "Web3" and prefix ID
                     const cryptoDashboardsWithType = cryptoDashboards.map((dashboard: CryptoDashboardType) => ({

@@ -4,8 +4,6 @@ import { BaseVisualization } from '../BaseVisualization'
 import { CryptoAnalytic } from '../types'
 import { Line } from 'react-chartjs-2'
 
-
-
 interface LineChartProps {
     data: CryptoAnalytic[]
     loading?: boolean
@@ -14,15 +12,15 @@ interface LineChartProps {
 
 export function LineChart({ data, loading, type }: LineChartProps): JSX.Element {
     const chartData = {
-        labels: data.map(item => new Date(item.created_at).toLocaleDateString()),
+        labels: data.map((item) => new Date(item.created_at).toLocaleDateString()),
         datasets: [
             {
                 label: type.replace('_', ' '),
-                data: data.map(item => item.filters[type]),
+                data: data.map((item) => item.filters[type]),
                 borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }
-        ]
+                tension: 0.1,
+            },
+        ],
     }
 
     const options = {
@@ -33,14 +31,14 @@ export function LineChart({ data, loading, type }: LineChartProps): JSX.Element 
             },
             title: {
                 display: true,
-                text: `${type.replace('_', ' ')} Over Time`
-            }
+                text: `${type.replace('_', ' ')} Over Time`,
+            },
         },
         scales: {
             y: {
-                beginAtZero: true
-            }
-        }
+                beginAtZero: true,
+            },
+        },
     }
 
     return (

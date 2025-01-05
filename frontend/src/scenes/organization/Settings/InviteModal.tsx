@@ -126,14 +126,15 @@ export function InviteModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                 description={
                     preflight?.email_service_available ? (
                         <span>
-                            Invite others to your project to collaborate together in analytickit. An invite is specific to
-                            an email address and expires after 3 days. Name can be provided for the team member's
+                            Invite others to your project to collaborate together in analytickit. An invite is specific
+                            to an email address and expires after 3 days. Name can be provided for the team member's
                             convenience.
                         </span>
                     ) : (
                         <span>
-                            This analytickit instance isn't configured to send emails. In the meantime, you can generate a
-                            link for each team member you want to invite. You can always invite others at a later time.{' '}
+                            This analytickit instance isn't configured to send emails. In the meantime, you can generate
+                            a link for each team member you want to invite. You can always invite others at a later
+                            time.{' '}
                             <strong>Make sure you share links with the project members you want to invite.</strong>
                         </span>
                     )
@@ -176,9 +177,10 @@ export function InviteModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                         showIcon
                         message={
                             <>
-                                You've hit the limit of team members you can invite to your analytickit instance given your
-                                license. Please contact <a href="mailto:sales@analytickit.com">sales@analytickit.com</a> to
-                                upgrade your license.
+                                You've hit the limit of team members you can invite to your analytickit instance given
+                                your license. Please contact{' '}
+                                <a href="mailto:sales@analytickit.com">sales@analytickit.com</a> to upgrade your
+                                license.
                             </>
                         }
                     />

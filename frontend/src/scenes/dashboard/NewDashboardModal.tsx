@@ -68,11 +68,7 @@ export function NewDashboardModal(): JSX.Element {
                     <LemonInput autoFocus={true} data-attr="dashboard-name-input" className="ph-ignore-input" />
                 </Field>
                 <Field name="crypto">
-                    <LemonCheckbox
-                        label="Crypto"
-                        name="crypto"
-                        className="ml-2"
-                    />
+                    <LemonCheckbox label="Crypto" name="crypto" className="ml-2" />
                 </Field>
                 <Field name="description" label="Description" showOptional>
                     <LemonTextArea data-attr="dashboard-description-input" className="ph-ignore-input" />

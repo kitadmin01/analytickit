@@ -47,8 +47,8 @@ export function TrendsSteps({ insightProps }: EditorFilterProps): JSX.Element {
                     filters.insight === InsightType.LIFECYCLE
                         ? MathAvailability.None
                         : filters.insight === InsightType.STICKINESS
-                        ? MathAvailability.ActorsOnly
-                        : MathAvailability.All
+                          ? MathAvailability.ActorsOnly
+                          : MathAvailability.All
                 }
                 propertiesTaxonomicGroupTypes={propertiesTaxonomicGroupTypes}
             />

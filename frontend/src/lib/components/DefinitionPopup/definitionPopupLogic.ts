@@ -61,7 +61,11 @@ export const definitionPopupLogic = kea<definitionPopupLogicType>({
             {} as Partial<TaxonomicDefinitionTypes>,
             {
                 setDefinition: (_, { item }) => item,
-                setLocalDefinition: (state, { item }) => ({ ...state, ...item } as Partial<TaxonomicDefinitionTypes>),
+                setLocalDefinition: (state, { item }) =>
+                    ({
+                        ...state,
+                        ...item,
+                    } as Partial<TaxonomicDefinitionTypes>),
             },
         ],
     },

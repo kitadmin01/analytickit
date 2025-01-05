@@ -41,7 +41,7 @@ dpa/benchmarks/results
 coverage-*.xml
 object_storage/
 __emails__
-share/GeoLite2-City.mmdb
+share/*
 a11y/
-kit3.8/*
+kit/*
 analytickit/crypto/s3data/*

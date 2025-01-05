@@ -454,8 +454,8 @@ export function EventsTable({
                                         Exporting by csv is limited to 3,500 events.
                                         <br />
                                         To return more, please use{' '}
-                                        <a href="https://analytickit.com/docs/api/events">the API</a>. Do you want to export
-                                        by CSV?
+                                        <a href="https://analytickit.com/docs/api/events">the API</a>. Do you want to
+                                        export by CSV?
                                     </>
                                 }
                                 onConfirm={startDownload}

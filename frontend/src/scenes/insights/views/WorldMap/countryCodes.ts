@@ -1,38 +1,38 @@
 export const letterToRegionalIndicator = {
-A:'🇦',
-B: '🇧',
-C: '🇨',
-D: '🇩',
-E: '🇪',
-F: '🇫',
-G: '🇬',
-H: '🇭',
-I: '🇮',
-J: '🇯',
-K: '🇰',
-L: '🇱',
-M: '🇲',
-N: '🇳',
-O: '🇴',
-P: '🇵',
-Q: '🇶',
-R: '🇷',
-S: '🇸',
-T: '🇹',
-U: '🇺',
-V: '🇻',
-W: '🇼',
-X: '🇽',
-Y: '🇾',
-Z: '🇿',
+    A: '🇦',
+    B: '🇧',
+    C: '🇨',
+    D: '🇩',
+    E: '🇪',
+    F: '🇫',
+    G: '🇬',
+    H: '🇭',
+    I: '🇮',
+    J: '🇯',
+    K: '🇰',
+    L: '🇱',
+    M: '🇲',
+    N: '🇳',
+    O: '🇴',
+    P: '🇵',
+    Q: '🇶',
+    R: '🇷',
+    S: '🇸',
+    T: '🇹',
+    U: '🇺',
+    V: '🇻',
+    W: '🇼',
+    X: '🇽',
+    Y: '🇾',
+    Z: '🇿',
 }
 
 /**
-* Returns country flag emoji for a given ISO 3166-1 alpha-2 country code.
-*
-* This is super simple because a country flag is in fact just the country's ISO code in _regional indicator_ form.
-* See: https://en.wikipedia.org/wiki/Regional_indicator_symbol
-*/
+ * Returns country flag emoji for a given ISO 3166-1 alpha-2 country code.
+ *
+ * This is super simple because a country flag is in fact just the country's ISO code in _regional indicator_ form.
+ * See: https://en.wikipedia.org/wiki/Regional_indicator_symbol
+ */
 export function countryCodeToFlag(countryCode: string): string {
     return `${letterToRegionalIndicator[countryCode[0]]}${letterToRegionalIndicator[countryCode[1]]}`
 }

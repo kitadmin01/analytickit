@@ -112,8 +112,6 @@ export const urls = {
     tokenTransferValueDistributionGraph: (): string => '/graphs/token-transfer-value-distribution',
     tokenFlowGraph: (): string => '/graphs/token-flow',
 
-
-
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {
             ...(exportOptions?.whitelabel ? { whitelabel: null } : {}),
@@ -127,4 +125,3 @@ export const urls = {
             ...(exportOptions?.noHeader ? { noHeader: null } : {}),
         }).url,
 }
-

@@ -66,7 +66,8 @@ function countAndLogEvents(): void {
     if (now - messageLogDate > 10000) {
         status.info(
             '🕒',
-            `Processed ${messageCounter} events${messageLogDate === 0 ? '' : ` in ${Math.round((now - messageLogDate) / 10) / 100}s`
+            `Processed ${messageCounter} events${
+                messageLogDate === 0 ? '' : ` in ${Math.round((now - messageLogDate) / 10) / 100}s`
             }`
         )
         messageCounter = 0

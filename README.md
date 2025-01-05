@@ -14,9 +14,9 @@
 
 ## analytickit is a product analytics suite, built for engineers
 
-* Automatically track every event on your website or app
-* Understand your users and how to improve your product
-* Deploy on your own infrastructure to keep control of your data.
+- Automatically track every event on your website or app
+- Understand your users and how to improve your product
+- Deploy on your own infrastructure to keep control of your data.
 
 ## Get started for free
 
@@ -24,9 +24,9 @@
 
 For <100K events ingested monthly on Linux with Docker (recommended 4GB memory):
 
- ```bash 
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/analytickit/analytickit/HEAD/bin/deploy-hobby)" 
- ``` 
+```bash
+ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/analytickit/analytickit/HEAD/bin/deploy-hobby)"
+```
 
 ### Option 2: Production instance on your infrastructure
 
@@ -130,4 +130,3 @@ with one of the team.
 
 Come help us make analytickit even better. We're growing
 fast, [and would love for you to join us](https://analytickit.com/careers).
-

@@ -36,11 +36,7 @@ export class CryptoAnalyticsErrorBoundary extends React.Component<Props, State> 
                     type="error"
                     message="Something went wrong"
                     description={this.state.error?.message}
-                    action={
-                        <Button onClick={this.handleRetry}>
-                            Retry
-                        </Button>
-                    }
+                    action={<Button onClick={this.handleRetry}>Retry</Button>}
                 />
             )
         }

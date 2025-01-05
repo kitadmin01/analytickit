@@ -9,7 +9,7 @@ interface LineGraphProps {
     datasets: GraphDataset[]
     labels: string[]
     type: GraphType
-    labelGroupType: "none" | "people" | number
+    labelGroupType: 'none' | 'people' | number
     incompletenessOffsetFromEnd: number
     tooltip: { showHeader: boolean }
     filters: any
@@ -28,26 +28,31 @@ interface GraphProps {
 }
 
 export function CryptoAnalyticsGraph({ data, filters, loading }: GraphProps): JSX.Element {
-    const graphData = useMemo(() => [{
-        data: data.map(item => Number(item.value)),
-        label: filters.activeFilter,
-        type: GraphType.Line,
-        borderColor: 'blue',
-        backgroundColor: 'rgba(0,0,255,0.1)',
-        borderWidth: 2,
-        tension: 0.1
-    }], [data, filters])
+    const graphData = useMemo(
+        () => [
+            {
+                data: data.map((item) => Number(item.value)),
+                label: filters.activeFilter,
+                type: GraphType.Line,
+                borderColor: 'blue',
+                backgroundColor: 'rgba(0,0,255,0.1)',
+                borderWidth: 2,
+                tension: 0.1,
+            },
+        ],
+        [data, filters]
+    )
 
     const lineGraphProps: LineGraphProps = {
         datasets: graphData,
-        labels: data.map(item => new Date(item.date).toLocaleDateString()),
+        labels: data.map((item) => new Date(item.date).toLocaleDateString()),
         type: GraphType.Line,
-        labelGroupType: "none",
+        labelGroupType: 'none',
         incompletenessOffsetFromEnd: 0,
         tooltip: { showHeader: true },
         filters: filters,
         label: FILTER_RANGES[filters.activeFilter]?.label || 'Value',
-        'data-attr': 'crypto-analytics-graph'
+        'data-attr': 'crypto-analytics-graph',
     }
 
     return (

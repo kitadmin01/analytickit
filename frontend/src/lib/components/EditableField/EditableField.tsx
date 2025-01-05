@@ -94,10 +94,7 @@ export function EditableField({
             data-attr={dataAttr}
             style={style}
         >
-            <Tooltip
-                placement="right"
-                title={undefined}
-            >
+            <Tooltip placement="right" title={undefined}>
                 <div className="EditableField--highlight">
                     {isEditing ? (
                         <>

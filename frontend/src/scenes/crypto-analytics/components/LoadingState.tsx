@@ -9,10 +9,10 @@ interface LoadingStateProps {
     overlay?: boolean
 }
 
-export function LoadingState({ 
-    size = 'default', 
-    text = 'Loading...', 
-    overlay = false 
+export function LoadingState({
+    size = 'default',
+    text = 'Loading...',
+    overlay = false,
 }: LoadingStateProps): JSX.Element {
     const spinner = (
         <Spin
@@ -23,11 +23,7 @@ export function LoadingState({
     )
 
     if (overlay) {
-        return (
-            <div className="loading-overlay">
-                {spinner}
-            </div>
-        )
+        return <div className="loading-overlay">{spinner}</div>
     }
 
     return spinner

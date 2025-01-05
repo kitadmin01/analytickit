@@ -1,6 +1,6 @@
 import { kea, loaders } from 'kea'
 import { CommunityEngagement, CommunityEngagementCreatePayload } from './CommunityEngagementModel'
-import api from 'lib/api' 
+import api from 'lib/api'
 import { lemonToast } from 'lib/components/lemonToast' // For user notifications
 
 import type { communityEngagementLogicType } from './CommunityEngagementServiceType'
@@ -45,41 +45,39 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
                     }
                 },
                 updateEngagement: async (payload: { id: number; data: CommunityEngagementCreatePayload }) => {
-                    const { id, data } = payload;
+                    const { id, data } = payload
                     try {
-                        const response = await api.update(`${API_ENDPOINT}/${id}`, data);
-                        lemonToast.success('Community Engagement updated successfully');
-                        return response;
+                        const response = await api.update(`${API_ENDPOINT}/${id}`, data)
+                        lemonToast.success('Community Engagement updated successfully')
+                        return response
                     } catch (error) {
-                        lemonToast.error('Failed to update Community Engagement');
-                        throw error;
+                        lemonToast.error('Failed to update Community Engagement')
+                        throw error
                     }
                 },
                 deleteEngagement: async (id: number) => {
                     try {
-                        await api.delete(`${API_ENDPOINT}/${id}`);
-                        lemonToast.success('Community Engagement deleted successfully');
+                        await api.delete(`${API_ENDPOINT}/${id}`)
+                        lemonToast.success('Community Engagement deleted successfully')
                     } catch (error) {
-                        lemonToast.error('Failed to delete Community Engagement');
-                        throw error;
+                        lemonToast.error('Failed to delete Community Engagement')
+                        throw error
                     }
                 },
-                                
-                
-},
+            },
         ],
         campaignAnalytics: [
             {}, // Initial state as an empty object
             {
                 fetchCampaignAnalytic: async (id: number) => {
                     try {
-                        const response = await api.get(`${API_ENDPOINT}/${id}/analytic`);
+                        const response = await api.get(`${API_ENDPOINT}/${id}/analytic`)
                         // Assuming response.data contains the analytics data
-                        console.log(`Fetched Campaign Analytic with ID: ${id}`, response.data); // Log the data for debugging purposes
-                        return { [id]: response.data }; // Update the state with the new data
+                        console.log(`Fetched Campaign Analytic with ID: ${id}`, response.data) // Log the data for debugging purposes
+                        return { [id]: response.data } // Update the state with the new data
                     } catch (error) {
-                        console.error(`Failed to fetch Campaign Analytic with ID: ${id}`, error);
-                        return { [id]: [] }; // Return an empty array for this ID in case of an error
+                        console.error(`Failed to fetch Campaign Analytic with ID: ${id}`, error)
+                        return { [id]: [] } // Return an empty array for this ID in case of an error
                     }
                 },
             },
@@ -89,17 +87,16 @@ export const communityEngagementLogic = kea<communityEngagementLogicType>({
             {
                 fetchWalletAnalytic: async (teamId: number) => {
                     try {
-                        const response = await api.get(`${WALLET_API_ENDPOINT}?team_id=${teamId}`);
-                        console.log(`Fetched Wallet Analytic with Team ID: ${teamId}`, response.data);
-                        return { [teamId]: response.data }; // Update the state with the new data
+                        const response = await api.get(`${WALLET_API_ENDPOINT}?team_id=${teamId}`)
+                        console.log(`Fetched Wallet Analytic with Team ID: ${teamId}`, response.data)
+                        return { [teamId]: response.data } // Update the state with the new data
                     } catch (error) {
-                        console.error(`Failed to fetch Wallet Analytic with Team ID: ${teamId}`, error);
-                        return { [teamId]: {} }; // Return an empty object for this ID in case of an error
+                        console.error(`Failed to fetch Wallet Analytic with Team ID: ${teamId}`, error)
+                        return { [teamId]: {} } // Return an empty object for this ID in case of an error
                     }
                 },
             },
         ],
-
     }),
     reducers: () => ({
         lastUpdated: [

@@ -80,8 +80,8 @@ const documentQuerySelector = (scope) => {
     typeof scope.querySelectorAll === 'function'
       ? scope
       : scope.document
-      ? scope.document
-      : INVALID_DOCUMENT
+        ? scope.document
+        : INVALID_DOCUMENT
   return (selector, onError) => {
     try {
       return querySelectorAllDeep(selector, document)

@@ -54,7 +54,7 @@ export function CreateOrganizationModal({
             back
         >
             <p>
-            BusinessProfiles gather people building products together.
+                BusinessProfiles gather people building products together.
                 <br />
                 <a
                     href="https://analytickit.com/docs/user-guides/organizations-and-projects"

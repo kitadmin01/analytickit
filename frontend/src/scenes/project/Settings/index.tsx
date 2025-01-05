@@ -98,18 +98,20 @@ export function ProjectSettings(): JSX.Element {
                 <h2 id="snippet" className="subtitle">
                     Website event autocapture
                 </h2>
-                To integrate analytickit into your website and get event autocapture with no additional work, include the
-                following snippet in your&nbsp;website's&nbsp;HTML. Ideally, put it just above the&nbsp;
+                To integrate analytickit into your website and get event autocapture with no additional work, include
+                the following snippet in your&nbsp;website's&nbsp;HTML. Ideally, put it just above the&nbsp;
                 <code>{'</head>'}</code>&nbsp;tag.
                 <br />
                 For more guidance, including on identifying visitors,{' '}
-                <a href="https://analytickit.com/doc/" target="_blank">see analytickit Docs</a>.
-                {currentTeamLoading && !currentTeam ? loadingComponent : <JSSnippet />}
+                <a href="https://analytickit.com/doc/" target="_blank">
+                    see analytickit Docs
+                </a>
+                .{currentTeamLoading && !currentTeam ? loadingComponent : <JSSnippet />}
                 <p>
                     You can even test analytickit out on a live site without changing any code.
                     <br />
-                    Just drag the bookmarklet below to your bookmarks bar, open the website you want to test analytickit on
-                    and click it.
+                    Just drag the bookmarklet below to your bookmarks bar, open the website you want to test analytickit
+                    on and click it.
                     <br />
                     This will enable our tracking, on the currently loaded page only. The data will show up in this
                     campaign.
@@ -120,9 +122,13 @@ export function ProjectSettings(): JSX.Element {
                 <h2 id="custom-events" className="subtitle">
                     Send custom events
                 </h2>
-                To send custom events <a href="https://analytickit.com/doc/" target="_blank"> visit analytickit Docs</a> and
-                integrate the library for the specific language or platform you're using. We support Python, Ruby, Node,
-                Go, PHP, iOS, Android, and more.
+                To send custom events{' '}
+                <a href="https://analytickit.com/doc/" target="_blank">
+                    {' '}
+                    visit analytickit Docs
+                </a>{' '}
+                and integrate the library for the specific language or platform you're using. We support Python, Ruby,
+                Node, Go, PHP, iOS, Android, and more.
                 <LemonDivider className="my-6" />
                 <h2 id="project-variables" className="subtitle mb-4">
                     Campaign Variables
@@ -132,7 +138,10 @@ export function ProjectSettings(): JSX.Element {
                 </h3>
                 <p>
                     You can use this write-only key in any one of{' '}
-                    <a href="https://analytickit.com/doc/" target="_blank">our libraries</a>.
+                    <a href="https://analytickit.com/doc/" target="_blank">
+                        our libraries
+                    </a>
+                    .
                 </p>
                 <CodeSnippet
                     actions={[
@@ -165,7 +174,8 @@ export function ProjectSettings(): JSX.Element {
                     Camapaign ID
                 </h3>
                 <p>
-                    You can use this ID to reference your campaign in our <a href="https://analytickit.com/docs">API</a>.
+                    You can use this ID to reference your campaign in our <a href="https://analytickit.com/docs">API</a>
+                    .
                 </p>
                 <CodeSnippet copyDescription="campaign ID">{String(currentTeam?.id || '')}</CodeSnippet>
                 <LemonDivider className="my-6" />
@@ -173,8 +183,8 @@ export function ProjectSettings(): JSX.Element {
                     Timezone
                 </h2>
                 <p>
-                    Set the timezone for your campaign. All charts will be based on this timezone, including how analytickit
-                    buckets data in day/week/month intervals.
+                    Set the timezone for your campaign. All charts will be based on this timezone, including how
+                    analytickit buckets data in day/week/month intervals.
                 </p>
                 <TimezoneConfig />
                 <LemonDivider className="my-6" />
@@ -297,18 +307,12 @@ export function ProjectSettings(): JSX.Element {
                 <p>
                     Please note <b>your website needs to have</b> the <a href="#snippet">analytickit snippet</a> or the
                     latest version of{' '}
-                    <a
-                        href="https://analytickit.com/docs/"
-                        target="_blank"
-                    >
+                    <a href="https://analytickit.com/docs/" target="_blank">
                         analytickit-js
                     </a>{' '}
                     <b>directly</b> installed, and the domains you wish to record must be set in{' '}
                     <a href="#authorized-urls">Authorized URLs</a>. For more details, check out our{' '}
-                    <a
-                        href="https://analytickit.com/docs/"
-                        target="_blank"
-                    >
+                    <a href="https://analytickit.com/docs/" target="_blank">
                         docs
                     </a>
                     .
@@ -316,7 +320,6 @@ export function ProjectSettings(): JSX.Element {
                 <SessionRecording />
                 <LemonDivider className="my-6" />
                 {/* <GroupAnalytics />  commented for now*/}
-                
                 <RestrictedArea Component={AccessControl} minimumAccessLevel={OrganizationMembershipLevel.Admin} />
                 <LemonDivider className="my-6" />
                 {currentTeam?.access_control && hasAvailableFeature(AvailableFeature.PROJECT_BASED_PERMISSIONING) && (

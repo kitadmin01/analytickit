@@ -170,7 +170,7 @@ export const insightLogic = kea<insightLogicType>({
                     if (!Object.entries(insight).length) {
                         return values.insight
                     }
-                
+
                     if ('filters' in insight && emptyFilters(insight.filters)) {
                         const error = new Error('Will not override empty filters in updateInsight.')
                         Sentry.captureException(error, {
@@ -182,7 +182,7 @@ export const insightLogic = kea<insightLogicType>({
                         })
                         throw error
                     }
-                
+
                     const response = await api.update(
                         `api/projects/${teamLogic.values.currentTeamId}/insights/${values.insight.id}`,
                         insight
@@ -193,16 +193,17 @@ export const insightLogic = kea<insightLogicType>({
                         result: response.result || values.insight.result,
                     }
                     callback?.(updatedInsight)
-                
+
                     savedInsightsLogic.findMounted()?.actions.loadInsights()
                     for (const id of updatedInsight.dashboards ?? []) {
-                        const isCryptoDashboard = /* Add your logic here to determine if the dashboard is a Web3 dashboard */true;
+                        const isCryptoDashboard =
+                            /* Add your logic here to determine if the dashboard is a Web3 dashboard */ true
                         dashboardLogic.findMounted({ id, isCrypto: isCryptoDashboard })?.actions.loadDashboardItems()
                     }
-                    
+
                     return updatedInsight
                 },
-                
+
                 setInsightMetadata: async ({ metadata }, breakpoint) => {
                     const editMode =
                         insightSceneLogic.isMounted() &&
@@ -242,16 +243,16 @@ export const insightLogic = kea<insightLogicType>({
                 // using values.filters, query for new insight results
                 loadResults: async ({ refresh, queryId }, breakpoint) => {
                     const { filters } = values
-                
+
                     const insight = (filters.insight as InsightType | undefined) || InsightType.TRENDS
                     const params = { ...filters, ...(refresh ? { refresh: true } : {}) }
-                
+
                     const dashboardItemId = props.dashboardItemId
                     actions.startQuery(queryId)
                     if (dashboardItemId && dashboardsModel.isMounted()) {
                         dashboardsModel.actions.updateDashboardRefreshStatus(dashboardItemId, true, null)
                     }
-                
+
                     let response
                     const { currentTeamId } = values
                     if (!currentTeamId) {
@@ -267,10 +268,12 @@ export const insightLogic = kea<insightLogicType>({
                                 cache.abortController.signal
                             )
                         } else {
-                            const isCryptoDashboard = true/* Add logic here to determine if filters indicate a Web3 dashboard */;
-                            dashboardLogic.findMounted({ id: dashboardItemId, isCrypto: isCryptoDashboard })?.actions.loadDashboardItems()
+                            const isCryptoDashboard =
+                                true /* Add logic here to determine if filters indicate a Web3 dashboard */
+                            dashboardLogic
+                                .findMounted({ id: dashboardItemId, isCrypto: isCryptoDashboard })
+                                ?.actions.loadDashboardItems()
                         }
-                        
                     } catch (e: any) {
                         if (e.name === 'AbortError') {
                             actions.abortQuery(queryId, insight, scene, e)
@@ -285,11 +288,19 @@ export const insightLogic = kea<insightLogicType>({
                     }
                     breakpoint()
                     cache.abortController = null
-                    actions.endQuery(queryId, (values.filters.insight as InsightType) || InsightType.TRENDS, response.last_refresh)
+                    actions.endQuery(
+                        queryId,
+                        (values.filters.insight as InsightType) || InsightType.TRENDS,
+                        response.last_refresh
+                    )
                     if (dashboardItemId && dashboardsModel.isMounted()) {
-                        dashboardsModel.actions.updateDashboardRefreshStatus(dashboardItemId, false, response.last_refresh)
+                        dashboardsModel.actions.updateDashboardRefreshStatus(
+                            dashboardItemId,
+                            false,
+                            response.last_refresh
+                        )
                     }
-                
+
                     return {
                         ...values.insight,
                         result: response.result,
@@ -297,8 +308,7 @@ export const insightLogic = kea<insightLogicType>({
                         timezone: response.timezone,
                         filters,
                     } as Partial<InsightModel>
-                }
-                
+                },
             },
         ],
     }),

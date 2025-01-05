@@ -208,8 +208,8 @@ export function CorrelationMatrix(): JSX.Element {
                                         correlationScoreStrength === 'strong'
                                             ? 'var(--success)'
                                             : correlationScoreStrength === 'moderate'
-                                            ? 'var(--warning)'
-                                            : 'var(--danger)',
+                                              ? 'var(--warning)'
+                                              : 'var(--danger)',
                                 }}
                             >
                                 <Tooltip title={`This ${actor} has ${correlationScoreStrength} correlation.`}>

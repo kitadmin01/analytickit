@@ -118,7 +118,9 @@ function ActionsComponent(_: any, member: OrganizationMemberType): JSX.Element |
                                 }}
                                 fullWidth
                             >
-                                {member.user.uuid !== user.uuid ? 'Remove from businessProfile' : 'Leave businessProfile'}
+                                {member.user.uuid !== user.uuid
+                                    ? 'Remove from businessProfile'
+                                    : 'Leave businessProfile'}
                             </LemonButton>
                         </>
                     ) : null}

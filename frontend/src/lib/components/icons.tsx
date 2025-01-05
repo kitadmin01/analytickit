@@ -1605,8 +1605,7 @@ export function IconCrypto(props: SvgIconProps): JSX.Element {
                 fill="currentColor"
             />
         </SvgIcon>
-
-    );
+    )
 }
 
 export function IconCryptoWallet(props: SvgIconProps): JSX.Element {
@@ -1621,4 +1620,3 @@ export function IconCryptoWallet(props: SvgIconProps): JSX.Element {
         </SvgIcon>
     )
 }
-

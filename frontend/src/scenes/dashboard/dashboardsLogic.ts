@@ -91,17 +91,15 @@ export const dashboardsLogic = kea<dashboardsLogicType>({
                         const web2Dashboards = await api.get(
                             `api/projects/${values.currentTeamId}/dashboards/?${toParams({ refresh })}`
                         )
-                        console.log("Web2 Dashboards:", web2Dashboards)
+                        console.log('Web2 Dashboards:', web2Dashboards)
 
                         // Fetch Web3 dashboards
-                        const cryptoDashboards = await api.get(
-                            `api/web3-dashboard/?${toParams({ refresh })}`
-                        )
-                        console.log("Web3 Dashboards:", cryptoDashboards)
+                        const cryptoDashboards = await api.get(`api/web3-dashboard/?${toParams({ refresh })}`)
+                        console.log('Web3 Dashboards:', cryptoDashboards)
 
                         // Combine both dashboards
                         const combinedDashboards = [...web2Dashboards.results, ...cryptoDashboards.results]
-                        console.log("Combined Dashboards:", combinedDashboards)
+                        console.log('Combined Dashboards:', combinedDashboards)
 
                         return combinedDashboards
                     } catch (error: any) {
@@ -117,9 +115,9 @@ export const dashboardsLogic = kea<dashboardsLogicType>({
     }),
     listeners: ({ actions, values, props }) => ({
         updateAndRefreshDashboard: async (_, breakpoint) => {
-            console.log("Props in updateAndRefreshDashboard:", props);
+            console.log('Props in updateAndRefreshDashboard:', props)
             await breakpoint(200)
-            const isCrypto = true// Determine if this is a CryptoDashboard
+            const isCrypto = true // Determine if this is a CryptoDashboard
             const apiUrl = isCrypto
                 ? `api/web3-dashboard/${props.id}`
                 : `api/projects/${values.currentTeamId}/dashboards/${props.id}`
@@ -130,7 +128,7 @@ export const dashboardsLogic = kea<dashboardsLogicType>({
         },
 
         removeItem: async ({ insight }) => {
-            console.log("Props in removeItem:", props);
+            console.log('Props in removeItem:', props)
             const isCrypto = props.isCrypto // Determine if this is a CryptoDashboard
             const apiUrl = isCrypto
                 ? `api/crypto-analytics/${insight.id}`

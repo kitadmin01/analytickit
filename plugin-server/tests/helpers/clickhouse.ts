@@ -44,7 +44,8 @@ export async function delayUntilEventIngested<T extends any[] | number>(
         dataLength = typeof data === 'number' ? data : data.length
         if (isDevEnv()) {
             console.log(
-                `Waiting. ${Math.round((performance.now() - timer) / 100) / 10}s since the start. ${dataLength} event${dataLength !== 1 ? 's' : ''
+                `Waiting. ${Math.round((performance.now() - timer) / 100) / 10}s since the start. ${dataLength} event${
+                    dataLength !== 1 ? 's' : ''
                 }.`
             )
         }

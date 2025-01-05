@@ -118,10 +118,10 @@ function getDisplayedType(filters: Partial<FilterType>): DisplayedType {
         filters.insight === InsightType.RETENTION
             ? 'RetentionContainer'
             : filters.insight === InsightType.PATHS
-            ? 'PathsViz'
-            : filters.insight === InsightType.FUNNELS
-            ? 'FunnelViz'
-            : filters.display || 'ActionsLineGraph'
+              ? 'PathsViz'
+              : filters.insight === InsightType.FUNNELS
+                ? 'FunnelViz'
+                : filters.display || 'ActionsLineGraph'
     ) as DisplayedType
 }
 

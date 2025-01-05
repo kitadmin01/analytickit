@@ -53,10 +53,14 @@ export function CreateProjectModal({
         <p>
             Campaigns are a way of tracking multiple products under the umbrella of a single businessProfile.
             <br />
-            All businessProfile members will be able to access the new campaign upon creation, but you can make it private
-            in its settings to restrict access.
+            All businessProfile members will be able to access the new campaign upon creation, but you can make it
+            private in its settings to restrict access.
             <br />
-            <a href="https://analytickit.com/docs/user-guides/organizations-and-projects" target="_blank" rel="noopener">
+            <a
+                href="https://analytickit.com/docs/user-guides/organizations-and-projects"
+                target="_blank"
+                rel="noopener"
+            >
                 Learn more about campaigns in Docs.
             </a>
         </p>

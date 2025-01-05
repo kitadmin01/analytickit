@@ -25,8 +25,11 @@ export const navigationLogic = kea<navigationLogicType>({
         latestVersion: { version: null },
     },
     selectors: {
-        getVersions: [(s) => [s.latestVersion], (latestVersion) => {
-            return latestVersion?.version ? [latestVersion.version] : []
-        }],
+        getVersions: [
+            (s) => [s.latestVersion],
+            (latestVersion) => {
+                return latestVersion?.version ? [latestVersion.version] : []
+            },
+        ],
     },
 })

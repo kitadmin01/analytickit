@@ -10,12 +10,7 @@ import { LemonButton } from '@analytickit/lemon-ui'
 import { FILTER_RANGES } from './constants'
 
 export function CryptoAnalyticsDashboard(): JSX.Element {
-    const { 
-        analyticsList, 
-        isLoading, 
-        dateRange,
-        selectedMetrics 
-    } = useValues(cryptoAnalyticsLogic)
+    const { analyticsList, isLoading, dateRange, selectedMetrics } = useValues(cryptoAnalyticsLogic)
     const { setDateRange, toggleMetric } = useActions(cryptoAnalyticsLogic)
 
     return (
@@ -23,10 +18,10 @@ export function CryptoAnalyticsDashboard(): JSX.Element {
             <Row gutter={[16, 16]} className="dashboard-controls">
                 <Col span={24}>
                     <div className="metric-toggles">
-                        {Object.keys(FILTER_RANGES).map(metric => (
+                        {Object.keys(FILTER_RANGES).map((metric) => (
                             <LemonButton
                                 key={metric}
-                                type={selectedMetrics.includes(metric) ? "primary" : "secondary"}
+                                type={selectedMetrics.includes(metric) ? 'primary' : 'secondary'}
                                 onClick={() => toggleMetric(metric)}
                             >
                                 {FILTER_RANGES[metric].label}
@@ -38,18 +33,12 @@ export function CryptoAnalyticsDashboard(): JSX.Element {
 
             <Row gutter={[16, 16]} className="dashboard-visualizations">
                 <Col span={12}>
-                    <TokenDistributionChart
-                        data={analyticsList}
-                        loading={isLoading}
-                    />
+                    <TokenDistributionChart data={analyticsList} loading={isLoading} />
                 </Col>
                 <Col span={12}>
-                    <TransactionValueChart
-                        data={analyticsList}
-                        loading={isLoading}
-                    />
+                    <TransactionValueChart data={analyticsList} loading={isLoading} />
                 </Col>
-                {selectedMetrics.map(metric => (
+                {selectedMetrics.map((metric) => (
                     <Col span={24} key={metric}>
                         <TimeSeriesChart
                             data={analyticsList}

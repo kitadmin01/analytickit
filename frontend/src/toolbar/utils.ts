@@ -376,11 +376,11 @@ export async function toolbarFetch(
 
     const payloadData = payload
         ? {
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }
+              body: JSON.stringify(payload),
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          }
         : {}
 
     const response = await fetch(fullUrl, {

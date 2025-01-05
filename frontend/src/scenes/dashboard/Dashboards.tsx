@@ -175,7 +175,10 @@ export function Dashboards(): JSX.Element {
                                             id: strippedId,
                                             isCrypto: type === 'Web3',
                                             placement: DashboardPlacement.ProjectHomepage,
-                                        }).actions.setDashboardMode(DashboardMode.Edit, DashboardEventSource.DashboardsList)
+                                        }).actions.setDashboardMode(
+                                            DashboardMode.Edit,
+                                            DashboardEventSource.DashboardsList
+                                        )
                                     }}
                                     fullWidth
                                 >
@@ -263,8 +266,8 @@ export function Dashboards(): JSX.Element {
                                 currentTab === DashboardsTab.Pinned
                                     ? 'pinned '
                                     : currentTab === DashboardsTab.Shared
-                                    ? 'shared '
-                                    : ''
+                                      ? 'shared '
+                                      : ''
                             }dashboards matching "${searchTerm}"!`
                         ) : currentTab === DashboardsTab.Pinned ? (
                             <>

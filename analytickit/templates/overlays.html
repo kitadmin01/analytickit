@@ -4,19 +4,20 @@
         <span>
             <span>Current branch: </span
             ><b><code style="background: 0; color: white">{{ git_branch|default:"unknown" }}</code></b
-        ><span>.</span>
+            ><span>.</span>
         </span>
     </div>
     <div>
         <span
-        ><span>analytickit running in </span><b><code style="background: 0; color: white">DEBUG</code></b> mode!</span
+            ><span>analytickit running in </span
+            ><b><code style="background: 0; color: white">DEBUG</code></b> mode!</span
         >
     </div>
     <div>
         <span
-        ><span>Current revision: </span
-        ><b><code style="background: 0; color: white">{{ git_rev|default:"unknown" }}</code></b
-        ><span>.</span></span
+            ><span>Current revision: </span
+            ><b><code style="background: 0; color: white">{{ git_rev|default:"unknown" }}</code></b
+            ><span>.</span></span
         >
     </div>
     <button title="Close debug bar">
@@ -29,8 +30,6 @@
             document.getElementById('bottom-notice').remove()
         }
     })
-
-
 </script>
 {% elif not e2e_testing %}
 <script>
@@ -43,7 +42,5 @@
             'Use a&nbsp;valid TLS&nbsp;certificate and&nbsp;route&nbsp;to&nbsp;<code style="background: 0; color: white">https://</code>.</div>'
         document.body.prepend(element)
     }
-
-
 </script>
 {% endif %}

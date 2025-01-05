@@ -3,7 +3,7 @@ import { humanFriendlyDuration, humanFriendlyNumber, percentage } from 'lib/util
 import { ChartDisplayType } from '~/types'
 
 const formats = ['numeric', 'duration', 'duration_ms', 'percentage', 'percentage_scaled'] as const
-export type AggregationAxisFormat = typeof formats[number]
+export type AggregationAxisFormat = (typeof formats)[number]
 
 export const aggregationAxisFormatSelectOptions: Record<AggregationAxisFormat, LemonSelectOption> = {
     numeric: {

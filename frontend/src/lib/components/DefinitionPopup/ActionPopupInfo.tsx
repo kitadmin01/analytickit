@@ -55,8 +55,8 @@ export function ActionPopupInfo({ entity }: { entity: ActionType }): JSX.Element
                                                 {step.url_matching === 'regex'
                                                     ? 'Regex:'
                                                     : step.url_matching === 'exact'
-                                                    ? ':'
-                                                    : 'contains:'}
+                                                      ? ':'
+                                                      : 'contains:'}
                                                 <pre>{step.url}</pre>
                                             </span>
                                         </li>

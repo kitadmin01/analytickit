@@ -26,7 +26,8 @@ export function ToolbarApp(props: ToolbarProps = {}): JSX.Element {
                   styleLink.href = `${jsURL}/static/toolbar.css`
                   styleLink.onload = () => setDidLoadStyles(true)
                   const shadowRoot =
-                      shadowRef.current?.shadowRoot || window.document.getElementById('__analytickit_TOOLBAR__')?.shadowRoot
+                      shadowRef.current?.shadowRoot ||
+                      window.document.getElementById('__analytickit_TOOLBAR__')?.shadowRoot
                   shadowRoot?.getElementById('analytickit-toolbar-styles')?.appendChild(styleLink)
               }
     )

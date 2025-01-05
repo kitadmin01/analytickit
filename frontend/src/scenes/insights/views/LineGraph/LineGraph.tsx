@@ -370,8 +370,8 @@ export function LineGraph_({
                                             labelGroupType === 'people'
                                                 ? 'people'
                                                 : labelGroupType === 'none'
-                                                ? ''
-                                                : aggregationLabel(labelGroupType).plural
+                                                  ? ''
+                                                  : aggregationLabel(labelGroupType).plural
                                         }
                                         {...tooltipConfig}
                                     />
@@ -679,8 +679,8 @@ export function LineGraph_({
                             focused || annotationsFocused
                                 ? selectedDayLabel
                                 : enabled && labelIndex
-                                ? datasets[0].days?.[labelIndex]
-                                : null
+                                  ? datasets[0].days?.[labelIndex]
+                                  : null
                         }
                         onClick={() => {
                             setFocused(false)
@@ -703,7 +703,7 @@ export function LineGraph_({
                             setFocused(true)
                             setHoldLeft(left)
                             setHoldLabelIndex(labelIndex)
-                            setSelectedDayLabel(labelIndex ? datasets[0].days?.[labelIndex] ?? null : null)
+                            setSelectedDayLabel(labelIndex ? (datasets[0].days?.[labelIndex] ?? null) : null)
                         }}
                         getPopupContainer={
                             annotationsRoot?.current ? () => annotationsRoot.current as HTMLDivElement : undefined

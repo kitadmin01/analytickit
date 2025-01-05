@@ -27,7 +27,7 @@ describe('PersonState.update()', () => {
 
         await resetTestDatabase()
         await resetTestDatabaseClickhouse()
-            ;[hub, closeHub] = await createHub({})
+        ;[hub, closeHub] = await createHub({})
         // Avoid collapsing merge tree causing race conditions!
         await hub.db.clickhouseQuery('SYSTEM STOP MERGES')
 

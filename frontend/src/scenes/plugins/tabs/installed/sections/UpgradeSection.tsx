@@ -38,8 +38,8 @@ export function UpgradeSection(): JSX.Element {
                       Object.keys(installedPluginUrls).length
                   }`
                 : pluginsNeedingUpdates.length > 0
-                ? 'Check again for updates'
-                : 'Check for updates'}
+                  ? 'Check again for updates'
+                  : 'Check for updates'}
         </Button>
     )
 

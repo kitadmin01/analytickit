@@ -6,7 +6,7 @@ import { TileForm } from './TileForm'
 import { GraphFilters } from './GraphFilters'
 
 interface ActiveUsersGraphPageProps {
-    campaignId: number; // Ensure campaignId is passed correctly
+    campaignId: number // Ensure campaignId is passed correctly
 }
 
 export const ActiveUsersGraphPage: React.FC<ActiveUsersGraphPageProps> = ({ campaignId }) => {
@@ -17,11 +17,10 @@ export const ActiveUsersGraphPage: React.FC<ActiveUsersGraphPageProps> = ({ camp
     const [isLoading, setIsLoading] = useState(true)
     const [dashboardTitle, setDashboardTitle] = useState('')
 
-
     useEffect(() => {
         const fetchData = async () => {
             if (campaignId) {
-                console.log("Fetching graph data for campaign:", campaignId)
+                console.log('Fetching graph data for campaign:', campaignId)
                 await fetchGraphData(campaignId)
                 setIsLoading(false) // Update the loading state
                 setDashboardTitle(`Active Users Graph for Campaign: ${campaignId}`) // Update the title based on campaignId
@@ -47,19 +46,15 @@ export const ActiveUsersGraphPage: React.FC<ActiveUsersGraphPageProps> = ({ camp
     return (
         <div className="active-users-graph-page">
             <h1>{dashboardTitle}</h1> {/* Display the dynamic dashboard title */}
-
             {/* Tile Form for editing tiles */}
             <TileForm onSave={handleSave} />
-
             {/* Filters for the graph */}
             <GraphFilters onFilterChange={handleFilterChange} activityLevels={activityLevels} />
-
             {/* Render the graph */}
             {isLoading ? (
                 <p>Loading...</p>
             ) : (
                 <GraphRenderer data={graphData} xKey="date" yKey="activeUsers" graphType="TimeSeries" />
-                
             )}
         </div>
     )

@@ -27,7 +27,7 @@ import { EventsTable } from 'scenes/events'
 export const scene: SceneExport = {
     component: DefinitionView,
     logic: definitionLogic,
-    paramsToProps: ({ params: { id } }): typeof definitionLogic['props'] => ({
+    paramsToProps: ({ params: { id } }): (typeof definitionLogic)['props'] => ({
         id,
     }),
 }

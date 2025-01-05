@@ -43,7 +43,7 @@ describe('prepareEventStep()', () => {
 
     beforeEach(async () => {
         await resetTestDatabase()
-            ;[hub, closeHub] = await createHub()
+        ;[hub, closeHub] = await createHub()
 
         // :KLUDGE: We test below whether kafka messages are produced, so make sure the person exists beforehand.
         await hub.db.createPerson(person.created_at, {}, {}, {}, pluginEvent.team_id, null, false, person.uuid, [
@@ -107,7 +107,11 @@ describe('prepareEventStep()', () => {
     })
 
     it('does not continue if event is ignored', async () => {
-        await hub.db.postgresQuery('UPDATE analytickit_team SET session_recording_opt_in = $1', [false], 'testRecordings')
+        await hub.db.postgresQuery(
+            'UPDATE analytickit_team SET session_recording_opt_in = $1',
+            [false],
+            'testRecordings'
+        )
 
         const response = await prepareEventStep(runner, { ...pluginEvent, event: '$snapshot' }, personContainer)
 

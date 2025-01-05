@@ -6,8 +6,8 @@ labels: bug
 
 ## Bug description
 
-*Please describe.*  
-*If this affects the front-end, screenshots would be of great help.*
+_Please describe._  
+_If this affects the front-end, screenshots would be of great help._
 
 ## How to reproduce
 
@@ -22,4 +22,4 @@ labels: bug
 
 ## Additional context
 
-#### *Thank you* for your bug report – we love squashing them!
+#### _Thank you_ for your bug report – we love squashing them!

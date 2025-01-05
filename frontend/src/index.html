@@ -1,16 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    {% include "head.html" %}
-</head>
-<body>
-{% include "overlays.html" %}
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-            if (!('entries' in Object) ||
-                !('fromEntries' in Object) ||
-                !('flatMap' in Array.prototype)
-            ) {
+    <head>
+        {% include "head.html" %}
+    </head>
+    <body>
+        {% include "overlays.html" %}
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
+            if (!('entries' in Object) || !('fromEntries' in Object) || !('flatMap' in Array.prototype)) {
                 var div = document.createElement('div')
                 div.style.color = '#fef6f6'
                 div.style.background = '#920c0c'
@@ -18,10 +15,8 @@
                 div.innerHTML = 'You are using a really old browser. Please upgrade to fully enjoy analytickit!'
                 document.body.prepend(div)
             }
-
-
-</script>
-<div id="root"></div>
-{% include "live_server_inject.html" %}
-</body>
+        </script>
+        <div id="root"></div>
+        {% include "live_server_inject.html" %}
+    </body>
 </html>

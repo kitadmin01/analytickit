@@ -109,7 +109,7 @@ export function createCohortFormData(cohort: CohortType): FormData {
                                               ...c,
                                               ...('value_property' in c ? { value: c.value_property } : {}),
                                               value_property: undefined,
-                                          } as AnyCohortCriteriaType)
+                                          }) as AnyCohortCriteriaType
                                   )
                               ),
                               (groupList) =>
@@ -424,7 +424,7 @@ export function cleanCriteria(criteria: AnyCohortCriteriaType, shouldPurge: bool
         }
     })
     fields.forEach(({ fieldKey, defaultValue }) => {
-        const nextValue = fieldKey ? criteria[fieldKey] ?? defaultValue : null
+        const nextValue = fieldKey ? (criteria[fieldKey] ?? defaultValue) : null
         if (fieldKey && shouldPurge) {
             populatedCriteria[fieldKey] = defaultValue
         } else if (fieldKey && nextValue !== undefined && nextValue !== null) {

@@ -46,8 +46,8 @@ const emptyMatchingOperator: Partial<Record<PropertyOperator, boolean>> = {
 }
 
 /** Return whether two values compare to each other according to the specified operator.
-* This simulates the behavior of ClickHouse (or other DBMSs) which like to cast values in SELECTs to the column's type.
-*/
+ * This simulates the behavior of ClickHouse (or other DBMSs) which like to cast values in SELECTs to the column's type.
+ */
 export function castingCompare(
     a: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
     b: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
@@ -185,11 +185,11 @@ export class ActionMatcher {
     }
 
     /**
-    * Sublevel 2 of action matching.
-    *
-    * Return whether the event is a match for the step's "URL" constraint.
-    * Step properties: `url_matching`, `url`.
-    */
+     * Sublevel 2 of action matching.
+     *
+     * Return whether the event is a match for the step's "URL" constraint.
+     * Step properties: `url_matching`, `url`.
+     */
     private checkStepUrl(event: IngestionEvent, step: ActionStep): boolean {
         // CHECK CONDITIONS, OTHERWISE SKIPPED
         if (step.url) {

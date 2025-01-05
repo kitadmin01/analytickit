@@ -30,8 +30,8 @@ export function ToolbarSettings(): JSX.Element {
                         }}
                         htmlFor="analytickit-toolbar-switch"
                     >
-                        Enable analytickit Toolbar, which gives access to heatmaps, stats and allows you to create actions,
-                        right there on your website!
+                        Enable analytickit Toolbar, which gives access to heatmaps, stats and allows you to create
+                        actions, right there on your website!
                     </label>
                 </Col>
             </Row>

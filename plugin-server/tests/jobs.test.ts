@@ -220,17 +220,17 @@ describe.skip('job queues', () => {
 
         beforeEach(async () => {
             mS3WrapperInstance.getObject.mockReturnValueOnce({ Body: 'test' })
-                ;[hub, closeHub] = await createHub(
-                    createConfig({
-                        CRASH_IF_NO_PERSISTENT_JOB_QUEUE: true,
-                        JOB_QUEUES: 's3',
-                        JOB_QUEUE_S3_PREFIX: 'prefix/',
-                        JOB_QUEUE_S3_BUCKET_NAME: 'bucket-name',
-                        JOB_QUEUE_S3_AWS_SECRET_ACCESS_KEY: 'secret key',
-                        JOB_QUEUE_S3_AWS_ACCESS_KEY: 'access key',
-                        JOB_QUEUE_S3_AWS_REGION: 'region',
-                    })
-                )
+            ;[hub, closeHub] = await createHub(
+                createConfig({
+                    CRASH_IF_NO_PERSISTENT_JOB_QUEUE: true,
+                    JOB_QUEUES: 's3',
+                    JOB_QUEUE_S3_PREFIX: 'prefix/',
+                    JOB_QUEUE_S3_BUCKET_NAME: 'bucket-name',
+                    JOB_QUEUE_S3_AWS_SECRET_ACCESS_KEY: 'secret key',
+                    JOB_QUEUE_S3_AWS_ACCESS_KEY: 'access key',
+                    JOB_QUEUE_S3_AWS_REGION: 'region',
+                })
+            )
         })
 
         afterEach(async () => closeHub?.())

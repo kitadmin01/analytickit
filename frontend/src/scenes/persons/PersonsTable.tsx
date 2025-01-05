@@ -37,7 +37,7 @@ export function PersonsTable({
         {
             title: 'ID',
             key: 'id',
-            render: function Render(_, person: PersonType) { 
+            render: function Render(_, person: PersonType) {
                 return (
                     <div style={{ overflow: 'hidden' }}>
                         {person.distinct_ids.length && (

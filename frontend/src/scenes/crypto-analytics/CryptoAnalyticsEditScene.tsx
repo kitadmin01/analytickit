@@ -37,13 +37,7 @@ export function CryptoAnalyticsEditScene(): JSX.Element {
                 <>
                     <PageHeader
                         title={id ? `Edit ${analytic?.name}` : 'New Crypto Analytics'}
-                        buttons={
-                            <LemonButton
-                                onClick={() => navigateToList()}
-                            >
-                                Cancel
-                            </LemonButton>
-                        }
+                        buttons={<LemonButton onClick={() => navigateToList()}>Cancel</LemonButton>}
                     />
                     <CryptoAnalyticsForm
                         initialValues={analytic || undefined}

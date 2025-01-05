@@ -13,7 +13,7 @@ export function CommandInput(): JSX.Element {
             {isSqueak ? (
                 <img src={analytickitIcon} className="palette__icon" />
             ) : activeFlow ? (
-                <activeFlow.icon className="palette__icon" /> ?? <EditOutlined className="palette__icon" />
+                (<activeFlow.icon className="palette__icon" /> ?? <EditOutlined className="palette__icon" />)
             ) : (
                 <SearchOutlined className="palette__icon" />
             )}

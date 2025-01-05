@@ -163,8 +163,8 @@ export const Popup = React.forwardRef<HTMLDivElement, PopupProps>(
             : null
 
         const isAttached = clonedChildren || referenceElement
-        const top = isAttached ? y ?? 0 : undefined
-        const left = isAttached ? x ?? 0 : undefined
+        const top = isAttached ? (y ?? 0) : undefined
+        const left = isAttached ? (x ?? 0) : undefined
 
         return (
             <>

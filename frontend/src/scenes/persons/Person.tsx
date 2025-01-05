@@ -30,7 +30,7 @@ const { TabPane } = Tabs
 export const scene: SceneExport = {
     component: Person,
     logic: personsLogic,
-    paramsToProps: ({ params: { _: rawUrlId } }): typeof personsLogic['props'] => ({
+    paramsToProps: ({ params: { _: rawUrlId } }): (typeof personsLogic)['props'] => ({
         syncWithUrl: true,
         urlId: decodeURIComponent(rawUrlId),
     }),
@@ -211,8 +211,8 @@ export function Person(): JSX.Element | null {
                             <div>
                                 <InfoCircleOutlined style={{ marginRight: '.25rem' }} />
                                 <span>
-                                    This page only shows changes made by users in the analytickit site. Automatic changes
-                                    from the API aren't shown here.
+                                    This page only shows changes made by users in the analytickit site. Automatic
+                                    changes from the API aren't shown here.
                                 </span>
                             </div>
                         }

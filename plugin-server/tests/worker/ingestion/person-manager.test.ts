@@ -19,9 +19,9 @@ describe('PersonManager.isNewPerson', () => {
 
     beforeEach(async () => {
         await resetTestDatabase()
-            ;[hub, closeHub] = await createHub({
-                DISTINCT_ID_LRU_SIZE: 10,
-            })
+        ;[hub, closeHub] = await createHub({
+            DISTINCT_ID_LRU_SIZE: 10,
+        })
         personManager = new PersonManager(hub)
     })
 

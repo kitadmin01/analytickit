@@ -152,8 +152,8 @@ export function EditSubscription({
                                         <code>{window.location.origin}</code>
                                     </b>
                                     . <br />
-                                    If this value is not configured correctly analytickit may be unable to correctly send
-                                    Subscriptions.{' '}
+                                    If this value is not configured correctly analytickit may be unable to correctly
+                                    send Subscriptions.{' '}
                                     <a
                                         target="_blank"
                                         rel="noopener"
@@ -297,8 +297,8 @@ export function EditSubscription({
                                                 <AlertMessage type="info">
                                                     <div className="flex gap-2 items-center">
                                                         <span>
-                                                            The analytickit Slack App is not in this channel. Please add it
-                                                            to the channel otherwise Subscriptions will fail to be
+                                                            The analytickit Slack App is not in this channel. Please add
+                                                            it to the channel otherwise Subscriptions will fail to be
                                                             delivered.{' '}
                                                             <a
                                                                 href="https://analytickit.com/docs/integrate/third-party/slack"

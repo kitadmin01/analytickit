@@ -41,15 +41,11 @@ export function CommandPalette(): JSX.Element | null {
         }
     })
 
-    useOutsideClickHandler(
-        boxRef,
-        () => {
-            if (isPaletteShown) {
-                hidePalette()
-            }
-        },
-        [isPaletteShown]
-    )
+    useOutsideClickHandler(boxRef, () => {
+        if (isPaletteShown) {
+            hidePalette()
+        }
+    }, [isPaletteShown])
 
     return !isPaletteShown ? null : (
         <div className="palette__overlay">

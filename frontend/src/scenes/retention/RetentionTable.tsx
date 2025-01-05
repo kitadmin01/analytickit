@@ -48,8 +48,8 @@ export function RetentionTable({ inCardView = false }: { inCardView?: boolean })
                 breakdowns?.length
                     ? row.label
                     : period === 'Hour'
-                    ? dayjs(row.date).format('MMM D, h A')
-                    : dayjs.utc(row.date).format('MMM D'),
+                      ? dayjs(row.date).format('MMM D, h A')
+                      : dayjs.utc(row.date).format('MMM D'),
             align: 'center',
         },
         {

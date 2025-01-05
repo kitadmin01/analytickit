@@ -133,7 +133,7 @@ export function ActionFilterRow({
     const onMathSelect = (_: unknown, selectedMath: string): void => {
         updateFilterMath({
             ...mathTypeToApiValues(selectedMath),
-            math_property: mathDefinitions[selectedMath]?.onProperty ? mathProperty ?? '$time' : undefined,
+            math_property: mathDefinitions[selectedMath]?.onProperty ? (mathProperty ?? '$time') : undefined,
             type: filter.type,
             index,
         })
@@ -385,8 +385,8 @@ export function ActionFilterRow({
                             filter.type === TaxonomicFilterGroupType.Events && filter.id
                                 ? [String(filter.id)]
                                 : filter.type === TaxonomicFilterGroupType.Actions && filter.id
-                                ? getEventNamesForAction(parseInt(String(filter.id)), actions)
-                                : []
+                                  ? getEventNamesForAction(parseInt(String(filter.id)), actions)
+                                  : []
                         }
                     />
                 </div>

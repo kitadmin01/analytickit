@@ -1,7 +1,7 @@
 import { kea } from 'kea'
 import { eventUsageLogic } from 'lib/utils/eventUsageLogic'
 import { teamLogic } from 'scenes/teamLogic'
-import type { primaryDashboardModalLogicType } from './primaryDashboardModalLogicType'
+import { primaryDashboardModalLogicType } from './primaryDashboardModalLogicType'
 
 export const primaryDashboardModalLogic = kea<primaryDashboardModalLogicType>({
     path: ['scenes', 'project-homepage', 'primaryDashboardModalLogic'],

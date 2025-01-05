@@ -10,13 +10,16 @@ const result = [
     {
         values: [
             {
-                count: 200, people: []
+                count: 200,
+                people: [],
             },
             {
-                count: 100, people: []
+                count: 100,
+                people: [],
             },
             {
-                count: 75, people: []
+                count: 75,
+                people: [],
             },
         ],
         label: 'Chrome::96',
@@ -24,13 +27,16 @@ const result = [
     {
         values: [
             {
-                count: 400, people: []
+                count: 400,
+                people: [],
             },
             {
-                count: 200, people: []
+                count: 200,
+                people: [],
             },
             {
-                count: 150, people: []
+                count: 150,
+                people: [],
             },
         ],
         label: 'Safari::34',

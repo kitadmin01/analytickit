@@ -16,9 +16,7 @@ export const plugin60: Plugin = {
     name: 'test-maxmind-plugin',
     description: 'Ingest GeoIP data via MaxMind',
     url: 'https://www.npmjs.com/package/analytickit-maxmind-plugin',
-    config_schema: {
-
-    },
+    config_schema: {},
     tag: '0.0.2',
     error: undefined,
     from_json: false,
@@ -104,17 +102,19 @@ export function mockPluginTempFolder(indexJs: string, pluginJson?: string): [Plu
     fs.writeFileSync(
         path.join(folder, 'plugin.json'),
         pluginJson ||
-        JSON.stringify({
-            name: 'analytickit-maxmind-plugin',
-            description: 'just for testing',
-            url: 'http://example.com/plugin',
-            config: {},
-            main: 'index.js',
-        })
+            JSON.stringify({
+                name: 'analytickit-maxmind-plugin',
+                description: 'just for testing',
+                url: 'http://example.com/plugin',
+                config: {},
+                main: 'index.js',
+            })
     )
     return [
         {
-            ...plugin60, plugin_type: 'local', url: `file:${folder}`
+            ...plugin60,
+            plugin_type: 'local',
+            url: `file:${folder}`,
         },
         () => {
             fs.rmSync(folder, { recursive: true })

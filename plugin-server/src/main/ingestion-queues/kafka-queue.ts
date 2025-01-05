@@ -190,7 +190,7 @@ export class KafkaQueue {
         }
         try {
             await this.consumer.disconnect()
-        } catch { }
+        } catch {}
 
         this.consumerReady = false
     }

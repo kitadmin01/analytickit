@@ -21,11 +21,9 @@ import { writeToFile } from './extensions/test-utils'
 export const imports = {
     ...(process.env.NODE_ENV === 'test'
         ? {
-            'test-utils/write-to-file': writeToFile,
-        }
-        : {
-
-        }),
+              'test-utils/write-to-file': writeToFile,
+          }
+        : {}),
     '@google-cloud/bigquery': bigquery,
     '@google-cloud/pubsub': pubsub,
     '@google-cloud/storage': gcs,

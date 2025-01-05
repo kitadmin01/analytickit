@@ -9,7 +9,6 @@ export function UpgradeModal(): JSX.Element {
     const { hideUpgradeModal, takeToPricing } = useActions(sceneLogic)
 
     const [featureName, featureCaption] = upgradeModalFeatureNameAndCaption ?? []
-    
 
     return (
         <Modal

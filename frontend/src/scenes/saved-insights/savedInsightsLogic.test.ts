@@ -8,31 +8,27 @@ import { cleanFilters } from 'scenes/insights/utils/cleanFilters'
 import { useMocks } from '~/mocks/jest'
 
 const createInsight = (id: number, string = 'hi'): InsightModel =>
-({
-    id: id || 1,
-    name: `${string}${id || 1}`,
-    short_id: `ii${id || 1}`,
-    order: 0,
-    layouts: [],
-    last_refresh: 'now',
-    refreshing: false,
-    created_by: null,
-    is_sample: false,
-    updated_at: 'now',
-    result: {
-
-    },
-    tags: [],
-    color: null,
-    created_at: 'now',
-    dashboard: null,
-    deleted: false,
-    saved: true,
-    filters_hash: 'hash',
-    filters: {
-
-    },
-} as any as InsightModel)
+    ({
+        id: id || 1,
+        name: `${string}${id || 1}`,
+        short_id: `ii${id || 1}`,
+        order: 0,
+        layouts: [],
+        last_refresh: 'now',
+        refreshing: false,
+        created_by: null,
+        is_sample: false,
+        updated_at: 'now',
+        result: {},
+        tags: [],
+        color: null,
+        created_at: 'now',
+        dashboard: null,
+        deleted: false,
+        saved: true,
+        filters_hash: 'hash',
+        filters: {},
+    }) as any as InsightModel
 const createSavedInsights = (string = 'hello'): InsightsResult => ({
     count: 3,
     results: [createInsight(1, string), createInsight(2, string), createInsight(3, string)],

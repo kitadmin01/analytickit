@@ -29,8 +29,8 @@ function createEntry(entry) {
             process.env.GENERATE_SOURCEMAP === 'false'
                 ? false
                 : process.env.NODE_ENV === 'production'
-                ? 'source-map'
-                : 'inline-source-map',
+                  ? 'source-map'
+                  : 'inline-source-map',
         entry: {
             [entry]: entry === 'main' || entry === 'cypress' ? './frontend/src/index.tsx' : null,
         },
@@ -44,8 +44,8 @@ function createEntry(entry) {
             publicPath: process.env.JS_URL
                 ? `${process.env.JS_URL}${process.env.JS_URL.endsWith('/') ? '' : '/'}static/`
                 : process.env.NODE_ENV === 'production'
-                ? '/static/'
-                : `http${process.env.LOCAL_HTTPS ? 's' : ''}://${webpackDevServerFrontendAddr}:8234/static/`,
+                  ? '/static/'
+                  : `http${process.env.LOCAL_HTTPS ? 's' : ''}://${webpackDevServerFrontendAddr}:8234/static/`,
         },
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -194,8 +194,8 @@ function createEntry(entry) {
                       new HtmlWebpackHarddiskPlugin(),
                   ]
                 : entry === 'cypress'
-                ? [new HtmlWebpackHarddiskPlugin()]
-                : []
+                  ? [new HtmlWebpackHarddiskPlugin()]
+                  : []
         ),
     }
 }

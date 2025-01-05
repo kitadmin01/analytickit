@@ -98,7 +98,10 @@ export function PluginSource({
                             for a good grasp of possibilities.
                             <br />
                             Once satisfied with your app, feel free to{' '}
-                            <a href="https://analytickit.com/docs/apps/build/tutorial#submitting-your-app" target="_blank">
+                            <a
+                                href="https://analytickit.com/docs/apps/build/tutorial#submitting-your-app"
+                                target="_blank"
+                            >
                                 submit it to the official App Store
                             </a>
                             .

@@ -27,11 +27,7 @@ export function NewCryptoAnalytics(): JSX.Element {
                 footer={null}
             >
                 <Form form={form} onFinish={handleSubmit}>
-                    <Form.Item
-                        name="name"
-                        label="Name"
-                        rules={[{ required: true, message: 'Please input a name!' }]}
-                    >
+                    <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input a name!' }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item name="description" label="Description">

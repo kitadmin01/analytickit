@@ -27,52 +27,36 @@ export function CryptoAnalyticsForm({ initialValues, onSubmit, onCancel }: Crypt
                         acc[key] = JSON.parse(values.filters[key])
                     }
                     return acc
-                }, {})
-            }
+                }, {}),
+            },
         })
     }
 
     return (
         <Card>
-            <Form
-                form={form}
-                layout="vertical"
-                initialValues={initialValues}
-                onFinish={handleSubmit}
-            >
-                <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[{ required: true, message: 'Please enter a name' }]}
-                >
+            <Form form={form} layout="vertical" initialValues={initialValues} onFinish={handleSubmit}>
+                <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
                     <Input placeholder="Analysis name" />
                 </Form.Item>
 
-                <Form.Item
-                    name="description"
-                    label="Description"
-                >
+                <Form.Item name="description" label="Description">
                     <Input.TextArea rows={4} placeholder="Describe your analysis" />
                 </Form.Item>
 
                 <Card title="Filters" className="mb-4">
                     {Object.entries(FILTER_RANGES).map(([key, config]) => (
-                        <Form.Item
-                            key={key}
-                            name={['filters', key]}
-                            label={config.label}
-                        >
+                        <Form.Item key={key} name={['filters', key]} label={config.label}>
                             <LemonSelect
                                 options={
                                     config.ranges
-                                        ? config.ranges.map(range => ({
-                                            label: range.label,
-                                            value: JSON.stringify({ min: range.min, max: range.max })
-                                        }))
-                                        : config.options?.map(option => ({
-                                            label: option,
-                                            value: option
-                                        }))
+                                        ? config.ranges.map((range) => ({
+                                              label: range.label,
+                                              value: JSON.stringify({ min: range.min, max: range.max }),
+                                          }))
+                                        : config.options?.map((option) => ({
+                                              label: option,
+                                              value: option,
+                                          }))
                                 }
                             />
                         </Form.Item>

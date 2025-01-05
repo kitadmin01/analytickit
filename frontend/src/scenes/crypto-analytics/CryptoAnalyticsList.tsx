@@ -37,13 +37,11 @@ export function CryptoAnalyticsList({ cryptoAnalytics, loading, onLoad }: Crypto
                 <div>
                     <Button
                         icon={<EditOutlined />}
-                        onClick={() => {/* Handle edit */}}
+                        onClick={() => {
+                            /* Handle edit */
+                        }}
                     />
-                    <Button
-                        icon={<DeleteOutlined />}
-                        onClick={() => deleteCryptoAnalytic(record.id)}
-                        danger
-                    />
+                    <Button icon={<DeleteOutlined />} onClick={() => deleteCryptoAnalytic(record.id)} danger />
                 </div>
             ),
         },
@@ -51,11 +49,7 @@ export function CryptoAnalyticsList({ cryptoAnalytics, loading, onLoad }: Crypto
 
     return (
         <Spin spinning={loading}>
-            <Table
-                dataSource={cryptoAnalytics}
-                columns={columns}
-                rowKey="id"
-            />
+            <Table dataSource={cryptoAnalytics} columns={columns} rowKey="id" />
         </Spin>
     )
 }

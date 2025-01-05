@@ -14,10 +14,10 @@ export const graphDataLogic = kea<graphDataLogicType>({
             {}, // Initial state as an empty object
             {
                 fetchGraphData: async (campaignId: number) => {
-                    console.log(`fetchGraphData called for campaign ID: ${campaignId}`); // Add logging for debugging
+                    console.log(`fetchGraphData called for campaign ID: ${campaignId}`) // Add logging for debugging
 
                     try {
-                        console.log(`Fetching data for campaign ID: ${campaignId}`); // Add logging for debugging
+                        console.log(`Fetching data for campaign ID: ${campaignId}`) // Add logging for debugging
                         const response = await api.get(`${API_ENDPOINT}/${campaignId}/analytic`)
                         const data = response.data // Assuming `data` contains all relevant graph data
                         console.log('Fetched Graph Data:', data)
@@ -26,36 +26,36 @@ export const graphDataLogic = kea<graphDataLogicType>({
                         return {
                             activeUsers: data.map((item: any) => ({
                                 date: item.creation_ts,
-                                active_users: item.active_users
+                                active_users: item.active_users,
                             })),
                             totalContractCalls: data.map((item: any) => ({
                                 date: item.creation_ts,
-                                total_contract_calls: item.total_contract_calls
+                                total_contract_calls: item.total_contract_calls,
                             })),
                             tokensTransferred: data.map((item: any) => ({
                                 date: item.creation_ts,
-                                tot_tokens_transferred: item.tot_tokens_transferred
+                                tot_tokens_transferred: item.tot_tokens_transferred,
                             })),
                             gasUsed: data.map((item: any) => ({
                                 date: item.creation_ts,
-                                ave_gas_used: item.ave_gas_used
+                                ave_gas_used: item.ave_gas_used,
                             })),
                             transactions: data.map((item: any) => ({
                                 date: item.creation_ts,
-                                tot_txns: item.tot_txns
+                                tot_txns: item.tot_txns,
                             })),
                             tokenTransferVolume: data.map((item: any) => ({
                                 date: item.creation_ts,
-                                token_transfer_volume: item.token_transfer_volume
+                                token_transfer_volume: item.token_transfer_volume,
                             })),
                             transactionValueDistribution: data.map((item: any) => ({
-                                distribution: item.transaction_value_distribution
+                                distribution: item.transaction_value_distribution,
                             })),
                             tokenTransferValueDistribution: data.map((item: any) => ({
-                                distribution: item.token_transfer_value_distribution
+                                distribution: item.token_transfer_value_distribution,
                             })),
                             tokenFlow: data.map((item: any) => ({
-                                flow: item.token_flow
+                                flow: item.token_flow,
                             })),
                         }
                     } catch (error) {

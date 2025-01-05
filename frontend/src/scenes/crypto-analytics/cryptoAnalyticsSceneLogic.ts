@@ -1,4 +1,3 @@
-// frontend/src/scenes/crypto-analytics/cryptoAnalyticsSceneLogic.ts
 import { actions, kea, path, reducers, listeners } from 'kea'
 import { router } from 'kea-router'
 import { urls } from 'scenes/urls'
@@ -24,7 +23,8 @@ export const cryptoAnalyticsSceneLogic = kea<cryptoAnalyticsSceneLogicType>([
         navigateToList: () => {
             router.actions.push(urls.cryptoAnalytics.list())
         },
-        navigateToType: ({ type }) => { // Add this listener
+        navigateToType: ({ type }) => {
+            // Add this listener
             router.actions.push(urls.cryptoAnalytics.type(type)) // Navigate to the type URL
         },
     })),

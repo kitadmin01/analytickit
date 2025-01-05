@@ -114,7 +114,7 @@ describe('schedule', () => {
             await delay(1000)
             await piscina.destroy()
             await closeHub()
-        } catch { }
+        } catch {}
     })
 
     describe('startPluginSchedules', () => {
@@ -132,7 +132,7 @@ describe('schedule', () => {
         `
             await resetTestDatabase(testCode)
             piscina = setupPiscina(workerThreads, 10)
-                ;[hub, closeHub] = await createHub({ LOG_LEVEL: LogLevel.Log, SCHEDULE_LOCK_TTL: 3 })
+            ;[hub, closeHub] = await createHub({ LOG_LEVEL: LogLevel.Log, SCHEDULE_LOCK_TTL: 3 })
 
             redis = await hub.redisPool.acquire()
             await redis.del(LOCKED_RESOURCE)

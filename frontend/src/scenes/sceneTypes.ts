@@ -1,6 +1,5 @@
 import { LogicWrapper } from 'kea'
 
-
 // The enum here has to match the first and only exported component of the scene.
 // If so, we can preload the scene's required chunks in parallel with the scene itself.
 
@@ -63,14 +62,13 @@ export enum Scene {
     //crypto
     ComEng = 'ComEng',
     ComEngDetail = 'ComEngDetail',
-    ComDashBoard = "ComDashBoard",
-    WalletAddress = "WalletAddress",
-    BillingCancel = "BillingCancel",
-    BillingSuccess = "BillingSuccess",
+    ComDashBoard = 'ComDashBoard',
+    WalletAddress = 'WalletAddress',
+    BillingCancel = 'BillingCancel',
+    BillingSuccess = 'BillingSuccess',
     CryptoDashboard = 'CryptoDashboard',
     Web3Dashboard = 'Web3Dashboard',
-    Graph = 'Graph',  // Single scene for all graph types
-
+    Graph = 'Graph', // Single scene for all graph types
 }
 
 export type SceneProps = Record<string, any>
@@ -123,5 +121,3 @@ export interface SceneConfig {
     /** Route requires project access (used e.g. by breadcrumbs). `true` implies `organizationBased` */
     projectBased?: boolean
 }
-
-

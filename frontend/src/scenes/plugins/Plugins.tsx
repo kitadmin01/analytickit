@@ -55,7 +55,7 @@ export function Plugins(): JSX.Element | null {
                         <br />
                         Make use of verified Apps from the{' '}
                         <a href="https://analytickit.com/apps" target="_blank">
-                        Integration Hub Library
+                            Integration Hub Library
                         </a>{' '}
                         – or{' '}
                         <a href="https://analytickit.com/docs/apps/build" target="_blank">
@@ -78,14 +78,7 @@ export function Plugins(): JSX.Element | null {
                         <RepositoryTab />
                     </TabPane>
                 ) : null}
-                <TabPane
-                    tab={
-                        <>
-                            History{' '}
-                        </>
-                    }
-                    key={PluginTab.History}
-                >
+                <TabPane tab={<>History </>} key={PluginTab.History}>
                     <ActivityLog scope={ActivityScope.PLUGIN} describer={pluginActivityDescriber} />
                 </TabPane>
 

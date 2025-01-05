@@ -61,7 +61,9 @@ export function ThirdPartyPanel(): JSX.Element {
                                                 </LemonTag>
                                             ))}
                                         </h3>
-                                        <p className="mb-0 text-muted">Send events from {source.name} into analytickit</p>
+                                        <p className="mb-0 text-muted">
+                                            Send events from {source.name} into analytickit
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">

@@ -14,12 +14,9 @@ export interface CommandResult {
 
 export const commandPaletteLogic = kea<commandPaletteLogicType>({
     path: ['lib', 'components', 'CommandPalette', 'commandPaletteLogic'],
-    
+
     connect: {
-        values: [
-            systemStatusLogic, ['systemStatus'],
-            preflightLogic, ['preflight']
-        ]
+        values: [systemStatusLogic, ['systemStatus'], preflightLogic, ['preflight']],
     },
 
     actions: {
@@ -29,12 +26,18 @@ export const commandPaletteLogic = kea<commandPaletteLogicType>({
     },
 
     reducers: {
-        isVisible: [false, {
-            setCommandPaletteShown: (_, { shown }) => shown
-        }],
-        commandRegistrations: [[] as CommandResult[], {
-            registerCommand: (state, { command }) => [...state, command],
-            deregisterCommand: (state, { command }) => state.filter((c) => c !== command)
-        }]
-    }
+        isVisible: [
+            false,
+            {
+                setCommandPaletteShown: (_, { shown }) => shown,
+            },
+        ],
+        commandRegistrations: [
+            [] as CommandResult[],
+            {
+                registerCommand: (state, { command }) => [...state, command],
+                deregisterCommand: (state, { command }) => state.filter((c) => c !== command),
+            },
+        ],
+    },
 })

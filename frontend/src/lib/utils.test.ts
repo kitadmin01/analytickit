@@ -1,53 +1,53 @@
 import tk from 'timekeeper'
 import {
-areObjectValuesEmpty,
-average,
-capitalizeFirstLetter,
-colonDelimitedDuration,
-compactNumber,
-dateFilterToText,
-endWithPunctation,
-ensureStringIsNotBlank,
-formatLabel,
-hexToRGBA,
-humanFriendlyDuration,
-identifierToHuman,
-isURL,
-median,
-midEllipsis,
-objectDiffShallow,
-pluralize,
-toParams,
-eventToDescription,
-ceilMsToClosestSecond,
-floorMsToClosestSecond,
-dateMapping,
-getFormattedLastWeekDate,
-genericOperatorMap,
-dateTimeOperatorMap,
-stringOperatorMap,
-numericOperatorMap,
-chooseOperatorMap,
-booleanOperatorMap,
-roundToDecimal,
-convertPropertyGroupToProperties,
-convertPropertiesToPropertyGroup,
-calculateDays,
-range,
-durationOperatorMap,
-isExternalLink,
-selectorOperatorMap,
-}from './utils'
+    areObjectValuesEmpty,
+    average,
+    capitalizeFirstLetter,
+    colonDelimitedDuration,
+    compactNumber,
+    dateFilterToText,
+    endWithPunctation,
+    ensureStringIsNotBlank,
+    formatLabel,
+    hexToRGBA,
+    humanFriendlyDuration,
+    identifierToHuman,
+    isURL,
+    median,
+    midEllipsis,
+    objectDiffShallow,
+    pluralize,
+    toParams,
+    eventToDescription,
+    ceilMsToClosestSecond,
+    floorMsToClosestSecond,
+    dateMapping,
+    getFormattedLastWeekDate,
+    genericOperatorMap,
+    dateTimeOperatorMap,
+    stringOperatorMap,
+    numericOperatorMap,
+    chooseOperatorMap,
+    booleanOperatorMap,
+    roundToDecimal,
+    convertPropertyGroupToProperties,
+    convertPropertiesToPropertyGroup,
+    calculateDays,
+    range,
+    durationOperatorMap,
+    isExternalLink,
+    selectorOperatorMap,
+} from './utils'
 import {
-ActionFilter,
-ElementType,
-EventType,
-FilterLogicalOperator,
-PropertyOperator,
-PropertyType,
-TimeUnitType,
-}from '~/types'
-import {dayjs}from 'lib/dayjs'
+    ActionFilter,
+    ElementType,
+    EventType,
+    FilterLogicalOperator,
+    PropertyOperator,
+    PropertyType,
+    TimeUnitType,
+} from '~/types'
+import { dayjs } from 'lib/dayjs'
 
 describe('toParams', () => {
     it('handles unusual input', () => {
@@ -121,10 +121,10 @@ describe('formatLabel()', () => {
     it('summing by property', () => {
         expect(formatLabel('some_event', { ...action, math: 'sum', math_property: 'event_property' })).toEqual(
             'some_event (sum of event_property)'
-)
-})
+        )
+    })
 
-it('action with properties', () => {
+    it('action with properties', () => {
         expect(
             formatLabel('some_event', {
                 ...action,
@@ -276,11 +276,11 @@ describe('dateFilterToText()', () => {
         it('can have overridden date options', () => {
             expect(dateFilterToText('-21d', null, 'default', [{ key: 'Last 3 weeks', values: ['-21d'] }])).toEqual(
                 'Last 3 weeks'
-)
-})
-})
+            )
+        })
+    })
 
-describe('formatted', () => {
+    describe('formatted', () => {
         it('handles dayjs dates', () => {
             const from = dayjs('2018-04-04T16:00:00.000Z')
             const to = dayjs('2018-04-09T15:05:00.000Z')
@@ -293,23 +293,23 @@ describe('formatted', () => {
             expect(dateFilterToText('dStart', null, 'default', dateMapping, true)).toEqual('March 2, 2012')
             expect(dateFilterToText('2020-01-02', '2020-01-05', 'default', dateMapping, true)).toEqual(
                 'January 2 - January 5, 2020'
-)
-expect(dateFilterToText(null, null, 'default', dateMapping, true)).toEqual('default')
+            )
+            expect(dateFilterToText(null, null, 'default', dateMapping, true)).toEqual('default')
             expect(dateFilterToText('-24h', null, 'default', dateMapping, true)).toEqual('March 1 - March 2, 2012')
             expect(dateFilterToText('-48h', undefined, 'default', dateMapping, true)).toEqual(
                 'February 29 - March 2, 2012'
-)
-expect(dateFilterToText('-1d', null, 'default', dateMapping, true)).toEqual('March 1, 2012')
+            )
+            expect(dateFilterToText('-1d', null, 'default', dateMapping, true)).toEqual('March 1, 2012')
             expect(dateFilterToText('-1mStart', '-1mEnd', 'default', dateMapping, true)).toEqual(
                 'March 1 - March 31, 2012'
-)
-expect(dateFilterToText('-180d', null, 'default', dateMapping, true)).toEqual(
+            )
+            expect(dateFilterToText('-180d', null, 'default', dateMapping, true)).toEqual(
                 'September 4, 2011 - March 2, 2012'
-)
-tk.reset()
-})
+            )
+            tk.reset()
+        })
 
-it('can have overridden date options', () => {
+        it('can have overridden date options', () => {
             tk.freeze(new Date(1330688329321))
             expect(
                 dateFilterToText(
@@ -318,8 +318,8 @@ it('can have overridden date options', () => {
                     'default',
                     [{ key: 'Last 3 weeks', values: ['-21d'], getFormattedDate: () => 'custom formatted date' }],
                     true
-)
-).toEqual('custom formatted date')
+                )
+            ).toEqual('custom formatted date')
             tk.reset()
         })
 
@@ -329,9 +329,9 @@ it('can have overridden date options', () => {
 
             expect(dateFilterToText(from, to, 'custom', dateMapping, true, 'YYYY-MM-DD hh:mm:ss')).toEqual(
                 '2018-04-04 12:00:00 - 2018-04-09 11:05:00'
-)
-})
-})
+            )
+        })
+    })
 })
 
 describe('hexToRGBA()', () => {
@@ -490,13 +490,13 @@ describe('eventToName()', () => {
     it('handles page events as expected', () => {
         expect(eventToDescription({ ...baseEvent, event: '$pageview', properties: { $pathname: '/hello' } })).toEqual(
             '/hello'
-)
-expect(eventToDescription({ ...baseEvent, event: '$pageleave', properties: { $pathname: '/bye' } })).toEqual(
+        )
+        expect(eventToDescription({ ...baseEvent, event: '$pageleave', properties: { $pathname: '/bye' } })).toEqual(
             '/bye'
-)
-})
+        )
+    })
 
-it('handles no text autocapture as expected', () => {
+    it('handles no text autocapture as expected', () => {
         expect(
             eventToDescription({
                 ...baseEvent,
@@ -527,8 +527,8 @@ it('handles no text autocapture as expected', () => {
                     elements: [{ tag_name: 'button', text: 'hello' } as ElementType],
                 },
                 true
-)
-).toEqual('clicked "hello"')
+            )
+        ).toEqual('clicked "hello"')
     })
 
     it('handles unknown event/action', () => {

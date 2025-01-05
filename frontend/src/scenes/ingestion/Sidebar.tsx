@@ -59,7 +59,11 @@ export function Sidebar(): JSX.Element {
                     <InviteMembersButton center={true} type="primary" />
                     <LemonDivider thick dashed className="my-6" />
                     <div className="IngestionSidebar__help">
-                        <a href="https://analytickit.slack.com/join/signup#/domain-signup" rel="noopener" target="_blank">
+                        <a
+                            href="https://analytickit.slack.com/join/signup#/domain-signup"
+                            rel="noopener"
+                            target="_blank"
+                        >
                             <LemonButton
                                 icon={<IconQuestionAnswer />}
                                 fullWidth
@@ -70,12 +74,7 @@ export function Sidebar(): JSX.Element {
                                 Get support on Slack
                             </LemonButton>
                         </a>
-                        <a
-                            href="https://analytickit.com/docs/"
-                            rel="noopener"
-                            target="_blank"
-                            className="mt-2"
-                        >
+                        <a href="https://analytickit.com/docs/" rel="noopener" target="_blank" className="mt-2">
                             <LemonButton
                                 icon={<IconArticle />}
                                 fullWidth

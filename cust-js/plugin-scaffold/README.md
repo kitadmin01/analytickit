@@ -12,12 +12,12 @@ yarn add --dev @analytickit/plugin-scaffold
 
 # if using npm
 npm install --save-dev @analytickit/plugin-scaffold
-``` 
+```
 
 Then in your plugins:
 
 ```typescript
-import { PluginEvent, PluginInput, PluginMeta } from "@analytickit/plugin-scaffold";
+import { PluginEvent, PluginInput, PluginMeta } from '@analytickit/plugin-scaffold'
 
 export function processEvent(event: PluginEvent, meta: PluginMeta<PluginInput>) {
     if (event.properties) {
@@ -34,5 +34,3 @@ It's magic! Just bump up `version` in `package.json` on the main branch and the 
 ## Questions?
 
 ### [Join our Slack community.](https://join.slack.com/t/analytickitusers/shared_invite/enQtOTY0MzU5NjAwMDY3LTc2MWQ0OTZlNjhkODk3ZDI3NDVjMDE1YjgxY2I4ZjI4MzJhZmVmNjJkN2NmMGJmMzc2N2U3Yjc3ZjI5NGFlZDQ)
-
-

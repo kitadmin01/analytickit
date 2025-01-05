@@ -102,7 +102,8 @@ export function upgradeExportEvents(
 
                     status.info(
                         '🚃',
-                        `Enqueued PluginConfig ${pluginConfig.id} batch ${payload.batchId} for retry #${payload.retriesPerformedSoFar + 1
+                        `Enqueued PluginConfig ${pluginConfig.id} batch ${payload.batchId} for retry #${
+                            payload.retriesPerformedSoFar + 1
                         } in ${Math.round(nextRetrySeconds)}s`
                     )
                     hub.statsd?.increment('plugin.export_events.retry_enqueued', {

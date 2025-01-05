@@ -195,7 +195,9 @@ $glyph_height: 22px;
             position: relative;
             height: 100%;
             background: var(--funnel-default);
-            transition: width 0.2s ease, height 0.2s ease;
+            transition:
+                width 0.2s ease,
+                height 0.2s ease;
 
             &.first {
                 border-radius: 4px 0 0 4px;

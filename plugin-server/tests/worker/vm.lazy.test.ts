@@ -254,12 +254,10 @@ describe('LazyPluginVM', () => {
             // Plugin gets disabled due to failure
             expect(disablePlugin).toHaveBeenCalledTimes(1)
             // An email to project members about the failure is queued
-            expect(mockServer.db.celeryApplyAsync).toHaveBeenCalledWith('analytickit.tasks.email.send_fatal_plugin_error', [
-                pluginConfig39.id,
-                null,
-                'RetryError (attempt 5/5)',
-                false,
-            ])
+            expect(mockServer.db.celeryApplyAsync).toHaveBeenCalledWith(
+                'analytickit.tasks.email.send_fatal_plugin_error',
+                [pluginConfig39.id, null, 'RetryError (attempt 5/5)', false]
+            )
         })
     })
 })

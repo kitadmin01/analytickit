@@ -100,7 +100,13 @@ export const elementsLogic = kea<elementsLogicType>({
         heatmapElements: [
             (s) => [heatmapLogic.selectors.countedElements, s.rectUpdateCounter, toolbarLogic.selectors.buttonVisible],
             (countedElements) =>
-                countedElements.map((e) => ({ ...e, rect: getRectForElement(e.element) } as ElementWithMetadata)),
+                countedElements.map(
+                    (e) =>
+                        ({
+                            ...e,
+                            rect: getRectForElement(e.element),
+                        } as ElementWithMetadata)
+                ),
         ],
 
         allInspectElements: [
@@ -112,7 +118,13 @@ export const elementsLogic = kea<elementsLogicType>({
             (s) => [s.allInspectElements, s.rectUpdateCounter, toolbarLogic.selectors.buttonVisible],
             (allInspectElements) =>
                 allInspectElements
-                    .map((element) => ({ element, rect: getRectForElement(element) } as ElementWithMetadata))
+                    .map(
+                        (element) =>
+                            ({
+                                element,
+                                rect: getRectForElement(element),
+                            } as ElementWithMetadata)
+                    )
                     .filter((e) => e.rect && e.rect.width * e.rect.height > 0),
         ],
 

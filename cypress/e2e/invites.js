@@ -10,7 +10,9 @@ describe('Invite Signup', () => {
 
         // Test invite creation flow
         cy.get('[data-attr=invite-teammate-button]').click()
-        cy.get('[data-attr=invite-email-input]').type('charlie@analytickit.com').should('have.value', 'charlie@analytickit.com')
+        cy.get('[data-attr=invite-email-input]')
+            .type('charlie@analytickit.com')
+            .should('have.value', 'charlie@analytickit.com')
         cy.get('[data-attr=invite-team-member-submit]').click()
         cy.get('[data-attr=invites-table] tbody td').should('contain', 'charlie@analytickit.com')
 

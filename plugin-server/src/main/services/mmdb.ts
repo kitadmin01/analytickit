@@ -59,20 +59,15 @@ async function decompressAndOpenMmdb(brotliContents: Buffer, filename: string): 
 /**
  * mmdb file is not Brotli-compressed so no need to decompress it, insted we can read it directly
  * fixed for Analytickit
- * */ 
+ * */
 function decompressAndOpenMmdb(contents: Buffer, filename: string): ReaderModel {
-    status.info(
-        '🪗',
-        `Using ${filename} with size ${prettyBytes(contents.byteLength)}`
-    );
+    status.info('🪗', `Using ${filename} with size ${prettyBytes(contents.byteLength)}`)
     try {
-        return Reader.openBuffer(contents);
+        return Reader.openBuffer(contents)
     } catch (e) {
-        throw new Error(`Failed to open MMDB file ${filename}: ${e.message}`);
+        throw new Error(`Failed to open MMDB file ${filename}: ${e.message}`)
     }
 }
-
-
 
 /** Download latest MMDB database, save it, and return its reader. */
 async function fetchAndInsertFreshMmdb(hub: Hub): Promise<ReaderModel> {
@@ -82,17 +77,17 @@ async function fetchAndInsertFreshMmdb(hub: Hub): Promise<ReaderModel> {
     status.info('⏳', 'Downloading GeoLite2 database from analytickit servers...')
     const response = await fetch(MMDB_ENDPOINT, { compress: false })
     const contentType = response.headers.get('content-type')
-     // Check for the presence of 'content-disposition' header
-     const contentDisposition = response.headers.get('content-disposition');
-     let filename;
-     if (contentDisposition) {
-         filename = contentDisposition.match(/filename="(.+)"/)![1];
-     } else {
-         // Use a default filename or derive from the URL
-         filename = 'GeoLite2-City-2023-09-19.mmdb';
-     }
-     const brotliContents = await response.buffer()
-     status.info('✅', `Downloaded ${filename} of ${prettyBytes(brotliContents.byteLength)}`)
+    // Check for the presence of 'content-disposition' header
+    const contentDisposition = response.headers.get('content-disposition')
+    let filename
+    if (contentDisposition) {
+        filename = contentDisposition.match(/filename="(.+)"/)![1]
+    } else {
+        // Use a default filename or derive from the URL
+        filename = 'GeoLite2-City-2023-09-19.mmdb'
+    }
+    const brotliContents = await response.buffer()
+    status.info('✅', `Downloaded ${filename} of ${prettyBytes(brotliContents.byteLength)}`)
 
     // Insert new attachment
     const newAttachmentResults = await db.postgresQuery<PluginAttachmentDB>(
@@ -192,7 +187,10 @@ export async function prepareMmdb(
         } else {
             const mmdb = await distributableFetchAndInsertFreshMmdb(serverInstance)
             if (!mmdb) {
-                status.warn('🤒', 'Because of MMDB unavailability, GeoIP plugins will fail in this analytickit instance')
+                status.warn(
+                    '🤒',
+                    'Because of MMDB unavailability, GeoIP plugins will fail in this analytickit instance'
+                )
             }
             return mmdb
         }
@@ -212,7 +210,8 @@ export async function prepareMmdb(
     if (mmdbAge > MMDB_STALE_AGE_DAYS) {
         status.info(
             '🔁',
-            `${MMDB_ATTACHMENT_KEY} is ${mmdbAge} ${mmdbAge === 1 ? 'day' : 'days'
+            `${MMDB_ATTACHMENT_KEY} is ${mmdbAge} ${
+                mmdbAge === 1 ? 'day' : 'days'
             } old, which is more than the staleness threshold of ${MMDB_STALE_AGE_DAYS} days, refreshing in the background...`
         )
         if (onlyBackground) {

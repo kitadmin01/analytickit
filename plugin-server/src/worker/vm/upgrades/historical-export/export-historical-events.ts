@@ -214,7 +214,8 @@ export function addHistoricalEventsExportCapability(
 
             // "Failed processing events 0-100 from 2021-08-19T12:34:26.061Z to 2021-08-19T12:44:26.061Z. Retrying in 3s"
             createLog(
-                `Failed processing events ${intraIntervalOffset}-${intraIntervalOffset + EVENTS_PER_RUN
+                `Failed processing events ${intraIntervalOffset}-${
+                    intraIntervalOffset + EVENTS_PER_RUN
                 } from ${new Date(timestampCursor).toISOString()} to ${new Date(
                     timestampCursor + EVENTS_TIME_INTERVAL
                 ).toISOString()}. Retrying in ${nextRetrySeconds}s`
@@ -242,7 +243,8 @@ export function addHistoricalEventsExportCapability(
         }
 
         createLog(
-            `Successfully processed events ${intraIntervalOffset}-${intraIntervalOffset + EVENTS_PER_RUN
+            `Successfully processed events ${intraIntervalOffset}-${
+                intraIntervalOffset + EVENTS_PER_RUN
             } from ${new Date(timestampCursor).toISOString()} to ${new Date(
                 timestampCursor + EVENTS_TIME_INTERVAL
             ).toISOString()}.`

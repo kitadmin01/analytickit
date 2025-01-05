@@ -194,10 +194,10 @@ WithColorCodedRows.args = {
         occupation === 'Engineer'
             ? 'var(--success)'
             : occupation === 'Retired'
-            ? 'var(--warning)'
-            : occupation === 'Body-builder'
-            ? 'var(--danger)'
-            : null,
+              ? 'var(--warning)'
+              : occupation === 'Body-builder'
+                ? 'var(--danger)'
+                : null,
 }
 
 export const WithHighlightedRows = BasicTemplate.bind({})

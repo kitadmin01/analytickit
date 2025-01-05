@@ -1,5 +1,9 @@
 .LemonRow {
-    transition: background-color 200ms ease, color 200ms ease, border 200ms ease, opacity 200ms ease;
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border 200ms ease,
+        opacity 200ms ease;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -144,7 +148,9 @@
     .LemonIcon {
         width: 1em;
         height: 1em;
-        transition: background-color 200ms ease, color 200ms ease;
+        transition:
+            background-color 200ms ease,
+            color 200ms ease;
         display: flex;
         align-items: center;
         justify-content: center;

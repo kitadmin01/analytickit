@@ -61,7 +61,7 @@ export function PropertyValue({
     allowCustom = true,
 }: PropertyValueProps): JSX.Element {
     // what the human has typed into the box
-    const [input, setInput] = useState(Array.isArray(value) ? '' : toString(value) ?? '')
+    const [input, setInput] = useState(Array.isArray(value) ? '' : (toString(value) ?? ''))
     // options from the server for search
     const [options, setOptions] = useState({} as Record<string, Option>)
 

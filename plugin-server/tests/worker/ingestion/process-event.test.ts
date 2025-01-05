@@ -25,7 +25,7 @@ beforeAll(async () => {
 beforeEach(async () => {
     await resetTestDatabase()
     await resetTestDatabaseClickhouse()
-        ;[hub, closeHub] = await createHub()
+    ;[hub, closeHub] = await createHub()
     redis = await hub.redisPool.acquire()
     await redis.flushdb()
 

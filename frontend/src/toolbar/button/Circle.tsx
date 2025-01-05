@@ -182,16 +182,16 @@ export function Circle({
                                               textAlign: 'center',
                                           }
                                         : labelPosition === 'left'
-                                        ? {
-                                              right: width / 2 + 8,
-                                              marginTop: -13,
-                                          }
-                                        : labelPosition === 'right'
-                                        ? {
-                                              left: width / 2 + 8,
-                                              marginTop: -13,
-                                          }
-                                        : {}),
+                                          ? {
+                                                right: width / 2 + 8,
+                                                marginTop: -13,
+                                            }
+                                          : labelPosition === 'right'
+                                            ? {
+                                                  left: width / 2 + 8,
+                                                  marginTop: -13,
+                                              }
+                                            : {}),
                                     whiteSpace: 'nowrap',
                                     color: 'white',
                                     pointerEvents: 'none',

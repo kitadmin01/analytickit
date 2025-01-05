@@ -217,21 +217,29 @@ export function Signup(): JSX.Element | null {
                                         {signupResponse?.success
                                             ? 'Opening analytickit…'
                                             : !preflight?.demo
-                                            ? 'Create account'
-                                            : !signupResponseLoading
-                                            ? 'Enter the demo environment'
-                                            : 'Preparing demo data…'}
+                                              ? 'Create account'
+                                              : !signupResponseLoading
+                                                ? 'Enter the demo environment'
+                                                : 'Preparing demo data…'}
                                     </LemonButton>
                                 </Form.Item>
 
                                 <Form.Item className="text-center terms-and-conditions-text">
                                     By {!preflight?.demo ? 'creating an account' : 'entering the demo environment'}, you
                                     agree to our{' '}
-                                    <a href={`https://analytickit.com/terms?${UTM_TAGS}`} target="_blank" rel="noopener">
+                                    <a
+                                        href={`https://analytickit.com/terms?${UTM_TAGS}`}
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
                                         Terms of Service
                                     </a>{' '}
                                     and{' '}
-                                    <a href={`https://analytickit.com/privacy?${UTM_TAGS}`} target="_blank" rel="noopener">
+                                    <a
+                                        href={`https://analytickit.com/privacy?${UTM_TAGS}`}
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
                                         Privacy Policy
                                     </a>
                                     .

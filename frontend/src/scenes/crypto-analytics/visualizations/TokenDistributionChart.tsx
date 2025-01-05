@@ -14,4 +14,4 @@ export function TokenDistributionChart({ data, loading }: TokenDistributionChart
             <div>Token Distribution Chart</div>
         </BaseVisualization>
     )
-} 
+}

@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { DatePicker, Select } from 'antd';
-import './GraphStyles.scss';
+import React, { useState } from 'react'
+import { DatePicker, Select } from 'antd'
+import './GraphStyles.scss'
 
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+const { RangePicker } = DatePicker
+const { Option } = Select
 
 interface GraphFiltersProps {
-    onFilterChange: (activityLevel: string, dateRange: [string, string] | null) => void;
-    activityLevels: string[];
+    onFilterChange: (activityLevel: string, dateRange: [string, string] | null) => void
+    activityLevels: string[]
 }
 
 export const GraphFilters: React.FC<GraphFiltersProps> = ({ onFilterChange, activityLevels }) => {
-    const [activityLevel, setActivityLevel] = useState<string>('all');
-    const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+    const [activityLevel, setActivityLevel] = useState<string>('all')
+    const [dateRange, setDateRange] = useState<[string, string] | null>(null)
 
     const handleFilterChange = () => {
-        onFilterChange(activityLevel, dateRange);
-    };
+        onFilterChange(activityLevel, dateRange)
+    }
 
     return (
         <div className="graph-filters">
@@ -27,8 +27,10 @@ export const GraphFilters: React.FC<GraphFiltersProps> = ({ onFilterChange, acti
                     </Option>
                 ))}
             </Select>
-            <RangePicker onChange={(dates) => setDateRange([dates[0]?.toISOString() ?? '', dates[1]?.toISOString() ?? ''])} />
+            <RangePicker
+                onChange={(dates) => setDateRange([dates[0]?.toISOString() ?? '', dates[1]?.toISOString() ?? ''])}
+            />
             <button onClick={handleFilterChange}>Apply Filters</button>
         </div>
-    );
-};
+    )
+}

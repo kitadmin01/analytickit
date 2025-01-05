@@ -23,8 +23,8 @@ export const MOCK_ORGANIZATION_ID: OrganizationType['id'] = 'ABCD'
 
 type APIMockReturnType = {
     [K in keyof Pick<typeof apiReal, 'create' | 'get' | 'update' | 'delete'>]: jest.Mock<
-        ReturnType<typeof apiReal[K]>,
-        Parameters<typeof apiReal[K]>
+        ReturnType<(typeof apiReal)[K]>,
+        Parameters<(typeof apiReal)[K]>
     >
 }
 

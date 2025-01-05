@@ -20,7 +20,7 @@ export interface NewDashboardForm {
 
 const defaultFormValues: NewDashboardForm = {
     name: '',
-    description: '', 
+    description: '',
     show: false,
     useTemplate: '',
     restrictionLevel: DashboardRestrictionLevel.EveryoneInProjectCanEdit,
@@ -54,7 +54,7 @@ export const newDashboardLogic = kea<newDashboardLogicType>([
             }),
             submit: async ({ name, description, useTemplate, restrictionLevel, show, crypto }, breakpoint) => {
                 let result: DashboardType
-                const teamId = teamLogic.values.currentTeamId  // Get the current team ID
+                const teamId = teamLogic.values.currentTeamId // Get the current team ID
 
                 if (crypto) {
                     // Handle Web3 (crypto) dashboard creation
@@ -63,7 +63,7 @@ export const newDashboardLogic = kea<newDashboardLogicType>([
                         description,
                         use_template: useTemplate,
                         restriction_level: restrictionLevel,
-                        team_id: teamId, 
+                        team_id: teamId,
                     })
                 } else {
                     // Handle Web2 dashboard creation

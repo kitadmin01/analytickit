@@ -249,34 +249,37 @@ export async function startPluginsServer(
             // check every 10 sec how long it has been since the last activity
 
             let lastFoundActivity: number
-            lastActivityCheck = setInterval(() => {
-                const stalenessCheckResult = stalenessCheck(hub, serverConfig.STALENESS_RESTART_SECONDS)
+            lastActivityCheck = setInterval(
+                () => {
+                    const stalenessCheckResult = stalenessCheck(hub, serverConfig.STALENESS_RESTART_SECONDS)
 
-                if (
-                    hub?.lastActivity &&
-                    stalenessCheckResult.isServerStale &&
-                    lastFoundActivity !== hub?.lastActivity
-                ) {
-                    lastFoundActivity = hub?.lastActivity
-                    const extra = {
-                        piscina: piscina ? JSON.stringify(getPiscinaStats(piscina)) : null,
-                        ...stalenessCheckResult,
-                    }
-                    Sentry.captureMessage(
-                        `Plugin Server has not ingested events for over ${serverConfig.STALENESS_RESTART_SECONDS} seconds! Rebooting.`,
-                        {
-                            extra,
+                    if (
+                        hub?.lastActivity &&
+                        stalenessCheckResult.isServerStale &&
+                        lastFoundActivity !== hub?.lastActivity
+                    ) {
+                        lastFoundActivity = hub?.lastActivity
+                        const extra = {
+                            piscina: piscina ? JSON.stringify(getPiscinaStats(piscina)) : null,
+                            ...stalenessCheckResult,
                         }
-                    )
-                    console.log(
-                        `Plugin Server has not ingested events for over ${serverConfig.STALENESS_RESTART_SECONDS} seconds! Rebooting.`,
-                        extra
-                    )
-                    hub?.statsd?.increment(`alerts.stale_plugin_server_restarted`)
+                        Sentry.captureMessage(
+                            `Plugin Server has not ingested events for over ${serverConfig.STALENESS_RESTART_SECONDS} seconds! Rebooting.`,
+                            {
+                                extra,
+                            }
+                        )
+                        console.log(
+                            `Plugin Server has not ingested events for over ${serverConfig.STALENESS_RESTART_SECONDS} seconds! Rebooting.`,
+                            extra
+                        )
+                        hub?.statsd?.increment(`alerts.stale_plugin_server_restarted`)
 
-                    killProcess()
-                }
-            }, Math.min(serverConfig.STALENESS_RESTART_SECONDS, 10000))
+                        killProcess()
+                    }
+                },
+                Math.min(serverConfig.STALENESS_RESTART_SECONDS, 10000)
+            )
         }
 
         serverInstance.piscina = piscina

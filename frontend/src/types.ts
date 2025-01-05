@@ -25,10 +25,9 @@ import { BehavioralFilterKey, BehavioralFilterType } from 'scenes/cohorts/Cohort
 import { LogicWrapper } from 'kea'
 import { AggregationAxisFormat } from 'scenes/insights/aggregationAxisFormat'
 
-export type Optional<T, K extends string | number | symbol> = Omit<T, K> &
-    {
-        [K in keyof T]?: T[K]
-    }
+export type Optional<T, K extends string | number | symbol> = Omit<T, K> & {
+    [K in keyof T]?: T[K]
+}
 
 // Keep this in sync with backend constants (constants.py)
 export enum AvailableFeature {
@@ -46,7 +45,7 @@ export enum AvailableFeature {
     GROUP_ANALYTICS = 'group_analytics',
     MULTIVARIATE_FLAGS = 'multivariate_flags',
     EXPERIMENTATION = 'experimentation',
-    TAGGING = 'tagging', 
+    TAGGING = 'tagging',
     BEHAVIORAL_COHORT_FILTERING = 'behavioral_cohort_filtering',
     WHITE_LABELLING = 'white_labelling',
     SUBSCRIPTIONS = 'subscriptions',
@@ -846,7 +845,7 @@ export interface DashboardType {
     tags?: string[]
     /** Purely local value to determine whether the dashboard should be highlighted, e.g. as a fresh duplicate. */
     _highlight?: boolean
-    type: "Web2" /** type added for crypto */
+    type: 'Web2' /** type added for crypto */
 }
 
 /** added for Crypto Dashboard */
@@ -868,7 +867,7 @@ export interface CryptoDashboardType {
     tags?: string[]
     /** Purely local value to determine whether the dashboard should be highlighted, e.g. as a fresh duplicate. */
     _highlight?: boolean
-    type: "Web3" /** type added for crypto */
+    type: 'Web3' /** type added for crypto */
 }
 
 export type DashboardLayoutSize = 'sm' | 'xs'

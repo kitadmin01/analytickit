@@ -105,11 +105,11 @@ export const getSlackChannelOptions = (
               label: `${x.id} #${x.name}`,
           }))
         : value
-        ? [
-              {
-                  key: value,
-                  label: value?.split('|')?.pop() || value,
-              },
-          ]
-        : []
+          ? [
+                {
+                    key: value,
+                    label: value?.split('|')?.pop() || value,
+                },
+            ]
+          : []
 }

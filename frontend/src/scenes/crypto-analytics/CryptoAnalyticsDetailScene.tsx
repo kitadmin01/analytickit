@@ -32,16 +32,8 @@ export function CryptoAnalyticsDetailScene(): JSX.Element {
                     title={analytic?.name || 'Crypto Analytics Detail'}
                     buttons={
                         <>
-                            <LemonButton
-                                onClick={() => navigateToList()}
-                            >
-                                Back to List
-                            </LemonButton>
-                            <LemonButton
-                                onClick={() => navigateToEdit(id)}
-                            >
-                                Edit
-                            </LemonButton>
+                            <LemonButton onClick={() => navigateToList()}>Back to List</LemonButton>
+                            <LemonButton onClick={() => navigateToEdit(id)}>Edit</LemonButton>
                         </>
                     }
                 />

@@ -30,7 +30,9 @@ function JSSetupSnippet(): JSX.Element {
 
 function JSEventSnippet(): JSX.Element {
     return (
-        <CodeSnippet language={Language.JavaScript}>{`analytickit.capture('my event', { property: 'value' })`}</CodeSnippet>
+        <CodeSnippet
+            language={Language.JavaScript}
+        >{`analytickit.capture('my event', { property: 'value' })`}</CodeSnippet>
     )
 }
 
@@ -79,8 +81,8 @@ export function WebInstructions(): JSX.Element {
             <LemonDivider thick dashed />
             <h2>Option 2. Javascript Library</h2>
             <p>
-                Use this option if you want more granular control of how analytickit runs in your website and the events you
-                capture. Recommended for teams with more stable products and more defined analytics requirements.{' '}
+                Use this option if you want more granular control of how analytickit runs in your website and the events
+                you capture. Recommended for teams with more stable products and more defined analytics requirements.{' '}
                 <Link
                     to="https://analytickit.com/docs/integrations/js-integration/?utm_medium=in-product&utm_campaign=ingestion-web"
                     target="_blank"
@@ -94,7 +96,11 @@ export function WebInstructions(): JSX.Element {
             <JSInstallSnippet />
             <h3>
                 Configure &amp; initialize (see more{' '}
-                <Link to="https://analytickit.com/docs/integrations/js-integration#config" target="_blank" rel="noopener">
+                <Link
+                    to="https://analytickit.com/docs/integrations/js-integration#config"
+                    target="_blank"
+                    rel="noopener"
+                >
                     configuration options
                 </Link>
                 )

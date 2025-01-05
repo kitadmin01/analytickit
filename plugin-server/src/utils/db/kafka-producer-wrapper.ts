@@ -12,15 +12,15 @@ import { timeoutGuard } from './utils'
 CompressionCodecs[CompressionTypes.Snappy] = SnappyCodec
 
 /** This class wraps kafkajs producer, adding batching to optimize performance.
-*
-* As messages get queued, we flush the queue in the following cases.
-*
-* 1. Message size + current batch exceeds max batch message size
-* 2. Too much time passed
-* 3. Too many messages queued.
-*
-* We also flush the queue regularly to avoid dropping any messages as the program quits.
-*/
+ *
+ * As messages get queued, we flush the queue in the following cases.
+ *
+ * 1. Message size + current batch exceeds max batch message size
+ * 2. Too much time passed
+ * 3. Too many messages queued.
+ *
+ * We also flush the queue regularly to avoid dropping any messages as the program quits.
+ */
 export class KafkaProducerWrapper {
     /** Kafka producer used for syncing Postgres and ClickHouse person data. */
     private producer: Producer
@@ -53,7 +53,7 @@ export class KafkaProducerWrapper {
             // :TRICKY: Swallow uncaught errors from flush as flush is already doing custom error reporting which would get lost.
             try {
                 await this.flush()
-            } catch (err) { }
+            } catch (err) {}
         }, this.flushFrequencyMs)
     }
 

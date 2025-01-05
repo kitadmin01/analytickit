@@ -12,7 +12,7 @@ describe('capabilities', () => {
         beforeAll(async () => {
             console.info = jest.fn() as any
             console.warn = jest.fn() as any
-                ;[hub, closeHub] = await createHub({ LOG_LEVEL: LogLevel.Warn })
+            ;[hub, closeHub] = await createHub({ LOG_LEVEL: LogLevel.Warn })
         })
 
         afterAll(async () => {

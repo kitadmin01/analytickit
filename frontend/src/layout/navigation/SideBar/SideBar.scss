@@ -9,7 +9,9 @@
 
 .SideBar__slider {
     z-index: var(--z-lemon-sidebar);
-    transition: 200ms ease margin, 200ms ease transform;
+    transition:
+        200ms ease margin,
+        200ms ease transform;
     position: absolute;
     flex-shrink: 0;
     height: 100%;

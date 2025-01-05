@@ -74,7 +74,9 @@ export function shouldSendEventToBuffer(
     //  as being from an identified user when in fact they are not, leading to unnecessary buffering
     const isMobileLibrary =
         !!event.properties &&
-        ['analytickit-ios', 'analytickit-android', 'analytickit-react-native', 'analytickit-flutter'].includes(event.properties['$lib'])
+        ['analytickit-ios', 'analytickit-android', 'analytickit-react-native', 'analytickit-flutter'].includes(
+            event.properties['$lib']
+        )
     const sendToBuffer = !isMobileLibrary && !person && !isAnonymousEvent && event.event !== '$identify'
 
     if (sendToBuffer) {

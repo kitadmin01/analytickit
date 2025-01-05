@@ -33,7 +33,7 @@ import { urls } from 'scenes/urls'
 export const scene: SceneExport = {
     component: FeatureFlag,
     logic: featureFlagLogic,
-    paramsToProps: ({ params: { id } }): typeof featureFlagLogic['props'] => ({
+    paramsToProps: ({ params: { id } }): (typeof featureFlagLogic)['props'] => ({
         id: id && id !== 'new' ? parseInt(id) : 'new',
     }),
 }
@@ -215,10 +215,10 @@ export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
                                         />
                                         <div className="text-muted text-sm pl-7">
                                             If your feature flag is applied prior to an identify or authentication
-                                            event, use this to ensure that feature flags are not reset after a visitor is
-                                            identified. This ensures the experience for the anonymous visitor is carried
-                                            forward to the authenticated visitor. Currently supported for analytickit-js
-                                            only.
+                                            event, use this to ensure that feature flags are not reset after a visitor
+                                            is identified. This ensures the experience for the anonymous visitor is
+                                            carried forward to the authenticated visitor. Currently supported for
+                                            analytickit-js only.
                                         </div>
                                     </div>
                                 )}

@@ -1,49 +1,49 @@
 import analytickit from 'analytickit-js'
-import {parsePeopleParams, PeopleParamType} from 'scenes/trends/personsModalLogic'
+import { parsePeopleParams, PeopleParamType } from 'scenes/trends/personsModalLogic'
 import {
-ActionType,
-ActorType,
-CohortType,
-CombinedEventType,
-DashboardCollaboratorType,
-DashboardType,
-EventDefinition,
-EventType,
-ExportedAssetType,
-FeatureFlagType,
-FilterType,
-InsightModel,
-IntegrationType,
-LicenseType,
-PluginLogEntry,
-PropertyDefinition,
-SharingConfigurationType,
-SlackChannelType,
-SubscriptionType,
-TeamType,
-UserType,
-}from '~/types'
-import {getCurrentTeamId} from './utils/logics'
-import {CheckboxValueType } from 'antd/lib/checkbox/Group'
-import {LOGS_PORTION_LIMIT} from 'scenes/plugins/plugin/pluginLogsLogic'
-import {toParams } from 'lib/utils'
-import { DashboardPrivilegeLevel} from './constants'
-import {EVENT_DEFINITIONS_PER_PAGE } from 'scenes/data-management/events/eventDefinitionsTableLogic'
-import {EVENT_PROPERTY_DEFINITIONS_PER_PAGE} from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
-import {PersonFilters} from 'scenes/persons/personsLogic'
-import {ActivityLogItem, ActivityScope} from 'lib/components/ActivityLog/humanizeActivity'
-import {ActivityLogProps} from 'lib/components/ActivityLog/ActivityLog'
+    ActionType,
+    ActorType,
+    CohortType,
+    CombinedEventType,
+    DashboardCollaboratorType,
+    DashboardType,
+    EventDefinition,
+    EventType,
+    ExportedAssetType,
+    FeatureFlagType,
+    FilterType,
+    InsightModel,
+    IntegrationType,
+    LicenseType,
+    PluginLogEntry,
+    PropertyDefinition,
+    SharingConfigurationType,
+    SlackChannelType,
+    SubscriptionType,
+    TeamType,
+    UserType,
+} from '~/types'
+import { getCurrentTeamId } from './utils/logics'
+import { CheckboxValueType } from 'antd/lib/checkbox/Group'
+import { LOGS_PORTION_LIMIT } from 'scenes/plugins/plugin/pluginLogsLogic'
+import { toParams } from 'lib/utils'
+import { DashboardPrivilegeLevel } from './constants'
+import { EVENT_DEFINITIONS_PER_PAGE } from 'scenes/data-management/events/eventDefinitionsTableLogic'
+import { EVENT_PROPERTY_DEFINITIONS_PER_PAGE } from 'scenes/data-management/event-properties/eventPropertyDefinitionsTableLogic'
+import { PersonFilters } from 'scenes/persons/personsLogic'
+import { ActivityLogItem, ActivityScope } from 'lib/components/ActivityLog/humanizeActivity'
+import { ActivityLogProps } from 'lib/components/ActivityLog/ActivityLog'
 
 export const ACTIVITY_PAGE_SIZE = 20
 
-export interface PaginatedResponse < T> {
-results: T[]
-next?: string
-previous?: string
+export interface PaginatedResponse<T> {
+    results: T[]
+    next?: string
+    previous?: string
 }
 
-export interface CountedPaginatedResponse extends PaginatedResponse < ActivityLogItem> {
-total_count: number
+export interface CountedPaginatedResponse extends PaginatedResponse<ActivityLogItem> {
+    total_count: number
 }
 
 const CSRF_COOKIE_NAME = 'analytickit_csrftoken'
@@ -394,10 +394,10 @@ const api = {
                 .withQueryString(
                     parsePeopleParams(peopleParams, filters) +
                         (searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : '')
-)
-.get()
-},
-async getCount(actionId: ActionType['id']): Promise<number> {
+                )
+                .get()
+        },
+        async getCount(actionId: ActionType['id']): Promise<number> {
             return (await new ApiRequest().actionsDetail(actionId).withAction('count').get()).count
         },
         determineDeleteEndpoint(): string {
@@ -578,10 +578,10 @@ async getCount(actionId: ActionType['id']): Promise<number> {
                         limit,
                         ...params,
                     })
-)
-.get()
-},
-determineListEndpoint({
+                )
+                .get()
+        },
+        determineListEndpoint({
             limit = EVENT_PROPERTY_DEFINITIONS_PER_PAGE,
             teamId = getCurrentTeamId(),
             ...params
@@ -600,13 +600,13 @@ determineListEndpoint({
                         limit,
                         ...params,
                     })
-)
-.assembleFullUrl()
-},
-},
+                )
+                .assembleFullUrl()
+        },
+    },
 
-cohorts: {
-async get(cohortId: CohortType['id']): Promise<CohortType> {
+    cohorts: {
+        async get(cohortId: CohortType['id']): Promise<CohortType> {
             return await new ApiRequest().cohortsDetail(cohortId).get()
         },
         async create(cohortData: Partial<CohortType>, filterParams?: string): Promise<CohortType> {
@@ -674,8 +674,8 @@ async get(cohortId: CohortType['id']): Promise<CohortType> {
             return dashboardId
                 ? new ApiRequest().dashboardSharing(dashboardId).get()
                 : insightId
-                ? new ApiRequest().insightSharing(insightId).get()
-                : null
+                  ? new ApiRequest().insightSharing(insightId).get()
+                  : null
         },
 
         async update(
@@ -691,8 +691,8 @@ async get(cohortId: CohortType['id']): Promise<CohortType> {
             return dashboardId
                 ? new ApiRequest().dashboardSharing(dashboardId).update({ data })
                 : insightId
-                ? new ApiRequest().insightSharing(insightId).update({ data })
-                : null
+                  ? new ApiRequest().insightSharing(insightId).update({ data })
+                  : null
         },
     },
 
@@ -714,10 +714,10 @@ async get(cohortId: CohortType['id']): Promise<CohortType> {
                     after: leadingEntry?.timestamp,
                 },
                 true
-)
+            )
 
-const response = await new ApiRequest()
-.projectsDetail(currentTeamId || undefined)
+            const response = await new ApiRequest()
+                .projectsDetail(currentTeamId || undefined)
                 .pluginLogs(pluginConfigId)
                 .withQueryString(params)
                 .get()

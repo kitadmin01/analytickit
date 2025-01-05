@@ -29,7 +29,11 @@ describe('OrganizationManager()', () => {
             expect(organization!.name).toEqual('TEST ORG')
 
             jest.spyOn(global.Date, 'now').mockImplementation(() => new Date('2020-02-27 11:00:25').getTime())
-            await hub.db.postgresQuery("UPDATE analytickit_organization SET name = 'Updated Name!'", undefined, 'testTag')
+            await hub.db.postgresQuery(
+                "UPDATE analytickit_organization SET name = 'Updated Name!'",
+                undefined,
+                'testTag'
+            )
 
             jest.mocked(hub.db.postgresQuery).mockClear()
 

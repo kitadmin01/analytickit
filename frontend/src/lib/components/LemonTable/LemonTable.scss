@@ -54,7 +54,9 @@
                 --row-base-height: 2.5rem; // Make group headers smaller for better hierarchy
             }
             &.LemonTable__loader {
-                transition: height 200ms ease, top 200ms ease;
+                transition:
+                    height 200ms ease,
+                    top 200ms ease;
                 z-index: 10;
                 position: absolute;
                 left: 0;

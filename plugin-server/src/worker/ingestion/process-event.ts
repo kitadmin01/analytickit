@@ -1,4 +1,4 @@
-import ClickHouse from'@analytickit/clickhouse'
+import ClickHouse from '@analytickit/clickhouse'
 import { PluginEvent, Properties } from '@analytickit/plugin-scaffold'
 import { DateTime } from 'luxon'
 

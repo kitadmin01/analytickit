@@ -76,7 +76,7 @@ export async function loadPlugin(hub: Hub, pluginConfig: PluginConfig): Promise<
             ? config['main']
                 ? readFileIfExists(hub.BASE_DIR, plugin, config['main'])
                 : readFileIfExists(hub.BASE_DIR, plugin, 'index.js') ||
-                readFileIfExists(hub.BASE_DIR, plugin, 'index.ts')
+                  readFileIfExists(hub.BASE_DIR, plugin, 'index.ts')
             : plugin.source__index_ts
         if (pluginSource) {
             void pluginConfig.vm?.initialize!(pluginSource, pluginDigest(plugin))
@@ -90,7 +90,8 @@ export async function loadPlugin(hub: Hub, pluginConfig: PluginConfig): Promise<
                 await processError(
                     hub,
                     pluginConfig,
-                    `Could not load source code for ${pluginDigest(plugin)}. Tried: ${config['main'] || 'index.ts, index.js'
+                    `Could not load source code for ${pluginDigest(plugin)}. Tried: ${
+                        config['main'] || 'index.ts, index.js'
                     }`
                 )
                 return false

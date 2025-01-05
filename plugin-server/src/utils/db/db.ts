@@ -838,7 +838,7 @@ export class DB {
                         ...rawPerson,
                         created_at: DateTime.fromISO(rawPerson.created_at).toUTC(),
                         version: Number(rawPerson.version || 0),
-                    } as Person)
+                    }) as Person
             )
         } else {
             throw new Error(`Can't fetch persons for database: ${database}`)
@@ -1341,7 +1341,7 @@ INSERT INTO analytickit_featureflaghashkeyoverride (team_id, person_id, feature_
                             ? { group4_properties: JSON.parse(event.group4_properties) }
                             : {}),
                         timestamp: clickHouseTimestampToISO(event.timestamp),
-                    } as ClickHouseEvent)
+                    }) as ClickHouseEvent
             ) || []
         )
     }

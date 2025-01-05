@@ -1,23 +1,23 @@
-import { Button, Card, Col, Row, Skeleton } from 'antd';
-import { useValues } from 'kea';
-import { billingLogic } from './billingLogic';
-import defaultImg from 'public/plan-default.svg';
-import { Spinner } from 'lib/components/Spinner/Spinner';
-import React, { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import api from 'lib/api';
+import { Button, Card, Col, Row, Skeleton } from 'antd'
+import { useValues } from 'kea'
+import { billingLogic } from './billingLogic'
+import defaultImg from 'public/plan-default.svg'
+import { Spinner } from 'lib/components/Spinner/Spinner'
+import React, { useState, useEffect } from 'react'
+import { loadStripe } from '@stripe/stripe-js'
+import api from 'lib/api'
 
 type PlanType = {
-    key: string;
-    name: string;
-    price_string: string;
-    url: string;
-    image_url: string;
-};
+    key: string
+    name: string
+    price_string: string
+    url: string
+    image_url: string
+}
 
 interface PlanProps {
-    plan: PlanType;
-    onSubscribe: (plan: PlanType) => void;
+    plan: PlanType
+    onSubscribe: (plan: PlanType) => void
 }
 
 function Plan({ plan, onSubscribe }: PlanProps): JSX.Element {
@@ -39,48 +39,49 @@ function Plan({ plan, onSubscribe }: PlanProps): JSX.Element {
                 </Button>
             </div>
         </Card>
-    );
+    )
 }
 
 export function BillingEnrollment(): JSX.Element | null {
-    const [availablePlans, setAvailablePlans] = useState<PlanType[]>([]);
-    const { plansLoading, billingSubscriptionLoading } = useValues(billingLogic);
+    const [availablePlans, setAvailablePlans] = useState<PlanType[]>([])
+    const { plansLoading, billingSubscriptionLoading } = useValues(billingLogic)
 
     useEffect(() => {
         fetch('/api/plans/')
-            .then(response => response.json())
-            .then(data => setAvailablePlans(data));
-    }, []);
+            .then((response) => response.json())
+            .then((data) => setAvailablePlans(data))
+    }, [])
 
-    const STRIPE_PUBLIC_KEY = "pk_live_51MCCGYFtMel7myQSKeJgrsPhqGWyVzt2eEt032NldI3OYpeHlQJ5GSapMVZFTt5PJfyLB8ejLUhpt8SGMsZ53uOQ003ViGi8rw";
-    const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
+    const STRIPE_PUBLIC_KEY =
+        'pk_live_51MCCGYFtMel7myQSKeJgrsPhqGWyVzt2eEt032NldI3OYpeHlQJ5GSapMVZFTt5PJfyLB8ejLUhpt8SGMsZ53uOQ003ViGi8rw'
+    const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
     const handleBillingSubscribe = (plan: PlanType): void => {
-        (async () => {
+        ;(async () => {
             try {
-                const response = await api.create('api/checkout/', { plan });
-                
+                const response = await api.create('api/checkout/', { plan })
+
                 if (response.error) {
-                    console.error(response.error);
-                    return;
+                    console.error(response.error)
+                    return
                 }
-    
-                const sessionId = response.id;
-                const stripe = await stripePromise;
+
+                const sessionId = response.id
+                const stripe = await stripePromise
                 if (!stripe) {
-                    console.error("Stripe failed to initialize.");
-                    return;
+                    console.error('Stripe failed to initialize.')
+                    return
                 }
-                const result = await stripe.redirectToCheckout({ sessionId });
-    
+                const result = await stripe.redirectToCheckout({ sessionId })
+
                 if (result.error) {
-                    console.error(result.error.message);
+                    console.error(result.error.message)
                 }
             } catch (error) {
-                console.error("Error starting the checkout process:", error);
+                console.error('Error starting the checkout process:', error)
             }
-        })();
-    };
+        })()
+    }
 
     return (
         <>
@@ -105,5 +106,5 @@ export function BillingEnrollment(): JSX.Element | null {
                 </Card>
             )}
         </>
-    );
+    )
 }

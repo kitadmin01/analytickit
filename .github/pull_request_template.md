@@ -7,8 +7,8 @@
 <!-- If there are frontend changes, please include screenshots. -->
 <!-- If a reference design was involved, include a link to the relevant Figma frame! -->
 
-👉 *Stay up-to-date with [analytickit coding conventions](https://analytickit.com/docs/contribute/coding-conventions) for
-a smoother review.*
+👉 _Stay up-to-date with [analytickit coding conventions](https://analytickit.com/docs/contribute/coding-conventions) for
+a smoother review._
 
 ## How did you test this code?
 

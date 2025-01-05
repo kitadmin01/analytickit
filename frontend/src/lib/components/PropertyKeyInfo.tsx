@@ -118,8 +118,8 @@ export const keyMapping: KeyMappingInterface = {
             description: (
                 <span>
                     This variable will be set to the distinct ID if you've called{' '}
-                    <pre style={{ display: 'inline' }}>analytickit.identify('distinct id')</pre>. If the user is anonymous,
-                    it'll be empty.
+                    <pre style={{ display: 'inline' }}>analytickit.identify('distinct id')</pre>. If the user is
+                    anonymous, it'll be empty.
                 </span>
             ),
         },
@@ -148,8 +148,8 @@ export const keyMapping: KeyMappingInterface = {
             description: (
                 <span>
                     Distinct ID either given by calling{' '}
-                    <pre style={{ display: 'inline' }}>analytickit.identify('distinct id')</pre> or generated automatically
-                    if the user is anonymous.
+                    <pre style={{ display: 'inline' }}>analytickit.identify('distinct id')</pre> or generated
+                    automatically if the user is anonymous.
                 </span>
             ),
             examples: ['1234', '16ff262c4301e5-0aa346c03894bc-39667c0e-1aeaa0-16ff262c431767'],

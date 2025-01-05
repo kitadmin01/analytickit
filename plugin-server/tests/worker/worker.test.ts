@@ -123,7 +123,7 @@ describe('worker', () => {
 
         try {
             await piscina.destroy()
-        } catch { }
+        } catch {}
     })
 
     describe('createTaskRunner()', () => {

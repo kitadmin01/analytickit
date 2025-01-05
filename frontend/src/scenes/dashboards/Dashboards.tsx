@@ -33,11 +33,7 @@ export function Dashboards(): JSX.Element {
                 ))}
             </div>
 
-            <LemonInput 
-                value={searchTerm || ''}
-                onChange={setSearchTerm}
-                placeholder="Search dashboards..."
-            />
+            <LemonInput value={searchTerm || ''} onChange={setSearchTerm} placeholder="Search dashboards..." />
         </div>
     )
-} 
+}

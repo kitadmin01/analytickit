@@ -30,7 +30,7 @@ describe('ActionMatcher', () => {
 
     beforeEach(async () => {
         await resetTestDatabase(undefined, undefined, undefined, { withExtendedTestData: false })
-            ;[hub, closeServer] = await createHub()
+        ;[hub, closeServer] = await createHub()
         actionMatcher = hub.actionMatcher
         actionCounter = 0
         personContainer = createPersonContainer()
@@ -58,20 +58,20 @@ describe('ActionMatcher', () => {
         }
         const steps: ActionStep[] = partialSteps.map(
             (partialStep, index) =>
-            ({
-                id: action.id * 100 + index,
-                action_id: action.id,
-                tag_name: null,
-                text: null,
-                href: null,
-                selector: null,
-                url: null,
-                url_matching: null,
-                name: null,
-                event: null,
-                properties: null,
-                ...partialStep,
-            } as ActionStep)
+                ({
+                    id: action.id * 100 + index,
+                    action_id: action.id,
+                    tag_name: null,
+                    text: null,
+                    href: null,
+                    selector: null,
+                    url: null,
+                    url_matching: null,
+                    name: null,
+                    event: null,
+                    properties: null,
+                    ...partialStep,
+                }) as ActionStep
         )
         await insertRow(hub.db.postgres, 'analytickit_action', action)
         await Promise.all(steps.map((step) => insertRow(hub.db.postgres, 'analytickit_actionstep', step)))

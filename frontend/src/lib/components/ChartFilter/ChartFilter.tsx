@@ -48,8 +48,8 @@ export function ChartFilter({ filters, onChange, disabled }: ChartFilterProps): 
         filters.insight === InsightType.RETENTION
             ? ChartDisplayType.ActionsTable
             : filters.insight === InsightType.FUNNELS
-            ? ChartDisplayType.FunnelViz
-            : ChartDisplayType.ActionsLineGraph
+              ? ChartDisplayType.FunnelViz
+              : ChartDisplayType.ActionsLineGraph
 
     function Label({
         icon,

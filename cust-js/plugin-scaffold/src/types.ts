@@ -168,8 +168,8 @@ type FullMetricsControls = MetricsControlsIncrement & MetricsControlsMax & Metri
 type MetricsControls<V> = V extends MetricsOperation.Sum
     ? MetricsControlsIncrement
     : V extends MetricsOperation.Max
-    ? MetricsControlsMax
-    : MetricsControlsMin
+      ? MetricsControlsMax
+      : MetricsControlsMin
 
 type MetaMetricsFromMetricsOptions<J extends Record<string, string>> = {
     [K in keyof J]: MetricsControls<J[K]>

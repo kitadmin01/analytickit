@@ -32,7 +32,9 @@
         .current-events-highlight-box {
             position: absolute;
             width: 100%;
-            transition: height 200ms ease-in-out, transform 300ms ease-in-out;
+            transition:
+                height 200ms ease-in-out,
+                transform 300ms ease-in-out;
             top: 0;
             left: 0;
             right: 0;

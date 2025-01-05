@@ -44,7 +44,8 @@ export async function eachBatch(
 
         status.info(
             '🧩',
-            `Kafka batch of ${batch.messages.length} events completed in ${new Date().valueOf() - batchStartTimer.valueOf()
+            `Kafka batch of ${batch.messages.length} events completed in ${
+                new Date().valueOf() - batchStartTimer.valueOf()
             }ms (${loggingKey})`
         )
     } finally {

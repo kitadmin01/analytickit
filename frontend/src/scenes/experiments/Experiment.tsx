@@ -272,8 +272,8 @@ export function Experiment(): JSX.Element {
                                                                         idx === 0
                                                                             ? 'border-t'
                                                                             : idx >= 3
-                                                                            ? 'border-b'
-                                                                            : ''
+                                                                              ? 'border-b'
+                                                                              : ''
                                                                     }`}
                                                                 >
                                                                     <div

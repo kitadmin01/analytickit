@@ -1,10 +1,10 @@
-import {PropertyFilterValue, PropertyOperator} from '~/types'
-import {genericOperatorMap} from 'lib/utils'
-import {dayjs} from 'lib/dayjs'
-import {TaxonomicFilterGroupType} from 'lib/components/TaxonomicFilter/types'
+import { PropertyFilterValue, PropertyOperator } from '~/types'
+import { genericOperatorMap } from 'lib/utils'
+import { dayjs } from 'lib/dayjs'
+import { TaxonomicFilterGroupType } from 'lib/components/TaxonomicFilter/types'
 
 export function eventToHumanName(event?: string): string {
-    return event && event[0] == '$' ? event[1].toUpperCase() + event.slice(2) : event ?? 'Event'
+    return event && event[0] == '$' ? event[1].toUpperCase() + event.slice(2) : (event ?? 'Event')
 }
 
 export function operatorToHumanName(operator?: string): string {

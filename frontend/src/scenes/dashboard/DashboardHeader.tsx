@@ -30,15 +30,8 @@ import { SharingModal } from 'lib/components/Sharing/SharingModal'
 // import { deleteCryptoDashboard } from 'some-path'
 
 export function DashboardHeader(): JSX.Element | null {
-    const {
-        dashboard,
-        allItemsLoading,
-        dashboardMode,
-        canEditDashboard,
-        showSubscriptions,
-        subscriptionId,
-        apiUrl,
-    } = useValues(dashboardLogic)
+    const { dashboard, allItemsLoading, dashboardMode, canEditDashboard, showSubscriptions, subscriptionId, apiUrl } =
+        useValues(dashboardLogic)
     const { setDashboardMode, triggerDashboardUpdate } = useActions(dashboardLogic)
     const { dashboardTags } = useValues(dashboardsLogic)
     const { updateDashboard, pinDashboard, unpinDashboard, deleteDashboard, duplicateDashboard } =
@@ -46,18 +39,16 @@ export function DashboardHeader(): JSX.Element | null {
     const { dashboardLoading } = useValues(dashboardsModel)
     const { hasAvailableFeature } = useValues(userLogic)
 
-    console.log("Dashboard value in DashboardHeader:", dashboard)
-
+    console.log('Dashboard value in DashboardHeader:', dashboard)
 
     const { push } = useActions(router)
 
     // Ensure `dashboard?.type` is defined before comparison
-    const isCryptoDashboard = dashboard?.type === 'Web3' as const;
-
+    const isCryptoDashboard = dashboard?.type === ('Web3' as const)
 
     const handleDelete = () => {
         if (dashboard) {
-            console.log("Deleting Dashboard:", dashboard)
+            console.log('Deleting Dashboard:', dashboard)
             // Check if `dashboard.type` is either "Web3" or "Web2"
             const deleteAction = isCryptoDashboard ? deleteCryptoDashboard : deleteDashboard
             deleteAction({ id: dashboard.id, redirect: true })
@@ -108,9 +99,7 @@ export function DashboardHeader(): JSX.Element | null {
                                     : undefined
                             }
                         />
-                        {isCryptoDashboard && (
-                            <span style={{ marginLeft: 10, color: 'blue' }}>(Web3)</span>
-                        )}
+                        {isCryptoDashboard && <span style={{ marginLeft: 10, color: 'blue' }}>(Web3)</span>}
                     </div>
                 }
                 buttons={
@@ -235,11 +224,7 @@ export function DashboardHeader(): JSX.Element | null {
                                                 Duplicate dashboard
                                             </LemonButton>
                                             {canEditDashboard && (
-                                                <LemonButton
-                                                    onClick={handleDelete}
-                                                    status="danger"
-                                                    fullWidth
-                                                >
+                                                <LemonButton onClick={handleDelete} status="danger" fullWidth>
                                                     Delete dashboard
                                                 </LemonButton>
                                             )}

@@ -81,8 +81,8 @@ function SeriesDisplay({
         insightType === InsightType.LIFECYCLE
             ? 'dau'
             : filter.math
-            ? apiValueToMathType(filter.math, filter.math_group_type_index)
-            : 'total'
+              ? apiValueToMathType(filter.math, filter.math_group_type_index)
+              : 'total'
     ] as MathDefinition | undefined
 
     return (

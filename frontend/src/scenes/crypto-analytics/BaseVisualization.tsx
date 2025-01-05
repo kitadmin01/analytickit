@@ -11,9 +11,7 @@ interface BaseVisualizationProps {
 export function BaseVisualization({ title, loading, children }: BaseVisualizationProps): JSX.Element {
     return (
         <Card title={title} className="crypto-visualization-card">
-            <Spin spinning={!!loading}>
-                {children}
-            </Spin>
+            <Spin spinning={!!loading}>{children}</Spin>
         </Card>
     )
 }

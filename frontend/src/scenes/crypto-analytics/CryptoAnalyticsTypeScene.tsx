@@ -20,10 +20,8 @@ export function CryptoAnalyticsTypeScene(): JSX.Element {
 
     const loadGraphData = async (): Promise<void> => {
         try {
-            const response = await api.get(
-                `/api/crypto/analytics/graph-data/?campaign_id=2`
-            )
-            
+            const response = await api.get(`/api/crypto/analytics/graph-data/?campaign_id=2`)
+
             if (!response.data?.data) {
                 console.error('No data received from API')
                 return
@@ -31,13 +29,13 @@ export function CryptoAnalyticsTypeScene(): JSX.Element {
 
             const formattedData = {
                 data: response.data.data
-                    .filter(item => item && item.creation_ts && item.active_users)
+                    .filter((item) => item && item.creation_ts && item.active_users)
                     .map((item: any) => ({
                         date: new Date(item.creation_ts).toISOString().split('T')[0],
-                        value: item.active_users
+                        value: item.active_users,
                     }))
                     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-                metric: 'active_users'
+                metric: 'active_users',
             }
             setGraphData(formattedData)
         } catch (error) {
@@ -53,7 +51,7 @@ export function CryptoAnalyticsTypeScene(): JSX.Element {
                 metric: 'active_users',
                 date_range: dateRange,
                 day_range: dayRange,
-                campaign_id: 2
+                campaign_id: 2,
             })
             // Show success message
             alert('Analytics saved successfully!')
@@ -94,31 +92,24 @@ export function CryptoAnalyticsTypeScene(): JSX.Element {
                         value={dateRange}
                         onChange={setDateRange}
                     />
-                    <Select
-                        style={{ width: 200 }}
-                        options={DAY_RANGES}
-                        value={dayRange}
-                        onChange={setDayRange}
-                    />
+                    <Select style={{ width: 200 }} options={DAY_RANGES} value={dayRange} onChange={setDayRange} />
                 </div>
 
-                <Button 
-                    type="primary" 
-                    onClick={handleSave}
-                    style={{ marginTop: '1rem' }}
-                >
+                <Button type="primary" onClick={handleSave} style={{ marginTop: '1rem' }}>
                     Save
                 </Button>
             </div>
 
             <div className="graph-container">
-                {graphData && <CryptoAnalyticsGraph 
-                    data={graphData.data} 
-                    filters={{
-                        token_type: activeUserType,
-                        activeFilter: 'active_users'
-                    }}
-                />}
+                {graphData && (
+                    <CryptoAnalyticsGraph
+                        data={graphData.data}
+                        filters={{
+                            token_type: activeUserType,
+                            activeFilter: 'active_users',
+                        }}
+                    />
+                )}
             </div>
         </div>
     )

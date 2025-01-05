@@ -2,13 +2,9 @@
 @import '../../../styles/vars.scss'; // Import global variables
 @import '../../../styles/mixins.scss'; // Import mixins
 
-
-
-
-
 .crypto-dashboard {
     // Base styles for the dashboard
-    background-color:  #f2f2f2; // Example of using a variable
+    background-color: #f2f2f2; // Example of using a variable
     padding: 20px;
 
     h1 {
@@ -22,7 +18,8 @@
         grid-template-columns: repeat(2, 1fr); // Keeps two graphs per row
         grid-gap: 20px; // Spacing between graphs
 
-        > div { // Targeting each graph container directly
+        > div {
+            // Targeting each graph container directly
             border: 1px solid #ccc; // Adds a border to each graph container
             padding: 10px; // Adds some padding inside the container
             background-color: #f9f9f9; // A light background color for the container
@@ -30,68 +27,65 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Optional: adds a subtle shadow
         }
 
-      .time-series-graph {
-        // Styles for each time series graph
-        margin-bottom: 30px;
-        padding: 15px;
-        background-color:  #fff;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .time-series-graph {
+            // Styles for each time series graph
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-        h2 {
-            // Styles for graph titles
-            color: #2d2d2d;
-            margin-bottom: 10px;
-        }
+            h2 {
+                // Styles for graph titles
+                color: #2d2d2d;
+                margin-bottom: 10px;
+            }
 
-        canvas {
-            max-width: 90%;
-            max-height: 80%;
-        }
-        canvas:hover {
-            cursor: default !important;
+            canvas {
+                max-width: 90%;
+                max-height: 80%;
+            }
+            canvas:hover {
+                cursor: default !important;
+            }
         }
     }
- }
 
- .graph-description {
-    font-size: 14px; // Adjust as needed
-    color: #666; // Adjust as needed
-    margin-top: 5px;
-    margin-bottom: 15px;
-    white-space: pre-line; // Ensures that newline characters are respected
-}
-
- .crypto-dashboard .network-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.crypto-dashboard .network-container > div {
-    flex-basis: calc(50% - 20px); /* Adjust based on your layout */
-    margin: 10px;
-}
-
-.layout {
-      width: 1366px;
-      height: 768px;
-    
-      display: grid;
-      grid-template-rows: repeat(5, 1fr);
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+    .graph-description {
+        font-size: 14px; // Adjust as needed
+        color: #666; // Adjust as needed
+        margin-top: 5px;
+        margin-bottom: 15px;
+        white-space: pre-line; // Ensures that newline characters are respected
     }
 
+    .crypto-dashboard .network-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .crypto-dashboard .network-container > div {
+        flex-basis: calc(50% - 20px); /* Adjust based on your layout */
+        margin: 10px;
+    }
+
+    .layout {
+        width: 1366px;
+        height: 768px;
+
+        display: grid;
+        grid-template-rows: repeat(5, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
 
     // Add more specific styles as needed
 }
 
 // Responsive styles
 @media (max-width: 768px) {
-      .graph-container {
-          grid-template-columns: 1fr; // Switches to a single column on smaller screens
-      }
+    .graph-container {
+        grid-template-columns: 1fr; // Switches to a single column on smaller screens
+    }
 }
-
-

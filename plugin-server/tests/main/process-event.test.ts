@@ -149,7 +149,7 @@ beforeEach(async () => {
         `
     await resetTestDatabase(testCode, TEST_CONFIG)
     await resetTestDatabaseClickhouse(TEST_CONFIG)
-        ;[hub, closeHub] = await createTestHub()
+    ;[hub, closeHub] = await createTestHub()
     eventsProcessor = new EventsProcessor(hub)
     processEventCounter = 0
     mockClientEventCounter = 0
@@ -916,7 +916,11 @@ test('long htext', async () => {
 })
 
 test('capture first team event', async () => {
-    await hub.db.postgresQuery(`UPDATE analytickit_team SET ingested_event = $1 WHERE id = $2`, [false, team.id], 'testTag')
+    await hub.db.postgresQuery(
+        `UPDATE analytickit_team SET ingested_event = $1 WHERE id = $2`,
+        [false, team.id],
+        'testTag'
+    )
 
     analytickit.capture = jest.fn() as any
     analytickit.identify = jest.fn() as any

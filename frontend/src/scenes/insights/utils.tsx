@@ -95,32 +95,39 @@ export function findInsightFromMountedLogic(
     dashboardId: number | undefined
 ): Partial<InsightModel> | null {
     if (dashboardId) {
-        const dashboardLogicInstance = dashboardLogic.findMounted({ id: dashboardId });
+        const dashboardLogicInstance = dashboardLogic.findMounted({ id: dashboardId })
         if (dashboardLogicInstance) {
-            const insightOnDashboard = dashboardLogicInstance.values.allItems?.items?.find((item) => item.short_id === insightShortId);
+            const insightOnDashboard = dashboardLogicInstance.values.allItems?.items?.find(
+                (item) => item.short_id === insightShortId
+            )
             if (insightOnDashboard) {
-                return insightOnDashboard;
+                return insightOnDashboard
             }
         }
 
-        const dashboards = dashboardsModel.findMounted()?.values.rawDashboards;
+        const dashboards = dashboardsModel.findMounted()?.values.rawDashboards
         if (dashboards) {
             for (const dashModelId of Object.keys(dashboards)) {
-                const dashboardLogicInstance = dashboardLogic.findMounted({ id: parseInt(dashModelId) });
+                const dashboardLogicInstance = dashboardLogic.findMounted({ id: parseInt(dashModelId) })
                 if (dashboardLogicInstance) {
-                    const insightOnModel = dashboardLogicInstance.values.allItems?.items?.find((item) => item.short_id === insightShortId);
+                    const insightOnModel = dashboardLogicInstance.values.allItems?.items?.find(
+                        (item) => item.short_id === insightShortId
+                    )
                     if (insightOnModel) {
-                        return insightOnModel;
+                        return insightOnModel
                     }
                 }
             }
         }
-        return null;
+        return null
     } else {
-        return savedInsightsLogic.findMounted()?.values.insights?.results?.find((item) => item.short_id === insightShortId) || null;
+        return (
+            savedInsightsLogic
+                .findMounted()
+                ?.values.insights?.results?.find((item) => item.short_id === insightShortId) || null
+        )
     }
 }
-
 
 export async function getInsightId(shortId: InsightShortId): Promise<number | undefined> {
     const insightId = insightLogic.findMounted({ dashboardItemId: shortId })?.values?.insight?.id
@@ -170,8 +177,8 @@ export function summarizeBreakdown(
                         (cohortId === 'all'
                             ? 'all users'
                             : cohortId in cohortsById
-                            ? cohortsById[cohortId]?.name
-                            : `ID ${cohortId}`)
+                              ? cohortsById[cohortId]?.name
+                              : `ID ${cohortId}`)
                 )
                 .join(', ')}`
         } else {
@@ -229,8 +236,8 @@ export function summarizeInsightFilters(
                         filters.funnel_order_type === StepOrderValue.STRICT
                             ? '⇉'
                             : filters.funnel_order_type === StepOrderValue.UNORDERED
-                            ? '&'
-                            : '→'
+                              ? '&'
+                              : '→'
                     summary = `${localFilters
                         .map((filter) => getDisplayNameFromEntityFilter(filter))
                         .join(` ${linkSymbol} `)} ${
@@ -278,8 +285,8 @@ export function summarizeInsightFilters(
                                 mathDefinition
                                     ? mathDefinition.shortName
                                     : localFilter.math === 'unique_group'
-                                    ? 'unique groups'
-                                    : mathType
+                                      ? 'unique groups'
+                                      : mathType
                             }`
                             if (filters.formula) {
                                 series = `${alphabet[localFilterIndex].toUpperCase()}. ${series}`
@@ -361,7 +368,7 @@ export function formatBreakdownLabel(
             return cohorts?.filter((c) => c.id == breakdown_value)[0]?.name ?? breakdown_value.toString()
         }
         return formatPropertyValueForDisplay
-            ? formatPropertyValueForDisplay(breakdown, breakdown_value)?.toString() ?? 'None'
+            ? (formatPropertyValueForDisplay(breakdown, breakdown_value)?.toString() ?? 'None')
             : breakdown_value.toString()
     } else if (typeof breakdown_value == 'string') {
         return breakdown_value === 'nan' ? 'Other' : breakdown_value === '' ? 'None' : breakdown_value

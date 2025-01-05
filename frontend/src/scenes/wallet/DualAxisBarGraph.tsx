@@ -1,21 +1,21 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import 'chart.js/auto';
+import React from 'react'
+import { Bar } from 'react-chartjs-2'
+import 'chart.js/auto'
 
 interface DualAxisBarGraphProps {
     data: {
-        labels: string[];
-        totalGasUsed: number[];
-        totalCost: number[];
-    };
-    title: string;
-    description: string;
+        labels: string[]
+        totalGasUsed: number[]
+        totalCost: number[]
+    }
+    title: string
+    description: string
 }
 
 const DualAxisBarGraph: React.FC<DualAxisBarGraphProps> = ({ data, title, description }) => {
     // Ensure that data is valid before proceeding
     if (!data || !data.labels || data.labels.length === 0) {
-        return <div>No data available</div>;
+        return <div>No data available</div>
     }
 
     const chartData = {
@@ -38,7 +38,7 @@ const DualAxisBarGraph: React.FC<DualAxisBarGraphProps> = ({ data, title, descri
                 yAxisID: 'y-axis-cost',
             },
         ],
-    };
+    }
 
     const options = {
         responsive: true,
@@ -67,7 +67,7 @@ const DualAxisBarGraph: React.FC<DualAxisBarGraphProps> = ({ data, title, descri
                 text: title,
             },
         },
-    };
+    }
 
     return (
         <div>
@@ -75,7 +75,7 @@ const DualAxisBarGraph: React.FC<DualAxisBarGraphProps> = ({ data, title, descri
             <p className="graph-description">{description}</p>
             <Bar data={chartData} options={options} />
         </div>
-    );
-};
+    )
+}
 
-export default DualAxisBarGraph;
+export default DualAxisBarGraph

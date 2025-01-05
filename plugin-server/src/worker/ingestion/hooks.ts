@@ -88,7 +88,7 @@ export async function getValueOfToken(
         // [person] OR [event.properties.bar] should be used instead
         if (tokenParts[1] === 'name') {
             const person = await personContainer.get()
-                ;[text, markdown] = getUserDetails(event, person, siteUrl, webhookType)
+            ;[text, markdown] = getUserDetails(event, person, siteUrl, webhookType)
         } else {
             const propertyName = `$${tokenParts[1]}`
             const property = event.properties?.[propertyName]

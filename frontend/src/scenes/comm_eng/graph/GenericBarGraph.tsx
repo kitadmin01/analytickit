@@ -1,24 +1,24 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import 'chart.js/auto';
+import React from 'react'
+import { Bar } from 'react-chartjs-2'
+import 'chart.js/auto'
 
 interface GenericBarGraphProps {
     data: {
         [key: string]: {
-            value1: number;
-            value2: number;
-        };
-    };
-    title: string; // Title of the graph
-    description: string;
-    label1: string; // Label for the first dataset
-    label2: string; // Label for the second dataset
+            value1: number
+            value2: number
+        }
+    }
+    title: string // Title of the graph
+    description: string
+    label1: string // Label for the first dataset
+    label2: string // Label for the second dataset
 }
 
 const GenericBarGraph: React.FC<GenericBarGraphProps> = ({ data, title, description, label1, label2 }) => {
-    const keys = Object.keys(data);
-    const values1 = keys.map(key => data[key].value1);
-    const values2 = keys.map(key => data[key].value2);
+    const keys = Object.keys(data)
+    const values1 = keys.map((key) => data[key].value1)
+    const values2 = keys.map((key) => data[key].value2)
 
     const chartData = {
         labels: keys,
@@ -40,7 +40,7 @@ const GenericBarGraph: React.FC<GenericBarGraphProps> = ({ data, title, descript
                 yAxisID: 'y-axis-2',
             },
         ],
-    };
+    }
 
     const options = {
         responsive: true,
@@ -69,7 +69,7 @@ const GenericBarGraph: React.FC<GenericBarGraphProps> = ({ data, title, descript
                 text: title,
             },
         },
-    };
+    }
 
     return (
         <div>
@@ -77,7 +77,7 @@ const GenericBarGraph: React.FC<GenericBarGraphProps> = ({ data, title, descript
             <p className="graph-description">{description}</p>
             <Bar data={chartData} options={options} />
         </div>
-    );
-};
+    )
+}
 
-export default GenericBarGraph;
+export default GenericBarGraph

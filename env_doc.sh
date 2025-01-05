@@ -10,7 +10,7 @@
    export CLICKHOUSE_HOST="localhost"
    export CLICKHOUSE_SECURE="False"
    export CLICKHOUSE_VERIFY="False"
-   export TEST="1"
+   export TEST="0"
    export OBJECT_STORAGE_ENABLED="True"
    export OBJECT_STORAGE_ENDPOINT="http://localhost:19000"
    export OBJECT_STORAGE_ACCESS_KEY_ID="object_storage_root_user"

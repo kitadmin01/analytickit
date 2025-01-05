@@ -106,8 +106,8 @@ export const FunnelCorrelation = (): JSX.Element | null => {
                                             correlationFeedbackRating === content[0]
                                                 ? { background: '#5375FF' }
                                                 : correlationFeedbackRating
-                                                ? { display: 'none' }
-                                                : {}
+                                                  ? { display: 'none' }
+                                                  : {}
                                         }
                                         onClick={() => {
                                             if (correlationFeedbackRating === content[0]) {

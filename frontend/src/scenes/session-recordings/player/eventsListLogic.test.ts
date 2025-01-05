@@ -103,7 +103,7 @@ describe('eventsListLogic', () => {
         it('scroll to specific rowIndex', async () => {
             const mockedList = {
                 scrollToPosition: jest.fn(),
-                getOffsetForRow: jest.fn(({ }: { alignment: string; index: number }) => 40),
+                getOffsetForRow: jest.fn(({}: { alignment: string; index: number }) => 40),
             }
 
             await expectLogic(logic, async () => {

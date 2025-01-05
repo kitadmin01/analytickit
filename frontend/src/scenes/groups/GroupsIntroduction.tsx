@@ -18,8 +18,8 @@ export function GroupsIntroduction({ access }: Props): JSX.Element {
         )
         subtext = (
             <>
-                Analyze how groups interact with your product as a whole instead of individual users (e.g. loyalty metrics by
-                companies instead of by users)
+                Analyze how groups interact with your product as a whole instead of individual users (e.g. loyalty
+                metrics by companies instead of by users)
             </>
         )
     } else if (access === GroupsAccessStatus.HasAccess) {

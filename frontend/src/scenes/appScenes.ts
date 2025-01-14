@@ -65,4 +65,5 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.CryptoDashboard]: () => import('./dashboard/Dashboard'), //new one
     [Scene.Web3Dashboard]: () => import('./dashboard/Dashboard'), //new one
     [Scene.Graph]: () => import('./comm_eng/dashboard/ActiveUsersGraphPage'), // Common component
+    [Scene.ActiveUsers]: () => import('./comm_eng/dashboard/ActiveUsersGraphPage'),
 }

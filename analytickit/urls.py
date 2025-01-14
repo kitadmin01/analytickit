@@ -1,7 +1,7 @@
 from typing import Any, Callable, List, Optional, cast
 from urllib.parse import urlparse
 from analytickit.api.crypto.com_eng import CommunityEngagementViewSet, get_active_users_data
-from analytickit.api.crypto.crypto_dash import CryptoAnalyticViewSet
+from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
 from django.conf import settings
 from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
@@ -10,6 +10,7 @@ from django.views.decorators import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django_prometheus.exports import ExportToDjangoView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from rest_framework.routers import DefaultRouter
 
 from analytickit.api import (
     api_not_found,
@@ -32,6 +33,7 @@ from analytickit.demo import demo_route
 from analytickit.models import User
 from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
 from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
+from analytickit.api.crypto.crypto_analytic import CryptoAnalyticViewSet
 
 
 from .utils import render_template
@@ -56,6 +58,10 @@ admin_urlpatterns = (
     if settings.MULTI_TENANCY or settings.DEMO
     else []
 )
+
+# Create a router for crypto endpoints
+crypto_router = DefaultRouter()
+crypto_router.register('api/crypto-analytics', CryptoAnalyticViewSet, basename='crypto-analytics')
 
 
 @csrf.ensure_csrf_cookie
@@ -219,6 +225,7 @@ urlpatterns = [
         'get': 'list',
         'post': 'create'
     }), name='web3-dashboards-list'),
+    path('', include(crypto_router.urls)),
 ]
 
 

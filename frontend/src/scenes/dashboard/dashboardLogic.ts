@@ -18,6 +18,7 @@ import {
     InsightModel,
     InsightShortId,
     InsightType,
+    CryptoDashboardType,
 } from '~/types'
 import type { dashboardLogicType } from './dashboardLogicType'
 import { Layout, Layouts } from 'react-grid-layout'
@@ -346,12 +347,12 @@ export const dashboardLogic = kea<dashboardLogicType>({
     selectors: () => ({
         placement: [() => [(_, props) => props.placement], (placement) => placement ?? DashboardPlacement.Dashboard],
         apiUrl: [
-            () => [(_, props) => props.id],
-            (id) => {
+            () => [(_, props) => props.id, (_, props) => props.isCrypto, teamLogic.selectors.currentTeamId],
+            (id: number | undefined, isCrypto: boolean | undefined, currentTeamId: number) => {
                 return (refresh?: boolean) =>
-                    props.isCrypto
+                    isCrypto
                         ? `api/web3-dashboard/${id}/?${toParams({ refresh })}`
-                        : `api/projects/${teamLogic.values.currentTeamId}/dashboards/${id}/?${toParams({
+                        : `api/projects/${currentTeamId}/dashboards/${id}/?${toParams({
                               refresh,
                           })}`
             },
@@ -389,7 +390,7 @@ export const dashboardLogic = kea<dashboardLogicType>({
         ],
         dashboard: [
             () => [dashboardsModel.selectors.nameSortedDashboards, (_, { id }) => id],
-            (dashboards, id): DashboardType | null => {
+            (dashboards, id): DashboardType | CryptoDashboardType | null => {
                 return dashboards.find((d) => d.id === id) || null
             },
         ],

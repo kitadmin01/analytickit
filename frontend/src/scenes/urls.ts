@@ -124,4 +124,5 @@ export const urls = {
             ...(exportOptions?.legend ? { legend: null } : {}),
             ...(exportOptions?.noHeader ? { noHeader: null } : {}),
         }).url,
+    activeUsers: (campaignId: string | number): string => `/crypto-analytics/active_users/${campaignId}`,
 }

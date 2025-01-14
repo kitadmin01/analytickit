@@ -69,6 +69,7 @@ export enum Scene {
     CryptoDashboard = 'CryptoDashboard',
     Web3Dashboard = 'Web3Dashboard',
     Graph = 'Graph', // Single scene for all graph types
+    ActiveUsers = 'ActiveUsers',
 }
 
 export type SceneProps = Record<string, any>

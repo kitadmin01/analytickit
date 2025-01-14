@@ -246,6 +246,10 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Billing Cancel',
     },
+    [Scene.ActiveUsers]: {
+        name: 'Active Users',
+        projectBased: true,
+    },
 }
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
@@ -351,4 +355,5 @@ export const routes: Record<string, Scene> = {
     [urls.transactionValueDistributionGraph()]: Scene.Graph,
     [urls.tokenTransferValueDistributionGraph()]: Scene.Graph,
     [urls.tokenFlowGraph()]: Scene.Graph,
+    [urls.activeUsers(':campaignId')]: Scene.ActiveUsers,
 }

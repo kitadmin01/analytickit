@@ -1,16 +1,14 @@
 from typing import Any, Callable, List, Optional, cast
 from urllib.parse import urlparse
-from analytickit.api.crypto.com_eng import CommunityEngagementViewSet, get_active_users_data
-from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
+
 from django.conf import settings
 from django.contrib import admin
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.urls import URLPattern, include, path, re_path
 from django.views.decorators import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django_prometheus.exports import ExportToDjangoView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-from rest_framework.routers import DefaultRouter
 
 from analytickit.api import (
     api_not_found,
@@ -32,9 +30,7 @@ from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
 from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
-from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
-from analytickit.api.crypto.crypto_analytic import CryptoAnalyticViewSet
-
+from analytickit.web23_views import simple_web23_view
 
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
@@ -58,10 +54,6 @@ admin_urlpatterns = (
     if settings.MULTI_TENANCY or settings.DEMO
     else []
 )
-
-# Create a router for crypto endpoints
-crypto_router = DefaultRouter()
-crypto_router.register('api/crypto-analytics', CryptoAnalyticViewSet, basename='crypto-analytics')
 
 
 @csrf.ensure_csrf_cookie
@@ -106,6 +98,10 @@ def opt_slash_path(route: str, view: Callable, name: Optional[str] = None) -> UR
     return re_path(fr"^{route}/?(?:[?#].*)?$", view, name=name)  # type: ignore
 
 
+def simple_test(request):
+    return JsonResponse({"status": "ok", "message": "Simple test endpoint is working"})
+
+
 urlpatterns = [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
@@ -134,6 +130,7 @@ urlpatterns = [
         "api/reset/<str:user_uuid>/",
         authentication.PasswordResetCompleteViewSet.as_view({"get": "retrieve", "post": "create"}),
     ),
+    re_path(r"^api.+", api_not_found),
     path("authorize_and_redirect/", login_required(authorize_and_redirect)),
     path("shared_dashboard/<str:access_token>", sharing.SharingViewerPageViewSet.as_view({"get": "retrieve"})),
     path("shared/<str:access_token>", sharing.SharingViewerPageViewSet.as_view({"get": "retrieve"})),
@@ -177,58 +174,11 @@ urlpatterns = [
         name="campaign-detail",
     ),
     path('api/wallet-address-metrics/', VisitorWallatAddressModelViewSet.as_view({'get': 'get_metrics'}), name='wallet-address-metrics'),
-
-    # Crypto dashboard URLs
-    path("api/web3-dashboard/", CryptoDashboardsViewSet.as_view({"get": "list", "post": "create"}), name="web3-dashboard"),
-    path("api/web3-dashboard/<int:pk>/",CryptoDashboardsViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}), name="web3-dashboard-detail"),
-
-    # Crypto analytics endpoints - put these BEFORE any catch-all patterns
-    path(
-        "api/crypto-analytics/type/active_users/",  # More specific route first
-        CryptoAnalyticViewSet.as_view({'get': 'get_active_users'}),
-        name="crypto-analytic-active-users",
-    ),
-    path(
-        "api/crypto-analytics/",
-        CryptoAnalyticViewSet.as_view({
-            "get": "list",
-            "post": "create"
-        }),
-        name="crypto-analytic-list-create",
-    ),
-    path(
-        "api/crypto-analytics/<int:pk>/",
-        CryptoAnalyticViewSet.as_view({
-            "get": "retrieve",
-            "put": "update",
-            "patch": "partial_update",
-            "delete": "destroy"
-        }),
-        name="crypto-analytic-detail",
-    ),
-
-    path('api/campaign/<int:campaign_id>/active_users/', get_active_users_data, name='active_users_data'),
-
-    path('api/crypto/analytics/save/', CryptoAnalyticViewSet.as_view({'post': 'create'})),
-    path('api/crypto/analytics/graph-data/', CryptoAnalyticViewSet.as_view({'get': 'get_graph_data'})),
-    path('api/dashboards/', CryptoDashboardsViewSet.as_view({
-        'get': 'list',
-        'post': 'create'
-    }), name='dashboards-list'),
-    path('api/dashboards/<int:pk>/', CryptoDashboardsViewSet.as_view({
-        'get': 'retrieve',
-        'put': 'update',
-        'patch': 'partial_update',
-        'delete': 'destroy'
-    }), name='dashboards-detail'),
-    path('api/web3-dashboard/', CryptoDashboardsViewSet.as_view({
-        'get': 'list',
-        'post': 'create'
-    }), name='web3-dashboards-list'),
-    path('', include(crypto_router.urls)),
+    
+    # Web23 endpoints
+    path('simple-test/', simple_test),
+    path('web23-view/<int:team_id>/', simple_web23_view, name='web23-view'),
 ]
-
-
 
 if settings.DEBUG:
     # If we have DEBUG=1 set, then let's expose the metrics for debugging. Note

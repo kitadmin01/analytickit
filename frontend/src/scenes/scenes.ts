@@ -250,6 +250,14 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         name: 'Active Users',
         projectBased: true,
     },
+    [Scene.Web23Dashboard]: {
+        projectBased: true,
+        name: 'Web2 to Web3 Analytics',
+    },
+    [Scene.Web23Detail]: {
+        projectBased: true,
+        name: 'Web2 to Web3 Analytics Detail',
+    },
 }
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
@@ -356,4 +364,6 @@ export const routes: Record<string, Scene> = {
     [urls.tokenTransferValueDistributionGraph()]: Scene.Graph,
     [urls.tokenFlowGraph()]: Scene.Graph,
     [urls.activeUsers(':campaignId')]: Scene.ActiveUsers,
+    [urls.web23Dashboard(':id')]: Scene.Web23Dashboard,
+ 
 }

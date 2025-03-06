@@ -114,7 +114,7 @@ export const web23Logic = kea<web23LogicType>({
                 loadFunnelData: async () => {
                     try {
                         const response = await api.get(
-                            `web23-view/${values.currentTeamId}/?from_date=${
+                            `api/web23/${values.currentTeamId}/?from_date=${
                                 values.fromDate
                             }&days=${values.days}`
                         )

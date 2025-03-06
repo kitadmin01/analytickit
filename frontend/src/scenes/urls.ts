@@ -112,6 +112,9 @@ export const urls = {
     tokenTransferValueDistributionGraph: (): string => '/graphs/token-transfer-value-distribution',
     tokenFlowGraph: (): string => '/graphs/token-flow',
 
+    // Add these URLs for Web23
+    web23Dashboard: (id: string): string => `/web23-dashboard/${id}`,
+
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {
             ...(exportOptions?.whitelabel ? { whitelabel: null } : {}),
@@ -125,4 +128,5 @@ export const urls = {
             ...(exportOptions?.noHeader ? { noHeader: null } : {}),
         }).url,
     activeUsers: (campaignId: string | number): string => `/crypto-analytics/active_users/${campaignId}`,
+
 }

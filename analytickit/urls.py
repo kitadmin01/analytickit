@@ -30,7 +30,7 @@ from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
 from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
-from analytickit.web23_views import simple_web23_view
+from analytickit.api.web23.views import Web23FunnelViewSet
 
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
@@ -177,7 +177,7 @@ urlpatterns = [
     
     # Web23 endpoints
     path('simple-test/', simple_test),
-    path('web23-view/<int:team_id>/', simple_web23_view, name='web23-view'),
+    path('api/web23/<int:team_id>/', Web23FunnelViewSet.as_view({'get': 'get_funnel_data'}), name='web23'),
 ]
 
 if settings.DEBUG:

@@ -4,7 +4,6 @@ from django.http import JsonResponse
 
 from analytickit.api.routing import DefaultRouterPlusPlus
 from analytickit.settings import EE_AVAILABLE
-from analytickit.api.web23.views import Web23FunnelViewSet
 
 
 from . import (
@@ -67,9 +66,6 @@ project_dashboards_router = projects_router.register(
     r"dashboards", dashboard.DashboardsViewSet, "project_dashboards", ["team_id"]
 )
 
-# Register Web23 endpoints
-projects_router.register(r"web23", Web23FunnelViewSet, "project_web23", ["team_id"])
-router.register(r'web23-funnel', Web23FunnelViewSet, basename='web23-funnel')
 
 projects_router.register(r"exports", exports.ExportedAssetViewSet, "exports", ["team_id"])
 projects_router.register(r"integrations", integration.IntegrationViewSet, "integrations", ["team_id"])
@@ -174,5 +170,11 @@ router.register(r'web3-dashboard', CryptoDashboardsViewSet, basename='web3-dashb
 
 from analytickit.api.crypto.crypto_dash import CryptoDashboardsViewSet
 router.register(r'web3-dashboard-detail', CryptoDashboardsViewSet, basename='web3-dashboard-detail')
+
+
+# Register Web23 endpoints
+from analytickit.api.web23.views import Web23FunnelViewSet
+#projects_router.register(r"web23", Web23FunnelViewSet, "project_web23", ["team_id"])
+router.register(r'web23', Web23FunnelViewSet, basename='web23')
 
 

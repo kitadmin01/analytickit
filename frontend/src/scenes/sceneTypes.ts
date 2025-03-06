@@ -70,6 +70,7 @@ export enum Scene {
     Web3Dashboard = 'Web3Dashboard',
     Graph = 'Graph', // Single scene for all graph types
     ActiveUsers = 'ActiveUsers',
+    Web23Dashboard = 'Web23Dashboard',
 }
 
 export type SceneProps = Record<string, any>

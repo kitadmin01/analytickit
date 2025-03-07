@@ -65,15 +65,21 @@ export interface Web23FunnelData {
 export const web23Logic = kea<web23LogicType>({
     path: ['scenes', 'web23', 'web23Logic'],
     props: {} as InsightLogicProps,
-    key: (props) => props.dashboardItemId || 'web23_dashboard',
+    key: (props) => {
+        if (props.dashboardItemId === null || props.dashboardItemId === undefined) {
+            return 'web23_dashboard'
+        }
+        return String(props.dashboardItemId)
+    },
 
     connect: {
-        values: [insightLogic, ['insight', 'insightLoading'], teamLogic, ['currentTeamId']],
+        values: [teamLogic, ['currentTeamId']],
     },
 
     actions: {
         setDateRange: (fromDate: string, toDate: string) => ({ fromDate, toDate }),
         setWalletAddress: (walletAddress: string | null) => ({ walletAddress }),
+        setFunnelDataError: (error: string | null) => ({ error }),
     },
 
     reducers: {
@@ -95,6 +101,13 @@ export const web23Logic = kea<web23LogicType>({
                 setWalletAddress: (_, { walletAddress }) => walletAddress,
             },
         ],
+        funnelDataError: [
+            null as string | null,
+            {
+                setFunnelDataError: (_, { error }) => error,
+                loadFunnelDataSuccess: () => null,
+            },
+        ],
     },
 
     selectors: {
@@ -107,20 +120,39 @@ export const web23Logic = kea<web23LogicType>({
         ],
     },
 
-    loaders: ({ values }) => ({
+    loaders: ({ values, actions }) => ({
         funnelData: [
             null as Web23FunnelData | null,
             {
                 loadFunnelData: async () => {
                     try {
+                        // Get the team ID from the URL if available
+                        const urlParams = new URLSearchParams(window.location.pathname);
+                        const pathParts = window.location.pathname.split('/');
+                        const teamIdFromUrl = pathParts[pathParts.length - 1];
+                        
+                        // Use the team ID from the URL or fall back to the current team ID
+                        const teamId = teamIdFromUrl && !isNaN(Number(teamIdFromUrl)) 
+                            ? teamIdFromUrl 
+                            : values.currentTeamId;
+                            
                         const response = await api.get(
-                            `api/web23/${values.currentTeamId}/?from_date=${
+                            `api/web23/${teamId}/?from_date=${
                                 values.fromDate
                             }&days=${values.days}`
                         )
+                        
+                        actions.setFunnelDataError(null)
                         return response
-                    } catch (error) {
-                        lemonToast.error('Failed to load Web2 to Web3 funnel data')
+                    } catch (error: any) {
+                        // Handle API errors
+                        if (error.response && error.response.status === 403) {
+                            actions.setFunnelDataError("No funnel data available for this team.")
+                        } else if (error.response && error.response.data && error.response.data.error) {
+                            actions.setFunnelDataError(error.response.data.error)
+                        } else {
+                            actions.setFunnelDataError(error.message || 'Failed to load data')
+                        }
                         return null
                     }
                 },

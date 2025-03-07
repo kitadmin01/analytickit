@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { PageHeader } from 'lib/components/PageHeader'
 import { useValues, useActions } from 'kea'
 import { web23Logic } from './web23Logic'
@@ -6,14 +6,33 @@ import { Spinner } from 'lib/components/Spinner/Spinner'
 import { LemonButton } from 'lib/components/LemonButton'
 import { Card } from 'antd'
 import { Table } from 'antd'
-import { DateFilter } from 'lib/components/DateFilter/DateFilter'
+import { DatePicker } from 'antd'
 import { teamLogic } from 'scenes/teamLogic'
+import { Alert } from 'antd'
+import { urls } from 'scenes/urls'
+import { dayjs } from 'lib/dayjs'
 
 export function Web23Dashboard(): JSX.Element {
-    const { currentTeamId } = useValues(teamLogic)
-    const logic = web23Logic({ dashboardItemId: currentTeamId?.toString() || 'web23_dashboard' })
-    const { funnelData, funnelDataLoading, fromDate, toDate } = useValues(logic)
-    const { loadFunnelData, setDateRange } = useActions(logic)
+    // Get the team ID from the URL
+    const teamId = window.location.pathname.split('/').pop();
+    
+    // Use the team ID from the URL or fall back to the current team ID
+    const { currentTeamId } = useValues(teamLogic);
+    const effectiveTeamId = teamId || currentTeamId?.toString();
+    
+    const logic = web23Logic({ dashboardItemId: null });
+    const { funnelData, funnelDataLoading, fromDate, toDate, funnelDataError } = useValues(logic);
+    const { loadFunnelData, setDateRange } = useActions(logic);
+    
+    // Only check for actual errors
+    const hasError = !!funnelDataError;
+    
+    const { RangePicker } = DatePicker;
+
+    // Add this effect to reload data when date range changes
+    useEffect(() => {
+        loadFunnelData();
+    }, [fromDate, toDate]);
 
     return (
         <div>
@@ -21,11 +40,17 @@ export function Web23Dashboard(): JSX.Element {
                 title="Web2 to Web3 Analytics"
                 caption="Analyze your Web2 to Web3 conversion funnel"
                 buttons={
-                    <DateFilter
-                        dateFrom={fromDate}
-                        dateTo={toDate}
-                        onChange={(fromDate, toDate) => setDateRange(fromDate, toDate)}
-                        defaultValue="Last 30 days"
+                    <RangePicker
+                        value={[dayjs(fromDate), dayjs(toDate)]}
+                        onChange={(dates) => {
+                            if (dates && dates[0] && dates[1]) {
+                                setDateRange(
+                                    dates[0].format('YYYY-MM-DD'),
+                                    dates[1].format('YYYY-MM-DD')
+                                );
+                            }
+                        }}
+                        allowClear={false}
                     />
                 }
             />
@@ -34,7 +59,24 @@ export function Web23Dashboard(): JSX.Element {
                 <div className="flex justify-center items-center h-40">
                     <Spinner size="lg" />
                 </div>
-            ) : funnelData ? (
+            ) : hasError ? (
+                <Alert
+                    type="error"
+                    message={funnelDataError || "No Web2 to Web3 data found"}
+                    description={
+                        <div>
+                            <p>We couldn't find any Web2 to Web3 data for this team.</p>
+                            <LemonButton
+                                type="primary"
+                                to={urls.web23Dashboard(effectiveTeamId || '1')}
+                                style={{ marginTop: 16 }}
+                            >
+                                Go to dashboard
+                            </LemonButton>
+                        </div>
+                    }
+                />
+            ) : funnelData && funnelData.summary ? (
                 <div className="space-y-4">
                     <Card title="Summary">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

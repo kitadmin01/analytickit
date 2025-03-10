@@ -232,6 +232,14 @@ function Pages(): JSX.Element {
                     title="Wallet Analytic"
                 />
             )}
+            {teamId !== undefined && (
+                <PageButton
+                    icon={<IconBarChart />}
+                    identifier={Scene.Web23Dashboard}
+                    to={urls.web23Dashboard(String(teamId))}
+                    title="Web2 to Web3 Analytics"
+                />
+            )}
         </ul>
     )
 }

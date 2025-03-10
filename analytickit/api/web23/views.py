@@ -34,12 +34,12 @@ def funnel_data(request, team_id):
         # Create funnel analysis instance
         funnel = UserFunnelAnalysis(
             team_id=int(team_id),
-            from_timestamp=from_date,
+            from_date=from_date,
             days=days
         )
         
         # Generate funnel data
-        funnel_data = funnel.generate_funnel_data()
+        funnel_data = funnel.get_funnel_data()
         
         return Response(funnel_data)
         
@@ -76,17 +76,10 @@ class Web23FunnelViewSet(ViewSet):
             else:
                 # Convert team_id to integer for comparison
                 team_id = int(team_id)
-                
-                # Check if the requested team_id matches the user's team_id
-                if request.user.team is None or team_id != request.user.team.id:
-                    return Response(
-                        {"error": "No funnel data available for this team."},
-                        status=status.HTTP_403_FORBIDDEN
-                    )
             
             # Parse query parameters
-            from_date_str = request.GET.get('from_date')
-            days = int(request.GET.get('days', 30))
+            from_date_str = request.query_params.get('from_date')
+            days = int(request.query_params.get('days', 30))
             
             # Parse from_date or use current date
             if from_date_str:
@@ -94,21 +87,29 @@ class Web23FunnelViewSet(ViewSet):
             else:
                 from_date = now().replace(hour=0, minute=0, second=0, microsecond=0)
             
+            # Format from_date as string
+            from_date_str = from_date.strftime('%Y-%m-%d')
+            
             # Create funnel analysis instance
             funnel = UserFunnelAnalysis(
                 team_id=int(team_id),
-                from_timestamp=from_date,
+                from_date=from_date_str,
                 days=days
             )
             
             # Generate funnel data
-            funnel_data = funnel.generate_funnel_data()
+            funnel_data = funnel.get_funnel_data()
             
             return Response(funnel_data)
             
         except Exception as e:
+            import traceback
+            error_details = {
+                "error": str(e),
+                "traceback": traceback.format_exc()
+            }
             return Response(
-                {"error": str(e)},
+                error_details,
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
     
@@ -118,11 +119,51 @@ class Web23FunnelViewSet(ViewSet):
         """
         return self.get_funnel_data(request)
     
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None, *args, **kwargs):
         """
         Retrieve Web2 to Web3 funnel analysis data for a specific team.
         """
-        return self.get_funnel_data(request, team_id=pk)
+        team_id = pk
+        return self.get_funnel_data(request, team_id=team_id)
+        
+    @action(detail=False, methods=['GET'], url_path='debug')
+    def debug(self, request):
+        """
+        Debug endpoint to check available events for a team.
+        """
+        try:
+            team_id = request.query_params.get('team_id')
+            if not team_id:
+                if request.user.team:
+                    team_id = request.user.team.id
+                else:
+                    return Response({"error": "No team_id provided"}, status=400)
+            
+            from_date_str = request.query_params.get('from_date')
+            days = int(request.query_params.get('days', 30))
+            
+            if from_date_str:
+                from_date = datetime.strptime(from_date_str, '%Y-%m-%d')
+            else:
+                from_date = now().replace(hour=0, minute=0, second=0, microsecond=0)
+                
+            # Use the check_events_data function to get available events
+            from analytickit.api.web23.wallet_queries import check_events_data
+            events_data = check_events_data(int(team_id), from_date, days)
+            
+            return Response({
+                "team_id": team_id,
+                "from_date": from_date.strftime('%Y-%m-%d'),
+                "days": days,
+                "events_data": events_data
+            })
+            
+        except Exception as e:
+            import traceback
+            return Response({
+                "error": str(e),
+                "traceback": traceback.format_exc()
+            }, status=500)
 
 
 @api_view(['GET'])

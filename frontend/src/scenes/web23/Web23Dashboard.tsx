@@ -4,13 +4,14 @@ import { useValues, useActions } from 'kea'
 import { web23Logic } from './web23Logic'
 import { Spinner } from 'lib/components/Spinner/Spinner'
 import { LemonButton } from 'lib/components/LemonButton'
-import { Card } from 'antd'
-import { Table } from 'antd'
+import { Card, Col, Row, Statistic, Table, Tabs, Progress, Divider } from 'antd'
 import { DatePicker } from 'antd'
 import { teamLogic } from 'scenes/teamLogic'
 import { Alert } from 'antd'
 import { urls } from 'scenes/urls'
-import { dayjs } from 'lib/dayjs'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { PieChart } from 'lib/components/Charts'
+import moment from 'moment'
 
 export function Web23Dashboard(): JSX.Element {
     // Get the team ID from the URL
@@ -41,7 +42,7 @@ export function Web23Dashboard(): JSX.Element {
                 caption="Analyze your Web2 to Web3 conversion funnel"
                 buttons={
                     <RangePicker
-                        value={[dayjs(fromDate), dayjs(toDate)]}
+                        value={[moment(fromDate), moment(toDate)]}
                         onChange={(dates) => {
                             if (dates && dates[0] && dates[1]) {
                                 setDateRange(
@@ -69,7 +70,7 @@ export function Web23Dashboard(): JSX.Element {
                             <LemonButton
                                 type="primary"
                                 to={urls.web23Dashboard(effectiveTeamId || '1')}
-                                style={{ marginTop: 16 }}
+                                className="mt-4"
                             >
                                 Go to dashboard
                             </LemonButton>
@@ -78,32 +79,155 @@ export function Web23Dashboard(): JSX.Element {
                 />
             ) : funnelData && funnelData.summary ? (
                 <div className="space-y-4">
-                    <Card title="Summary">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <h5>Total Visits</h5>
-                                <div className="text-2xl font-bold">{funnelData.summary.total_visits}</div>
-                            </div>
-                            <div>
-                                <h5>Total Engagement</h5>
-                                <div className="text-2xl font-bold">{funnelData.summary.total_engagement}</div>
-                            </div>
-                            <div>
-                                <h5>Total Conversions</h5>
-                                <div className="text-2xl font-bold">{funnelData.summary.total_conversions}</div>
-                            </div>
-                            <div>
-                                <h5>Conversion Rate</h5>
-                                <div className="text-2xl font-bold">
-                                    {(funnelData.summary.overall_conversion_rate * 100).toFixed(2)}%
-                                </div>
-                            </div>
-                        </div>
+                    {/* Summary Cards */}
+                    <Row gutter={16}>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic 
+                                    title="Total Visits" 
+                                    value={funnelData.summary.total_visits} 
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic 
+                                    title="Total Engagement" 
+                                    value={funnelData.summary.total_engagement} 
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic 
+                                    title="Total Conversions" 
+                                    value={funnelData.summary.total_conversions} 
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic 
+                                    title="Conversion Rate" 
+                                    value={(funnelData.summary.overall_conversion_rate * 100).toFixed(2)} 
+                                    suffix="%" 
+                                />
+                            </Card>
+                        </Col>
+                    </Row>
+
+                    {/* Funnel Stages */}
+                    <Card title="Funnel Stages">
+                        <Row gutter={16}>
+                            <Col span={8}>
+                                <Statistic 
+                                    title="Awareness" 
+                                    value={funnelData.summary.total_visits} 
+                                />
+                                <Progress 
+                                    percent={100} 
+                                    showInfo={false} 
+                                />
+                            </Col>
+                            <Col span={8}>
+                                <Statistic 
+                                    title="Engagement" 
+                                    value={funnelData.summary.total_engagement} 
+                                />
+                                <Progress 
+                                    percent={(funnelData.summary.awareness_to_engagement_rate * 100)} 
+                                    showInfo={false} 
+                                />
+                                <small>{(funnelData.summary.awareness_to_engagement_rate * 100).toFixed(2)}% of visits</small>
+                            </Col>
+                            <Col span={8}>
+                                <Statistic 
+                                    title="Conversion" 
+                                    value={funnelData.summary.total_conversions} 
+                                />
+                                <Progress 
+                                    percent={(funnelData.summary.engagement_to_conversion_rate * 100)} 
+                                    showInfo={false} 
+                                />
+                                <small>{(funnelData.summary.engagement_to_conversion_rate * 100).toFixed(2)}% of engagement</small>
+                            </Col>
+                        </Row>
                     </Card>
 
+                    {/* Transaction Value Metrics */}
+                    <Card title="Transaction Metrics">
+                        <Row gutter={16}>
+                            <Col span={6}>
+                                <Statistic 
+                                    title="Total Value" 
+                                    value={funnelData.summary.total_transaction_value.toFixed(2)} 
+                                    prefix="$" 
+                                />
+                            </Col>
+                            <Col span={6}>
+                                <Statistic 
+                                    title="Average Value" 
+                                    value={funnelData.summary.avg_transaction_value.toFixed(2)} 
+                                    prefix="$" 
+                                />
+                            </Col>
+                            <Col span={6}>
+                                <Statistic 
+                                    title="Median Value" 
+                                    value={funnelData.summary.median_transaction_value.toFixed(2)} 
+                                    prefix="$" 
+                                />
+                            </Col>
+                            <Col span={6}>
+                                <Statistic 
+                                    title="Standard Deviation" 
+                                    value={funnelData.summary.std_dev_transaction_value.toFixed(2)} 
+                                    prefix="$" 
+                                />
+                            </Col>
+                        </Row>
+                    </Card>
+
+                    {/* Time to Conversion */}
+                    <Card title="Time to Conversion">
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Statistic 
+                                    title="Average Time" 
+                                    value={funnelData.time_to_conversion.avg_minutes.toFixed(0)} 
+                                    suffix="minutes" 
+                                />
+                            </Col>
+                            <Col span={12}>
+                                <Statistic 
+                                    title="Median Time" 
+                                    value={funnelData.time_to_conversion.median_minutes.toFixed(0)} 
+                                    suffix="minutes" 
+                                />
+                            </Col>
+                        </Row>
+                        <Divider />
+                        <h4>Distribution</h4>
+                        <PieChart
+                            data={Object.entries(funnelData.time_to_conversion.distribution).map(([key, value]) => ({
+                                name: key,
+                                value: value
+                            }))}
+                        />
+                    </Card>
+
+                    {/* Weekly Metrics */}
                     <Card title="Weekly Metrics">
                         <Table
-                            dataSource={funnelData.weekly_metrics}
+                            dataSource={funnelData.weekly_metrics.map(week => ({
+                                ...week,
+                                key: week.week,
+                                visits_wow_formatted: week.visits_wow ? `${(week.visits_wow * 100).toFixed(2)}%` : '-',
+                                engagement_wow_formatted: week.engagement_wow ? `${(week.engagement_wow * 100).toFixed(2)}%` : '-',
+                                transactions_wow_formatted: week.transactions_wow ? `${(week.transactions_wow * 100).toFixed(2)}%` : '-',
+                                conversion_rate_formatted: `${(week.conversion_rate * 100).toFixed(2)}%`,
+                                conversion_rate_wow_formatted: week.conversion_rate_wow ? `${(week.conversion_rate_wow * 100).toFixed(2)}%` : '-',
+                            }))}
                             columns={[
                                 {
                                     title: 'Week',
@@ -115,69 +239,111 @@ export function Web23Dashboard(): JSX.Element {
                                     dataIndex: 'visits',
                                 },
                                 {
+                                    title: 'WoW',
+                                    dataIndex: 'visits_wow_formatted',
+                                },
+                                {
                                     title: 'Engagement',
                                     dataIndex: 'engagement',
+                                },
+                                {
+                                    title: 'WoW',
+                                    dataIndex: 'engagement_wow_formatted',
                                 },
                                 {
                                     title: 'Transactions',
                                     dataIndex: 'transactions',
                                 },
                                 {
+                                    title: 'WoW',
+                                    dataIndex: 'transactions_wow_formatted',
+                                },
+                                {
                                     title: 'Conversion Rate',
-                                    dataIndex: 'conversion_rate',
-                                    render: (value) => `${(value * 100).toFixed(2)}%`,
+                                    dataIndex: 'conversion_rate_formatted',
+                                },
+                                {
+                                    title: 'WoW',
+                                    dataIndex: 'conversion_rate_wow_formatted',
                                 },
                             ]}
                         />
                     </Card>
 
-                    <Card title="Device Analytics">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <h5>Devices</h5>
-                                <Table
-                                    dataSource={Object.entries(funnelData.device_analytics.devices).map(
-                                        ([device, count], index) => ({
-                                            key: index,
-                                            device,
-                                            count,
-                                        })
-                                    )}
-                                    columns={[
-                                        {
-                                            title: 'Device',
-                                            dataIndex: 'device',
-                                        },
-                                        {
-                                            title: 'Count',
-                                            dataIndex: 'count',
-                                        },
-                                    ]}
-                                />
-                            </div>
-                            <div>
-                                <h5>Browsers</h5>
-                                <Table
-                                    dataSource={Object.entries(funnelData.device_analytics.browsers).map(
-                                        ([browser, count], index) => ({
-                                            key: index,
-                                            browser,
-                                            count,
-                                        })
-                                    )}
-                                    columns={[
-                                        {
-                                            title: 'Browser',
-                                            dataIndex: 'browser',
-                                        },
-                                        {
-                                            title: 'Count',
-                                            dataIndex: 'count',
-                                        },
-                                    ]}
-                                />
-                            </div>
-                        </div>
+                    {/* Device Analytics */}
+                    <Tabs defaultActiveKey="1">
+                        <Tabs.TabPane tab="Devices" key="1">
+                            <PieChart
+                                data={Object.entries(funnelData.device_analytics.devices).map(([key, value]) => ({
+                                    name: key,
+                                    value: value
+                                }))}
+                            />
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Browsers" key="2">
+                            <PieChart
+                                data={Object.entries(funnelData.device_analytics.browsers).map(([key, value]) => ({
+                                    name: key,
+                                    value: value
+                                }))}
+                            />
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Operating Systems" key="3">
+                            <PieChart
+                                data={Object.entries(funnelData.device_analytics.operating_systems).map(([key, value]) => ({
+                                    name: key,
+                                    value: value
+                                }))}
+                            />
+                        </Tabs.TabPane>
+                    </Tabs>
+
+                    {/* Campaign Performance */}
+                    <Card title="Campaign Performance">
+                        <Table
+                            dataSource={Object.entries(funnelData.campaign_performance).map(([campaign, data]) => ({
+                                key: campaign,
+                                campaign: campaign,
+                                visits: data.visits,
+                                sources: Object.entries(data.sources)
+                                    .sort((a, b) => b[1] - a[1])
+                                    .slice(0, 3)
+                                    .map(([source, count]) => `${source} (${count})`)
+                                    .join(', '),
+                                medium: Object.entries(data.medium)
+                                    .sort((a, b) => b[1] - a[1])
+                                    .slice(0, 3)
+                                    .map(([medium, count]) => `${medium} (${count})`)
+                                    .join(', '),
+                                geo: Object.entries(data.geo)
+                                    .sort((a, b) => b[1] - a[1])
+                                    .slice(0, 3)
+                                    .map(([geo, count]) => `${geo} (${count})`)
+                                    .join(', ')
+                            }))}
+                            columns={[
+                                {
+                                    title: 'Campaign',
+                                    dataIndex: 'campaign',
+                                },
+                                {
+                                    title: 'Visits',
+                                    dataIndex: 'visits',
+                                },
+                                {
+                                    title: 'Top Sources',
+                                    dataIndex: 'sources',
+                                },
+                                {
+                                    title: 'Top Medium',
+                                    dataIndex: 'medium',
+                                },
+                                {
+                                    title: 'Top Locations',
+                                    dataIndex: 'geo',
+                                },
+                            ]}
+                        />
                     </Card>
                 </div>
             ) : (

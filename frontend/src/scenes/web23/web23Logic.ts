@@ -21,6 +21,12 @@ export interface Web23FunnelData {
         total_conversions: number
         unique_wallets: number
         overall_conversion_rate: number
+        awareness_to_engagement_rate: number
+        engagement_to_conversion_rate: number
+        avg_transaction_value: number
+        median_transaction_value: number
+        total_transaction_value: number
+        std_dev_transaction_value: number
     }
     daily_metrics: Array<{
         date: string
@@ -39,6 +45,7 @@ export interface Web23FunnelData {
         engagement_wow?: number
         transactions_wow?: number
         conversion_rate_wow?: number
+        significant_change?: boolean
     }>
     campaign_performance: Record<
         string,
@@ -46,19 +53,31 @@ export interface Web23FunnelData {
             visits: number
             sources: Record<string, number>
             medium: Record<string, number>
+            geo: Record<string, number>
         }
     >
     device_analytics: {
         devices: Record<string, number>
         browsers: Record<string, number>
+        operating_systems: Record<string, number>
+        screen_sizes: Record<string, number>
+        device_conversion_rates: Record<string, number>
     }
     conversion_metrics: {
         referrer_distribution: Record<string, number>
         transaction_stats: {
             initiated: number
             successful: number
+            failed: number
             avg_value: number
+            median_value: number
+            total_value: number
         }
+    }
+    time_to_conversion: {
+        avg_minutes: number
+        median_minutes: number
+        distribution: Record<string, number>
     }
 }
 

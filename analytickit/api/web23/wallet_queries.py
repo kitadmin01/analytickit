@@ -1,10 +1,14 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union, Tuple
 from datetime import datetime, timedelta
 from collections import defaultdict
 from django.db.models.functions import Lower
 from analytickit.models.crypto.wallet_address import VisitorWalletAddress
 from analytickit.client import sync_execute
 import json
+import logging
+from statistics import median, stdev
+
+logger = logging.getLogger(__name__)
 
 def get_team_wallet_addresses(team_id: int, from_timestamp: datetime, wallet_address: str = None) -> List[Dict[str, Any]]:
     """
@@ -250,399 +254,750 @@ class UserFunnelAnalysis:
     3. Conversion (Web3 Transaction)
     """
     
-    def __init__(self, team_id: int, from_timestamp: datetime, days: int = 30):
+    def __init__(self, team_id: int, from_date: str, days: int):
+        """
+        Initialize the funnel analysis with team ID, start date, and number of days.
+        
+        Args:
+            team_id: The team ID to analyze
+            from_date: Start date in YYYY-MM-DD format or a datetime object
+            days: Number of days to analyze from the start date
+        """
         self.team_id = team_id
-        self.from_timestamp = from_timestamp
+        
+        # Handle from_date as either string or datetime
+        if isinstance(from_date, str):
+            self.from_date = from_date
+            try:
+                # Validate the date format
+                datetime.strptime(from_date, "%Y-%m-%d")
+            except ValueError as e:
+                print(f"Warning: Invalid date format for from_date '{from_date}': {str(e)}")
+                # Use current date as fallback
+                self.from_date = datetime.now().strftime("%Y-%m-%d")
+                print(f"Using current date instead: {self.from_date}")
+        else:
+            # Convert datetime object to string
+            self.from_date = from_date.strftime("%Y-%m-%d")
+            
         self.days = days
-
-    def get_funnel_stages(self) -> Dict[str, Any]:
+        
+        # Calculate to_date for display purposes
+        from_date_obj = datetime.strptime(self.from_date, "%Y-%m-%d")
+        to_date_obj = from_date_obj + timedelta(days=days)
+        self.to_date = to_date_obj.strftime("%Y-%m-%d")
+        
+        print(f"Initialized UserFunnelAnalysis for team {team_id} from {self.from_date} to {self.to_date}")
+        
+    def get_funnel_data(self) -> Dict[str, Any]:
         """
-        Get data for all funnel stages using existing functions
+        Main method to retrieve and process funnel data
         """
-        # Get all web2 events (both awareness and engagement)
-        web2_events = self._get_web2_events()
+        try:
+            # Fetch raw event data
+            events = self._fetch_events()
+            
+            if not events:
+                return {"error": "No funnel data available for this team."}
+            
+            # Process events into funnel stages
+            visits, engagement_events, conversion_events = self._process_events(events)
+            
+            # Calculate summary metrics
+            summary = self._calculate_summary(visits, engagement_events, conversion_events)
+            
+            # Calculate daily metrics
+            daily_metrics = self._calculate_daily_metrics(visits, engagement_events, conversion_events)
+            
+            # Calculate weekly metrics with WoW comparison
+            weekly_metrics = self._calculate_weekly_metrics(daily_metrics)
+            
+            # Analyze campaign performance
+            campaign_performance = self._analyze_campaign_performance(visits)
+            
+            # Analyze device and browser usage
+            device_analytics = self._analyze_device_analytics(visits)
+            
+            # Analyze conversion metrics
+            conversion_metrics = self._analyze_conversion_metrics(conversion_events, visits)
+            
+            # Calculate time-to-conversion metrics
+            time_to_conversion = self._calculate_time_to_conversion(visits, conversion_events)
+            
+            return {
+                "metadata": {
+                    "team_id": self.team_id,
+                    "from_date": self.from_date,
+                    "to_date": self.to_date,
+                    "days": self.days,
+                    "weeks": len(weekly_metrics)
+                },
+                "summary": summary,
+                "daily_metrics": daily_metrics,
+                "weekly_metrics": weekly_metrics,
+                "campaign_performance": campaign_performance,
+                "device_analytics": device_analytics,
+                "conversion_metrics": conversion_metrics,
+                "time_to_conversion": time_to_conversion
+            }
+        except Exception as e:
+            logger.error(f"Error in get_funnel_data: {str(e)}")
+            return {"error": f"Failed to analyze funnel data: {str(e)}"}
+    
+    def _fetch_events(self) -> List[Dict[str, Any]]:
+        """
+        Fetch events from ClickHouse for the specified team and date range.
+        """
+        from analytickit.client import sync_execute
+        from datetime import datetime, timedelta
         
-        # Get web3 conversion events
-        web3_data = self._get_web3_transactions(web2_events['unique_wallets'])
+        logger = logging.getLogger(__name__)
         
-        # Process events into funnel stages
-        awareness_metrics = self._process_awareness_events(web2_events['events'])
-        engagement_metrics = self._process_engagement_events(web2_events['events'])
-        conversion_metrics = self._process_conversion_events(web3_data)
+        # Parse from_date string to datetime
+        try:
+            if isinstance(self.from_date, str):
+                from_date = datetime.strptime(self.from_date, "%Y-%m-%d")
+                logger.info(f"Parsed from_date string '{self.from_date}' to {from_date}")
+            else:
+                from_date = self.from_date
+                logger.info(f"Using from_date object directly: {from_date}")
+        except ValueError as e:
+            logger.error(f"Error parsing from_date '{self.from_date}': {str(e)}")
+            # Default to current date if parsing fails
+            from_date = datetime.now()
+            logger.info(f"Using default date: {from_date}")
+            
+        # Calculate to_date
+        to_date = from_date + timedelta(days=self.days)
         
-        return {
-            "awareness": awareness_metrics,
-            "engagement": engagement_metrics,
-            "conversion": conversion_metrics,
-            "unique_wallets": web2_events['unique_wallets']
+        # Debug information
+        logger.info(f"Fetching events for team {self.team_id} from {from_date} to {to_date}")
+        print(f"Fetching events for team {self.team_id} from {from_date} to {to_date}")
+        
+        # Query to get all events for the team in the date range
+        query = """
+        SELECT
+            event,
+            properties,
+            person_properties,
+            distinct_id,
+            timestamp
+        FROM events
+        WHERE team_id = %(team_id)s
+          AND timestamp >= %(from_date)s
+          AND timestamp <= %(to_date)s
+        ORDER BY timestamp
+        """
+        
+        params = {
+            "team_id": self.team_id,
+            "from_date": from_date,
+            "to_date": to_date
         }
-
-    def _get_web2_events(self) -> Dict[str, Any]:
+        
+        logger.info(f"Query params: {params}")
+        
+        try:
+            results = sync_execute(query, params)
+            
+            # Debug information
+            event_count = len(results)
+            logger.info(f"Found {event_count} events")
+            print(f"Found {event_count} events")
+            
+            if event_count > 0:
+                # Log the first few events for debugging
+                for i, row in enumerate(results[:3]):
+                    event_name = row[0]
+                    logger.info(f"Event {i+1}: {event_name} at {row[4]}")
+                    print(f"Event {i+1}: {event_name} at {row[4]}")
+            else:
+                logger.warning("No events found for the specified criteria")
+                print("No events found for the specified criteria")
+            
+            # Convert to list of dictionaries
+            events = []
+            for row in results:
+                event_name, properties_json, person_properties_json, distinct_id, timestamp = row
+                
+                # Parse JSON properties
+                properties = self._parse_json_safely(properties_json)
+                person_properties = self._parse_json_safely(person_properties_json)
+                
+                events.append({
+                    "event": event_name,
+                    "properties": properties,
+                    "person_properties": person_properties,
+                    "distinct_id": distinct_id,
+                    "timestamp": timestamp.isoformat() if timestamp else None
+                })
+            
+            return events
+            
+        except Exception as e:
+            logger.error(f"Error fetching events: {str(e)}")
+            print(f"Error fetching events: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            print(traceback.format_exc())
+            return []
+    
+    def _process_events(self, events: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
-        Get all web2 events using existing functions
+        Process events into three categories: visits, engagement, and conversion.
         """
-        # Get wallet login events
-        login_events = get_wallet_login_events(
-            team_id=self.team_id,
-            event_name='WalletLogin',
-            days=self.days,
-            from_date=self.from_timestamp
-        )
-
-        # Get pageview events
-        pageview_events = get_wallet_login_events( 
-            team_id=self.team_id,
-            event_name='Pageview',
-            days=self.days,
-            from_date=self.from_timestamp
-        )
-
-        # Combine all events
-        all_events = login_events + pageview_events
-
-        # Get unique wallets
+        visits = []
+        engagement_events = []
+        conversion_events = []
+        
+        for event in events:
+            event_name = event.get('event', '')
+            properties = event.get('properties', {})
+            
+            # Process pageview events as visits
+            if event_name.lower() in ['$pageview', 'pageview']:
+                visits.append(event)
+                continue
+                
+            # Check for engagement events
+            if self._is_engagement_event(event_name, properties):
+                engagement_events.append(event)
+                continue
+                
+            # Check for conversion events
+            if self._is_conversion_event(event_name, properties):
+                # Process transaction data if available
+                if 'txn_data' in properties:
+                    txn_data = self._parse_json_safely(properties['txn_data'])
+                    token_transfer_data = self._parse_json_safely(properties.get('token_transfer_data', '{}'))
+                    event['merged_txn_data'] = self._merge_transaction_data(txn_data, token_transfer_data)
+                
+                conversion_events.append(event)
+                continue
+                
+            # If not categorized yet, check if it's a visit
+            if not visits and ('$current_url' in properties or 'url' in properties):
+                visits.append(event)
+        
+        return visits, engagement_events, conversion_events
+    
+    def _extract_wallet_address(self, properties: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract wallet address from event properties
+        Check multiple possible property names
+        """
+        for key in ["wallet_address", "walletAddress", "$wallet_address", "wallet"]:
+            if key in properties and properties[key]:
+                return properties[key].lower()  # Normalize to lowercase
+        return None
+    
+    def _is_engagement_event(self, event_name: str, properties: Dict[str, Any]) -> bool:
+        """Determine if an event is an engagement event."""
+        # Consider WalletLogin as an engagement event
+        if event_name.lower() == 'walletlogin':
+            return True
+        
+        # Check for wallet-related properties in any event
+        wallet_address = self._extract_wallet_address(properties)
+        if wallet_address:
+            return True
+            
+        # Add other engagement event criteria here
+        engagement_events = ['login', 'signup', 'connect_wallet', 'wallet_connected']
+        return event_name.lower() in [e.lower() for e in engagement_events]
+    
+    def _is_conversion_event(self, event_name: str, properties: Dict[str, Any]) -> bool:
+        """Determine if an event is a conversion event."""
+        # Transaction events are conversion events
+        if 'transaction' in event_name.lower():
+            return True
+            
+        # Check for transaction data in properties
+        if 'txn_data' in properties or 'transaction' in properties:
+            return True
+            
+        # Add other conversion event criteria here
+        conversion_events = ['purchase', 'swap', 'transfer', 'mint', 'stake']
+        return event_name.lower() in [e.lower() for e in conversion_events]
+    
+    def _parse_json_safely(self, data: Any) -> Any:
+        """
+        Safely parse JSON data if it's a string
+        """
+        if isinstance(data, str):
+            try:
+                return json.loads(data)
+            except json.JSONDecodeError:
+                logger.warning(f"Failed to parse JSON: {data[:100]}...")
+                return data
+        return data
+    
+    def _merge_transaction_data(self, txn_data: Any, token_transfer_data: Any) -> Dict[str, Any]:
+        """
+        Merge transaction data with token transfer data
+        """
+        result = {}
+        
+        # Add transaction data
+        if isinstance(txn_data, dict):
+            result.update(txn_data)
+        elif isinstance(txn_data, list) and txn_data:
+            result.update(txn_data[0] if isinstance(txn_data[0], dict) else {})
+        
+        # Add token transfer data
+        if isinstance(token_transfer_data, dict):
+            result["token_transfers"] = [token_transfer_data]
+        elif isinstance(token_transfer_data, list):
+            result["token_transfers"] = token_transfer_data
+        
+        return result
+    
+    def _calculate_time_difference(self, start_time: str, end_time: str) -> Optional[int]:
+        """
+        Calculate time difference in minutes between two timestamps
+        """
+        try:
+            start = datetime.fromisoformat(start_time.replace('Z', '+00:00'))
+            end = datetime.fromisoformat(end_time.replace('Z', '+00:00'))
+            return int((end - start).total_seconds() / 60)
+        except (ValueError, TypeError):
+            return None
+    
+    def _calculate_summary(self, visits: List[Dict[str, Any]], engagement_events: List[Dict[str, Any]], 
+                          conversion_events: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Calculate summary metrics for the funnel
+        """
+        total_visits = len(visits)
+        total_engagement = len(engagement_events)
+        total_conversions = len(conversion_events)
+        
+        # Extract unique wallets
         unique_wallets = set()
-        for event in login_events:
-            properties = event['properties']
-            if isinstance(properties, str):
-                try:
-                    properties = json.loads(properties)
-                    wallet = properties.get('$crypto_wallet_public_address')
-                    if wallet:
-                        unique_wallets.add(wallet.lower())
-                except json.JSONDecodeError:
-                    continue
-
-        return {
-            "events": all_events,
-            "unique_wallets": list(unique_wallets)
-        }
-
-    def _process_awareness_events(self, events: List[Dict]) -> Dict[str, Any]:
-        """
-        Process awareness stage metrics (page visits, referrers)
-        """
-        daily_visits = defaultdict(int)
-        referrer_counts = defaultdict(int)
-        device_types = defaultdict(int)
+        for event in visits + engagement_events + conversion_events:
+            wallet = self._extract_wallet_address(event.get("properties", {}))
+            if wallet:
+                unique_wallets.add(wallet)
         
-        for event in events:
-            properties = event['properties']
-            if isinstance(properties, str):
-                try:
-                    properties = json.loads(properties)
-                except json.JSONDecodeError:
-                    continue
-                    
-            date_key = event['timestamp'].strftime('%Y-%m-%d')
-            
-            # Count page visits
-            if event.get('event') == 'Pageview':
-                daily_visits[date_key] += 1
-                
-                # Track referrers
-                referrer = properties.get('$referrer', 'direct')
-                referrer_counts[referrer] += 1
-                
-                # Track device types
-                device_type = properties.get('$device_type', 'unknown')
-                device_types[device_type] += 1
+        # Calculate conversion rates
+        overall_conversion_rate = total_conversions / total_visits if total_visits > 0 else 0
+        awareness_to_engagement_rate = total_engagement / total_visits if total_visits > 0 else 0
+        engagement_to_conversion_rate = total_conversions / total_engagement if total_engagement > 0 else 0
         
-        return {
-            "daily_visits": dict(daily_visits),
-            "referrer_distribution": dict(referrer_counts),
-            "device_distribution": dict(device_types),
-            "total_visits": sum(daily_visits.values())
-        }
-
-    def _process_engagement_events(self, events: List[Dict]) -> Dict[str, Any]:
-        """
-        Process engagement stage metrics (campaign interactions, session data)
-        """
-        # Initialize nested defaultdict for campaign metrics
-        campaign_metrics = defaultdict(lambda: {
-            'visits': 0,
-            'sources': defaultdict(int),
-            'medium': defaultdict(int)
-        })
-        daily_engagement = defaultdict(int)
-        browser_stats = defaultdict(int)
-        
-        for event in events:
-            properties = event['properties']
-            if isinstance(properties, str):
-                try:
-                    properties = json.loads(properties)
-                except json.JSONDecodeError:
-                    continue
-                    
-            date_key = event['timestamp'].strftime('%Y-%m-%d')
-            
-            # Track campaign data
-            campaign = properties.get('utm_campaign', 'no_campaign')
-            source = properties.get('utm_source', 'no_source')
-            medium = properties.get('utm_medium', 'no_medium')
-            
-            # Update campaign metrics
-            campaign_metrics[campaign]['visits'] += 1
-            campaign_metrics[campaign]['sources'][source] += 1
-            campaign_metrics[campaign]['medium'][medium] += 1
-            
-            # Track daily engagement
-            daily_engagement[date_key] += 1
-            
-            # Track browser stats
-            browser = properties.get('$browser', 'unknown')
-            browser_stats[browser] += 1
-        
-        # Convert defaultdict to regular dict for JSON serialization
-        campaign_metrics_dict = {}
-        for campaign, data in campaign_metrics.items():
-            campaign_metrics_dict[campaign] = {
-                'visits': data['visits'],
-                'sources': dict(data['sources']),
-                'medium': dict(data['medium'])
-            }
-        
-        return {
-            "campaign_metrics": campaign_metrics_dict,
-            "daily_engagement": dict(daily_engagement),
-            "browser_distribution": dict(browser_stats),
-            "total_engagement": sum(daily_engagement.values())
-        }
-
-    def _process_conversion_events(self, web3_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Process conversion stage metrics (web3 transactions)
-        """
-        daily_transactions = defaultdict(lambda: {"initiated": 0, "successful": 0})
+        # Calculate transaction values
         transaction_values = []
+        for event in conversion_events:
+            value = self._extract_transaction_value(event)
+            if value is not None:
+                transaction_values.append(value)
         
-        for tx in web3_data['transactions']:
-            # Convert timestamp string to datetime
-            date_key = datetime.fromisoformat(tx['timestamp']).strftime('%Y-%m-%d')
+        avg_transaction_value = sum(transaction_values) / len(transaction_values) if transaction_values else 0
+        median_transaction_value = median(transaction_values) if len(transaction_values) >= 1 else 0
+        total_transaction_value = sum(transaction_values)
+        
+        # Calculate standard deviation if we have enough data
+        std_dev_transaction_value = stdev(transaction_values) if len(transaction_values) >= 2 else 0
+        
+        return {
+            "total_visits": total_visits,
+            "total_engagement": total_engagement,
+            "total_conversions": total_conversions,
+            "unique_wallets": len(unique_wallets),
+            "overall_conversion_rate": overall_conversion_rate,
+            "awareness_to_engagement_rate": awareness_to_engagement_rate,
+            "engagement_to_conversion_rate": engagement_to_conversion_rate,
+            "avg_transaction_value": avg_transaction_value,
+            "median_transaction_value": median_transaction_value,
+            "total_transaction_value": total_transaction_value,
+            "std_dev_transaction_value": std_dev_transaction_value
+        }
+    
+    def _extract_transaction_value(self, event: Dict[str, Any]) -> Optional[float]:
+        """
+        Extract transaction value from a conversion event
+        """
+        properties = event.get("properties", {})
+        
+        # Try different possible property names
+        for key in ["value", "amount", "transaction_value", "txn_value"]:
+            if key in properties and properties[key] is not None:
+                try:
+                    return float(properties[key])
+                except (ValueError, TypeError):
+                    pass
+        
+        # Check in txn_data
+        txn_data = properties.get("txn_data")
+        txn_data = self._parse_json_safely(txn_data)
+        
+        if isinstance(txn_data, dict) and "value" in txn_data:
+            try:
+                return float(txn_data["value"])
+            except (ValueError, TypeError):
+                pass
+        
+        # Check in merged_txn_data if available
+        if "merged_txn_data" in event:
+            merged_data = event["merged_txn_data"]
+            if isinstance(merged_data, dict) and "value" in merged_data:
+                try:
+                    return float(merged_data["value"])
+                except (ValueError, TypeError):
+                    pass
+        
+        return None
+    
+    def _calculate_daily_metrics(self, visits: List[Dict[str, Any]], engagement_events: List[Dict[str, Any]],
+                               conversion_events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Calculate metrics for each day in the date range
+        """
+        # Create a dictionary to store metrics for each day
+        daily_data = defaultdict(lambda: {"visits": 0, "engagement": 0, "transactions": 0})
+        
+        # Process visits
+        for event in visits:
+            date = self._extract_date(event.get("timestamp"))
+            if date:
+                daily_data[date]["visits"] += 1
+        
+        # Process engagement events
+        for event in engagement_events:
+            date = self._extract_date(event.get("timestamp"))
+            if date:
+                daily_data[date]["engagement"] += 1
+        
+        # Process conversion events
+        for event in conversion_events:
+            date = self._extract_date(event.get("timestamp"))
+            if date:
+                daily_data[date]["transactions"] += 1
+        
+        # Ensure all days in the range are included
+        start_date = datetime.strptime(self.from_date, "%Y-%m-%d")
+        all_days = []
+        
+        for i in range(self.days):
+            current_date = (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
+            metrics = daily_data.get(current_date, {"visits": 0, "engagement": 0, "transactions": 0})
+            all_days.append({
+                "date": current_date,
+                "visits": metrics["visits"],
+                "engagement": metrics["engagement"],
+                "transactions": metrics["transactions"]
+            })
+        
+        return all_days
+    
+    def _extract_date(self, timestamp: Optional[str]) -> Optional[str]:
+        """
+        Extract date in YYYY-MM-DD format from timestamp
+        """
+        if not timestamp:
+            return None
+        
+        try:
+            dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+            return dt.strftime("%Y-%m-%d")
+        except (ValueError, TypeError):
+            return None
+    
+    def _calculate_weekly_metrics(self, daily_metrics: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Aggregate daily metrics into weekly metrics with WoW comparison
+        """
+        if not daily_metrics:
+            return []
+        
+        # Group days into weeks
+        weeks = []
+        current_week = []
+        week_number = 1
+        
+        for day_data in daily_metrics:
+            current_week.append(day_data)
             
-            # Handle txn_data as list or dict
-            txn_data = tx.get('txn_data', [])
-            if isinstance(txn_data, list):
-                # If it's a list, process each transaction in the list
-                for transaction in txn_data:
-                    if isinstance(transaction, dict):
-                        daily_transactions[date_key]["initiated"] += 1
-                        if transaction.get('receipt_status') == 1:  # Successful transaction
-                            daily_transactions[date_key]["successful"] += 1
-                        
-                        # Track transaction value if available
-                        value = transaction.get('value')
-                        if value and isinstance(value, (int, float, str)):
-                            try:
-                                value_float = float(value)
-                                transaction_values.append(value_float)
-                            except (ValueError, TypeError):
-                                continue
-            elif isinstance(txn_data, dict):
-                # If it's a dictionary, process it directly
-                daily_transactions[date_key]["initiated"] += 1
-                if txn_data.get('receipt_status') == 1:
-                    daily_transactions[date_key]["successful"] += 1
+            # If we have 7 days or it's the last day, create a week
+            if len(current_week) == 7 or day_data == daily_metrics[-1]:
+                if current_week:
+                    start_date = current_week[0]["date"]
+                    end_date = current_week[-1]["date"]
                     
-                value = txn_data.get('value')
-                if value and isinstance(value, (int, float, str)):
-                    try:
-                        value_float = float(value)
-                        transaction_values.append(value_float)
-                    except (ValueError, TypeError):
-                        continue
+                    # Sum metrics for the week
+                    visits = sum(day["visits"] for day in current_week)
+                    engagement = sum(day["engagement"] for day in current_week)
+                    transactions = sum(day["transactions"] for day in current_week)
+                    
+                    # Calculate conversion rate
+                    conversion_rate = transactions / visits if visits > 0 else 0
+                    
+                    weeks.append({
+                        "week": week_number,
+                        "date_range": f"{start_date} to {end_date}",
+                        "visits": visits,
+                        "engagement": engagement,
+                        "transactions": transactions,
+                        "conversion_rate": conversion_rate
+                    })
+                    
+                    week_number += 1
+                    current_week = []
         
-        return {
-            "daily_transactions": dict(daily_transactions),
-            "total_initiated": sum(day["initiated"] for day in daily_transactions.values()),
-            "total_successful": sum(day["successful"] for day in daily_transactions.values()),
-            "avg_transaction_value": sum(transaction_values) / len(transaction_values) if transaction_values else 0,
-            "total_transactions": len(transaction_values)
-        }
-
-    def generate_funnel_data(self) -> Dict[str, Any]:
-        """
-        Generate complete funnel analysis data with all stages
-        """
-        funnel_stages = self.get_funnel_stages()
-        
-        # Calculate date range for consistent reporting
-        date_range = [
-            (self.from_timestamp + timedelta(days=x)).strftime('%Y-%m-%d')
-            for x in range(self.days)
-        ]
-        
-        # Generate weekly date ranges
-        weekly_ranges = []
-        current_date = self.from_timestamp
-        while current_date < self.from_timestamp + timedelta(days=self.days):
-            week_end = min(current_date + timedelta(days=7), self.from_timestamp + timedelta(days=self.days))
-            weekly_ranges.append({
-                'start': current_date.strftime('%Y-%m-%d'),
-                'end': (week_end - timedelta(days=1)).strftime('%Y-%m-%d'),
-                'week_number': (current_date - self.from_timestamp).days // 7 + 1
-            })
-            current_date = week_end
-        
-        # Aggregate metrics by week
-        weekly_metrics = []
-        for week_range in weekly_ranges:
-            start_date = datetime.strptime(week_range['start'], '%Y-%m-%d')
-            end_date = datetime.strptime(week_range['end'], '%Y-%m-%d') + timedelta(days=1)
+        # Calculate week-over-week changes
+        for i in range(1, len(weeks)):
+            prev_week = weeks[i-1]
+            curr_week = weeks[i]
             
-            # Get dates in this week
-            week_dates = [
-                d.strftime('%Y-%m-%d') for d in 
-                [start_date + timedelta(days=x) for x in range((end_date - start_date).days)]
-            ]
+            # Calculate percentage changes
+            curr_week["visits_wow"] = self._calculate_percentage_change(prev_week["visits"], curr_week["visits"])
+            curr_week["engagement_wow"] = self._calculate_percentage_change(prev_week["engagement"], curr_week["engagement"])
+            curr_week["transactions_wow"] = self._calculate_percentage_change(prev_week["transactions"], curr_week["transactions"])
+            curr_week["conversion_rate_wow"] = self._calculate_percentage_change(prev_week["conversion_rate"], curr_week["conversion_rate"])
             
-            # Aggregate metrics for this week
-            weekly_metrics.append({
-                'week': week_range['week_number'],
-                'date_range': f"{week_range['start']} to {week_range['end']}",
-                'visits': sum(funnel_stages['awareness']['daily_visits'].get(date, 0) for date in week_dates),
-                'engagement': sum(funnel_stages['engagement']['daily_engagement'].get(date, 0) for date in week_dates),
-                'transactions': sum(
-                    funnel_stages['conversion']['daily_transactions'].get(date, {}).get('successful', 0) 
-                    for date in week_dates
-                ),
-                'conversion_rate': round(
-                    sum(funnel_stages['conversion']['daily_transactions'].get(date, {}).get('successful', 0) for date in week_dates) /
-                    max(sum(funnel_stages['awareness']['daily_visits'].get(date, 0) for date in week_dates), 1) * 100, 2
-                )
-            })
+            # Add flags for significant changes
+            curr_week["significant_change"] = any(
+                abs(curr_week.get(f"{metric}_wow", 0)) > 0.2  # 20% change threshold
+                for metric in ["visits", "engagement", "transactions", "conversion_rate"]
+            )
         
-        # Calculate week-over-week changes if we have multiple weeks
-        if len(weekly_metrics) > 1:
-            for i in range(1, len(weekly_metrics)):
-                prev_week = weekly_metrics[i-1]
-                curr_week = weekly_metrics[i]
-                
-                curr_week['visits_wow'] = self._calculate_percentage_change(curr_week['visits'], prev_week['visits'])
-                curr_week['engagement_wow'] = self._calculate_percentage_change(curr_week['engagement'], prev_week['engagement'])
-                curr_week['transactions_wow'] = self._calculate_percentage_change(curr_week['transactions'], prev_week['transactions'])
-                curr_week['conversion_rate_wow'] = self._calculate_percentage_change(curr_week['conversion_rate'], prev_week['conversion_rate'])
-        
-        # Generate aggregated metrics
-        funnel_data = {
-            "metadata": {
-                "team_id": self.team_id,
-                "from_date": self.from_timestamp.strftime('%Y-%m-%d'),
-                "to_date": (self.from_timestamp + timedelta(days=self.days)).strftime('%Y-%m-%d'),
-                "days": self.days,
-                "weeks": len(weekly_metrics)
-            },
-            "summary": {
-                "total_visits": funnel_stages['awareness']['total_visits'],
-                "total_engagement": funnel_stages['engagement']['total_engagement'],
-                "total_conversions": funnel_stages['conversion']['total_successful'],
-                "unique_wallets": len(funnel_stages['unique_wallets']),
-                "overall_conversion_rate": round(
-                    funnel_stages['conversion']['total_successful'] / 
-                    max(funnel_stages['awareness']['total_visits'], 1) * 100, 2
-                )
-            },
-            "daily_metrics": [
-                {
-                    "date": date,
-                    "visits": funnel_stages['awareness']['daily_visits'].get(date, 0),
-                    "engagement": funnel_stages['engagement']['daily_engagement'].get(date, 0),
-                    "transactions": funnel_stages['conversion']['daily_transactions'].get(date, {}).get('successful', 0)
-                }
-                for date in date_range
-            ],
-            "weekly_metrics": weekly_metrics,
-            "campaign_performance": funnel_stages['engagement']['campaign_metrics'],
-            "device_analytics": {
-                "devices": funnel_stages['awareness']['device_distribution'],
-                "browsers": funnel_stages['engagement']['browser_distribution']
-            },
-            "conversion_metrics": {
-                "referrer_distribution": funnel_stages['awareness']['referrer_distribution'],
-                "transaction_stats": {
-                    "initiated": funnel_stages['conversion']['total_initiated'],
-                    "successful": funnel_stages['conversion']['total_successful'],
-                    "avg_value": funnel_stages['conversion']['avg_transaction_value']
-                }
-            }
-        }
-        
-        return funnel_data
-
-    def _calculate_percentage_change(self, current, previous):
-        """Helper function to calculate percentage change"""
+        return weeks
+    
+    def _calculate_percentage_change(self, previous: float, current: float) -> float:
+        """
+        Calculate percentage change between two values
+        """
         if previous == 0:
-            return 100 if current > 0 else 0
-        return round((current - previous) / previous * 100, 2)
-
-    def _get_web3_transactions(self, wallet_addresses: List[str]) -> Dict[str, Any]:
+            return 1.0 if current > 0 else 0.0
+        return (current - previous) / previous
+    
+    def _analyze_campaign_performance(self, visits: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Get on-chain token purchase events from Postgres using existing function
+        Analyze performance by campaign, source, and medium
         """
-        # Get transactions using existing function
-        transactions = get_team_wallet_addresses(
-            team_id=self.team_id,
-            from_timestamp=self.from_timestamp
-        )
+        campaigns = defaultdict(lambda: {
+            "visits": 0,
+            "sources": defaultdict(int),
+            "medium": defaultdict(int),
+            "geo": defaultdict(int)
+        })
         
-        # Filter transactions for connected wallets if provided
-        if wallet_addresses:
-            wallet_addresses_lower = [addr.lower() for addr in wallet_addresses]
-            transactions = [
-                tx for tx in transactions 
-                if tx['visitor_wallet_address'].lower() in wallet_addresses_lower
-            ]
-        
-        # Process transactions into daily counts
-        daily_purchases = defaultdict(int)
-        transaction_details = []
-        
-        for tx in transactions:
-            date_key = tx['visitor_wallet_address_ts'].strftime('%Y-%m-%d')
-            daily_purchases[date_key] += 1
-            transaction_details.append({
-                'wallet': tx['visitor_wallet_address'],
-                'timestamp': tx['visitor_wallet_address_ts'].isoformat(),
-                'txn_data': tx['txn_data'],
-                'token_transfer_data': tx['token_transfer_data']
-            })
+        for event in visits:
+            properties = event.get("properties", {})
             
+            # Extract UTM parameters
+            campaign = properties.get("utm_campaign", "direct")
+            source = properties.get("utm_source", "direct")
+            medium = properties.get("utm_medium", "direct")
+            
+            # Extract geographic data if available
+            country = properties.get("$geoip_country_name", "unknown")
+            
+            # Update campaign data
+            campaigns[campaign]["visits"] += 1
+            campaigns[campaign]["sources"][source] += 1
+            campaigns[campaign]["medium"][medium] += 1
+            campaigns[campaign]["geo"][country] += 1
+        
+        return dict(campaigns)
+    
+    def _analyze_device_analytics(self, visits: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Analyze device and browser usage
+        """
+        devices = defaultdict(int)
+        browsers = defaultdict(int)
+        operating_systems = defaultdict(int)
+        screen_sizes = defaultdict(int)
+        
+        for event in visits:
+            properties = event.get("properties", {})
+            
+            # Extract device information
+            device = properties.get("$device_type", properties.get("device", "unknown"))
+            browser = properties.get("$browser", "unknown")
+            os = properties.get("$os", "unknown")
+            
+            # Extract screen size if available
+            screen_width = properties.get("$screen_width")
+            screen_height = properties.get("$screen_height")
+            screen_size = f"{screen_width}x{screen_height}" if screen_width and screen_height else "unknown"
+            
+            # Update counters
+            devices[device] += 1
+            browsers[browser] += 1
+            operating_systems[os] += 1
+            screen_sizes[screen_size] += 1
+        
+        # Calculate conversion rates by device and browser
+        device_conversion_rates = self._calculate_device_conversion_rates(visits)
+        
         return {
-            "daily_purchases": dict(daily_purchases),
-            "transactions": transaction_details
+            "devices": dict(devices),
+            "browsers": dict(browsers),
+            "operating_systems": dict(operating_systems),
+            "screen_sizes": dict(screen_sizes),
+            "device_conversion_rates": device_conversion_rates
+        }
+    
+    def _calculate_device_conversion_rates(self, visits: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Calculate conversion rates by device type
+        """
+        # This would require matching visits to conversions by user
+        # Placeholder implementation
+        return {}
+    
+    def _analyze_conversion_metrics(self, conversion_events: List[Dict[str, Any]], 
+                                  visits: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Analyze detailed conversion metrics
+        """
+        # Extract referrer distribution
+        referrer_distribution = defaultdict(int)
+        for event in visits:
+            properties = event.get("properties", {})
+            referrer = properties.get("$referrer", "direct")
+            referrer_distribution[referrer] += 1
+        
+        # Analyze transaction statistics
+        transaction_stats = {
+            "initiated": 0,
+            "successful": 0,
+            "failed": 0,
+            "avg_value": 0,
+            "median_value": 0,
+            "total_value": 0
+        }
+        
+        transaction_values = []
+        for event in conversion_events:
+            properties = event.get("properties", {})
+            
+            # Count initiated transactions
+            transaction_stats["initiated"] += 1
+            
+            # Check if transaction was successful
+            status = properties.get("status", "").lower()
+            if status == "success" or status == "completed":
+                transaction_stats["successful"] += 1
+            elif status == "failed" or status == "error":
+                transaction_stats["failed"] += 1
+            
+            # Extract transaction value
+            value = self._extract_transaction_value(event)
+            if value is not None:
+                transaction_values.append(value)
+        
+        # Calculate transaction value statistics
+        if transaction_values:
+            transaction_stats["avg_value"] = sum(transaction_values) / len(transaction_values)
+            transaction_stats["median_value"] = median(transaction_values) if len(transaction_values) >= 1 else 0
+            transaction_stats["total_value"] = sum(transaction_values)
+        
+        return {
+            "referrer_distribution": dict(referrer_distribution),
+            "transaction_stats": transaction_stats
+        }
+    
+    def _calculate_time_to_conversion(self, visits: List[Dict[str, Any]], 
+                                    conversion_events: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Calculate time-to-conversion metrics
+        """
+        conversion_times = []
+        for event in conversion_events:
+            if "time_to_conversion" in event and event["time_to_conversion"] is not None:
+                conversion_times.append(event["time_to_conversion"])
+        
+        if not conversion_times:
+            return {
+                "avg_minutes": 0,
+                "median_minutes": 0,
+                "distribution": {}
+            }
+        
+        # Calculate average and median
+        avg_minutes = sum(conversion_times) / len(conversion_times)
+        median_minutes = median(conversion_times)
+        
+        # Create distribution buckets
+        distribution = defaultdict(int)
+        for minutes in conversion_times:
+            if minutes < 5:
+                bucket = "< 5 min"
+            elif minutes < 30:
+                bucket = "5-30 min"
+            elif minutes < 60:
+                bucket = "30-60 min"
+            elif minutes < 24 * 60:
+                bucket = "1-24 hours"
+            else:
+                bucket = "> 24 hours"
+            distribution[bucket] += 1
+        
+        return {
+            "avg_minutes": avg_minutes,
+            "median_minutes": median_minutes,
+            "distribution": dict(distribution)
         }
 
 def check_events_data(team_id: int, from_date: datetime, days: int = 1):
     """
-    Debug function to check available events in Clickhouse
+    Check what events are available in ClickHouse for the given team and date range.
+    Returns a dictionary with event counts and time ranges.
     """
-    query = """
-        SELECT 
-            event,
-            count(*) as count,
-            min(timestamp) as min_time,
-            max(timestamp) as max_time
-        FROM default.events 
-        WHERE team_id = %(team_id)s
-        AND timestamp >= toDateTime(%(from_date)s)
-        AND timestamp < toDateTime(%(to_date)s)
-        GROUP BY event
-    """
+    from analytickit.client import sync_execute
     
     to_date = from_date + timedelta(days=days)
+    
+    # Query to get event counts by event name
+    query = """
+    SELECT 
+        event,
+        count(*) as count,
+        min(timestamp) as min_time,
+        max(timestamp) as max_time
+    FROM events
+    WHERE team_id = %(team_id)s
+      AND timestamp >= %(from_date)s
+      AND timestamp <= %(to_date)s
+    GROUP BY event
+    ORDER BY count DESC
+    """
+    
     params = {
         "team_id": team_id,
         "from_date": from_date,
         "to_date": to_date
     }
     
-    results = sync_execute(query, params)
-    
     print("\nAvailable events in Clickhouse:")
-    for event, count, min_time, max_time in results:
-        print(f"Event: {event}")
-        print(f"Count: {count}")
-        print(f"Time range: {min_time} to {max_time}")
-        print("---") 
+    
+    results = []
+    
+    try:
+        rows = sync_execute(query, params)
+        
+        for row in rows:
+            event_name, count, min_time, max_time = row
+            print(f"Event: {event_name}")
+            print(f"Count: {count}")
+            print(f"Time range: {min_time} to {max_time}")
+            print("---")
+            
+            results.append({
+                "event_name": event_name,
+                "count": count,
+                "min_time": min_time.isoformat() if min_time else None,
+                "max_time": max_time.isoformat() if max_time else None
+            })
+        
+        if not rows:
+            print("No events found for this team and date range.")
+            
+    except Exception as e:
+        print(f"Error checking events: {str(e)}")
+        import traceback
+        print(traceback.format_exc())
+    
+    return results 

@@ -12,6 +12,27 @@ import { urls } from 'scenes/urls'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { PieChart } from 'lib/components/Charts'
 import moment from 'moment'
+import {
+    TotalVisitsTooltip,
+    TotalEngagementTooltip,
+    TotalConversionsTooltip,
+    ConversionRateTooltip,
+    AwarenessTooltip,
+    EngagementTooltip,
+    ConversionTooltip,
+    TotalValueTooltip,
+    AverageValueTooltip,
+    MedianValueTooltip,
+    StdDevValueTooltip,
+    AverageTimeTooltip,
+    MedianTimeTooltip,
+    CampaignTooltip,
+    SourcesTooltip,
+    MediumTooltip,
+    LocationsTooltip,
+    WalletAddressesTooltip,
+    WoWTooltip
+} from './Web23Tooltips'
 
 export function Web23Dashboard(): JSX.Element {
     // Get the team ID from the URL
@@ -112,35 +133,43 @@ export function Web23Dashboard(): JSX.Element {
                     <Row gutter={16}>
                         <Col span={6}>
                             <Card>
-                                <Statistic 
-                                    title="Total Visits" 
-                                    value={funnelData.summary.total_visits} 
-                                />
+                                <TotalVisitsTooltip>
+                                    <Statistic 
+                                        title="Total Visits" 
+                                        value={funnelData.summary.total_visits} 
+                                    />
+                                </TotalVisitsTooltip>
                             </Card>
                         </Col>
                         <Col span={6}>
                             <Card>
-                                <Statistic 
-                                    title="Total Engagement" 
-                                    value={funnelData.summary.total_engagement} 
-                                />
+                                <TotalEngagementTooltip>
+                                    <Statistic 
+                                        title="Total Engagement" 
+                                        value={funnelData.summary.total_engagement} 
+                                    />
+                                </TotalEngagementTooltip>
                             </Card>
                         </Col>
                         <Col span={6}>
                             <Card>
-                                <Statistic 
-                                    title="Total Conversions" 
-                                    value={funnelData.summary.total_conversions} 
-                                />
+                                <TotalConversionsTooltip>
+                                    <Statistic 
+                                        title="Total Conversions" 
+                                        value={funnelData.summary.total_conversions} 
+                                    />
+                                </TotalConversionsTooltip>
                             </Card>
                         </Col>
                         <Col span={6}>
                             <Card>
-                                <Statistic 
-                                    title="Conversion Rate" 
-                                    value={(funnelData.summary.overall_conversion_rate * 100).toFixed(2)} 
-                                    suffix="%" 
-                                />
+                                <ConversionRateTooltip>
+                                    <Statistic 
+                                        title="Conversion Rate" 
+                                        value={(funnelData.summary.overall_conversion_rate * 100).toFixed(2)} 
+                                        suffix="%" 
+                                    />
+                                </ConversionRateTooltip>
                             </Card>
                         </Col>
                     </Row>
@@ -149,20 +178,24 @@ export function Web23Dashboard(): JSX.Element {
                     <Card title="Funnel Stages">
                         <Row gutter={16}>
                             <Col span={8}>
-                                <Statistic 
-                                    title="Awareness" 
-                                    value={funnelData.summary.total_visits} 
-                                />
+                                <AwarenessTooltip>
+                                    <Statistic 
+                                        title="Awareness" 
+                                        value={funnelData.summary.total_visits} 
+                                    />
+                                </AwarenessTooltip>
                                 <Progress 
                                     percent={100} 
                                     showInfo={false} 
                                 />
                             </Col>
                             <Col span={8}>
-                                <Statistic 
-                                    title="Engagement" 
-                                    value={funnelData.summary.total_engagement} 
-                                />
+                                <EngagementTooltip>
+                                    <Statistic 
+                                        title="Engagement" 
+                                        value={funnelData.summary.total_engagement} 
+                                    />
+                                </EngagementTooltip>
                                 <Progress 
                                     percent={(funnelData.summary.awareness_to_engagement_rate * 100)} 
                                     showInfo={false} 
@@ -170,10 +203,12 @@ export function Web23Dashboard(): JSX.Element {
                                 <small>{(funnelData.summary.awareness_to_engagement_rate * 100).toFixed(2)}% of visits</small>
                             </Col>
                             <Col span={8}>
-                                <Statistic 
-                                    title="Conversion" 
-                                    value={funnelData.summary.total_conversions} 
-                                />
+                                <ConversionTooltip>
+                                    <Statistic 
+                                        title="Conversion" 
+                                        value={funnelData.summary.total_conversions} 
+                                    />
+                                </ConversionTooltip>
                                 <Progress 
                                     percent={(funnelData.summary.engagement_to_conversion_rate * 100)} 
                                     showInfo={false} 
@@ -187,32 +222,40 @@ export function Web23Dashboard(): JSX.Element {
                     <Card title="Transaction Metrics">
                         <Row gutter={16}>
                             <Col span={6}>
-                                <Statistic 
-                                    title="Total Value" 
-                                    value={funnelData.summary.total_transaction_value.toFixed(2)} 
-                                    prefix="$" 
-                                />
+                                <TotalValueTooltip>
+                                    <Statistic 
+                                        title="Total Value" 
+                                        value={funnelData.summary.total_transaction_value.toFixed(2)} 
+                                        prefix="$" 
+                                    />
+                                </TotalValueTooltip>
                             </Col>
                             <Col span={6}>
-                                <Statistic 
-                                    title="Average Value" 
-                                    value={funnelData.summary.avg_transaction_value.toFixed(2)} 
-                                    prefix="$" 
-                                />
+                                <AverageValueTooltip>
+                                    <Statistic 
+                                        title="Average Value" 
+                                        value={funnelData.summary.avg_transaction_value.toFixed(2)} 
+                                        prefix="$" 
+                                    />
+                                </AverageValueTooltip>
                             </Col>
                             <Col span={6}>
-                                <Statistic 
-                                    title="Median Value" 
-                                    value={funnelData.summary.median_transaction_value.toFixed(2)} 
-                                    prefix="$" 
-                                />
+                                <MedianValueTooltip>
+                                    <Statistic 
+                                        title="Median Value" 
+                                        value={funnelData.summary.median_transaction_value.toFixed(2)} 
+                                        prefix="$" 
+                                    />
+                                </MedianValueTooltip>
                             </Col>
                             <Col span={6}>
-                                <Statistic 
-                                    title="Standard Deviation" 
-                                    value={funnelData.summary.std_dev_transaction_value.toFixed(2)} 
-                                    prefix="$" 
-                                />
+                                <StdDevValueTooltip>
+                                    <Statistic 
+                                        title="Standard Deviation" 
+                                        value={funnelData.summary.std_dev_transaction_value.toFixed(2)} 
+                                        prefix="$" 
+                                    />
+                                </StdDevValueTooltip>
                             </Col>
                         </Row>
                     </Card>
@@ -221,18 +264,22 @@ export function Web23Dashboard(): JSX.Element {
                     <Card title="Time to Conversion">
                         <Row gutter={16}>
                             <Col span={12}>
-                                <Statistic 
-                                    title="Average Time" 
-                                    value={funnelData.time_to_conversion.avg_minutes.toFixed(0)} 
-                                    suffix="minutes" 
-                                />
+                                <AverageTimeTooltip>
+                                    <Statistic 
+                                        title="Average Time" 
+                                        value={funnelData.time_to_conversion.avg_minutes.toFixed(0)} 
+                                        suffix="minutes" 
+                                    />
+                                </AverageTimeTooltip>
                             </Col>
                             <Col span={12}>
-                                <Statistic 
-                                    title="Median Time" 
-                                    value={funnelData.time_to_conversion.median_minutes.toFixed(0)} 
-                                    suffix="minutes" 
-                                />
+                                <MedianTimeTooltip>
+                                    <Statistic 
+                                        title="Median Time" 
+                                        value={funnelData.time_to_conversion.median_minutes.toFixed(0)} 
+                                        suffix="minutes" 
+                                    />
+                                </MedianTimeTooltip>
                             </Col>
                         </Row>
                         <Divider />
@@ -268,7 +315,7 @@ export function Web23Dashboard(): JSX.Element {
                                     dataIndex: 'visits',
                                 },
                                 {
-                                    title: 'WoW',
+                                    title: <WoWTooltip><span>WoW</span></WoWTooltip>,
                                     dataIndex: 'visits_wow_formatted',
                                 },
                                 {
@@ -276,7 +323,7 @@ export function Web23Dashboard(): JSX.Element {
                                     dataIndex: 'engagement',
                                 },
                                 {
-                                    title: 'WoW',
+                                    title: <WoWTooltip><span>WoW</span></WoWTooltip>,
                                     dataIndex: 'engagement_wow_formatted',
                                 },
                                 {
@@ -284,7 +331,7 @@ export function Web23Dashboard(): JSX.Element {
                                     dataIndex: 'transactions',
                                 },
                                 {
-                                    title: 'WoW',
+                                    title: <WoWTooltip><span>WoW</span></WoWTooltip>,
                                     dataIndex: 'transactions_wow_formatted',
                                 },
                                 {
@@ -292,7 +339,7 @@ export function Web23Dashboard(): JSX.Element {
                                     dataIndex: 'conversion_rate_formatted',
                                 },
                                 {
-                                    title: 'WoW',
+                                    title: <WoWTooltip><span>WoW</span></WoWTooltip>,
                                     dataIndex: 'conversion_rate_wow_formatted',
                                 },
                             ]}
@@ -403,7 +450,7 @@ export function Web23Dashboard(): JSX.Element {
                             }))}
                             columns={[
                                 {
-                                    title: 'Campaign',
+                                    title: <CampaignTooltip><span>Campaign</span></CampaignTooltip>,
                                     dataIndex: 'campaign',
                                     key: 'campaign'
                                 },
@@ -414,22 +461,22 @@ export function Web23Dashboard(): JSX.Element {
                                     sorter: (a: any, b: any) => a.visits - b.visits
                                 },
                                 {
-                                    title: 'Sources',
+                                    title: <SourcesTooltip><span>Sources</span></SourcesTooltip>,
                                     dataIndex: 'sources',
                                     key: 'sources'
                                 },
                                 {
-                                    title: 'Medium',
+                                    title: <MediumTooltip><span>Medium</span></MediumTooltip>,
                                     dataIndex: 'medium',
                                     key: 'medium'
                                 },
                                 {
-                                    title: 'Locations',
+                                    title: <LocationsTooltip><span>Locations</span></LocationsTooltip>,
                                     dataIndex: 'geo',
                                     key: 'geo'
                                 },
                                 {
-                                    title: 'Wallet Addresses',
+                                    title: <WalletAddressesTooltip><span>Wallet Addresses</span></WalletAddressesTooltip>,
                                     dataIndex: 'wallets',
                                     key: 'wallets'
                                 }

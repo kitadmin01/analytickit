@@ -8,8 +8,6 @@ import json
 import logging
 from statistics import median, stdev
 
-logger = logging.getLogger(__name__)
-
 def get_team_wallet_addresses(team_id: int, from_timestamp: datetime, wallet_address: str = None) -> List[Dict[str, Any]]:
     """
     Retrieve visitor wallet data for a given team_id, timestamp and optional wallet address
@@ -22,6 +20,8 @@ def get_team_wallet_addresses(team_id: int, from_timestamp: datetime, wallet_add
     Returns:
         List of dictionaries containing all wallet data
     """
+    print(f"Fetching team wallet addresses for team {team_id} from {from_timestamp} with wallet {wallet_address}")
+    
     query = VisitorWalletAddress.objects.filter(
         team_id=team_id,
         visitor_wallet_address_ts__gte=from_timestamp
@@ -45,8 +45,9 @@ def get_team_wallet_addresses(team_id: int, from_timestamp: datetime, wallet_add
         'team_id',
         'txn_data',
         'token_transfer_data'
-    ).order_by('visitor_wallet_address_ts'))  # Added ordering
+    ).order_by('visitor_wallet_address_ts'))
     
+    print(f"Retrieved {len(wallet_data)} wallet addresses")
     return wallet_data
 
 def get_wallet_login_events(
@@ -69,6 +70,8 @@ def get_wallet_login_events(
     Returns:
         List of dictionaries containing properties, person_properties and person_id
     """
+    print(f"Fetching wallet login events for team {team_id}, event {event_name}, wallet {wallet_address}, days {days}, from {from_date}")
+    
     # Build the date clause - Always use toDateTime for consistency
     if from_date:
         to_date = from_date + timedelta(days=days)
@@ -106,20 +109,28 @@ def get_wallet_login_events(
         base_query += wallet_query
         params["wallet_address"] = wallet_address
 
-    results = sync_execute(base_query, params)
-    
-    events_data = [
-        {
-            "event": result[0],
-            "properties": result[1],
-            "person_properties": result[2],
-            "person_id": result[3],
-            "timestamp": result[4]
-        }
-        for result in results
-    ]
-    
-    return events_data
+    try:
+        results = sync_execute(base_query, params)
+        print(f"Retrieved {len(results)} wallet login events")
+        
+        events_data = [
+            {
+                "event": result[0],
+                "properties": result[1],
+                "person_properties": result[2],
+                "person_id": result[3],
+                "timestamp": result[4]
+            }
+            for result in results
+        ]
+        
+        if events_data:
+            print(f"First event details - Event: {events_data[0]['event']}, Timestamp: {events_data[0]['timestamp']}, Person ID: {events_data[0]['person_id']}")
+        
+        return events_data
+    except Exception as e:
+        print(f"Error fetching wallet login events: {str(e)}")
+        raise
 
 def get_consolidated_wallet_data(
     team_id: int, 
@@ -272,10 +283,10 @@ class UserFunnelAnalysis:
                 # Validate the date format
                 datetime.strptime(from_date, "%Y-%m-%d")
             except ValueError as e:
-                print(f"Warning: Invalid date format for from_date '{from_date}': {str(e)}")
+                print("Warning: Invalid date format")
                 # Use current date as fallback
                 self.from_date = datetime.now().strftime("%Y-%m-%d")
-                print(f"Using current date instead: {self.from_date}")
+                print("Using current date")
         else:
             # Convert datetime object to string
             self.from_date = from_date.strftime("%Y-%m-%d")
@@ -287,7 +298,7 @@ class UserFunnelAnalysis:
         to_date_obj = from_date_obj + timedelta(days=days)
         self.to_date = to_date_obj.strftime("%Y-%m-%d")
         
-        print(f"Initialized UserFunnelAnalysis for team {team_id} from {self.from_date} to {self.to_date}")
+        print(f"Initialized user funnel analysis for team {team_id}, from {self.from_date} to {self.to_date}")
         
     def get_funnel_data(self) -> Dict[str, Any]:
         """
@@ -316,13 +327,16 @@ class UserFunnelAnalysis:
             campaign_performance = self._analyze_campaign_performance(visits)
             
             # Analyze device and browser usage
-            device_analytics = self._analyze_device_analytics(visits)
+            device_analytics = self._analyze_device_analytics(visits, engagement_events)
             
             # Analyze conversion metrics
             conversion_metrics = self._analyze_conversion_metrics(conversion_events, visits)
             
             # Calculate time-to-conversion metrics
             time_to_conversion = self._calculate_time_to_conversion(visits, conversion_events)
+            
+            # Analyze geo data
+            geo_analytics = self._analyze_geo_analytics(events)
             
             return {
                 "metadata": {
@@ -338,10 +352,11 @@ class UserFunnelAnalysis:
                 "campaign_performance": campaign_performance,
                 "device_analytics": device_analytics,
                 "conversion_metrics": conversion_metrics,
-                "time_to_conversion": time_to_conversion
+                "time_to_conversion": time_to_conversion,
+                "geo_analytics": geo_analytics
             }
         except Exception as e:
-            logger.error(f"Error in get_funnel_data: {str(e)}")
+            print(f"Error in get_funnel_data: {str(e)}")
             return {"error": f"Failed to analyze funnel data: {str(e)}"}
     
     def _fetch_events(self) -> List[Dict[str, Any]]:
@@ -351,28 +366,25 @@ class UserFunnelAnalysis:
         from analytickit.client import sync_execute
         from datetime import datetime, timedelta
         
-        logger = logging.getLogger(__name__)
-        
         # Parse from_date string to datetime
         try:
             if isinstance(self.from_date, str):
                 from_date = datetime.strptime(self.from_date, "%Y-%m-%d")
-                logger.info(f"Parsed from_date string '{self.from_date}' to {from_date}")
+                print(f"Parsed from_date: {self.from_date}, parsed_date: {from_date}")
             else:
                 from_date = self.from_date
-                logger.info(f"Using from_date object directly: {from_date}")
+                print(f"Using from_date directly: {from_date}")
         except ValueError as e:
-            logger.error(f"Error parsing from_date '{self.from_date}': {str(e)}")
+            print(f"Warning: Error parsing from_date: {self.from_date}, error: {str(e)}")
             # Default to current date if parsing fails
             from_date = datetime.now()
-            logger.info(f"Using default date: {from_date}")
+            print(f"Using default date: {from_date}")
             
         # Calculate to_date
         to_date = from_date + timedelta(days=self.days)
         
         # Debug information
-        logger.info(f"Fetching events for team {self.team_id} from {from_date} to {to_date}")
-        print(f"Fetching events for team {self.team_id} from {from_date} to {to_date}")
+        print(f"Fetching events for team {self.team_id}, from {from_date} to {to_date}")
         
         # Query to get all events for the team in the date range
         query = """
@@ -395,25 +407,22 @@ class UserFunnelAnalysis:
             "to_date": to_date
         }
         
-        logger.info(f"Query params: {params}")
+        print(f"Query parameters: {params}")
         
         try:
             results = sync_execute(query, params)
             
             # Debug information
             event_count = len(results)
-            logger.info(f"Found {event_count} events")
             print(f"Found {event_count} events")
             
             if event_count > 0:
                 # Log the first few events for debugging
                 for i, row in enumerate(results[:3]):
                     event_name = row[0]
-                    logger.info(f"Event {i+1}: {event_name} at {row[4]}")
-                    print(f"Event {i+1}: {event_name} at {row[4]}")
+                    print(f"Event details - Number: {i+1}, Name: {event_name}, Timestamp: {row[4]}")
             else:
-                logger.warning("No events found for the specified criteria")
-                print("No events found for the specified criteria")
+                print(f"Warning: No events found for team {self.team_id}, from {from_date} to {to_date}")
             
             # Convert to list of dictionaries
             events = []
@@ -435,10 +444,8 @@ class UserFunnelAnalysis:
             return events
             
         except Exception as e:
-            logger.error(f"Error fetching events: {str(e)}")
             print(f"Error fetching events: {str(e)}")
             import traceback
-            logger.error(traceback.format_exc())
             print(traceback.format_exc())
             return []
     
@@ -446,6 +453,8 @@ class UserFunnelAnalysis:
         """
         Process events into three categories: visits, engagement, and conversion.
         """
+        print(f"Processing {len(events)} events")
+        
         visits = []
         engagement_events = []
         conversion_events = []
@@ -454,18 +463,30 @@ class UserFunnelAnalysis:
             event_name = event.get('event', '')
             properties = event.get('properties', {})
             
+            # Debug logging for event processing
+            print(f"Processing event - Name: {event_name}, Properties: {properties}")
+            
             # Process pageview events as visits
             if event_name.lower() in ['$pageview', 'pageview']:
+                print(f"Found visit event: {event_name}")
+                # Log UTM parameters if present
+                utm_campaign = properties.get('utm_campaign')
+                utm_source = properties.get('utm_source')
+                utm_medium = properties.get('utm_medium')
+                if utm_campaign or utm_source or utm_medium:
+                    print(f"UTM parameters found - Campaign: {utm_campaign}, Source: {utm_source}, Medium: {utm_medium}")
                 visits.append(event)
                 continue
                 
             # Check for engagement events
             if self._is_engagement_event(event_name, properties):
+                print(f"Found engagement event: {event_name}")
                 engagement_events.append(event)
                 continue
                 
             # Check for conversion events
             if self._is_conversion_event(event_name, properties):
+                print(f"Found conversion event: {event_name}")
                 # Process transaction data if available
                 if 'txn_data' in properties:
                     txn_data = self._parse_json_safely(properties['txn_data'])
@@ -477,7 +498,17 @@ class UserFunnelAnalysis:
                 
             # If not categorized yet, check if it's a visit
             if not visits and ('$current_url' in properties or 'url' in properties):
+                print(f"Found visit event by url")
+                # Log UTM parameters if present
+                utm_campaign = properties.get('utm_campaign')
+                utm_source = properties.get('utm_source')
+                utm_medium = properties.get('utm_medium')
+                if utm_campaign or utm_source or utm_medium:
+                    print(f"UTM parameters found - Campaign: {utm_campaign}, Source: {utm_source}, Medium: {utm_medium}")
                 visits.append(event)
+        
+        # Debug logging for final categorization
+        print(f"Event categorization summary - Visits: {len(visits)}, Engagement: {len(engagement_events)}, Conversion: {len(conversion_events)}")
         
         return visits, engagement_events, conversion_events
     
@@ -528,7 +559,7 @@ class UserFunnelAnalysis:
             try:
                 return json.loads(data)
             except json.JSONDecodeError:
-                logger.warning(f"Failed to parse JSON: {data[:100]}...")
+                print(f"Warning: Failed to parse JSON: {data[:100]}...")
                 return data
         return data
     
@@ -774,11 +805,14 @@ class UserFunnelAnalysis:
         """
         Analyze performance by campaign, source, and medium
         """
+        print(f"\nAnalyzing campaign performance for {len(visits)} visits")
+        
         campaigns = defaultdict(lambda: {
             "visits": 0,
             "sources": defaultdict(int),
             "medium": defaultdict(int),
-            "geo": defaultdict(int)
+            "geo": defaultdict(int),
+            "wallet_addresses": set()  # Add set to store unique wallet addresses
         })
         
         for event in visits:
@@ -792,34 +826,78 @@ class UserFunnelAnalysis:
             # Extract geographic data if available
             country = properties.get("$geoip_country_name", "unknown")
             
+            # Extract wallet address if available
+            wallet_address = properties.get("$crypto_wallet_public_address")
+            if wallet_address:
+                campaigns[campaign]["wallet_addresses"].add(wallet_address)
+            
+            # Debug logging for campaign data
+            print(f"\nProcessing visit for campaign analysis:")
+            print(f"Campaign: {campaign}")
+            print(f"Source: {source}")
+            print(f"Medium: {medium}")
+            print(f"Country: {country}")
+            print(f"Wallet Address: {wallet_address}")
+            
             # Update campaign data
             campaigns[campaign]["visits"] += 1
             campaigns[campaign]["sources"][source] += 1
             campaigns[campaign]["medium"][medium] += 1
             campaigns[campaign]["geo"][country] += 1
         
+        # Convert sets to lists for JSON serialization
+        for campaign_data in campaigns.values():
+            campaign_data["wallet_addresses"] = list(campaign_data["wallet_addresses"])
+        
+        # Debug logging for final campaign data
+        print("\nFinal campaign data:")
+        for campaign, data in campaigns.items():
+            print(f"\nCampaign: {campaign}")
+            print(f"Visits: {data['visits']}")
+            print(f"Sources: {dict(data['sources'])}")
+            print(f"Medium: {dict(data['medium'])}")
+            print(f"Geo: {dict(data['geo'])}")
+            print(f"Wallet Addresses: {data['wallet_addresses']}")
+        
         return dict(campaigns)
     
-    def _analyze_device_analytics(self, visits: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_device_analytics(self, visits: List[Dict[str, Any]], engagement_events: List[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Analyze device and browser usage
+        Analyze device and browser usage from both visits and engagement events
         """
+        print(f"Analyzing device analytics for {len(visits)} visits and {len(engagement_events or [])} engagement events")
+        
         devices = defaultdict(int)
         browsers = defaultdict(int)
         operating_systems = defaultdict(int)
         screen_sizes = defaultdict(int)
         
+        # Process visits
         for event in visits:
             properties = event.get("properties", {})
             
-            # Extract device information
+            # Debug logging for full properties
+            print(f"Visit event properties: {properties}")
+            
+            # Extract device information with proper case handling
             device = properties.get("$device_type", properties.get("device", "unknown"))
-            browser = properties.get("$browser", "unknown")
-            os = properties.get("$os", "unknown")
+            browser = properties.get("$browser", properties.get("browser", "unknown"))
+            os = properties.get("$os", properties.get("os", "unknown"))
+            
+            # Debug logging for raw values
+            print(f"Raw device properties - Device: {device}, Browser: {browser}, OS: {os}")
+            
+            # Normalize values to handle case sensitivity
+            device = device.lower() if device else "unknown"
+            browser = browser.lower() if browser else "unknown"
+            os = os.lower() if os else "unknown"
+            
+            # Debug logging for normalized values
+            print(f"Normalized device properties - Device: {device}, Browser: {browser}, OS: {os}")
             
             # Extract screen size if available
-            screen_width = properties.get("$screen_width")
-            screen_height = properties.get("$screen_height")
+            screen_width = properties.get("$screen_width", properties.get("screen_width"))
+            screen_height = properties.get("$screen_height", properties.get("screen_height"))
             screen_size = f"{screen_width}x{screen_height}" if screen_width and screen_height else "unknown"
             
             # Update counters
@@ -827,6 +905,50 @@ class UserFunnelAnalysis:
             browsers[browser] += 1
             operating_systems[os] += 1
             screen_sizes[screen_size] += 1
+            
+            # Debug logging for current counts
+            print(f"Current counts - Devices: {dict(devices)}, Browsers: {dict(browsers)}, OS: {dict(operating_systems)}")
+        
+        # Process engagement events if provided
+        if engagement_events:
+            for event in engagement_events:
+                properties = event.get("properties", {})
+                
+                # Debug logging for full properties
+                print(f"Engagement event properties: {properties}")
+                
+                # Extract device information with proper case handling
+                device = properties.get("$device_type", properties.get("device", "unknown"))
+                browser = properties.get("$browser", properties.get("browser", "unknown"))
+                os = properties.get("$os", properties.get("os", "unknown"))
+                
+                # Debug logging for raw values
+                print(f"Raw device properties - Device: {device}, Browser: {browser}, OS: {os}")
+                
+                # Normalize values to handle case sensitivity
+                device = device.lower() if device else "unknown"
+                browser = browser.lower() if browser else "unknown"
+                os = os.lower() if os else "unknown"
+                
+                # Debug logging for normalized values
+                print(f"Normalized device properties - Device: {device}, Browser: {browser}, OS: {os}")
+                
+                # Extract screen size if available
+                screen_width = properties.get("$screen_width", properties.get("screen_width"))
+                screen_height = properties.get("$screen_height", properties.get("screen_height"))
+                screen_size = f"{screen_width}x{screen_height}" if screen_width and screen_height else "unknown"
+                
+                # Update counters
+                devices[device] += 1
+                browsers[browser] += 1
+                operating_systems[os] += 1
+                screen_sizes[screen_size] += 1
+                
+                # Debug logging for current counts
+                print(f"Current counts - Devices: {dict(devices)}, Browsers: {dict(browsers)}, OS: {dict(operating_systems)}")
+        
+        # Debug logging for final counts
+        print(f"Device analytics summary - Devices: {dict(devices)}, Browsers: {dict(browsers)}, OS: {dict(operating_systems)}")
         
         # Calculate conversion rates by device and browser
         device_conversion_rates = self._calculate_device_conversion_rates(visits)
@@ -941,6 +1063,56 @@ class UserFunnelAnalysis:
             "distribution": dict(distribution)
         }
 
+    def _analyze_geo_analytics(self, events: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Analyze geographic data from events
+        """
+        print(f"Analyzing geo analytics for {len(events)} events")
+        
+        continents = defaultdict(int)
+        countries = defaultdict(int)
+        cities = defaultdict(int)
+        regions = defaultdict(int)
+        timezones = defaultdict(int)
+        
+        for event in events:
+            properties = event.get("properties", {})
+            
+            # Extract geo information from different possible locations
+            geo_data = {
+                "continent": properties.get("$geoip_continent_name") or properties.get("$initial_geoip_continent_name"),
+                "country": properties.get("$geoip_country_name") or properties.get("$initial_geoip_country_name"),
+                "city": properties.get("$geoip_city_name") or properties.get("$initial_geoip_city_name"),
+                "region": properties.get("$geoip_subdivision_1_name") or properties.get("$initial_geoip_subdivision_1_name"),
+                "timezone": properties.get("$geoip_time_zone") or properties.get("$initial_geoip_time_zone")
+            }
+            
+            # Debug logging for geo data
+            print(f"Geo data found: {geo_data}")
+            
+            # Update counters
+            if geo_data["continent"]:
+                continents[geo_data["continent"]] += 1
+            if geo_data["country"]:
+                countries[geo_data["country"]] += 1
+            if geo_data["city"]:
+                cities[geo_data["city"]] += 1
+            if geo_data["region"]:
+                regions[geo_data["region"]] += 1
+            if geo_data["timezone"]:
+                timezones[geo_data["timezone"]] += 1
+        
+        # Debug logging for final counts
+        print(f"Geo analytics summary - Continents: {dict(continents)}, Countries: {dict(countries)}, Cities: {dict(cities)}")
+        
+        return {
+            "continents": dict(continents),
+            "countries": dict(countries),
+            "cities": dict(cities),
+            "regions": dict(regions),
+            "timezones": dict(timezones)
+        }
+
 def check_events_data(team_id: int, from_date: datetime, days: int = 1):
     """
     Check what events are available in ClickHouse for the given team and date range.
@@ -971,7 +1143,7 @@ def check_events_data(team_id: int, from_date: datetime, days: int = 1):
         "to_date": to_date
     }
     
-    print("\nAvailable events in Clickhouse:")
+    print(f"Checking available events for team {team_id} from {from_date} to {to_date}")
     
     results = []
     
@@ -980,10 +1152,7 @@ def check_events_data(team_id: int, from_date: datetime, days: int = 1):
         
         for row in rows:
             event_name, count, min_time, max_time = row
-            print(f"Event: {event_name}")
-            print(f"Count: {count}")
-            print(f"Time range: {min_time} to {max_time}")
-            print("---")
+            print(f"Event details - Name: {event_name}, Count: {count}, Time range: {min_time} to {max_time}")
             
             results.append({
                 "event_name": event_name,
@@ -993,7 +1162,7 @@ def check_events_data(team_id: int, from_date: datetime, days: int = 1):
             })
         
         if not rows:
-            print("No events found for this team and date range.")
+            print(f"No events found for team {team_id} from {from_date} to {to_date}")
             
     except Exception as e:
         print(f"Error checking events: {str(e)}")

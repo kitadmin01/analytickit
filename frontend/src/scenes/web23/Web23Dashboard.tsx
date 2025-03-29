@@ -4,7 +4,7 @@ import { useValues, useActions } from 'kea'
 import { web23Logic } from './web23Logic'
 import { Spinner } from 'lib/components/Spinner/Spinner'
 import { LemonButton } from 'lib/components/LemonButton'
-import { Card, Col, Row, Statistic, Table, Tabs, Progress, Divider } from 'antd'
+import { Card, Col, Row, Statistic, Table, Tabs, Progress, Divider, Tooltip } from 'antd'
 import { DatePicker } from 'antd'
 import { teamLogic } from 'scenes/teamLogic'
 import { Alert } from 'antd'
@@ -39,7 +39,36 @@ export function Web23Dashboard(): JSX.Element {
         <div>
             <PageHeader
                 title="Web2 to Web3 Analytics"
-                caption="Analyze your Web2 to Web3 conversion funnel"
+                caption={
+                    <div>
+                        <div>Analyze your Web2 to Web3 conversion funnel</div>
+                        {funnelData?.campaign_performance && (
+                            <div className="mt-2">
+                                <strong>Wallet Addresses: </strong>
+                                {(() => {
+                                    const allWallets = new Set<string>();
+                                    Object.values(funnelData.campaign_performance).forEach((campaign: any) => {
+                                        (campaign.wallet_addresses || []).forEach((wallet: string) => allWallets.add(wallet));
+                                    });
+                                    const walletArray = Array.from(allWallets);
+                                    if (walletArray.length === 0) {
+                                        return 'No wallets found';
+                                    }
+                                    return walletArray.map((wallet, index) => (
+                                        <React.Fragment key={wallet}>
+                                            <Tooltip title={wallet}>
+                                                <span className="cursor-help">
+                                                    {`${wallet.slice(0, 6)}...${wallet.slice(-4)}`}
+                                                </span>
+                                            </Tooltip>
+                                            {index < walletArray.length - 1 && ', '}
+                                        </React.Fragment>
+                                    ));
+                                })()}
+                            </div>
+                        )}
+                    </div>
+                }
                 buttons={
                     <RangePicker
                         value={[moment(fromDate), moment(toDate)]}
@@ -296,53 +325,117 @@ export function Web23Dashboard(): JSX.Element {
                                 }))}
                             />
                         </Tabs.TabPane>
+                        <Tabs.TabPane tab="Geo Analytics" key="4">
+                            <Row gutter={[16, 16]}>
+                                <Col span={12}>
+                                    <Card title="Continents">
+                                        <PieChart
+                                            data={Object.entries(funnelData.geo_analytics.continents).map(([key, value]) => ({
+                                                name: key,
+                                                value: value
+                                            }))}
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={12}>
+                                    <Card title="Countries">
+                                        <PieChart
+                                            data={Object.entries(funnelData.geo_analytics.countries).map(([key, value]) => ({
+                                                name: key,
+                                                value: value
+                                            }))}
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={12}>
+                                    <Card title="Cities">
+                                        <PieChart
+                                            data={Object.entries(funnelData.geo_analytics.cities).map(([key, value]) => ({
+                                                name: key,
+                                                value: value
+                                            }))}
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={12}>
+                                    <Card title="Regions">
+                                        <PieChart
+                                            data={Object.entries(funnelData.geo_analytics.regions).map(([key, value]) => ({
+                                                name: key,
+                                                value: value
+                                            }))}
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={24}>
+                                    <Card title="Timezones">
+                                        <PieChart
+                                            data={Object.entries(funnelData.geo_analytics.timezones).map(([key, value]) => ({
+                                                name: key,
+                                                value: value
+                                            }))}
+                                        />
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </Tabs.TabPane>
                     </Tabs>
 
                     {/* Campaign Performance */}
                     <Card title="Campaign Performance">
                         <Table
-                            dataSource={Object.entries(funnelData.campaign_performance).map(([campaign, data]) => ({
+                            dataSource={Object.entries(funnelData.campaign_performance || {}).map(([campaign, data]: [string, any]) => ({
                                 key: campaign,
                                 campaign: campaign,
-                                visits: data.visits,
-                                sources: Object.entries(data.sources)
-                                    .sort((a, b) => b[1] - a[1])
-                                    .slice(0, 3)
+                                visits: data.visits || 0,
+                                sources: Object.entries(data.sources || {})
                                     .map(([source, count]) => `${source} (${count})`)
-                                    .join(', '),
-                                medium: Object.entries(data.medium)
-                                    .sort((a, b) => b[1] - a[1])
-                                    .slice(0, 3)
+                                    .join(', ') || 'No sources',
+                                medium: Object.entries(data.medium || {})
                                     .map(([medium, count]) => `${medium} (${count})`)
-                                    .join(', '),
-                                geo: Object.entries(data.geo)
-                                    .sort((a, b) => b[1] - a[1])
-                                    .slice(0, 3)
+                                    .join(', ') || 'No medium',
+                                geo: Object.entries(data.geo || {})
                                     .map(([geo, count]) => `${geo} (${count})`)
-                                    .join(', ')
+                                    .join(', ') || 'No locations',
+                                wallets: (data.wallet_addresses || [])
+                                    .map((wallet: string) => `${wallet.slice(0, 6)}...${wallet.slice(-4)}`)
+                                    .join(', ') || 'No wallets'
                             }))}
                             columns={[
                                 {
                                     title: 'Campaign',
                                     dataIndex: 'campaign',
+                                    key: 'campaign'
                                 },
                                 {
                                     title: 'Visits',
                                     dataIndex: 'visits',
+                                    key: 'visits',
+                                    sorter: (a: any, b: any) => a.visits - b.visits
                                 },
                                 {
-                                    title: 'Top Sources',
+                                    title: 'Sources',
                                     dataIndex: 'sources',
+                                    key: 'sources'
                                 },
                                 {
-                                    title: 'Top Medium',
+                                    title: 'Medium',
                                     dataIndex: 'medium',
+                                    key: 'medium'
                                 },
                                 {
-                                    title: 'Top Locations',
+                                    title: 'Locations',
                                     dataIndex: 'geo',
+                                    key: 'geo'
                                 },
+                                {
+                                    title: 'Wallet Addresses',
+                                    dataIndex: 'wallets',
+                                    key: 'wallets'
+                                }
                             ]}
+                            pagination={false}
+                            locale={{ emptyText: 'No campaign data available' }}
                         />
                     </Card>
                 </div>

@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: toronado
+Version: 0.1.0
+Summary: Fast lxml-based CSS stylesheet inliner.
+Home-page: UNKNOWN
+Author: ted kaemming, disqus
+Author-email: ted@disqus.com
+License: Apache License 2.0
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: cssselect
+Requires-Dist: cssutils
+Requires-Dist: lxml
+Provides-Extra: dev
+Requires-Dist: flake8 ; extra == 'dev'
+Provides-Extra: tests
+Requires-Dist: exam ; extra == 'tests'
+Requires-Dist: pytest ; extra == 'tests'
+
+UNKNOWN
+
+

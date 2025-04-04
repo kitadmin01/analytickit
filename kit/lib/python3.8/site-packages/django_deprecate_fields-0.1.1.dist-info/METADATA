@@ -1,0 +1,80 @@
+Metadata-Version: 2.1
+Name: django-deprecate-fields
+Version: 0.1.1
+Summary: This package allows deprecating model fields and allows removing them in a backwards compatible manner.
+Home-page: https://github.com/3YOURMIND/django-deprecate-fields
+Author: 3YOURMIND GmbH
+License: Apache License 2.0
+Keywords: django migration deprecation database backward compatibility
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.1
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: Framework :: Django :: 3.1
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown
+Requires-Dist: Django (>=2.1)
+
+# Django - Deprecate Field
+
+[![PyPi](https://img.shields.io/pypi/v/django-deprecate-fields.svg?branch=master)](https://pypi.python.org/pypi/django-deprecate-fields/)
+[![License](https://img.shields.io/github/license/3yourmind/django-deprecate-fields.svg)](./LICENSE)
+[![Contributing](https://img.shields.io/badge/PR-welcome-green.svg)](https://github.com/3YOURMIND/django-deprecate-fields/pulls)
+[![3yourminD-Careers](https://img.shields.io/badge/3YOURMIND-Hiring-brightgreen.svg)](https://www.3yourmind.com/career)
+[![Stars](https://img.shields.io/github/stars/3YOURMIND/django-deprecate-fields.svg?style=social&label=Stars)](https://github.com/3YOURMIND/django-deprecate-fields/stargazers)
+
+## Installation
+
+```
+pip install django-deprecate-fields
+```
+
+## Usage
+
+Assume the simple following model:
+```python
+from django.db import models
+
+class MyModel(models.Model):
+    field1 = models.CharField()
+    field2 = models.CharField()
+```
+
+In order to remove `field1`, it should first be marked as deprecated:
+```python
+from django.db import models
+from django_deprecate_fields import deprecate_field
+
+class MyModel(models.Model):
+    field1 = deprecate_field(models.CharField())
+    field2 = models.CharField()
+```
+
+Secondly, `makemigrations` should be called, which will change the field to be nullable. Any lingering references to it
+in your code will return `None` (or optionally any value or callable passed to `deprecate_field` as the
+`return_instead` argument)
+
+Lastly, after the changes above have been deployed, `field1` can then safely be removed in the model (plus another
+`makemigrations` run)
+
+## Contributing
+
+First of all, thank you very much for contributing to this project. Please base
+your work on the `master` branch and target `master` in your pull request.
+
+## License
+
+`django-deprecate-fields` is released under the [Apache 2.0 License](./LICENSE).
+
+

@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: kafka-helper
+Version: 0.2
+Summary: Makes it easy to use the kafka-python library with Apache Kafka on Heroku
+Home-page: https://github.com/heroku/kafka-helper
+Author: Arthur Louie
+Author-email: alouie@heroku.com
+License: MIT
+Download-URL: https://github.com/heroku/kafka-helper/tarball/0.1
+Keywords: kafka,heroku,kafka-python
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Development Status :: 4 - Beta
+Classifier: Topic :: Text Processing :: Linguistic
+Requires-Dist: cryptography
+
+UNKNOWN
+
+

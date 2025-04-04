@@ -54,6 +54,7 @@ export interface Web23FunnelData {
             sources: Record<string, number>
             medium: Record<string, number>
             geo: Record<string, number>
+            wallet_addresses?: string[]
         }
     >
     device_analytics: {
@@ -78,6 +79,13 @@ export interface Web23FunnelData {
         avg_minutes: number
         median_minutes: number
         distribution: Record<string, number>
+    }
+    geo_analytics: {
+        continents: Record<string, number>
+        countries: Record<string, number>
+        cities: Record<string, number>
+        regions: Record<string, number>
+        timezones: Record<string, number>
     }
 }
 

@@ -348,6 +348,7 @@ export const routes: Record<string, Scene> = {
     [urls.walletAddress(':teamId')]: Scene.WalletAddress,
     [urls.billingSuccess()]: Scene.BillingSuccess,
     [urls.billingCancel()]: Scene.BillingCancel,
+    [urls.web23Dashboard(':id')]: Scene.Web23Dashboard,
 
     
 }

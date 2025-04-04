@@ -18,8 +18,6 @@ curl -s 'http://localhost:8123/ping' || ( service_warning 'ClickHouse'; bin/chec
 
 [ ! -f ./share/GeoLite2-City-2023-09-19.mmdb ] && ( curl -L "https://analytickit.s3.amazonaws.com/GeoLite2-City.mmdb" | brotli --decompress --output=./share/GeoLite2-City-2023-09-19.mmdb )
 
-
-
 ./bin/start-worker &
 ./bin/start-backend &
 ./bin/start-frontend &

@@ -287,7 +287,7 @@ export function Web23Dashboard(): JSX.Element {
                         <PieChart
                             data={Object.entries(funnelData.time_to_conversion.distribution).map(([key, value]) => ({
                                 name: key,
-                                value: value
+                                value: Number(value)
                             }))}
                         />
                     </Card>
@@ -379,7 +379,7 @@ export function Web23Dashboard(): JSX.Element {
                                         <PieChart
                                             data={Object.entries(funnelData.geo_analytics.continents).map(([key, value]) => ({
                                                 name: key,
-                                                value: value
+                                                value: Number(value)
                                             }))}
                                         />
                                     </Card>
@@ -389,7 +389,7 @@ export function Web23Dashboard(): JSX.Element {
                                         <PieChart
                                             data={Object.entries(funnelData.geo_analytics.countries).map(([key, value]) => ({
                                                 name: key,
-                                                value: value
+                                                value: Number(value)
                                             }))}
                                         />
                                     </Card>
@@ -399,7 +399,7 @@ export function Web23Dashboard(): JSX.Element {
                                         <PieChart
                                             data={Object.entries(funnelData.geo_analytics.cities).map(([key, value]) => ({
                                                 name: key,
-                                                value: value
+                                                value: Number(value)
                                             }))}
                                         />
                                     </Card>
@@ -409,7 +409,7 @@ export function Web23Dashboard(): JSX.Element {
                                         <PieChart
                                             data={Object.entries(funnelData.geo_analytics.regions).map(([key, value]) => ({
                                                 name: key,
-                                                value: value
+                                                value: Number(value)
                                             }))}
                                         />
                                     </Card>
@@ -419,7 +419,7 @@ export function Web23Dashboard(): JSX.Element {
                                         <PieChart
                                             data={Object.entries(funnelData.geo_analytics.timezones).map(([key, value]) => ({
                                                 name: key,
-                                                value: value
+                                                value: Number(value)
                                             }))}
                                         />
                                     </Card>

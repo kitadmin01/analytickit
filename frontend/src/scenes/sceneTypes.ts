@@ -67,7 +67,7 @@ export enum Scene {
     WalletAddress = "WalletAddress",
     BillingCancel = "BillingCancel",
     BillingSuccess = "BillingSuccess",
-
+    Web23Dashboard = 'Web23Dashboard',
 }
 
 export type SceneProps = Record<string, any>

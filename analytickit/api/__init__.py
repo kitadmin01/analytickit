@@ -1,9 +1,9 @@
 from rest_framework import decorators, exceptions
 from .crypto import wall_add
+from django.http import JsonResponse
 
 from analytickit.api.routing import DefaultRouterPlusPlus
 from analytickit.settings import EE_AVAILABLE
-
 
 
 from . import (
@@ -65,6 +65,7 @@ projects_router.register(r"feature_flags", feature_flag.FeatureFlagViewSet, "pro
 project_dashboards_router = projects_router.register(
     r"dashboards", dashboard.DashboardsViewSet, "project_dashboards", ["team_id"]
 )
+
 
 projects_router.register(r"exports", exports.ExportedAssetViewSet, "exports", ["team_id"])
 projects_router.register(r"integrations", integration.IntegrationViewSet, "integrations", ["team_id"])
@@ -163,5 +164,11 @@ router.register(r"campaign", CommunityEngagementViewSet)
 
 from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
 router.register(r'wallet-address-metrics', VisitorWallatAddressModelViewSet, basename='wallet-address-metrics')
+
+
+# Register Web23 endpoints
+from analytickit.api.web23.views import Web23FunnelViewSet
+#projects_router.register(r"web23", Web23FunnelViewSet, "project_web23", ["team_id"])
+router.register(r'web23', Web23FunnelViewSet, basename='web23')
 
 

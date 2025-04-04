@@ -248,6 +248,12 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Billing Cancel',
     },
+    [Scene.Web23Dashboard]: {
+        projectBased: true,
+        name: 'Web2 to Web3 Analytics',
+    },
+
+
 }
 
 

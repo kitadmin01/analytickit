@@ -248,6 +248,12 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Billing Cancel',
     },
+    [Scene.Web23Dashboard]: {
+        projectBased: true,
+        name: 'Web2 to Web3 Analytics',
+    },
+
+
 }
 
 
@@ -342,6 +348,7 @@ export const routes: Record<string, Scene> = {
     [urls.walletAddress(':teamId')]: Scene.WalletAddress,
     [urls.billingSuccess()]: Scene.BillingSuccess,
     [urls.billingCancel()]: Scene.BillingCancel,
+    [urls.web23Dashboard(':id')]: Scene.Web23Dashboard,
 
     
 }

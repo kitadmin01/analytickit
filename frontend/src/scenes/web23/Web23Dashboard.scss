@@ -1,0 +1,120 @@
+.web23-dashboard {
+    padding: 1rem;
+    
+    h1 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .web23-summary-metrics {
+        margin-bottom: 2rem;
+        
+        .metric-card {
+            text-align: center;
+            
+            h3 {
+                font-size: 14px;
+                color: var(--muted);
+                margin-bottom: 0.5rem;
+            }
+            
+            .metric-value {
+                font-size: 24px;
+                font-weight: 600;
+                color: var(--primary);
+            }
+        }
+    }
+    
+    .ant-tabs-content {
+        padding: 1rem 0;
+    }
+}
+
+.web23-weekly-metrics {
+    .week-card {
+        margin-bottom: 1rem;
+        
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            
+            h3 {
+                margin: 0;
+            }
+        }
+        
+        .week-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            
+            .metric-item {
+                width: 25%;
+                padding: 0.5rem;
+                
+                .metric-label {
+                    font-size: 12px;
+                    color: var(--muted);
+                }
+                
+                .metric-value {
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                
+                .metric-change {
+                    font-size: 12px;
+                    
+                    &.positive {
+                        color: var(--success);
+                    }
+                    
+                    &.negative {
+                        color: var(--danger);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.web23-campaign-performance {
+    .campaign-table {
+        margin-top: 1rem;
+    }
+}
+
+.web23-device-analytics {
+    .chart-container {
+        height: 300px;
+        margin-bottom: 2rem;
+    }
+}
+
+.web23-conversion-metrics {
+    .referrer-table {
+        margin-bottom: 2rem;
+    }
+    
+    .transaction-stats {
+        display: flex;
+        flex-wrap: wrap;
+        
+        .stat-card {
+            width: 33.33%;
+            padding: 0 0.5rem;
+            text-align: center;
+            
+            h3 {
+                font-size: 14px;
+                color: var(--muted);
+            }
+            
+            .stat-value {
+                font-size: 24px;
+                font-weight: 600;
+            }
+        }
+    }
+} 

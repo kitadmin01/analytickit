@@ -44,5 +44,6 @@ __emails__
 share/GeoLite2-City.mmdb
 a11y/
 kit3.8/*
+kit/*
 analytickit/crypto/s3data/*
-share/GeoLite2-City-2023-09-19.mmdb 
+share/GeoLite2-City-2023-09-19.mmdb  

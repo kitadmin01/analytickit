@@ -26,10 +26,10 @@ from analytickit.api import (
 
 # for crypto
 from analytickit.api.crypto.com_eng import CommunityEngagementViewSet
+from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
 from analytickit.api.decide import hostname_in_app_urls
 from analytickit.demo import demo_route
 from analytickit.models import User
-from analytickit.api.crypto.wall_add import VisitorWallatAddressModelViewSet
 
 from .utils import render_template
 from .views import health, login_required, preflight_check, robots_txt, security_txt, stats
@@ -94,7 +94,7 @@ def authorize_and_redirect(request: HttpRequest) -> HttpResponse:
 def opt_slash_path(route: str, view: Callable, name: Optional[str] = None) -> URLPattern:
     """Catches path with or without trailing slash, taking into account query param and hash."""
     # Ignoring the type because while name can be optional on re_path, mypy doesn't agree
-    return re_path(fr"^{route}/?(?:[?#].*)?$", view, name=name)  # type: ignore
+    return re_path(rf"^{route}/?(?:[?#].*)?$", view, name=name)  # type: ignore
 
 
 urlpatterns = [
@@ -125,6 +125,8 @@ urlpatterns = [
         "api/reset/<str:user_uuid>/",
         authentication.PasswordResetCompleteViewSet.as_view({"get": "retrieve", "post": "create"}),
     ),
+    # Agent recommendations API
+    path("api/", include("analytickit.agent.urls")),
     re_path(r"^api.+", api_not_found),
     path("authorize_and_redirect/", login_required(authorize_and_redirect)),
     path("shared_dashboard/<str:access_token>", sharing.SharingViewerPageViewSet.as_view({"get": "retrieve"})),
@@ -168,10 +170,11 @@ urlpatterns = [
         ),
         name="campaign-detail",
     ),
-    path('api/wallet-address-metrics/', VisitorWallatAddressModelViewSet.as_view({'get': 'get_metrics'}), name='wallet-address-metrics'),
-
-
-
+    path(
+        "api/wallet-address-metrics/",
+        VisitorWallatAddressModelViewSet.as_view({"get": "get_metrics"}),
+        name="wallet-address-metrics",
+    ),
 ]
 
 if settings.DEBUG:

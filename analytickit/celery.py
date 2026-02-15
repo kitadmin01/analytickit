@@ -65,7 +65,8 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
 
     # Update events table partitions twice a week
     sender.add_periodic_task(
-        crontab(day_of_week="mon,fri", hour=0, minute=0), update_event_partitions.s(),  # check twice a week
+        crontab(day_of_week="mon,fri", hour=0, minute=0),
+        update_event_partitions.s(),  # check twice a week
     )
 
     # Send weekly status report on self-hosted instances
@@ -78,6 +79,13 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
         sender.add_periodic_task(crontab(hour=4, minute=0), verify_persons_data_in_sync.s())
 
     sender.add_periodic_task(crontab(day_of_week="fri", hour=0, minute=0), clean_stale_partials.s())
+
+    # AI Recommendations Agent — daily at 6 AM UTC
+    sender.add_periodic_task(
+        crontab(hour=6, minute=0),
+        generate_daily_recommendations_all_task.s(),
+        name="daily AI recommendations",
+    )
 
     # Send the emails at 3PM UTC every day
     sender.add_periodic_task(crontab(hour=15, minute=0), send_first_ingestion_reminder_emails.s())
@@ -138,7 +146,9 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
 
         if materialize_columns_crontab:
             sender.add_periodic_task(
-                materialize_columns_crontab, clickhouse_materialize_columns.s(), name="clickhouse materialize columns",
+                materialize_columns_crontab,
+                clickhouse_materialize_columns.s(),
+                name="clickhouse materialize columns",
             )
 
             sender.add_periodic_task(
@@ -207,16 +217,14 @@ def pg_table_cache_hit_rate():
 
     with connection.cursor() as cursor:
         try:
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT
                  relname as table_name,
                  sum(heap_blks_hit) / nullif(sum(heap_blks_hit) + sum(heap_blks_read),0) * 100 AS ratio
                 FROM pg_statio_user_tables
                 GROUP BY relname
                 ORDER BY ratio ASC
-            """
-            )
+            """)
             tables = cursor.fetchall()
             for row in tables:
                 gauge("pg_table_cache_hit_rate", float(row[1]), tags={"table": row[0]})
@@ -231,8 +239,7 @@ def pg_plugin_server_query_timing():
 
     with connection.cursor() as cursor:
         try:
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT
                     substring(query from 'plugin-server:(\\w+)') AS query_type,
                     total_time as total_time,
@@ -246,8 +253,7 @@ def pg_plugin_server_query_timing():
                 WHERE query LIKE '%%plugin-server%%'
                 ORDER BY total_time DESC
                 LIMIT 50
-                """
-            )
+                """)
 
             for row in cursor.fetchall():
                 row_dictionary = {column.name: value for column, value in zip(cursor.description, row)}
@@ -271,7 +277,10 @@ CLICKHOUSE_TABLES = [
 
 if settings.CLICKHOUSE_REPLICATION:
     CLICKHOUSE_TABLES.extend(
-        ["sharded_events", "sharded_session_recording_events",]
+        [
+            "sharded_events",
+            "sharded_session_recording_events",
+        ]
     )
 
 
@@ -342,7 +351,7 @@ def clickhouse_part_count():
         order by freq desc;
     """
     rows = sync_execute(QUERY)
-    for (table, parts) in rows:
+    for table, parts in rows:
         gauge(f"analytickit_celery_clickhouse_table_parts_count", parts, tags={"table": table})
 
 
@@ -361,7 +370,7 @@ def clickhouse_mutation_count():
         ORDER BY freq DESC
     """
     rows = sync_execute(QUERY)
-    for (table, muts) in rows:
+    for table, muts in rows:
         gauge(f"analytickit_celery_clickhouse_table_mutations_count", muts, tags={"table": table})
 
 
@@ -565,3 +574,10 @@ def schedule_all_subscriptions():
         pass
     else:
         _schedule_all_subscriptions()
+
+
+@app.task(ignore_result=True)
+def generate_daily_recommendations_all_task():
+    from analytickit.agent.tasks import generate_daily_recommendations_all
+
+    generate_daily_recommendations_all()

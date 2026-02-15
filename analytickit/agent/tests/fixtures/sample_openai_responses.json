@@ -1,0 +1,37 @@
+{
+    "valid_response": {
+        "recommendations": [
+            {
+                "category": "engagement",
+                "severity": "warning",
+                "title": "Wallet login rate dropped 15%",
+                "detail": "Wallet login rate is 23.1% today vs 27.2% 7-day average. The drop correlates with decreased Bing organic traffic.",
+                "suggested_action": "Review Bing campaign targeting and consider increasing PPC budget by 20%",
+                "metric_references": ["wallet_login_rate", "traffic_sources"]
+            },
+            {
+                "category": "campaign",
+                "severity": "action_required",
+                "title": "Twitter campaign driving on-chain value",
+                "detail": "twitter-campaign generated 1 wallet login and 0.001 ETH in on-chain transactions from just 28 visitors.",
+                "suggested_action": "Scale twitter-campaign budget - it has the highest visitor-to-transaction conversion rate",
+                "metric_references": ["campaign_attribution", "txn_volume_eth"]
+            },
+            {
+                "category": "growth",
+                "severity": "info",
+                "title": "NFT blog post driving quality traffic",
+                "detail": "/from-trends-to-treasures page has 2.2% visitor-to-transaction conversion rate (1 of 45 visitors transacted).",
+                "suggested_action": "Create more NFT-focused content and cross-promote with twitter-campaign",
+                "metric_references": ["page_to_txn_correlation", "top_pages"]
+            }
+        ]
+    },
+    "empty_response": {
+        "recommendations": []
+    },
+    "malformed_response": "not valid json at all",
+    "missing_fields_response": {
+        "recommendations": [{ "category": "engagement", "title": "Missing required fields" }]
+    }
+}

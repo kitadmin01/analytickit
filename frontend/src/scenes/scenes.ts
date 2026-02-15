@@ -5,7 +5,6 @@ import { ErrorProjectUnavailable as ErrorProjectUnavailableComponent } from '~/l
 import { urls } from 'scenes/urls'
 import { InsightShortId } from '~/types'
 
-
 export const emptySceneParams = { params: {}, searchParams: {}, hashParams: {} }
 
 export const preloadedScenes: Record<string, LoadedScene> = {
@@ -242,9 +241,8 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
     [Scene.BillingSuccess]: {
         projectBased: true,
         name: 'Billing Success',
-
     },
-      [Scene.BillingCancel]: {
+    [Scene.BillingCancel]: {
         projectBased: true,
         name: 'Billing Cancel',
     },
@@ -252,10 +250,11 @@ export const sceneConfigurations: Partial<Record<Scene, SceneConfig>> = {
         projectBased: true,
         name: 'Web2 to Web3 Analytics',
     },
-
-
+    [Scene.Recommendations]: {
+        projectBased: true,
+        name: 'AI Recommendations',
+    },
 }
-
 
 export const redirects: Record<string, string | ((params: Params) => string)> = {
     '/': urls.projectHomepage(),
@@ -349,6 +348,5 @@ export const routes: Record<string, Scene> = {
     [urls.billingSuccess()]: Scene.BillingSuccess,
     [urls.billingCancel()]: Scene.BillingCancel,
     [urls.web23Dashboard(':id')]: Scene.Web23Dashboard,
-
-    
+    [urls.recommendations()]: Scene.Recommendations,
 }

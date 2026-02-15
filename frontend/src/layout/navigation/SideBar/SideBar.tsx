@@ -8,18 +8,13 @@ import {
     IconBarChart,
     IconCoffee,
     IconCohort,
-    IconComment,
-    IconExperiment,
-    IconFlag,
     IconGauge,
     IconLive,
-    IconOpenInApp,
     IconPerson,
     IconPin,
     IconPlus,
     IconRecording,
     IconSettings,
-    IconTools,
     UnverifiedEvent,
     IconCrypto,
     IconCryptoWallet,
@@ -32,21 +27,13 @@ import { canViewPlugins } from '~/scenes/plugins/access'
 import { Scene } from '~/scenes/sceneTypes'
 import { teamLogic } from '~/scenes/teamLogic'
 import { urls } from '~/scenes/urls'
-import { AvailableFeature } from '~/types'
 import './SideBar.scss'
 import { navigationLogic } from '../navigationLogic'
 import { FEATURE_FLAGS } from 'lib/constants'
 import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
-import { groupsModel } from '~/models/groupsModel'
-import { userLogic } from 'scenes/userLogic'
-import { preflightLogic } from 'scenes/PreflightCheck/preflightLogic'
 import { SideBarApps } from '~/layout/navigation/SideBar/SideBarApps'
 import { PageButton } from '~/layout/navigation/SideBar/PageButton'
 import { frontendAppsLogic } from 'scenes/apps/frontendAppsLogic'
-import { authorizedUrlsLogic } from 'scenes/toolbar-launch/authorizedUrlsLogic'
-import { LemonButton } from 'lib/components/LemonButton'
-import { Tooltip } from 'lib/components/Tooltip'
-import Typography from 'antd/lib/typography'
 
 function Pages(): JSX.Element {
     const { currentOrganization } = useValues(organizationLogic)
@@ -54,15 +41,10 @@ function Pages(): JSX.Element {
     const { isProjectSwitcherShown } = useValues(navigationLogic)
     const { pinnedDashboards } = useValues(dashboardsModel)
     const { featureFlags } = useValues(featureFlagLogic)
-    const { showGroupsOptions } = useValues(groupsModel)
-    const { hasAvailableFeature } = useValues(userLogic)
-    const { preflight } = useValues(preflightLogic)
     const { currentTeam } = useValues(teamLogic)
     const { frontendApps } = useValues(frontendAppsLogic)
-    const { appUrls, launchUrl } = useValues(authorizedUrlsLogic)
 
     const [arePinnedDashboardsShown, setArePinnedDashboardsShown] = useState(false)
-    const [isToolbarLaunchShown, setIsToolbarLaunchShown] = useState(false)
 
     const teamId = currentTeam?.id // Extract teamId from currentTeam
 
@@ -240,6 +222,12 @@ function Pages(): JSX.Element {
                     title="Web2 to Web3 Analytics"
                 />
             )}
+            <PageButton
+                icon={<IconBarChart />}
+                identifier={Scene.Recommendations}
+                to={urls.recommendations()}
+                title="AI Recommendations"
+            />
         </ul>
     )
 }

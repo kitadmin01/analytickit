@@ -120,7 +120,8 @@ export const systemStatusLogic = kea<systemStatusLogicType>({
         error: [
             null as null | string,
             {
-                loadSystemStatusFailure: (_, { error }) => error,
+                loadSystemStatusSuccess: () => null,
+                loadSystemStatusFailure: (_, { error }) => error || 'An unknown error occurred',
             },
         ],
         openSections: [

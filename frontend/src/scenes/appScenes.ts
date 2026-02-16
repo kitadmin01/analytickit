@@ -63,4 +63,5 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.BillingSuccess]: () => import('./billing/PaymentSuccess'),
     [Scene.BillingCancel]: () => import('./billing/PaymentCancel'),
     [Scene.Web23Dashboard]: () => import('./web23/Web23Dashboard'),
+    [Scene.Recommendations]: () => import('./recommendations/Recommendations'),
 }

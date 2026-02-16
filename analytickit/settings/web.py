@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django_filters",
     "axes",
     "drf_spectacular",
+    "analytickit.agent.apps.AgentConfig",
 ]
 
 MIDDLEWARE = [

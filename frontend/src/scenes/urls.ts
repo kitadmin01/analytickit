@@ -96,10 +96,9 @@ export const urls = {
     walletAddress: (teamId: string): string => `/wallet-dashboard/${teamId}`,
     billingSuccess: (): string => '/success',
     billingCancel: (): string => '/cancel',
+    recommendations: (): string => '/recommendations',
     // Add these URLs for Web23
     web23Dashboard: (id: string): string => `/web23-dashboard/${id}`,
-
-
 
     shared: (token: string, exportOptions?: ExportOptions): string =>
         combineUrl(`/shared/${token}`, {
@@ -114,4 +113,3 @@ export const urls = {
             ...(exportOptions?.noHeader ? { noHeader: null } : {}),
         }).url,
 }
-

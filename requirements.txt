@@ -215,6 +215,8 @@ numpy==1.21.4
     # via -r requirements.in
 openai==1.6.1
     # via -r requirements.in (AI recommendations agent)
+httpx>=0.25.0,<0.28
+    # via openai (pinned to avoid proxies kwarg removal in 0.28+)
 oauthlib==3.1.0
     # via
     #   requests-oauthlib

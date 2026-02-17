@@ -13,10 +13,10 @@ class RecommendationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RecommendationSerializer
 
     def get_queryset(self):
-        team = self.request.user.team
-        if not team:
+        team_id = self.request.user.current_team_id
+        if not team_id:
             return Recommendation.objects.none()
-        qs = Recommendation.objects.filter(team=team)
+        qs = Recommendation.objects.filter(team_id=team_id)
 
         filter_date = self.request.query_params.get("date")
         if filter_date:
@@ -30,26 +30,28 @@ class RecommendationViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=["get"])
     def latest(self, request):
-        team = request.user.team
-        if not team:
+        team_id = request.user.current_team_id
+        if not team_id:
             return Response({"error": "No team found"}, status=status.HTTP_400_BAD_REQUEST)
 
-        latest_date = Recommendation.objects.filter(team=team).values_list("date", flat=True).order_by("-date").first()
+        latest_date = (
+            Recommendation.objects.filter(team_id=team_id).values_list("date", flat=True).order_by("-date").first()
+        )
         if not latest_date:
             return Response({"results": []})
 
-        qs = Recommendation.objects.filter(team=team, date=latest_date)
+        qs = Recommendation.objects.filter(team_id=team_id, date=latest_date)
         serializer = self.get_serializer(qs, many=True)
         return Response({"results": serializer.data, "date": latest_date})
 
     @action(detail=True, methods=["post"])
     def acted(self, request, pk=None):
-        team = request.user.team
-        if not team:
+        team_id = request.user.current_team_id
+        if not team_id:
             return Response({"error": "No team found"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            rec = Recommendation.objects.get(pk=pk, team=team)
+            rec = Recommendation.objects.get(pk=pk, team_id=team_id)
         except Recommendation.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -61,13 +63,13 @@ class RecommendationViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=["get"])
     def summary(self, request):
-        team = request.user.team
-        if not team:
+        team_id = request.user.current_team_id
+        if not team_id:
             return Response({"error": "No team found"}, status=status.HTTP_400_BAD_REQUEST)
 
         today = date.today()
         last_7_days = Recommendation.objects.filter(
-            team=team,
+            team_id=team_id,
             date__gte=(
                 today.replace(day=today.day - 7) if today.day > 7 else today.replace(month=today.month - 1, day=28)
             ),
@@ -88,13 +90,13 @@ class RecommendationViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["post"])
     def generate(self, request):
         """Manually trigger recommendation generation (rate limited)."""
-        team = request.user.team
-        if not team:
+        team_id = request.user.current_team_id
+        if not team_id:
             return Response({"error": "No team found"}, status=status.HTTP_400_BAD_REQUEST)
 
         from analytickit.agent.tasks import generate_daily_recommendations
 
-        generate_daily_recommendations.delay(team.id)
+        generate_daily_recommendations.delay(team_id)
         return Response({"status": "queued", "message": "Recommendation generation has been queued."})
 
 
@@ -102,11 +104,11 @@ class AggregationSnapshotViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AggregationSnapshotSerializer
 
     def get_queryset(self):
-        team = self.request.user.team
-        if not team:
+        team_id = self.request.user.current_team_id
+        if not team_id:
             return AggregationSnapshot.objects.none()
 
-        qs = AggregationSnapshot.objects.filter(team=team)
+        qs = AggregationSnapshot.objects.filter(team_id=team_id)
 
         filter_date = self.request.query_params.get("date")
         if filter_date:

@@ -1,5 +1,6 @@
 import { kea } from 'kea'
 import api from 'lib/api'
+import { toParams } from 'lib/utils'
 import type { recommendationsLogicType } from './recommendationsLogicType'
 
 export interface Recommendation {
@@ -38,7 +39,9 @@ export const recommendationsLogic = kea<recommendationsLogicType>({
                 if (values.categoryFilter) {
                     params.category = values.categoryFilter
                 }
-                const response = await api.get('api/recommendations/', params)
+                const queryString = toParams(params)
+                const url = queryString ? `api/recommendations/?${queryString}` : 'api/recommendations/'
+                const response = await api.get(url)
                 return response.results as Recommendation[]
             },
         },

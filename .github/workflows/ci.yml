@@ -1,0 +1,115 @@
+name: CI
+
+on:
+    pull_request:
+        branches: [develop, main]
+    push:
+        branches: [develop]
+
+jobs:
+    test-python:
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:14
+                env:
+                    POSTGRES_DB: analytickit_test
+                    POSTGRES_USER: test
+                    POSTGRES_PASSWORD: test
+                ports: ['5432:5432']
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+            redis:
+                image: redis:7
+                ports: ['6379:6379']
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+        env:
+            DATABASE_URL: postgres://test:test@localhost:5432/analytickit_test
+            REDIS_URL: redis://localhost:6379/0
+            DJANGO_SETTINGS_MODULE: analytickit.settings
+            SECRET_KEY: test-secret-key-do-not-use-in-production
+            OPENAI_API_KEY: test-key-not-real
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.11'
+                  cache: 'pip'
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  pip install coverage flake8 pytest
+
+            - name: Lint with flake8
+              run: |
+                  flake8 analytickit/ --max-line-length=120 --exclude=migrations
+
+            - name: Run migrations
+              run: |
+                  python manage.py migrate --run-syncdb
+
+            - name: Run tests with coverage
+              run: |
+                  coverage run --source='analytickit' manage.py test --verbosity=2
+                  coverage report --fail-under=80
+                  coverage xml
+
+            - name: Upload coverage
+              uses: codecov/codecov-action@v4
+              with:
+                  file: ./coverage.xml
+                  fail_ci_if_error: false
+
+    test-frontend:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '18'
+                  cache: 'npm'
+                  cache-dependency-path: frontend/package-lock.json
+
+            - name: Install dependencies
+              run: cd frontend && npm ci
+
+            - name: Lint
+              run: cd frontend && npm run lint
+
+            - name: Run tests
+              run: cd frontend && npm test -- --watchAll=false --coverage
+
+    pr-checks:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Check conventional commit in PR title
+              uses: amannn/action-semantic-pull-request@v5
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Check for migration files
+              run: |
+                  # If models.py was changed, ensure a migration file exists in the PR
+                  MODELS_CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -c 'models.py' || true)
+                  MIGRATIONS_ADDED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -c '/migrations/' || true)
+                  if [ "$MODELS_CHANGED" -gt 0 ] && [ "$MIGRATIONS_ADDED" -eq 0 ]; then
+                    echo "::warning::models.py was changed but no migration file was added. Did you forget to run makemigrations?"
+                  fi

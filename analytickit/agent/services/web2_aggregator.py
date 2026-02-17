@@ -1,7 +1,7 @@
 import json
 import logging
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 
 from analytickit.client import sync_execute
@@ -14,7 +14,7 @@ class Web2Aggregator:
 
     def __init__(self, team_id: int, target_date: datetime = None, days: int = 1):
         self.team_id = team_id
-        self.target_date = target_date or datetime.utcnow()
+        self.target_date = target_date or datetime.now(timezone.utc)
         self.days = days
         self.from_date = self.target_date - timedelta(days=days)
 

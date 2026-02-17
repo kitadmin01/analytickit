@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from celery import shared_task
 
@@ -33,7 +33,7 @@ def generate_daily_recommendations(self, team_id: int, model: str = None):
         return
 
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         model = model or DAILY_MODEL
 
         # 1. Run aggregation pipeline

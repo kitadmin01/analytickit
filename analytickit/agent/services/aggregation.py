@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from analytickit.agent.models import AggregationSnapshot
@@ -17,7 +17,7 @@ class AggregationPipeline:
 
     def __init__(self, team_id: int, target_date: datetime = None):
         self.team_id = team_id
-        self.target_date = target_date or datetime.utcnow()
+        self.target_date = target_date or datetime.now(timezone.utc)
         self.token_manager = TokenManager()
 
     def run(self) -> AggregationSnapshot:
